@@ -1,4 +1,5 @@
-export * from './MainApp/main-app.component';
+export * from './MainAppLast/main-app-last.component.tsx';
+export * from './MainApp/main-app.component.tsx';
 export * from './AppFooter/app-footer.component';
 export * from './ProtectedRoute/protected-route.component';
 export * from './AppHeader/app-header.component';

@@ -9,9 +9,9 @@ import {
 export function MainAppRoutes() {
     return (
         <Routes>
-            <Route path='/all-communities' element={<AllCommunities />} />
-            <Route path='/my-communities' element={<MyCommunities />} />
-            <Route path='/my-profile' element={<MyProfile />} />
+            <Route path='t/all-communities' element={<AllCommunities />} />
+            <Route path='t/my-communities' element={<MyCommunities />} />
+            <Route path='t/my-profile' element={<MyProfile />} />
         </Routes>
     );
 }

@@ -14,9 +14,6 @@ import {
 } from "./pages";
 
 
-
-
-
 function App() {
       return (
           <AuthProvider>

@@ -1,6 +1,6 @@
 export function AppFooter() {
     return (
-        <div className="AppFooter">
+        <div>
             UtU ©{new Date().getFullYear()}
         </div>
     )

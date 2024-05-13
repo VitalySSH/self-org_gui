@@ -1,33 +1,48 @@
-import { MailOutlined, BellFilled } from "@ant-design/icons"
-import { Badge, Image, Space } from "antd";
-import {useNavigate} from "react-router-dom";
+import { MailOutlined, BellFilled, UserOutlined } from "@ant-design/icons"
+import { Avatar, Badge, Flex, Space } from "antd";
+import { useLocalStorage } from "../../hooks";
 
 export function AppHeader() {
 
-    const navigate = useNavigate();
-    const onClickImage = () => {
-        navigate('/');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [user, _setUser] = useLocalStorage('user', null);
+    let userName = '';
+    if (user) {
+        userName = `${user.firstname } ${user.surname }`
     }
 
     return (
-        <div className="AppHeader">
-            <a href="">
-                <Image
-                height={40}
-                preview={false}
-                src="/utu_logo.png"
-                onClick={onClickImage}
-                >
-                </Image>
-            </a>
+        <Flex>
             <Space>
-                <Badge count={2} dot>
-                    <MailOutlined style={{ fontSize: 24 }}/>
+                <Avatar
+                    icon={<UserOutlined />}
+                    size={40}
+                    style={{
+                        color: "black",
+                        background: "white" ,
+                        borderWidth: 2,
+                        borderColor: "black",
+                        cursor: "pointer"
+                    }}
+                />
+                <div style={{ marginRight: 20 }}>
+                    <span>{ userName }</span>
+                </div>
+                <Badge count={2} dot style={{ marginRight: 20 }}>
+                    <MailOutlined style={{
+                        fontSize: 24,
+                        marginRight: 20,
+                        cursor: "pointer",
+                    }}/>
                 </Badge>
-                <Badge count={5}>
-                    <BellFilled style={{ fontSize: 24 }}/>
+                <Badge count={5} style={{ marginRight: 20 }}>
+                    <BellFilled style={{
+                        fontSize: 24,
+                        marginRight: 20,
+                        cursor: "pointer",
+                    }}/>
                 </Badge>
             </Space>
-        </div>
+        </Flex>
     )
 }
