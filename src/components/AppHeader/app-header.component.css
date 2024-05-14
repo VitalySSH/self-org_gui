@@ -1,0 +1,11 @@
+.user-name {
+    display: inline-flex;
+    margin-right: 20px;
+
+}
+
+@media screen and (max-width: 800px) {
+    .user-name {
+        display:none;
+    }
+}

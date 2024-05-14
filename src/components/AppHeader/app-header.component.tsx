@@ -15,6 +15,7 @@ import {
 } from "antd";
 import { useLocalStorage } from "../../hooks";
 import { useNavigate } from "react-router-dom";
+import './app-header.component.css';
 
 type NotificationPlacement = NotificationArgsProps['placement'];
 
@@ -24,7 +25,7 @@ export function AppHeader() {
     const navigate = useNavigate();
     const [api, contextHolder] =
         notification.useNotification();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const [user, setUser] = useLocalStorage('user', null);
     let userName = '';
     if (user) {
@@ -63,7 +64,7 @@ export function AppHeader() {
                     }}
                     onClick={avatarOnClick}
                 />
-                <div style={{ marginRight: 20, display: "flex" }}>
+                <div className="user-name">
                     <span>{ userName }</span>
                 </div>
                 <LogoutOutlined
