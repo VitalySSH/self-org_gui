@@ -22,8 +22,8 @@
 }
 
 .content {
-    margin: 24px 16px;
-    padding: 20px;
+    margin: 6px 10px;
+    padding: 5px;
 }
 
 .triger-btn {
@@ -93,6 +93,6 @@
 /*}*/
 
 .ant-menu-item-selected {
-    background-color: red !important;
-    color: black !important;
+    background-color: #ff4d4f !important;
+    color: #ffffff !important;
 }

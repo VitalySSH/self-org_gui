@@ -1,12 +1,13 @@
-import {Button, Card, Checkbox, Form, Image, Input, message, Space } from 'antd';
+import { Button, Card, Checkbox, Form, Image, Input, message, Space } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { SignInFormDataInterface } from "../../interfaces";
-import AuthApiClientService from "../../services/auth-api-client.service.ts";
+
 import { useNavigate } from "react-router-dom";
-import { useLocalStorage } from "../../hooks";
-import { encryptPassword } from "../../utils";
-import { CurrentUserService } from "../../services";
 import { useEffect } from "react";
+import { useLocalStorage } from "../../../hooks";
+import { encryptPassword } from "../../../utils";
+import { SignInFormDataInterface } from "../../../interfaces";
+import AuthApiClientService from "../../../services/auth-api-client.service.ts";
+import { CurrentUserService } from "../../../services";
 
 export function SignIn() {
 
@@ -33,13 +34,13 @@ export function SignIn() {
                     CurrentUserService.set(currentUser)
                 }
                 navigate(-1);
-            }).catch((error) => {
-                if (error.response.status == 401) {
-                    message.warning('Введён некорректный email или пароль').then();
-                } else if (error.response.status == 404) {
-                    message.warning('Указанный адрес электронной почты не найден').then();
-                }
-            });
+            }).catch((error: { response: { status: number; }; }) => {
+            if (error.response.status == 401) {
+                message.warning('Введён некорректный email или пароль').then();
+            } else if (error.response.status == 404) {
+                message.warning('Указанный адрес электронной почты не найден').then();
+            }
+        });
     }
     const handleForgotPassword = () => {
         console.log('Забыл пароль');
@@ -109,7 +110,7 @@ export function SignIn() {
                             {
                                 pattern: /[\s\w.,<>_/|\\{}$&^%?@#\-+=~`№':;()[\]]/,
                             }
-                         ]}
+                        ]}
                         hasFeedback
                     >
                         <Input.Password
@@ -119,7 +120,7 @@ export function SignIn() {
                             minLength={ 8 }
                         />
                     </Form.Item>
-                        <span>
+                    <span>
                             <a
                                 style={{float: 'right'}}
                                 className='login-form-forgot'

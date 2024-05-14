@@ -13,6 +13,7 @@ import {
 } from "../../pages";
 import { AppHeader } from "../AppHeader/app-header.component.tsx";
 import { AppFooter } from "../AppFooter/app-footer.component.tsx";
+import { CommunityPanel } from "../CommunityPanel/community-panel.component.tsx";
 
 
 const {
@@ -42,9 +43,11 @@ const items: MenuItem[] = [
     // getItem('Сообщества', 'communities', <TeamOutlined style={{ fontSize: 20 }} />,
     //     [getItem('Все', 'all-communities'),
     //         getItem('Мои', 'my-communities')]),
-    getItem('Сообщества', 'all-communities',
+    getItem('Общие настройки сообщества', 'all-communities',
         <TeamOutlined style={{ fontSize: 20 }} />),
-    getItem('Делегаты', 'my-communities',
+    getItem('Мои настройки сообщества', 'my-communities',
+        <TeamOutlined style={{ fontSize: 20 }} />),
+    getItem('Мои делегаты', 'my-profile',
         <TeamOutlined style={{ fontSize: 20 }} />),
 ];
 
@@ -54,10 +57,12 @@ export function MainApp () {
         collapsed,
         setCollapsed
     ] = useState(false);
+
     const [
         logoPath,
         setLogoPath
     ] = useState('/utu_logo.png');
+
     const [
         selectedKeys,
         setSelectedKeys
@@ -75,7 +80,17 @@ export function MainApp () {
                 collapsible
                 collapsed={collapsed}
                 trigger={null}
+                width={280}
                 className="sider"
+                breakpoint="md"
+                onBreakpoint={(broken) => {
+                    setCollapsed(broken);
+                    if (!broken) {
+                        setLogoPath('/utu_logo.png');
+                    } else {
+                        setLogoPath('/utu_logo_small.png');
+                    }
+                }}
             >
                 <div>
                     <Flex align="center" justify="center" className="">
@@ -121,6 +136,7 @@ export function MainApp () {
                     <AppHeader/>
                 </Header>
                 <Content className="content">
+                    <CommunityPanel />
                     <Routes>
                         <Route path='/all-communities' element={<AllCommunities/>}/>
                         <Route path='/my-communities' element={<MyCommunities/>} />

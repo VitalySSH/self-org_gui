@@ -1,20 +1,22 @@
-import {Button, Card, Checkbox, Form, Image, Input, Space } from 'antd';
+import { Button, Card, Checkbox, Form, Image, Input, Space } from 'antd';
 import { LockOutlined, UserAddOutlined } from '@ant-design/icons';
-import { SignUpFormDataInterface} from "../../interfaces";
+
 import { useNavigate } from "react-router-dom";
 import TextArea from "antd/lib/input/TextArea";
-import { CrudDataSourceService } from "../../services";
-import { UserModel } from "../../models";
-import { encryptPassword } from "../../utils";
-import { useLocalStorage } from "../../hooks";
 import { useEffect } from "react";
+import { useLocalStorage } from "../../../hooks";
+import { CrudDataSourceService } from "../../../services";
+import { UserModel } from "../../../models";
+import { SignUpFormDataInterface } from "../../../interfaces";
+import { encryptPassword } from "../../../utils";
 
-export function SignUp() {
+export function SignUp(){
 
     const navigate = useNavigate();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [user, _setUser] = useLocalStorage('user', null);
-    const userService = new CrudDataSourceService(UserModel);
+    const userService =
+        new CrudDataSourceService(UserModel);
 
     useEffect(() => {
         if (user) navigate(-1);
@@ -39,7 +41,11 @@ export function SignUp() {
             }}
         >
             <Card style={{ width: 500 }}>
-                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 30 }}>
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginBottom: 30
+                }}>
                     <Image
                         height={60}
                         preview={false}

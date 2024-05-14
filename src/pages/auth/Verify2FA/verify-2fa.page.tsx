@@ -1,8 +1,7 @@
-// import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {Button, Card, Form, Input, message, Space} from "antd";
-import { AuthContextProviderInterface } from "../../interfaces";
-import { useAuth } from "../../hooks";
+import { Button, Card, Form, Input, message, Space } from "antd";
+import { AuthContextProviderInterface } from "../../../interfaces";
+import { useAuth } from "../../../hooks";
 
 
 export const Verify2FA = () => {
@@ -15,7 +14,8 @@ export const Verify2FA = () => {
         if (isValid && authData.is2FAVerified) {
             navigate('/');
         } else {
-            message.warning('Недействительный код. Пожалуйста, попробуйте снова').then();
+            message.warning('Недействительный код. ' +
+                'Пожалуйста, попробуйте снова').then();
         }
     }
 

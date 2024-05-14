@@ -1,7 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import { SignIn, SignUp } from './components/auth';
 import { AuthProvider } from './hooks';
-import { Secret, Verify2FA } from './components/auth';
 import {
     MainApp,
     ProtectedRoute,
@@ -11,6 +9,9 @@ import {
     MyCommunities,
     NoMatchPage,
     MyProfile,
+    SignIn,
+    SignUp,
+    Verify2FA,
 } from "./pages";
 
 
@@ -21,7 +22,6 @@ function App() {
                   <Route path='/verify-2fa' element={<Verify2FA />} />
                   <Route path='/sign-in' element={<SignIn />} />
                   <Route path='/sign-up' element={<SignUp />} />
-                  <Route path='/secret' element={<Secret />}/>
 
                   <Route path='/' element={
                       <ProtectedRoute>
