@@ -5,6 +5,7 @@ import { ProviderComponentInterface, AuthContextProviderInterface } from "../int
 const AuthContext = createContext({});
 
 export const AuthProvider = (component: ProviderComponentInterface) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [user, _setUser] = useLocalStorage('user', null);
     // const [is2FAVerified, setIs2FAVerified] = useState(false);
     // console.log(setIs2FAVerified);

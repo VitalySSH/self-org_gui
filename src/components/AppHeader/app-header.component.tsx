@@ -60,7 +60,8 @@ export function AppHeader() {
                         background: "white" ,
                         borderWidth: 2,
                         borderColor: "black",
-                        cursor: "pointer"
+                        cursor: "pointer",
+                        marginBottom: 10,
                     }}
                     onClick={avatarOnClick}
                 />

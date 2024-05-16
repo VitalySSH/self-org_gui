@@ -56,6 +56,15 @@
     font-weight: 500;
 }
 
+.menu-item {
+    white-space: normal !important;
+    line-height: 20px !important;
+}
+
+.menu-icon {
+    font-size: 20px !important;
+}
+
 /*.ant-menu-submenu {*/
 /*    color: black !important;*/
 /*}*/
@@ -93,6 +102,6 @@
 /*}*/
 
 .ant-menu-item-selected {
-    background-color: #ff4d4f !important;
-    color: #ffffff !important;
+    background-color: red !important;
+    color: white !important;
 }

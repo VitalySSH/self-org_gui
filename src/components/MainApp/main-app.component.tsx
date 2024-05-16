@@ -1,11 +1,17 @@
-import {Button, Flex, Image, Layout, Menu, type MenuProps} from "antd";
-import React, { useState } from "react";
+import { Button, Flex, Image, Layout, Menu } from "antd";
+import { useEffect, useState } from "react";
 import {
     MenuUnfoldOutlined,
-    MenuFoldOutlined, TeamOutlined,
+    MenuFoldOutlined,
+    TeamOutlined,
 } from '@ant-design/icons';
 import './main-app.component.css';
-import {Route, Routes, useNavigate} from "react-router-dom";
+import {
+    Route,
+    Routes,
+    useLocation,
+    useNavigate,
+} from "react-router-dom";
 import {
     AllCommunities,
     MyCommunities,
@@ -23,35 +29,8 @@ const {
     Footer,
 } = Layout;
 
-type MenuItem = Required<MenuProps>['items'][number];
-
-function getItem(
-    label: React.ReactNode,
-    key: React.Key,
-    icon?: React.ReactNode,
-    children?: MenuItem[],
-): MenuItem {
-    return {
-        key,
-        icon,
-        children,
-        label,
-    } as MenuItem;
-}
-
-const items: MenuItem[] = [
-    // getItem('Сообщества', 'communities', <TeamOutlined style={{ fontSize: 20 }} />,
-    //     [getItem('Все', 'all-communities'),
-    //         getItem('Мои', 'my-communities')]),
-    getItem('Общие настройки сообщества', 'all-communities',
-        <TeamOutlined style={{ fontSize: 20 }} />),
-    getItem('Мои настройки сообщества', 'my-communities',
-        <TeamOutlined style={{ fontSize: 20 }} />),
-    getItem('Мои делегаты', 'my-profile',
-        <TeamOutlined style={{ fontSize: 20 }} />),
-];
-
 export function MainApp () {
+    const location = useLocation();
     const navigate = useNavigate();
     const [
         collapsed,
@@ -73,6 +52,11 @@ export function MainApp () {
         navigate('/');
     }
 
+    useEffect(() => {
+        const pathname = location.pathname.split('/')
+        setSelectedKeys([pathname[pathname.length - 1]]);
+    }, [location])
+
     return (
         <Layout className="app">
             <Sider
@@ -80,7 +64,7 @@ export function MainApp () {
                 collapsible
                 collapsed={collapsed}
                 trigger={null}
-                width={280}
+                width={250}
                 className="sider"
                 breakpoint="md"
                 onBreakpoint={(broken) => {
@@ -104,15 +88,31 @@ export function MainApp () {
                         >
                         </Image>
                     </Flex>
-                    <Menu mode="inline"
-                          className="menu-bar"
-                          items={items}
-                          onClick={(item) => {
-                              setSelectedKeys([item.key]);
-                              navigate(item.key)
-                          }}
-                          selectedKeys={selectedKeys}
-                    />
+                    <Menu
+                        mode="inline"
+                        className="menu-bar"
+                        onClick={(item) => {
+                          setSelectedKeys([item.key]);
+                          navigate(item.key)
+                        }}
+                        selectedKeys={selectedKeys}
+                    >
+                        <Menu.Item
+                            key="all-communities"
+                            icon={<TeamOutlined className="menu-icon" />}
+                            className="menu-item"
+                        >Общие настройки сообщества</Menu.Item>
+                        <Menu.Item
+                            key="my-communities"
+                            icon={<TeamOutlined className="menu-icon" />}
+                            className="menu-item"
+                        >Мои настройки сообщества</Menu.Item>
+                        <Menu.Item
+                            key="my-profile"
+                            icon={<TeamOutlined className="menu-icon" />}
+                            className="menu-item"
+                        >Мои делегаты</Menu.Item>
+                    </Menu>
                 </div>
 
                 <Button
