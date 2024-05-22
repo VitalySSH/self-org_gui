@@ -16,13 +16,13 @@ class AuthApiClientService {
         });
     }
 
-    login(email: string, hashed_password: string) {
+    login(email: string, secret_password: string) {
         return this.http.post<void>('/auth/login',
-            { email: email, hashed_password: hashed_password});
+            { email: email, secret_password: secret_password});
     }
-    async asyncLogin(email: string, hashed_password: string) {
+    async asyncLogin(email: string, secret_password: string) {
         return this.http.post<void>('/auth/login',
-            { email: email, hashed_password: hashed_password}).then();
+            { email: email, secret_password: secret_password}).then();
     }
 
     logout() {
