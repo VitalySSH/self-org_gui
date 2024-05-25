@@ -113,7 +113,7 @@ export class CrudDataSourceService<T extends ApiModel> {
     }
 
     modelToJsonApi(model: T): CrudApiDataInterface {
-        let jsonApi: { [key: string]: any } = {
+        const jsonApi: { [key: string]: any } = {
             id: model.id || v4()
         };
         const attributes: { [key: string]: any } = {};
@@ -169,6 +169,20 @@ export class CrudDataSourceService<T extends ApiModel> {
             await this.http.get<CrudApiDataInterface>(url);
 
         return this.jsonApiToModel(response.data);
+    }
+
+    save(model: T, create: boolean = false) {
+        const data = this.modelToJsonApi(model);
+
+        if (!create && model.id) {
+            const url = `/${this.model.entityName}/${model.id}`;
+            return this.http.patch<CrudApiDataInterface>(url, data);
+        } else {
+            const url = `/${this.model.entityName}`;
+            return this.http.post<CrudApiDataInterface>(url, data);
+        }
+
+
     }
 
 

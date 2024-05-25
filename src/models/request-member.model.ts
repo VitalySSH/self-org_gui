@@ -7,16 +7,16 @@ import { StatusModel } from "./status.model.ts";
     entityName: 'request_member',
 })
 export class RequestMemberModel extends ApiModel{
-    @oneToMany()
+    @oneToMany('user')
     member?: UserModel;
 
-    @oneToMany()
+    @oneToMany('user')
     creator?: UserModel;
 
     // @oneToMany()
     // community?: string;
 
-    @oneToMany()
+    @oneToMany('status')
     status?: StatusModel;
 
     @attribute()

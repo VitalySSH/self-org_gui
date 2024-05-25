@@ -27,7 +27,7 @@ export class UserModel extends ApiModel{
     @attribute()
     hashed_password?: string;
 
-    @manyToMany()
+    @manyToMany('request_member')
     adding_communities?: RequestMemberModel[]
 
 }

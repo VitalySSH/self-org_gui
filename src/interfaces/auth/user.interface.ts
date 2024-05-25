@@ -2,6 +2,7 @@ export interface UserInterface {
     id: string;
     firstname: string;
     surname: string;
+    about_me: string;
     foto_id?: string;
     email: string;
     hashed_password: string;

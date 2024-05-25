@@ -9,3 +9,7 @@
   line-height: 1.5;
   font-weight: 400;
 }
+
+.ant-col.ant-form-item-label {
+  padding: 0 !important;
+}

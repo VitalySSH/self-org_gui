@@ -80,6 +80,8 @@ export function SignIn() {
                 >
                     <Form.Item
                         name='email'
+                        label='Электронная почта'
+                        labelCol={{ span: 24 }}
                         rules={[
                             {
                                 required: true,
@@ -94,11 +96,12 @@ export function SignIn() {
                     >
                         <Input
                             prefix={<UserOutlined className='site-form-item-icon'/>}
-                            placeholder='Электронная почта'
                         />
                     </Form.Item>
                     <Form.Item
                         name='password'
+                        label='Пароль'
+                        labelCol={{ span: 24 }}
                         rules={[
                             {
                                 required: true,
@@ -116,20 +119,19 @@ export function SignIn() {
                         <Input.Password
                             prefix={<LockOutlined className='site-form-item-icon'/>}
                             type='password'
-                            placeholder='Пароль'
                             minLength={ 8 }
                         />
                     </Form.Item>
                     <span>
-                            <a
-                                style={{float: 'right'}}
-                                className='login-form-forgot'
-                                href=""
-                                onClick={ handleForgotPassword }
-                            >
-                                Не помню пароль
-                            </a>
-                        </span>
+                        <a
+                            style={{float: 'right'}}
+                            className='login-form-forgot'
+                            href=""
+                            onClick={ handleForgotPassword }
+                        >
+                            Не помню пароль
+                        </a>
+                    </span>
                     <Form.Item>
                         <Form.Item name='remember' valuePropName='checked' noStyle>
                             <Checkbox>Запомнить меня</Checkbox>

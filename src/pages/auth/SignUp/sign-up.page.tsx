@@ -60,6 +60,8 @@ export function SignUp(){
                 >
                     <Form.Item
                         name='firstname'
+                        label='Имя'
+                        labelCol={{ span: 24 }}
                         rules={[
                             {
                                 required: true,
@@ -70,11 +72,12 @@ export function SignUp(){
                     >
                         <Input
                             prefix={<UserAddOutlined className='site-form-item-icon'/>}
-                            placeholder='Имя'
                         />
                     </Form.Item>
                     <Form.Item
                         name='surname'
+                        label='Фамилия'
+                        labelCol={{ span: 24 }}
                         rules={[
                             {
                                 required: true,
@@ -85,16 +88,19 @@ export function SignUp(){
                     >
                         <Input
                             prefix={<UserAddOutlined className='site-form-item-icon'/>}
-                            placeholder='Фамилия'
-                        />
-                    </Form.Item>
-                    <Form.Item name='about_me'>
-                        <TextArea
-                            placeholder='Обо мне'
                         />
                     </Form.Item>
                     <Form.Item
+                        name='about_me'
+                        label='Обо мне'
+                        labelCol={{ span: 24 }}
+                    >
+                        <TextArea />
+                    </Form.Item>
+                    <Form.Item
                         name='email'
+                        label='Электронная почта'
+                        labelCol={{ span: 24 }}
                         rules={[
                             {
                                 required: true,
@@ -109,11 +115,12 @@ export function SignUp(){
                     >
                         <Input
                             prefix={<UserAddOutlined className='site-form-item-icon'/>}
-                            placeholder='Электронная почта'
                         />
                     </Form.Item>
                     <Form.Item
                         name='password'
+                        label='Пароль'
+                        labelCol={{ span: 24 }}
                         rules={[
                             {
                                 required: true,
@@ -131,12 +138,13 @@ export function SignUp(){
                         <Input.Password
                             prefix={<LockOutlined className='site-form-item-icon'/>}
                             type='password'
-                            placeholder='Пароль'
                             minLength={8}
                         />
                     </Form.Item>
                     <Form.Item
                         name='confirm_password'
+                        label='Подтверждение пароля'
+                        labelCol={{ span: 24 }}
                         dependencies={['password']}
                         rules={[
                             {
@@ -163,7 +171,6 @@ export function SignUp(){
                         <Input.Password
                             prefix={<LockOutlined className='site-form-item-icon'/>}
                             type='password'
-                            placeholder='Подтверждение пароля'
                             minLength={8}
                         />
                     </Form.Item>
