@@ -3,8 +3,6 @@ import { LockOutlined, UserAddOutlined } from '@ant-design/icons';
 
 import { useNavigate } from "react-router-dom";
 import TextArea from "antd/lib/input/TextArea";
-import { useEffect } from "react";
-import { useLocalStorage } from "../../../hooks";
 import { CrudDataSourceService } from "../../../services";
 import { UserModel } from "../../../models";
 import { SignUpFormDataInterface } from "../../../interfaces";
@@ -13,22 +11,22 @@ import { encryptPassword } from "../../../utils";
 export function SignUp(){
 
     const navigate = useNavigate();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [user, _setUser] = useLocalStorage('user', null);
     const userService =
         new CrudDataSourceService(UserModel);
 
-    useEffect(() => {
-        if (user) navigate(-1);
-    });
-
     const onFinish = (formData: SignUpFormDataInterface) => {
-        const user = userService.createRecord();
-        user.firstname = formData.firstname;
-        user.surname = formData.surname;
-        user.about_me = formData.about_me;
-        user.email = formData.email;
-        user.hashed_password = btoa(encryptPassword(formData.password));
+        const userModel = userService.createRecord();
+        userModel.firstname = formData.firstname;
+        userModel.surname = formData.surname;
+        userModel.about_me = formData.about_me;
+        userModel.email = formData.email;
+        userModel.hashed_password = btoa(encryptPassword(formData.password));
+
+        userService.save(userModel).then(() => {
+            navigate('/sign-in', { preventScrollReset: true });
+        }).catch((error) => {
+            console.log(error);
+        });
     }
 
     return (
@@ -124,13 +122,14 @@ export function SignUp(){
                         rules={[
                             {
                                 required: true,
-                                message: 'Пожалуйста, введите пароль, используя латинские буквы',
+                                message: 'Пожалуйста, введите пароль',
                             },
                             {
                                 whitespace: false,
                             },
                             {
                                 pattern: /[\s\w.,<>_/|\\{}$&^%?@#\-+=~`№':;()[\]]/,
+                                message: 'Используйте латинские буквы и цифры',
                             }
                         ]}
                         hasFeedback
@@ -156,6 +155,7 @@ export function SignUp(){
                             },
                             {
                                 pattern: /[\s\w.,<>_/|\\{}$&^%?@#\-+=~`№':;()[\]]/,
+                                message: 'Используйте латинские буквы и цифры',
                             },
                             ({getFieldValue}) => ({
                                 validator(_, value) {

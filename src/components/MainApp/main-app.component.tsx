@@ -30,6 +30,7 @@ const {
 } = Layout;
 
 export function MainApp () {
+
     const location = useLocation();
     const navigate = useNavigate();
     const [
@@ -49,11 +50,11 @@ export function MainApp () {
 
     const onClickImage = () => {
         setSelectedKeys([]);
-        navigate('/');
+        navigate('/', { preventScrollReset: true });
     }
 
     useEffect(() => {
-        const pathname = location.pathname.split('/')
+        const pathname = location.pathname.split('/');
         setSelectedKeys([pathname[pathname.length - 1]]);
     }, [location])
 
@@ -93,7 +94,7 @@ export function MainApp () {
                         className="menu-bar"
                         onClick={(item) => {
                           setSelectedKeys([item.key]);
-                          navigate(item.key)
+                          navigate(item.key, { preventScrollReset: true });
                         }}
                         selectedKeys={selectedKeys}
                     >

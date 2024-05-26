@@ -1,22 +1,16 @@
 import { Button, Card, Checkbox, Form, Image, Input, message, Space } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { useLocalStorage } from "../../../hooks";
+import { useNavigate} from "react-router-dom";
+import { useAuth } from "../../../hooks";
 import { encryptPassword } from "../../../utils";
-import { SignInFormDataInterface } from "../../../interfaces";
+import { AuthContextProvider, SignInFormDataInterface } from "../../../interfaces";
 import AuthApiClientService from "../../../services/auth-api-client.service.ts";
-import { CurrentUserService } from "../../../services";
 
 export function SignIn() {
 
     const navigate = useNavigate();
-    const [user, setUser] = useLocalStorage('user', null);
-
-    useEffect(() => {
-        // if (user) navigate(-1);
-    });
+    const authData: AuthContextProvider = useAuth();
 
     const onFinish = (formData: SignInFormDataInterface) => {
         formData.hashed_password = btoa(encryptPassword(formData.password));
@@ -28,12 +22,10 @@ export function SignIn() {
 
         AuthApiClientService.login(formData.email, formData.hashed_password)
             .then(async () => {
-                if (!user) {
+                if (!authData.user && authData.login) {
                     const currentUser = await AuthApiClientService.getCurrentUser();
-                    setUser(currentUser);
-                    CurrentUserService.set(currentUser)
+                    authData.login(currentUser);
                 }
-                navigate(-1);
             }).catch((error: { response: { status: number; }; }) => {
             if (error.response.status == 401) {
                 message.warning('Введён некорректный email или пароль').then();
@@ -47,7 +39,7 @@ export function SignIn() {
     };
 
     const handleRegister = () => {
-        navigate('/sign-up');
+        navigate('/sign-up', { preventScrollReset: true });
     };
 
     return (
@@ -105,13 +97,14 @@ export function SignIn() {
                         rules={[
                             {
                                 required: true,
-                                message: 'Пожалуйста, введите пароль, используя латинские буквы',
+                                message: 'Пожалуйста, введите пароль',
                             },
                             {
                                 whitespace: false,
                             },
                             {
                                 pattern: /[\s\w.,<>_/|\\{}$&^%?@#\-+=~`№':;()[\]]/,
+                                message: 'Используйте латинские буквы и цифры',
                             }
                         ]}
                         hasFeedback

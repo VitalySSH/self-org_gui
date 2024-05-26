@@ -13,29 +13,26 @@ import {
     NotificationArgsProps,
     Space
 } from "antd";
-import { useLocalStorage } from "../../hooks";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks";
 import './app-header.component.css';
 import { useState } from "react";
 import TextArea from "antd/lib/input/TextArea";
 import { CrudDataSourceService } from "../../services";
 import { UserModel } from "../../models";
+import { AuthContextProvider, UserInterface } from "../../interfaces";
 
 type NotificationPlacement = NotificationArgsProps['placement'];
 
 
 export function AppHeader() {
 
-    const navigate = useNavigate();
     const [api, contextHolder] =
         notification.useNotification();
     const [open, setOpen] = useState(false);
 
-    const [user, setUser] = useLocalStorage('user', null);
+    const authData: AuthContextProvider = useAuth();
     let userName = '';
-    if (user) {
-        userName = `${user.firstname } ${user.surname }`
-    }
+    if (authData.user) userName = `${authData.user.firstname } ${authData.user.surname }`;
 
     const avatarOnClick = () => {
         setOpen(true);
@@ -50,22 +47,22 @@ export function AppHeader() {
     };
 
     const LogoutOnClick = () => {
-        setUser(null);
-        navigate('/sign-in');
+        if (authData.logout) authData.logout();
     }
 
     const onFinish = (formData: object) => {
         const submitData = Object.assign({}, formData);
         const userService = new CrudDataSourceService(UserModel);
         const userModel = userService.createRecord();
-        userModel.id = user.id;
+        userModel.id = authData.user?.id;
+        const user = authData.user as { [key: string]: any };
 
         for (const [key, value] of Object.entries(submitData)) {
             userModel[key] = value;
             user[key] = value;
         }
 
-        setUser(user);
+        if (authData.login) authData.login(user as UserInterface);
 
         userService.save(userModel).then(() => {
             setOpen(false);
@@ -139,14 +136,20 @@ export function AppHeader() {
                 onCancel={handleCancel}
                 footer={[]}
             >
+                <div className="profile-avatar">
+                    <Avatar
+                        size={{ xs: 64, sm: 90, md: 128, lg: 200, xl: 256, xxl: 300 }}
+                        icon={<UserOutlined />}
+                    />
+                </div>
                 <Form
                     name='profile'
                     onFinish={onFinish}
                     initialValues={{
-                        firstname: user.firstname,
-                        surname: user.surname,
-                        about_me: user.about_me,
-                        email: user.email,
+                        firstname: authData.user?.firstname,
+                        surname: authData.user?.surname,
+                        about_me: authData.user?.about_me,
+                        email: authData.user?.email,
                     }}
                 >
                     <Form.Item

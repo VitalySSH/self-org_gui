@@ -1,18 +1,18 @@
 import { useNavigate } from 'react-router-dom';
 import { Button, Card, Form, Input, message, Space } from "antd";
-import { AuthContextProviderInterface } from "../../../interfaces";
+import { AuthContextProvider } from "../../../interfaces";
 import { useAuth } from "../../../hooks";
 
 
 export const Verify2FA = () => {
     const navigate = useNavigate();
-    const authData: AuthContextProviderInterface = useAuth();
+    const authData: AuthContextProvider = useAuth();
 
     const onFinish = (values: { code: string }) => {
         // const isValid = await verify2FACode(values.code);
         const isValid = Boolean(values.code);
         if (isValid && authData.is2FAVerified) {
-            navigate('/');
+            navigate(-1);
         } else {
             message.warning('Недействительный код. ' +
                 'Пожалуйста, попробуйте снова').then();

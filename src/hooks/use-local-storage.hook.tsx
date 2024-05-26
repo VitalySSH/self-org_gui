@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { CurrentUserService } from "../services";
 
 export const useLocalStorage = (keyName: string, defaultValue: any) => {
+
     const [storedValue, setStoredValue] = useState(() => {
         try {
             const value = localStorage.getItem(keyName);
@@ -14,6 +16,7 @@ export const useLocalStorage = (keyName: string, defaultValue: any) => {
             return defaultValue;
         }
     });
+
     const setValue = (newValue: any) => {
         try {
             localStorage.setItem(keyName, JSON.stringify(newValue));
@@ -21,6 +24,9 @@ export const useLocalStorage = (keyName: string, defaultValue: any) => {
             console.log(err);
         }
         setStoredValue(newValue);
+        if (keyName === 'user') {
+            CurrentUserService.set(newValue);
+        }
     };
 
     return [storedValue, setValue];
