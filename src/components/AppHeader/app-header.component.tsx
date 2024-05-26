@@ -3,7 +3,7 @@ import {
     BellFilled,
     UserOutlined,
     QuestionCircleFilled,
-    LogoutOutlined,
+    // LogoutOutlined,
 } from "@ant-design/icons"
 import {
     Avatar,
@@ -96,14 +96,14 @@ export function AppHeader() {
                 <div className="user-name">
                     <span>{ userName }</span>
                 </div>
-                <LogoutOutlined
-                    style={{
-                        marginRight: 20,
-                        fontSize: 24,
-                        cursor: "pointer",
-                    }}
-                    onClick={LogoutOnClick}
-                />
+                {/*<LogoutOutlined*/}
+                {/*    style={{*/}
+                {/*        marginRight: 20,*/}
+                {/*        fontSize: 24,*/}
+                {/*        cursor: "pointer",*/}
+                {/*    }}*/}
+                {/*    onClick={LogoutOnClick}*/}
+                {/*/>*/}
                 <Badge count={2} dot style={{ marginRight: 20 }}>
                     <MailOutlined style={{
                         fontSize: 24,
@@ -134,7 +134,11 @@ export function AppHeader() {
                 open={open}
                 title="Ваши данные"
                 onCancel={handleCancel}
-                footer={[]}
+                footer={[
+                    <Button key="back" onClick={LogoutOnClick}>
+                        Выйти
+                    </Button>,
+                ]}
             >
                 <div className="profile-avatar">
                     <Avatar

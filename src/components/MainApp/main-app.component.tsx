@@ -139,7 +139,7 @@ export function MainApp () {
                 <Content className="content">
                     <CommunityPanel />
                     <Routes>
-                        <Route path='/all-communities' element={<AllCommunities/>}/>
+                        <Route path='/all-communities' element={<AllCommunities/>} />
                         <Route path='/my-communities' element={<MyCommunities/>} />
                         <Route path='/my-profile' element={<MyProfile />} />
                     </Routes>
