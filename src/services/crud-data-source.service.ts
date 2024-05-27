@@ -1,13 +1,18 @@
 import { v4 } from 'uuid';
-import { CrudApiDataInterface } from "../interfaces";
+import {CrudApiDataInterface, Pagination} from "../interfaces";
 import axios, { AxiosInstance } from "axios";
 import {
     ApiModel,
+    CommunityDescriptionModel,
+    CommunityModel,
+    CommunityNameModel,
+    CommunitySettingsModel,
+    DelegateSettingsModel, InitiativeCategoryModel,
     RequestMemberModel,
-    StatusModel,
+    StatusModel, UserCommunitySettingsModel,
     UserModel,
 } from "../models";
-import { ModelType } from "../types";
+import {Filters, ModelType, Orders} from "../types";
 import AuthApiClientService from "./auth-api-client.service.ts";
 import { CurrentUserService } from "./current-user.service.ts";
 import { dataSourceConfig } from "../annotations";
@@ -17,6 +22,13 @@ import { dataSourceConfig } from "../annotations";
         user: UserModel,
         request_member: RequestMemberModel,
         status: StatusModel,
+        community: CommunityModel,
+        community_description: CommunityDescriptionModel,
+        community_name: CommunityNameModel,
+        community_settings: CommunitySettingsModel,
+        delegate_settings: DelegateSettingsModel,
+        initiative_category: InitiativeCategoryModel,
+        user_community_settings: UserCommunitySettingsModel,
     }
 })
 export class CrudDataSourceService<T extends ApiModel> {
@@ -38,7 +50,7 @@ export class CrudDataSourceService<T extends ApiModel> {
         this.refreshToken();
     }
 
-    private getModel(entityName: string): T {
+    private getModel(entityName: string): ModelType<any> {
         const config = Reflect.getMetadata('DataSourceConfig', this.constructor);
         return config.models[entityName];
     }
@@ -87,20 +99,20 @@ export class CrudDataSourceService<T extends ApiModel> {
             }
         }
         for (const [key, value] of Object.entries(apiData.relations || {})) {
-            const oneToManyEntityName = oneToMany[key];
+            const oneToManyEntityName = oneToMany[key]?.entityName;
             if (oneToManyEntityName) {
                 if (Object.keys(value || {}).length) {
                     const oneToManyModel = this.getModel(oneToManyEntityName);
-                    model[key] = this.jsonApiToModel(value, oneToManyModel);
+                    model[key] = this.jsonApiToModel(value, new oneToManyModel());
                 }
             } else {
-                const manyToManyEntityName = manyToMany[key];
+                const manyToManyEntityName = manyToMany[key]?.entityName;
                 if (manyToManyEntityName) {
                     const relations: T[] = [];
                     if (value.length) {
                         value.forEach((relation: CrudApiDataInterface) => {
                             const manyToManyModel = this.getModel(manyToManyEntityName);
-                            const relationModel = this.jsonApiToModel(relation, manyToManyModel);
+                            const relationModel = this.jsonApiToModel(relation, new manyToManyModel());
                             relations.push(relationModel);
                         });
                     }
@@ -169,6 +181,26 @@ export class CrudDataSourceService<T extends ApiModel> {
             await this.http.get<CrudApiDataInterface>(url);
 
         return this.jsonApiToModel(response.data);
+    }
+
+    list(filters?: Filters, orders?: Orders, pagination?: Pagination, include?: string[]) {
+        const url = `/${this.model.entityName}/list`;
+        const data = {
+            filters,
+            orders,
+            pagination,
+            include,
+        }
+
+        return this.http.post<CrudApiDataInterface[]>(url, data)
+            .then(r => {
+                const records: T[] = [];
+                r.data.forEach((item) => {
+                    const record = this.jsonApiToModel(item);
+                    records.push(record);
+                });
+                return records;
+            });
     }
 
     save(model: T, create: boolean = false) {
