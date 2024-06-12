@@ -64,9 +64,9 @@ export class CrudDataSourceService<T extends ApiModel> {
                 const originalConfig = error.config;
                 const userData = CurrentUserService.user;
 
-                if (userData && error.response?.status === 401 && !originalConfig._retry) {
+                if (userData && userData.secret_password && error.response?.status === 401 && !originalConfig._retry) {
                     originalConfig._retry = true;
-                    await AuthApiClientService.asyncLogin(userData.email, userData.hashed_password);
+                    await AuthApiClientService.asyncLogin(userData.email, userData.secret_password);
 
                     return this.http(originalConfig);
                 }

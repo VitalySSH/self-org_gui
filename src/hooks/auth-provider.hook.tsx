@@ -1,5 +1,9 @@
 import { useLocalStorage } from './use-local-storage.hook.tsx';
-import { ProviderComponent, AuthContextProvider, UserInterface } from "../interfaces";
+import {
+    ProviderComponent,
+    AuthContextProvider,
+    UserInterface
+} from "../interfaces";
 import { AuthContext } from './const/hooks.const.ts';
 import { useNavigate } from "react-router-dom";
 

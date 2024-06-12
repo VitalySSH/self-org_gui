@@ -1,50 +1,34 @@
 import {
-    MailOutlined,
-    BellFilled,
     UserOutlined,
-    QuestionCircleFilled,
-    // LogoutOutlined,
+    MenuOutlined,
 } from "@ant-design/icons"
-import {
-    Avatar,
-    Badge, Button,
-    Flex, Form, Input, Modal,
-    notification,
-    NotificationArgsProps,
-    Space
-} from "antd";
+import { Avatar, Button, Drawer, Flex, Form, Input, Modal, Space } from "antd";
 import { useAuth } from "../../hooks";
-import './app-header.component.css';
+import './auth-header-icons.component.css';
 import { useState } from "react";
 import TextArea from "antd/lib/input/TextArea";
 import { CrudDataSourceService } from "../../services";
 import { UserModel } from "../../models";
 import { AuthContextProvider, UserInterface } from "../../interfaces";
+import { useNavigate } from "react-router-dom";
 
-type NotificationPlacement = NotificationArgsProps['placement'];
+export function AuthHeaderIcons() {
 
-
-export function AppHeader() {
-
-    const [api, contextHolder] =
-        notification.useNotification();
-    const [open, setOpen] = useState(false);
+    const navigate = useNavigate();
+    const [modalOpen, setModalOpen] =
+        useState(false);
+    const [drawerOpen, setDrawerOpen] =
+        useState(false);
 
     const authData: AuthContextProvider = useAuth();
     let userName = '';
-    if (authData.user) userName = `${authData.user.firstname } ${authData.user.surname }`;
-
-    const avatarOnClick = () => {
-        setOpen(true);
+    if (authData.user) {
+        userName = `${authData.user.firstname } ${authData.user.surname }`;
     }
 
-    const openNotification = (placement: NotificationPlacement) => {
-        api.info({
-            message: `Уведомление`,
-            description: 'Не тыкай сюда!',
-            placement,
-        });
-    };
+    const avatarOnClick = () => {
+        setModalOpen(true);
+    }
 
     const LogoutOnClick = () => {
         if (authData.logout) authData.logout();
@@ -52,7 +36,8 @@ export function AppHeader() {
 
     const onFinish = (formData: object) => {
         const submitData = Object.assign({}, formData);
-        const userService = new CrudDataSourceService(UserModel);
+        const userService =
+            new CrudDataSourceService(UserModel);
         const userModel = userService.createRecord();
         userModel.id = authData.user?.id;
         const user = authData.user as { [key: string]: any };
@@ -65,27 +50,36 @@ export function AppHeader() {
         if (authData.login) authData.login(user as UserInterface);
 
         userService.save(userModel).then(() => {
-            setOpen(false);
+            setModalOpen(false);
         }).catch((error) => {
             console.log(error);
-            setOpen(false);
+            setModalOpen(false);
         });
 
     }
 
     const handleCancel = () => {
-        setOpen(false);
+        setModalOpen(false);
     };
+
+    const drawerOnClick = () => {
+        setDrawerOpen(true);
+    }
+
+    const communitiesOnClick = () => {
+        setDrawerOpen(false);
+        navigate('communities', { preventScrollReset: true });
+    }
 
     return (
         <Flex>
             <Space>
                 <Avatar
-                    icon={<UserOutlined />}
+                    icon={<UserOutlined/>}
                     size={40}
                     style={{
                         color: "black",
-                        background: "white" ,
+                        background: "white",
                         borderWidth: 2,
                         borderColor: "black",
                         cursor: "pointer",
@@ -93,45 +87,18 @@ export function AppHeader() {
                     }}
                     onClick={avatarOnClick}
                 />
-                <div className="user-name">
-                    <span>{ userName }</span>
+                <div className="icon-text">
+                    <span>{userName}</span>
                 </div>
-                {/*<LogoutOutlined*/}
-                {/*    style={{*/}
-                {/*        marginRight: 20,*/}
-                {/*        fontSize: 24,*/}
-                {/*        cursor: "pointer",*/}
-                {/*    }}*/}
-                {/*    onClick={LogoutOnClick}*/}
-                {/*/>*/}
-                <Badge count={2} dot style={{ marginRight: 20 }}>
-                    <MailOutlined style={{
-                        fontSize: 24,
-                        marginRight: 20,
-                        cursor: "pointer",
-                    }}/>
-                </Badge>
-                <Badge count={5} style={{ marginRight: 20 }}>
-                    <BellFilled style={{
-                        fontSize: 24,
-                        marginRight: 20,
-                        cursor: "pointer",
-                    }}/>
-                </Badge>
-                <Space>
-                    {contextHolder}
-                    <QuestionCircleFilled
-                        onClick={() => openNotification('bottomRight')}
-                        style={{
-                            fontSize: 28,
-                            marginRight: 20,
-                            cursor: "pointer",
-                        }}
-                    />
-                </Space>
+                <MenuOutlined style={{
+                    fontSize: 24,
+                    cursor: "pointer",
+                }}
+                onClick={drawerOnClick}
+                />
             </Space>
             <Modal
-                open={open}
+                open={modalOpen}
                 title="Ваши данные"
                 onCancel={handleCancel}
                 footer={[
@@ -221,6 +188,20 @@ export function AppHeader() {
                     </Form.Item>
                 </Form>
             </Modal>
+            <Drawer
+                closable
+                destroyOnClose
+                placement="right"
+                width={400}
+                open={drawerOpen}
+                onClose={() => setDrawerOpen(false)}
+            >
+                <Button type="primary"
+                        style={{ marginBottom: 16 }}
+                        onClick={communitiesOnClick}>
+                    Все сообщества
+                </Button>
+            </Drawer>
         </Flex>
     )
 }

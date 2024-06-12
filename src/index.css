@@ -10,6 +10,41 @@
   font-weight: 400;
 }
 
+.app {
+  display: flex;
+  flex-direction: column;
+  width: 99.2vw;
+  height: 98vh;
+}
+
+.header {
+  height: 60px;
+  background: white;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  padding: 4px 20px 4px 12px;
+}
+
+.footer {
+  height: 40px;
+  background: white;
+  display: flex;
+  justify-content: center;
+}
+
 .ant-col.ant-form-item-label {
   padding: 0 !important;
+}
+
+.icon-text {
+  display: inline-flex;
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+
+@media screen and (max-width: 800px) {
+  .icon-text {
+    display: none;
+  }
 }

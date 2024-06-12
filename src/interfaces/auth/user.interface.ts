@@ -5,5 +5,5 @@ export interface UserInterface {
     about_me: string;
     foto_id?: string;
     email: string;
-    hashed_password: string;
+    secret_password?: string;
 }

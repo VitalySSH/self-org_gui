@@ -13,18 +13,21 @@ export function SignIn() {
     const authData: AuthContextProvider = useAuth();
 
     const onFinish = (formData: SignInFormDataInterface) => {
-        formData.hashed_password = btoa(encryptPassword(formData.password));
+        const secret_password = btoa(encryptPassword(formData.password));
 
         if (formData.remember) {
             localStorage.setItem('email', formData.email);
             localStorage.setItem('password', formData.password);
         }
 
-        AuthApiClientService.login(formData.email, formData.hashed_password)
+        AuthApiClientService.login(formData.email, secret_password)
             .then(async () => {
                 if (!authData.user && authData.login) {
                     const currentUser = await AuthApiClientService.getCurrentUser();
+                    currentUser.secret_password = secret_password;
                     authData.login(currentUser);
+                } else {
+                    navigate(-1);
                 }
             }).catch((error: { response: { status: number; }; }) => {
             if (error.response.status == 401) {
