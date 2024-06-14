@@ -10,12 +10,6 @@
   font-weight: 400;
 }
 
-.body {
-  height: 100%;
-  width: 100%;
-  display: block;
-}
-
 .app {
   display: flex;
   flex-direction: column;

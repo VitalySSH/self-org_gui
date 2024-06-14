@@ -2,16 +2,12 @@ import { Flex, Image, Space, Typography, Layout } from "antd";
 
 export function AboutPage() {
     return (
-        <Layout
-            style={{
-                overflow: "hidden"
-            }}
-        >
+        <Layout>
             <div
                 style={{
                     marginLeft: "auto",
                     marginRight: "auto",
-                    maxWidth: "50%",
+                    maxWidth: "60%",
                     textAlign: "center",
                 }}
             >
@@ -31,7 +27,8 @@ export function AboutPage() {
             <Space
                 style={{
                     padding: 30,
-                }}>
+                }}
+            >
                 <div
                     style={{
                         maxWidth: 500,

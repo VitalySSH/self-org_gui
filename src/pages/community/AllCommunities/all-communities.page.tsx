@@ -1,7 +1,9 @@
+import { EllipsisOutlined } from "@ant-design/icons"
 import { Card, List, Space, Typography } from "antd";
 import { CrudDataSourceService } from "../../../services";
 import { CommunityModel } from "../../../models";
 import { useEffect, useState } from "react";
+import Meta from "antd/es/card/Meta";
 
 
 export function AllCommunities() {
@@ -63,20 +65,16 @@ export function AllCommunities() {
                 renderItem={(item: { title: string; description: string; }) => (
                     <List.Item>
                         <Card
-                            title={item.title}
                             onClick={onClick}
-                            style={{
-                                cursor: "pointer",
-                            }}
-                            styles={{
-                                body: {
-                                    width: '100%',
-                                    height: 120,
-                                    overflowY: "scroll",
-                                    overflowX: "hidden",
-                                }
-                            }}
-                        >{item.description}</Card>
+                            actions={[
+                                <EllipsisOutlined key="ellipsis" />,
+                            ]}
+                        >
+                            <Meta
+                                title={item.title}
+                                description={item.description}
+                            />
+                        </Card>
                     </List.Item>
                 )}/>
         </Space>
