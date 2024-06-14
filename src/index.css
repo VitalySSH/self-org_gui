@@ -10,6 +10,12 @@
   font-weight: 400;
 }
 
+.body {
+  height: 100%;
+  width: 100%;
+  display: block;
+}
+
 .app {
   display: flex;
   flex-direction: column;
@@ -29,8 +35,13 @@
 .footer {
   height: 40px;
   background: white;
-  display: flex;
+  display: inline-flex;
   justify-content: center;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 100;
 }
 
 .ant-col.ant-form-item-label {

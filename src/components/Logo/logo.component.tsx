@@ -9,7 +9,7 @@ export function Logo() {
     }
 
     return (
-        <Flex align="center" justify="center">
+        <Flex>
             <Image
                 height={40}
                 preview={false}
@@ -18,8 +18,8 @@ export function Logo() {
                 style={{
                     width: "auto",
                     cursor: "pointer",
-                    position: "fixed",
-                    top: 8,
+                    position: "absolute",
+                    bottom: 10,
                     marginLeft: 21,
                 }}
             >

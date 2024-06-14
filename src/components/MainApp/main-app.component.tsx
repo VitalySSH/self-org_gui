@@ -10,8 +10,13 @@ import { useAuth } from "../../hooks";
 import {
     AuthHeaderIcons
 } from "../AuthHeaderIcons/auth-header-icons.component.tsx";
-import { AllCommunities } from "../../pages";
-import { Route, Routes } from "react-router-dom";
+import {
+    AboutPage,
+    AllCommunities,
+    MyCommunities,
+    NewCommunity
+} from "../../pages";
+import { Route, Routes, useLocation } from "react-router-dom";
 
 
 const {
@@ -22,12 +27,19 @@ const {
 
 export function MainApp () {
 
+    const location = useLocation();
     const authData: AuthContextProvider = useAuth();
+
     let icons;
     if (authData.user) {
         icons = <AuthHeaderIcons />;
     } else {
         icons = <NotAuthHeaderIcons />;
+    }
+
+    let aboutPage = <div />;
+    if (location.pathname === '/') {
+        aboutPage = <AboutPage />;
     }
 
     return (
@@ -38,8 +50,11 @@ export function MainApp () {
                     {icons}
                 </Header>
                 <Content className="content">
+                    {aboutPage}
                     <Routes>
                         <Route path='/communities' element={<AllCommunities/>} />
+                        <Route path='/my-communities' element={<MyCommunities/>} />
+                        <Route path='/new-community' element={<NewCommunity/>} />
                     </Routes>
                 </Content>
                 <Footer className="footer">

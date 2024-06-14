@@ -68,6 +68,14 @@ export function AllCommunities() {
                             style={{
                                 cursor: "pointer",
                             }}
+                            styles={{
+                                body: {
+                                    width: '100%',
+                                    height: 120,
+                                    overflowY: "scroll",
+                                    overflowX: "hidden",
+                                }
+                            }}
                         >{item.description}</Card>
                     </List.Item>
                 )}/>

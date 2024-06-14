@@ -10,11 +10,10 @@ import TextArea from "antd/lib/input/TextArea";
 import { CrudDataSourceService } from "../../services";
 import { UserModel } from "../../models";
 import { AuthContextProvider, UserInterface } from "../../interfaces";
-import { useNavigate } from "react-router-dom";
+import { RightMenu } from "../RightMenu/right-menu.component.tsx";
 
 export function AuthHeaderIcons() {
 
-    const navigate = useNavigate();
     const [modalOpen, setModalOpen] =
         useState(false);
     const [drawerOpen, setDrawerOpen] =
@@ -64,11 +63,6 @@ export function AuthHeaderIcons() {
 
     const drawerOnClick = () => {
         setDrawerOpen(true);
-    }
-
-    const communitiesOnClick = () => {
-        setDrawerOpen(false);
-        navigate('communities', { preventScrollReset: true });
     }
 
     return (
@@ -192,15 +186,11 @@ export function AuthHeaderIcons() {
                 closable
                 destroyOnClose
                 placement="right"
-                width={400}
+                width={250}
                 open={drawerOpen}
                 onClose={() => setDrawerOpen(false)}
             >
-                <Button type="primary"
-                        style={{ marginBottom: 16 }}
-                        onClick={communitiesOnClick}>
-                    Все сообщества
-                </Button>
+                <RightMenu setDrawerOpen={setDrawerOpen} />
             </Drawer>
         </Flex>
     )
