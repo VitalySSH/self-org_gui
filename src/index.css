@@ -21,9 +21,10 @@
 
 .header {
   height: 60px;
+  width: 100%;
   background: white;
-  display: inline-flex;
-  justify-content: end;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
   padding: 4px 20px 4px 12px;
 }
@@ -38,6 +39,14 @@
   bottom: 0;
   right: 0;
   z-index: 100;
+}
+
+.communities {
+  width: 40vw;
+  padding: 30px;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .ant-col.ant-form-item-label {

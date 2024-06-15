@@ -1,4 +1,3 @@
-import './main-app.component.css';
 import { Layout } from "antd";
 import { AppFooter } from "../AppFooter/app-footer.component.tsx";
 import {
@@ -45,11 +44,11 @@ export function MainApp () {
     return (
         <Layout className="app">
             <Layout>
-                <Header className="main-header">
+                <Header className="header">
                     <Logo />
                     {icons}
                 </Header>
-                <Content className="content">
+                <Content className="main-content">
                     {aboutPage}
                     <Routes>
                         <Route path='/communities' element={<AllCommunities/>} />

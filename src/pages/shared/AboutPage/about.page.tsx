@@ -1,3 +1,4 @@
+import './about.page.css';
 import { Flex, Image, Space, Typography, Layout } from "antd";
 
 export function AboutPage() {
@@ -7,7 +8,7 @@ export function AboutPage() {
                 style={{
                     marginLeft: "auto",
                     marginRight: "auto",
-                    maxWidth: "46%",
+                    maxWidth: "44%",
                     textAlign: "center",
                 }}
             >
@@ -25,9 +26,7 @@ export function AboutPage() {
                 ></div>
             </div>
             <Space
-                style={{
-                    padding: 30,
-                }}
+                className="about-page-card"
             >
                 <div
                     style={{

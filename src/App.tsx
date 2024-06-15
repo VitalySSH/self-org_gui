@@ -12,7 +12,9 @@ import {
     MyProfile,
     SignIn,
     SignUp,
-    Verify2FA, NewCommunity,
+    Verify2FA,
+    NewCommunity,
+    CommunitySettings,
 } from "./pages";
 
 
@@ -48,7 +50,7 @@ function App() {
                           <Community />
                       </ProtectedRoute>
                   }>
-                      <Route path='all-communities' element={<AllCommunities />} />
+                      <Route path='settings' element={<CommunitySettings />} />
                       <Route path='my-communities' element={<MyCommunities />} />
                       <Route path='my-profile' element={<MyProfile />} />
                   </Route>

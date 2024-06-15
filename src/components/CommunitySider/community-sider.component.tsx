@@ -4,6 +4,8 @@ import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     TeamOutlined,
+    SettingOutlined,
+    BulbOutlined,
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
@@ -29,11 +31,13 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-    getItem('Общие настройки сообщества', 'all-communities',
-        'menu-item', <TeamOutlined className="menu-icon" />),
-    getItem('Мои настройки сообщества', 'my-communities',
-        'menu-item', <TeamOutlined className="menu-icon" />),
-    getItem('Мои делегаты', 'my-profile',
+    getItem('Общие настройки', 'settings',
+        'menu-item', <SettingOutlined className="menu-icon" />),
+    getItem('Мои настройки', 'my_settings',
+        'menu-item', <SettingOutlined className="menu-icon" />),
+    getItem('Инициативы', 'my-profile_1',
+        'menu-item', <BulbOutlined className="menu-icon" />),
+    getItem('Мои делегаты', 'my-profile_2',
         'menu-item', <TeamOutlined className="menu-icon" />),
 ];
 

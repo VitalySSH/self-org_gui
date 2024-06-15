@@ -1,10 +1,15 @@
 .content {
     height: 100vh;
     width: 100%;
-    display: grid !important;
+    display: flex;
     margin: 6px 10px;
     padding: 5px;
-    justify-content: center;
+    flex-direction: column;
     align-content: flex-start;
-    overflow: unset;
+    overflow: scroll;
+}
+
+.community-name {
+    margin-left: 3rem;
+    margin-bottom: 2rem !important;
 }

@@ -2,7 +2,16 @@ import {
     UserOutlined,
     MenuOutlined,
 } from "@ant-design/icons"
-import { Avatar, Button, Drawer, Flex, Form, Input, Modal, Space } from "antd";
+import {
+    Avatar,
+    Button,
+    Drawer,
+    Flex,
+    Form,
+    Input,
+    Modal,
+    Space,
+} from "antd";
 import { useAuth } from "../../hooks";
 import './auth-header-icons.component.css';
 import { useState } from "react";

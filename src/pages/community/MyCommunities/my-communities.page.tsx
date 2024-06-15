@@ -1,4 +1,4 @@
-import { Card, List, Space, Typography } from "antd";
+import { Card, Layout, List, Space, Typography } from "antd";
 import { useEffect, useState } from "react";
 import {
     CommunityAoDataSourceService,
@@ -52,76 +52,75 @@ export function MyCommunities() {
     }, [loadData]);
 
     return (
-        <Space
-            direction="vertical"
-            style={{
-                width: "40vw",
-                padding: "0 6px",
-            }}
-        >
-            <Typography.Title level={3}>Мои сообщества</Typography.Title>
-            <List
-                itemLayout="vertical"
-                dataSource={dataSource}
-                loading={loading}
-                renderItem={(item: CommunityCard) => (
-                    <List.Item>
-                        <Card
-                            actions={[
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        color: "black",
-                                        alignContent: "center",
-                                        justifyContent: "center",
-                                    }}
-                                    onClick={() => {
-                                        const path =
-                                            `/my-communities/${item.id}`;
-                                        navigate(path);
-                                    }}
-                                >
-                                    <LoginOutlined
+        <Layout>
+            <Space
+                direction="vertical"
+                className="communities"
+            >
+                <Typography.Title level={3}>Мои сообщества</Typography.Title>
+                <List
+                    itemLayout="vertical"
+                    dataSource={dataSource}
+                    loading={loading}
+                    renderItem={(item: CommunityCard) => (
+                        <List.Item>
+                            <Card
+                                actions={[
+                                    <div
                                         style={{
-                                            fontSize: 18
+                                            display: "flex",
+                                            color: "black",
+                                            alignContent: "center",
+                                            justifyContent: "center",
                                         }}
-                                    />
-                                    <span
+                                        onClick={() => {
+                                            const path =
+                                                `/my-communities/${item.id}`;
+                                            navigate(path);
+                                        }}
+                                    >
+                                        <LoginOutlined
+                                            style={{
+                                                fontSize: 18
+                                            }}
+                                        />
+                                        <span
+                                            style={{
+                                                marginLeft: 10
+                                            }}
+                                        >Перейти</span>
+                                    </div>,
+                                    <div
                                         style={{
-                                            marginLeft: 10
+                                            display: "flex",
+                                            color: "black",
+                                            alignContent: "center",
+                                            justifyContent: "center",
                                         }}
-                                    >Перейти</span>
-                                </div>,
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        color: "black",
-                                        alignContent: "center",
-                                        justifyContent: "center",
-                                    }}
-                                >
-                                    <LogoutOutlined
-                                        style={{
-                                            fontSize: 18
-                                        }}
-                                    />
-                                    <span
-                                        style={{
-                                            marginLeft: 10
-                                        }}
-                                    >Покинуть</span>
-                                </div>,
-                            ]}
-                        >
-                            <Meta
-                                title={item.title}
-                                description={item.description}
-                            />
-                        </Card>
-                    </List.Item>
-                )}
-            />
-        </Space>
+                                    >
+                                        <LogoutOutlined
+                                            style={{
+                                                fontSize: 18
+                                            }}
+                                        />
+                                        <span
+                                            style={{
+                                                marginLeft: 10
+                                            }}
+                                        >Покинуть</span>
+                                    </div>,
+                                ]}
+                            >
+                                <Meta
+                                    title={item.title}
+                                    description={item.description}
+                                />
+                            </Card>
+                        </List.Item>
+                    )}
+                />
+            </Space>
+        </Layout>
     );
 }
 

@@ -1,5 +1,5 @@
 import { EllipsisOutlined } from "@ant-design/icons"
-import { Card, List, Space, Typography } from "antd";
+import { Card, Layout, List, Space, Typography } from "antd";
 import { CrudDataSourceService } from "../../../services";
 import { CommunityModel } from "../../../models";
 import { useEffect, useState } from "react";
@@ -42,44 +42,37 @@ export function AllCommunities() {
         }
     }
 
-    const onClick = () => {
-
-    }
-
     useEffect(() => {
         loadData();
     }, [loadData]);
 
     return (
-        <Space
-            direction="vertical"
-            style={{
-                width: "40vw",
-                overflow: "auto",
-                padding: "0 6px",
-            }}
-        >
-            <Typography.Title level={3}>Сообщества</Typography.Title>
-            <List
-                itemLayout="vertical"
-                dataSource={dataSource}
-                loading={loading}
-                renderItem={(item: { title: string; description: string; }) => (
-                    <List.Item>
-                        <Card
-                            onClick={onClick}
-                            actions={[
-                                <EllipsisOutlined key="ellipsis" />,
-                            ]}
-                        >
-                            <Meta
-                                title={item.title}
-                                description={item.description}
-                            />
-                        </Card>
-                    </List.Item>
-                )}
-            />
-        </Space>
+        <Layout>
+            <Space
+                direction="vertical"
+                className="communities"
+            >
+                <Typography.Title level={3}>Сообщества</Typography.Title>
+                <List
+                    itemLayout="vertical"
+                    dataSource={dataSource}
+                    loading={loading}
+                    renderItem={(item: { title: string; description: string; }) => (
+                        <List.Item>
+                            <Card
+                                actions={[
+                                    <EllipsisOutlined key="ellipsis" />,
+                                ]}
+                            >
+                                <Meta
+                                    title={item.title}
+                                    description={item.description}
+                                />
+                            </Card>
+                        </List.Item>
+                    )}
+                />
+            </Space>
+        </Layout>
     );
 }

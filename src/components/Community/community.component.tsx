@@ -1,8 +1,8 @@
-import { Layout } from "antd";
+import {Layout, Typography} from "antd";
 import './community.component.css';
 import { Route, Routes, useParams } from "react-router-dom";
 import {
-    AllCommunities,
+    CommunitySettings,
     MyCommunities,
     MyProfile
 } from "../../pages";
@@ -13,6 +13,9 @@ import {
 import {
     AuthHeaderIcons
 } from "../AuthHeaderIcons/auth-header-icons.component.tsx";
+import { CrudDataSourceService } from "../../services";
+import { CommunityModel } from "../../models";
+import {useEffect, useState} from "react";
 
 
 const {
@@ -23,20 +26,56 @@ const {
 
 export function Community () {
 
-    const { id } = useParams()
-    console.log(id);
+    const { id } = useParams();
+    const [loading, setLoading] =
+        useState(true);
+    const [community, setCommunity] =
+        useState({} as CommunityModel);
+    const [communityName, setCommunityName] =
+        useState('');
+
+    const communityService =
+        new CrudDataSourceService(CommunityModel);
+
+    const getCommunity = () => {
+        if (loading && id) {
+            communityService.get(id, [
+                'main_settings.name', 'main_settings.description'
+            ]).then(community => {
+                    setCommunity(community);
+                    const name =
+                        community.main_settings?.name?.name || '';
+                    setCommunityName(name);
+                }).catch((error) => {
+                console.log(error);
+            }).finally(() => {
+                setLoading(false);
+            });
+        }
+    }
+
+    useEffect(() => {
+        getCommunity();
+    }, [getCommunity]);
 
     return (
         <Layout className="app">
             <CommunitySider />
             <Layout>
                 <Header className="header">
-                    <AuthHeaderIcons/>
+                    <Typography.Title
+                        level={4}
+                        className="community-name"
+                    >{communityName}</Typography.Title>
+                    <AuthHeaderIcons />
                 </Header>
                 <Content className="content">
                     {/*<CommunityPanel />*/}
                     <Routes>
-                        <Route path='all-communities' element={<AllCommunities/>} />
+                        <Route path='settings' element={
+                                <CommunitySettings community={community} />
+                            }
+                        />
                         <Route path='my-communities' element={<MyCommunities/>} />
                         <Route path='my-profile' element={<MyProfile />} />
                     </Routes>

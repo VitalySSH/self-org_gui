@@ -1,10 +1,18 @@
-import { Typography } from "antd";
+import { Layout, Space, Typography } from "antd";
 
 export function NewCommunity() {
     return (
-        <div>
-            <Typography.Title level={3}>Новое сообщество</Typography.Title>
-        </div>
+        <Layout>
+            <Space
+                direction="vertical"
+                className="communities"
+            >
+                <Typography.Title
+                    level={3}
+                    style={{ textAlign: "center" }}
+                >Новое сообщество</Typography.Title>
+            </Space>
+        </Layout>
     );
 }
 

@@ -32,7 +32,7 @@ const items: MenuItem[] = [
 ];
 
 
-export function RightMenu(data: any) {
+export function RightMenu(props: any) {
 
     const navigate = useNavigate();
 
@@ -41,7 +41,7 @@ export function RightMenu(data: any) {
             mode="inline"
             items={items}
             onClick={(item) => {
-                data.setDrawerOpen(false);
+                props.setDrawerOpen(false);
                 navigate(`/${item.key}`, { preventScrollReset: true });
             }}
             style={{
