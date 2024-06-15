@@ -8,3 +8,4 @@ export * from './crud/model-config.interface';
 export * from './crud/filter-item.interface';
 export * from './crud/order-item.interface';
 export * from './crud/pagination.interface';
+export * from './community/community-card.interface';

@@ -7,7 +7,7 @@ export function AboutPage() {
                 style={{
                     marginLeft: "auto",
                     marginRight: "auto",
-                    maxWidth: "60%",
+                    maxWidth: "46%",
                     textAlign: "center",
                 }}
             >

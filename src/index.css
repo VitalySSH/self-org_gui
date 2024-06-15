@@ -13,14 +13,16 @@
 .app {
   display: flex;
   flex-direction: column;
-  width: 99.2vw;
+  width: 99vw;
   height: 98vh;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .header {
   height: 60px;
   background: white;
-  display: flex;
+  display: inline-flex;
   justify-content: end;
   align-items: center;
   padding: 4px 20px 4px 12px;

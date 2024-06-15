@@ -1,6 +1,6 @@
 import { Layout } from "antd";
 import './community.component.css';
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useParams } from "react-router-dom";
 import {
     AllCommunities,
     MyCommunities,
@@ -22,6 +22,9 @@ const {
 } = Layout;
 
 export function Community () {
+
+    const { id } = useParams()
+    console.log(id);
 
     return (
         <Layout className="app">

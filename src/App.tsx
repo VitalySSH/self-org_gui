@@ -20,7 +20,7 @@ function App() {
       return (
           <AuthProvider>
               <Routes>
-                  <Route path='/' element={<MainApp />}
+                  <Route path='/*' element={<MainApp />}
                   >
                       <Route path='communities' element={
                           <ProtectedRoute>
@@ -31,8 +31,9 @@ function App() {
                           <ProtectedRoute>
                             <MyCommunities />
                           </ProtectedRoute>
-                      } />
-                      <Route path='/new-community' element={
+                      }>
+                      </Route>
+                      <Route path='new-community' element={
                           <ProtectedRoute>
                             <NewCommunity/>
                           </ProtectedRoute>
@@ -42,7 +43,7 @@ function App() {
                   <Route path='/sign-in' element={<SignIn />} />
                   <Route path='/sign-up' element={<SignUp />} />
 
-                  <Route path='/com/*' element={
+                  <Route path='my-communities/:id/*' element={
                       <ProtectedRoute>
                           <Community />
                       </ProtectedRoute>

@@ -26,8 +26,10 @@ export function AllCommunities() {
                     const items: { title: string, description: string }[] = [];
                     data.forEach(community => {
                         const item = {
-                            title: community.main_settings?.name?.name || '',
-                            description: community.main_settings?.description?.value || '',
+                            title: community
+                                .main_settings?.name?.name || '',
+                            description: community
+                                .main_settings?.description?.value || '',
                         };
                         items.push(item);
                     });
@@ -76,7 +78,8 @@ export function AllCommunities() {
                             />
                         </Card>
                     </List.Item>
-                )}/>
+                )}
+            />
         </Space>
     );
 }

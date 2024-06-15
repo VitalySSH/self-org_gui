@@ -1,21 +1,21 @@
 import { v4 } from 'uuid';
-import {CrudApiDataInterface, Pagination} from "../interfaces";
-import axios, { AxiosInstance } from "axios";
+import { CrudApiDataInterface, Pagination } from "../interfaces";
 import {
     ApiModel,
     CommunityDescriptionModel,
     CommunityModel,
     CommunityNameModel,
     CommunitySettingsModel,
-    DelegateSettingsModel, InitiativeCategoryModel,
+    DelegateSettingsModel,
+    InitiativeCategoryModel,
     RequestMemberModel,
-    StatusModel, UserCommunitySettingsModel,
+    StatusModel,
+    UserCommunitySettingsModel,
     UserModel,
 } from "../models";
-import {Filters, ModelType, Orders} from "../types";
-import AuthApiClientService from "./auth-api-client.service.ts";
-import { CurrentUserService } from "./current-user.service.ts";
+import { Filters, ModelType, Orders } from "../types";
 import { dataSourceConfig } from "../annotations";
+import { DataSourceService } from "./data-source.service.ts";
 
 @dataSourceConfig({
     models: {
@@ -31,49 +31,25 @@ import { dataSourceConfig } from "../annotations";
         user_community_settings: UserCommunitySettingsModel,
     }
 })
-export class CrudDataSourceService<T extends ApiModel> {
+export class CrudDataSourceService<T extends ApiModel>
+    extends DataSourceService{
 
     modelType: ModelType<T>;
     model: T;
-    http: AxiosInstance;
 
-    constructor(modelType: ModelType<T>) {
-        this.http = axios.create({
-            baseURL: 'http://localhost:8080/api/v1/crud',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            withCredentials: true,
-        });
+    constructor(
+        modelType: ModelType<T>,
+        baseURL = 'http://localhost:8080/api/v1/crud',
+    ) {
+        super(baseURL);
         this.modelType = modelType;
         this.model = new this.modelType();
-        this.refreshToken();
     }
 
     private getModel(entityName: string): ModelType<any> {
-        const config = Reflect.getMetadata('DataSourceConfig', this.constructor);
+        const config = Reflect.getMetadata(
+            'DataSourceConfig', this.constructor);
         return config.models[entityName];
-    }
-
-    private refreshToken() {
-        this.http.interceptors.response.use(
-            (response) => {
-                return response;
-            },
-            async (error) => {
-                const originalConfig = error.config;
-                const userData = CurrentUserService.user;
-
-                if (userData && userData.secret_password && error.response?.status === 401 && !originalConfig._retry) {
-                    originalConfig._retry = true;
-                    await AuthApiClientService.asyncLogin(userData.email, userData.secret_password);
-
-                    return this.http(originalConfig);
-                }
-
-                return Promise.reject(error);
-            }
-        );
     }
 
     createRecord() {
@@ -88,31 +64,40 @@ export class CrudDataSourceService<T extends ApiModel> {
         const oneToMany = model.oneToMany;
         const manyToMany = model.manyToMany;
 
-        for (const [key, value] of Object.entries(apiData.attributes || {})) {
+        const attributesData = apiData.attributes || {};
+        for (const [key, value] of Object.entries(attributesData)) {
             if (attributes[key]) {
                 model[key] = value;
             }
         }
-        for (const [key, value] of Object.entries(apiData.readonly || {})) {
+        const readonlyData = apiData.readonly || {};
+        for (const [key, value] of Object.entries(readonlyData)) {
             if (readonly[key]) {
                 model[key] = value;
             }
         }
-        for (const [key, value] of Object.entries(apiData.relations || {})) {
+        const relationsData = apiData.relations || {};
+        for (const [key, value] of Object.entries(relationsData)) {
             const oneToManyEntityName = oneToMany[key]?.entityName;
             if (oneToManyEntityName) {
                 if (Object.keys(value || {}).length) {
-                    const oneToManyModel = this.getModel(oneToManyEntityName);
-                    model[key] = this.jsonApiToModel(value, new oneToManyModel());
+                    const oneToManyModel =
+                        this.getModel(oneToManyEntityName);
+                    model[key] =
+                        this.jsonApiToModel(value, new oneToManyModel());
                 }
             } else {
                 const manyToManyEntityName = manyToMany[key]?.entityName;
                 if (manyToManyEntityName) {
                     const relations: T[] = [];
                     if (value.length) {
-                        value.forEach((relation: CrudApiDataInterface) => {
-                            const manyToManyModel = this.getModel(manyToManyEntityName);
-                            const relationModel = this.jsonApiToModel(relation, new manyToManyModel());
+                        value.forEach(
+                            (relation: CrudApiDataInterface) => {
+                            const manyToManyModel =
+                                this.getModel(manyToManyEntityName);
+                            const relationModel =
+                                this.jsonApiToModel(relation,
+                                    new manyToManyModel());
                             relations.push(relationModel);
                         });
                     }
@@ -183,7 +168,12 @@ export class CrudDataSourceService<T extends ApiModel> {
         return this.jsonApiToModel(response.data);
     }
 
-    list(filters?: Filters, orders?: Orders, pagination?: Pagination, include?: string[]) {
+    async list(
+        filters?: Filters,
+        orders?: Orders,
+        pagination?: Pagination,
+        include?: string[]
+    ) {
         const url = `/${this.model.entityName}/list`;
         const data = {
             filters,
@@ -192,15 +182,14 @@ export class CrudDataSourceService<T extends ApiModel> {
             include,
         }
 
-        return this.http.post<CrudApiDataInterface[]>(url, data)
-            .then(r => {
-                const records: T[] = [];
-                r.data.forEach((item) => {
-                    const record = this.jsonApiToModel(item);
-                    records.push(record);
-                });
-                return records;
-            });
+        const r =
+            await this.http.post<CrudApiDataInterface[]>(url, data);
+        const records: T[] = [];
+        r.data.forEach((item) => {
+            const record = this.jsonApiToModel(item);
+            records.push(record);
+        });
+        return records;
     }
 
     save(model: T, create: boolean = false) {
