@@ -14,6 +14,9 @@ export class UserCommunitySettingsModel extends ApiModel{
     @oneToMany('user')
     user?: UserModel;
 
+    @attribute()
+    community_id?: string;
+
     @oneToMany('community_name')
     name?: CommunityNameModel;
 

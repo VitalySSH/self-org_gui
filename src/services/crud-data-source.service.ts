@@ -146,26 +146,18 @@ export class CrudDataSourceService<T extends ApiModel>
             const param = `include=${inc}`
             included.push(param);
         });
+
         return included.length ? url + '?' + included.join('&') : url;
     }
 
 
-    get(id: string, include?: string[]) {
+    async get(id: string, include?: string[]) {
         const url = this.buildUrlWithInclude(
             `/${this.model.entityName}/${id}`, include)
-        return this.http.get<CrudApiDataInterface>(url)
-            .then(r => {
-                return this.jsonApiToModel(r.data)
-            });
-    }
-
-    async asyncGet(id: string, include?: string[]) {
-        const url = this.buildUrlWithInclude(
-            `/${this.model.entityName}/${id}`, include)
-        const response =
+        const r =
             await this.http.get<CrudApiDataInterface>(url);
 
-        return this.jsonApiToModel(response.data);
+        return this.jsonApiToModel(r.data);
     }
 
     async list(
@@ -189,21 +181,26 @@ export class CrudDataSourceService<T extends ApiModel>
             const record = this.jsonApiToModel(item);
             records.push(record);
         });
+
         return records;
     }
 
-    save(model: T, create: boolean = false) {
+    async save(model: T, create: boolean = false) {
         const data = this.modelToJsonApi(model);
 
         if (!create && model.id) {
             const url = `/${this.model.entityName}/${model.id}`;
-            return this.http.patch<CrudApiDataInterface>(url, data);
+            const r =
+                await this.http.patch<CrudApiDataInterface>(url, data);
+
+            return this.jsonApiToModel(r.data);
         } else {
             const url = `/${this.model.entityName}`;
-            return this.http.post<CrudApiDataInterface>(url, data);
+            const r =
+                await this.http.post<CrudApiDataInterface>(url, data);
+
+            return this.jsonApiToModel(r.data);
         }
-
-
     }
 
 

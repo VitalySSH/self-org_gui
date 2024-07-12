@@ -15,6 +15,7 @@ import {
     Verify2FA,
     NewCommunity,
     CommunitySettings,
+    MyCommunitySettings,
 } from "./pages";
 
 
@@ -51,7 +52,9 @@ function App() {
                       </ProtectedRoute>
                   }>
                       <Route path='settings' element={<CommunitySettings />} />
-                      <Route path='my-communities' element={<MyCommunities />} />
+                      <Route path='my-settings' element={
+                          <MyCommunitySettings />
+                      } />
                       <Route path='my-profile' element={<MyProfile />} />
                   </Route>
 

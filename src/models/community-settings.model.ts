@@ -3,7 +3,7 @@ import { attribute, manyToMany, modelConfig, oneToMany } from "../annotations";
 import { CommunityDescriptionModel } from "./community-description.model.ts";
 import { CommunityNameModel } from "./community-name.model.ts";
 import { RequestMemberModel } from "./request-member.model.ts";
-import {InitiativeCategoryModel} from "./initiative-category.model.ts";
+import { InitiativeCategoryModel } from "./initiative-category.model.ts";
 
 @modelConfig({
     entityName: 'community_settings',

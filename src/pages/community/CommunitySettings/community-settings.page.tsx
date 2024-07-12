@@ -1,12 +1,88 @@
-import { Checkbox, Form, Input, Layout, Space, Typography } from "antd";
+import {
+    Checkbox,
+    Form,
+    Input,
+    Layout,
+    message,
+    Space,
+    Spin,
+    Typography
+} from "antd";
 import TextArea from "antd/lib/input/TextArea";
+import { CrudDataSourceService } from "../../../services";
+import {
+    CommunityModel,
+} from "../../../models";
+import { useEffect, useState } from "react";
 
 export function CommunitySettings(props: any) {
 
-    const settings = props.community?.main_settings;
+    const [messageApi, contextHolder] =
+        message.useMessage();
+    const [settingsLoading, setSettingsLoading] =
+        useState(true);
+    const communityService =
+        new CrudDataSourceService(CommunityModel);
+
+    const communityId = props?.communityId;
+    const [form] = Form.useForm();
+
+    const errorInfo = (content: string) => {
+        messageApi.open({
+            type: 'error',
+            content: content,
+        }).then();
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const getCommunitySettings = () => {
+        if (settingsLoading && communityId) {
+            communityService.get(communityId,
+                [
+                    'main_settings.name',
+                    'main_settings.description',
+                    'creator',
+                ])
+                .then(community => {
+                    const firstname =
+                        community?.creator?.firstname;
+                    const surname =
+                        community?.creator?.surname;
+                    const creatorFio = `${firstname} ${surname}`;
+                    const settingsInst =
+                        community.main_settings;
+                    form.setFieldValue('name', settingsInst?.name?.name);
+                    form.setFieldValue(
+                        'description',
+                        settingsInst?.description?.value || '');
+                    form.setFieldValue('quorum', settingsInst?.quorum);
+                    form.setFieldValue('vote', settingsInst?.vote);
+                    form.setFieldValue('is_secret_ballot',
+                        settingsInst?.is_secret_ballot || false);
+                    form.setFieldValue('is_can_offer',
+                        settingsInst?.is_can_offer || false);
+                    form.setFieldValue('is_minority_not_participate',
+                        settingsInst?.is_minority_not_participate || false);
+                    form.setFieldValue('creator', creatorFio);
+            }).catch((error) => {
+                errorInfo(`Ошибка получения сообщества: ${error}`);
+            }).finally(() => {
+                setSettingsLoading(false);
+            });
+        } else {
+            if (settingsLoading) {
+                setSettingsLoading(false);
+            }
+        }
+    }
+
+    useEffect(() => {
+        getCommunitySettings();
+    }, [getCommunitySettings]);
 
     return (
         <Layout>
+            {contextHolder}
             <Typography.Title
                 level={4}
                 style={{ marginLeft: 20 }}
@@ -14,65 +90,77 @@ export function CommunitySettings(props: any) {
             <Space
                 style={{ marginTop: 30 }}
             >
-                <Form
-                    name='community-settings'
-                    initialValues={{
-                        name: settings?.name?.name || '',
-                        description: settings?.description?.value || '',
-                        quorum: settings?.quorum,
-                        vote: settings?.vote,
-                    }}
+                <Spin
+                    tip="Загрузка данных"
+                    size="large"
+                    spinning={settingsLoading}
                 >
-                    <Form.Item
-                        name='name'
-                        label='Наименование'
-                        labelCol={{ span: 24 }}
+                    <Form
+                        name='community-settings'
+                        form={form}
+                        style={{ width: 600 }}
                     >
-                        <Input readOnly />
-                    </Form.Item>
-                    <Form.Item
-                        name='description'
-                        label='Описание'
-                        labelCol={{ span: 24 }}
-                    >
-                        <TextArea readOnly rows={5} />
-                    </Form.Item>
-                    <Form.Item
-                        name='quorum'
-                        label='Кворум'
-                        labelCol={{ span: 24 }}
-                    >
-                        <Input type="number" readOnly />
-                    </Form.Item>
-                    <Form.Item
-                        name='vote'
-                        label='Принятие решения'
-                        labelCol={{ span: 24 }}
-                    >
-                        <Input type="number" readOnly />
-                    </Form.Item>
-                    <Form.Item
-                        name='is_secret_ballot'
-                        label='Тайное голосавание?'
-                        labelCol={{ span: 24 }}
-                    >
-                        <Checkbox checked={settings?.is_secret_ballot || false} />
-                    </Form.Item>
-                    <Form.Item
-                        name='is_can_offer'
-                        label='Оказываем услуги другим сообществам?'
-                        labelCol={{ span: 24 }}
-                    >
-                        <Checkbox checked={settings?.is_can_offer || false} />
-                    </Form.Item>
-                    <Form.Item
-                        name='is_minority_not_participate'
-                        label='Меньшинство обязано подчиниться большинству?'
-                        labelCol={{ span: 24 }}
-                    >
-                        <Checkbox checked={settings?.is_minority_not_participate || false} />
-                    </Form.Item>
-                </Form>
+                        <Form.Item
+                            name='name'
+                            label='Наименование'
+                            labelCol={{ span: 24 }}
+                        >
+                            <Input readOnly />
+                        </Form.Item>
+                        <Form.Item
+                            name='description'
+                            label='Описание'
+                            labelCol={{ span: 24 }}
+                        >
+                            <TextArea readOnly rows={5} />
+                        </Form.Item>
+                        <Form.Item
+                            name='quorum'
+                            label='Кворум'
+                            labelCol={{ span: 24 }}
+                        >
+                            <Input type="number" readOnly />
+                        </Form.Item>
+                        <Form.Item
+                            name='vote'
+                            label='Принятие решения'
+                            labelCol={{ span: 24 }}
+                        >
+                            <Input type="number" readOnly />
+                        </Form.Item>
+                        <Form.Item
+                            name='is_secret_ballot'
+                            label='Тайное голосавание?'
+                            labelCol={{ span: 24 }}
+                            valuePropName="checked"
+                        >
+                            <Checkbox />
+                        </Form.Item>
+                        <Form.Item
+                            name='is_can_offer'
+                            label='Оказываем услуги другим сообществам?'
+                            labelCol={{ span: 24 }}
+                            valuePropName="checked"
+                        >
+                            <Checkbox />
+                        </Form.Item>
+                        <Form.Item
+                            name='is_minority_not_participate'
+                            label='Меньшинство обязано подчиниться большинству?'
+                            labelCol={{ span: 24 }}
+                            valuePropName="checked"
+                        >
+                            <Checkbox />
+                        </Form.Item>
+                        <Form.Item
+                            name='creator'
+                            label='Создатель'
+                            labelCol={{ span: 24 }}
+                        >
+                            <Input readOnly />
+                        </Form.Item>
+                    </Form>
+                </Spin>
             </Space>
         </Layout>
     );

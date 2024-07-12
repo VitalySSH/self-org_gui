@@ -39,7 +39,7 @@ export function AuthHeaderIcons() {
     }
 
     const LogoutOnClick = () => {
-        if (authData.logout) authData.logout();
+        authData.logout();
     }
 
     const onFinish = (formData: object) => {
@@ -55,7 +55,7 @@ export function AuthHeaderIcons() {
             user[key] = value;
         }
 
-        if (authData.login) authData.login(user as UserInterface);
+        authData.login(user as UserInterface);
 
         userService.save(userModel).then(() => {
             setModalOpen(false);
@@ -109,6 +109,7 @@ export function AuthHeaderIcons() {
                         Выйти
                     </Button>,
                 ]}
+                style={{ top: 50 }}
             >
                 <div className="profile-avatar">
                     <Avatar

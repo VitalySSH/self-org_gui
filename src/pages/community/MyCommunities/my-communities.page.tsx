@@ -52,7 +52,9 @@ export function MyCommunities() {
     }, [loadData]);
 
     return (
-        <Layout>
+        <Layout
+            style={{ height: '100%', overflowY: "scroll" }}
+        >
             <Space
                 direction="vertical"
                 className="communities"

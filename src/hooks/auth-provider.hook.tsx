@@ -6,6 +6,8 @@ import {
 } from "../interfaces";
 import { AuthContext } from './const/hooks.const.ts';
 import { useNavigate } from "react-router-dom";
+import { CrudDataSourceService } from "../services";
+import { UserModel } from "../models";
 
 
 
@@ -13,6 +15,9 @@ export const AuthProvider = (component: ProviderComponent) => {
 
     const navigate = useNavigate();
     const [user, setUser] = useLocalStorage('user', null);
+
+    const userService =
+        new CrudDataSourceService(UserModel);
 
     const login = (user: UserInterface) => {
         setUser(user);
@@ -23,10 +28,18 @@ export const AuthProvider = (component: ProviderComponent) => {
         navigate('/', { preventScrollReset: true });
     };
 
+    const getUserRelation = (): UserModel => {
+        const userModel = userService.createRecord();
+        userModel.id = user.id;
+
+        return userModel;
+    };
+
     const value: AuthContextProvider = {
         user,
         login,
         logout,
+        getUserRelation,
     };
 
 

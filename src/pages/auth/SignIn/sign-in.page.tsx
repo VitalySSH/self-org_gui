@@ -22,7 +22,7 @@ export function SignIn() {
 
         AuthApiClientService.login(formData.email, secret_password)
             .then(async () => {
-                if (!authData.user && authData.login) {
+                if (!authData.user) {
                     const currentUser = await AuthApiClientService.getCurrentUser();
                     currentUser.secret_password = secret_password;
                     authData.login(currentUser);

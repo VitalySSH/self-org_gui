@@ -9,3 +9,4 @@ export * from './crud/filter-item.interface';
 export * from './crud/order-item.interface';
 export * from './crud/pagination.interface';
 export * from './community/community-card.interface';
+export * from './community/community-settings.interface';

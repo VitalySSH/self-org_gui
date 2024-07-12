@@ -1,9 +1,9 @@
-import {Layout, Typography} from "antd";
+import { Layout, Typography } from "antd";
 import './community.component.css';
 import { Route, Routes, useParams } from "react-router-dom";
 import {
     CommunitySettings,
-    MyCommunities,
+    MyCommunitySettings,
     MyProfile
 } from "../../pages";
 import { AppFooter } from "../AppFooter/app-footer.component.tsx";
@@ -15,7 +15,7 @@ import {
 } from "../AuthHeaderIcons/auth-header-icons.component.tsx";
 import { CrudDataSourceService } from "../../services";
 import { CommunityModel } from "../../models";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 
 const {
@@ -29,26 +29,21 @@ export function Community () {
     const { id } = useParams();
     const [loading, setLoading] =
         useState(true);
-    const [community, setCommunity] =
-        useState({} as CommunityModel);
     const [communityName, setCommunityName] =
         useState('');
 
     const communityService =
         new CrudDataSourceService(CommunityModel);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const getCommunity = () => {
         if (loading && id) {
-            communityService.get(id, [
-                'main_settings.name', 'main_settings.description'
-            ]).then(community => {
-                    setCommunity(community);
+            communityService.get(id, ['main_settings.name'])
+                .then(communityInst => {
                     const name =
-                        community.main_settings?.name?.name || '';
+                        communityInst.main_settings?.name?.name || '';
                     setCommunityName(name);
-                }).catch((error) => {
-                console.log(error);
-            }).finally(() => {
+                }).finally(() => {
                 setLoading(false);
             });
         }
@@ -70,13 +65,14 @@ export function Community () {
                     <AuthHeaderIcons />
                 </Header>
                 <Content className="content">
-                    {/*<CommunityPanel />*/}
                     <Routes>
                         <Route path='settings' element={
-                                <CommunitySettings community={community} />
+                                <CommunitySettings communityId={id}/>
                             }
                         />
-                        <Route path='my-communities' element={<MyCommunities/>} />
+                        <Route path='my-settings' element={
+                            <MyCommunitySettings communityId={id} />
+                        } />
                         <Route path='my-profile' element={<MyProfile />} />
                     </Routes>
                 </Content>

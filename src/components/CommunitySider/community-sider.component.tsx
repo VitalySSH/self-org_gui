@@ -33,7 +33,7 @@ function getItem(
 const items: MenuItem[] = [
     getItem('Общие настройки', 'settings',
         'menu-item', <SettingOutlined className="menu-icon" />),
-    getItem('Мои настройки', 'my_settings',
+    getItem('Мои настройки', 'my-settings',
         'menu-item', <SettingOutlined className="menu-icon" />),
     getItem('Инициативы', 'my-profile_1',
         'menu-item', <BulbOutlined className="menu-icon" />),
