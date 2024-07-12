@@ -1,7 +1,11 @@
 import { Menu, MenuProps } from "antd";
 import './right-menu.component.css'
 import React from "react";
-import { TeamOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import {
+    TeamOutlined,
+    PlusCircleOutlined,
+    UserAddOutlined,
+} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -29,6 +33,8 @@ const items: MenuItem[] = [
         'menu-item', <TeamOutlined className="menu-icon" />),
     getItem('Мои сообщества', 'my-communities',
         'menu-item', <TeamOutlined className="menu-icon" />),
+    getItem('Мои заявки на вступление', 'my-add-requests',
+        'menu-item', <UserAddOutlined className="menu-icon" />),
 ];
 
 
@@ -45,7 +51,7 @@ export function RightMenu(props: any) {
                 navigate(`/${item.key}`, { preventScrollReset: true });
             }}
             style={{
-                width: '100%'
+                width: 450
             }}
         />
     )

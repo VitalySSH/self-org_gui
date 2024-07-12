@@ -196,7 +196,7 @@ export function AuthHeaderIcons() {
                 closable
                 destroyOnClose
                 placement="right"
-                width={250}
+                width={300}
                 open={drawerOpen}
                 onClose={() => setDrawerOpen(false)}
             >

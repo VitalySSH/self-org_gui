@@ -25,7 +25,11 @@ export function MyCommunities() {
         if (loading) {
             communityService
                 .myList(undefined, undefined, undefined,
-                    ['main_settings.name', 'main_settings.description'])
+                    [
+                        'user_settings',
+                        'main_settings.name',
+                        'main_settings.description',
+                    ])
                 .then(data => {
                     const communities: CommunityCard[] = [];
                     data.forEach(community => {
@@ -35,6 +39,7 @@ export function MyCommunities() {
                                 .main_settings?.name?.name || '',
                             description: community
                                 .main_settings?.description?.value || '',
+                            members: (community.user_settings || []).length,
                         };
                         communities.push(communityItem);
                     });
@@ -117,6 +122,9 @@ export function MyCommunities() {
                                     title={item.title}
                                     description={item.description}
                                 />
+                                <div className="community-members">
+                                    Участников: {item.members}
+                                </div>
                             </Card>
                         </List.Item>
                     )}

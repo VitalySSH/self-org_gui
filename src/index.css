@@ -49,6 +49,10 @@
   margin-right: auto;
 }
 
+.community-members {
+  margin-top: 10px;
+}
+
 .ant-col.ant-form-item-label {
   padding: 0 !important;
 }

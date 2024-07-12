@@ -6,6 +6,9 @@ import {
     TeamOutlined,
     SettingOutlined,
     BulbOutlined,
+    ToolOutlined,
+    UserAddOutlined,
+    UserDeleteOutlined,
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
@@ -34,11 +37,15 @@ const items: MenuItem[] = [
     getItem('Общие настройки', 'settings',
         'menu-item', <SettingOutlined className="menu-icon" />),
     getItem('Мои настройки', 'my-settings',
-        'menu-item', <SettingOutlined className="menu-icon" />),
-    getItem('Инициативы', 'my-profile_1',
+        'menu-item', <ToolOutlined className="menu-icon" />),
+    getItem('Инициативы', 'initiatives',
         'menu-item', <BulbOutlined className="menu-icon" />),
-    getItem('Мои делегаты', 'my-profile_2',
+    getItem('Мои делегаты', 'my-delegates',
         'menu-item', <TeamOutlined className="menu-icon" />),
+    getItem('Заявки на вступление', 'add-member',
+        'menu-item', <UserAddOutlined className="menu-icon" />),
+    getItem('Заявки на исключение', 'remove-member',
+        'menu-item', <UserDeleteOutlined className="menu-icon" />),
 ];
 
 export function CommunitySider() {

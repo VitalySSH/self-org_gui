@@ -109,7 +109,7 @@ export function NewCommunity() {
                                                         setButtonLoading(false);
                                                         successInfo('Сообщество создано');
                                                         setTimeout(() => {
-                                                            navigate('/communities');
+                                                            navigate('/my-communities');
                                                         }, 2000);
                                                     }).catch((error) => {
                                                     setButtonLoading(false);
