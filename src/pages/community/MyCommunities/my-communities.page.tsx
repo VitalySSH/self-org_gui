@@ -4,7 +4,7 @@ import {
     CommunityAoDataSourceService,
 } from "../../../services";
 import { CommunityModel } from "../../../models";
-import { LogoutOutlined, LoginOutlined } from "@ant-design/icons";
+import { CloseSquareOutlined, CheckSquareOutlined } from "@ant-design/icons";
 import Meta from "antd/es/card/Meta";
 import { useNavigate } from "react-router-dom";
 import { CommunityCard } from "../../../interfaces";
@@ -69,6 +69,7 @@ export function MyCommunities() {
                     itemLayout="vertical"
                     dataSource={dataSource}
                     loading={loading}
+                    locale={{emptyText: "Нет сообществ"}}
                     renderItem={(item: CommunityCard) => (
                         <List.Item>
                             <Card
@@ -86,7 +87,7 @@ export function MyCommunities() {
                                             navigate(path);
                                         }}
                                     >
-                                        <LoginOutlined
+                                        <CheckSquareOutlined
                                             style={{
                                                 fontSize: 18
                                             }}
@@ -105,7 +106,7 @@ export function MyCommunities() {
                                             justifyContent: "center",
                                         }}
                                     >
-                                        <LogoutOutlined
+                                        <CloseSquareOutlined
                                             style={{
                                                 fontSize: 18
                                             }}

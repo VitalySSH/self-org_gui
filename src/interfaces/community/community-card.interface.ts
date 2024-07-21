@@ -3,4 +3,5 @@ export interface CommunityCard {
     title: string;
     description: string;
     members: number;
+    isMyCommunity?: boolean;
 }

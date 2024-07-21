@@ -4,11 +4,13 @@ import { CrudDataSourceService } from "../../../services";
 import { CommunityModel } from "../../../models";
 import { useEffect, useState } from "react";
 import Meta from "antd/es/card/Meta";
-import { CommunityCard } from "../../../interfaces";
+import { AuthContextProvider, CommunityCard } from "../../../interfaces";
+import { useAuth } from "../../../hooks";
 
 
 export function AllCommunities() {
 
+    const authData: AuthContextProvider = useAuth();
     const [loading, setLoading] =
         useState(true);
     const [dataSource, setDataSource] =
@@ -23,13 +25,19 @@ export function AllCommunities() {
             communityService
                 .list(undefined, undefined, undefined,
                 [
-                    'user_settings',
+                    'user_settings.user',
                     'main_settings.name',
                     'main_settings.description',
                 ])
                 .then(data => {
                     const items: CommunityCard[] = [];
                     data.forEach(community => {
+                        const isMyCommunity =
+                            (community.user_settings || [])
+                                .filter(
+                                    (ucs) =>
+                                        ucs.user?.id === authData.user?.id
+                                ).length > 0;
                         const item = {
                             id: community.id || '',
                             title: community
@@ -37,6 +45,7 @@ export function AllCommunities() {
                             description: community
                                 .main_settings?.description?.value || '',
                             members: (community.user_settings || []).length,
+                            isMyCommunity: isMyCommunity,
                         };
                         items.push(item);
                     });
@@ -53,9 +62,39 @@ export function AllCommunities() {
         loadData();
     }, [loadData]);
 
+    const buildActions = (communityCard: CommunityCard) => {
+        const actions: JSX.Element[] = [];
+        if (!communityCard.isMyCommunity) {
+            const action = (
+                <div
+                    style={{
+                        display: "flex",
+                        color: "black",
+                        alignContent: "center",
+                        justifyContent: "center",
+                    }}
+                >
+                    <SolutionOutlined
+                        style={{
+                            fontSize: 18
+                        }}
+                    />
+                    <span
+                        style={{
+                            marginLeft: 10
+                        }}
+                    >Заявка на вступление</span>
+                </div>
+            );
+            actions.push(action);
+        }
+
+        return actions;
+    }
+
     return (
         <Layout
-            style={{ height: '100%', overflowY: "scroll" }}
+            style={{height: '100%', overflowY: "scroll"}}
         >
             <Space
                 direction="vertical"
@@ -66,30 +105,11 @@ export function AllCommunities() {
                     itemLayout="vertical"
                     dataSource={dataSource}
                     loading={loading}
+                    locale={{emptyText: "Нет сообществ"}}
                     renderItem={(item: CommunityCard) => (
                         <List.Item>
                             <Card
-                                actions={[
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            color: "black",
-                                            alignContent: "center",
-                                            justifyContent: "center",
-                                        }}
-                                    >
-                                        <SolutionOutlined
-                                            style={{
-                                                fontSize: 18
-                                            }}
-                                        />
-                                        <span
-                                            style={{
-                                                marginLeft: 10
-                                            }}
-                                        >Заявка на вступление</span>
-                                    </div>,
-                                ]}
+                                actions={buildActions(item)}
                             >
                                 <Meta
                                     title={item.title}
