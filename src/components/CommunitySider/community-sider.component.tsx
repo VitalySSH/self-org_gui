@@ -4,11 +4,11 @@ import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     TeamOutlined,
-    SettingOutlined,
     BulbOutlined,
     ToolOutlined,
     UserAddOutlined,
     UserDeleteOutlined,
+    BarChartOutlined,
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
@@ -34,8 +34,8 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-    getItem('Общие настройки', 'settings',
-        'menu-item', <SettingOutlined className="menu-icon" />),
+    getItem('Обзор', 'summary',
+        'menu-item', <BarChartOutlined className="menu-icon" />),
     getItem('Мои настройки', 'my-settings',
         'menu-item', <ToolOutlined className="menu-icon" />),
     getItem('Инициативы', 'initiatives',

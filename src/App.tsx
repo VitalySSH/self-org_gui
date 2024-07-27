@@ -9,13 +9,13 @@ import {
     AllCommunities,
     MyCommunities,
     NoMatchPage,
-    MyProfile,
     SignIn,
     SignUp,
     Verify2FA,
     NewCommunity,
     CommunitySettings,
     MyCommunitySettings,
+    AddMemberRequest, CommunitySummary,
 } from "./pages";
 
 
@@ -51,11 +51,11 @@ function App() {
                           <Community />
                       </ProtectedRoute>
                   }>
-                      <Route path='settings' element={<CommunitySettings />} />
+                      <Route path='summary' element={<CommunitySummary />} />
                       <Route path='my-settings' element={
                           <MyCommunitySettings />
                       } />
-                      <Route path='my-profile' element={<MyProfile />} />
+                      <Route path='add-member' element={<AddMemberRequest />} />
                   </Route>
 
                   <Route path="*" element={<NoMatchPage />} />

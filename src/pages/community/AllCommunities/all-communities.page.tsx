@@ -106,6 +106,11 @@ export function AllCommunities() {
                     dataSource={dataSource}
                     loading={loading}
                     locale={{emptyText: "Нет сообществ"}}
+                    pagination={{
+                        position: 'bottom',
+                        align: 'center'
+                    }}
+                    size="large"
                     renderItem={(item: CommunityCard) => (
                         <List.Item>
                             <Card

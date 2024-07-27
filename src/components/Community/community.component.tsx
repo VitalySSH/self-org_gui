@@ -2,9 +2,9 @@ import { Layout, Typography } from "antd";
 import './community.component.css';
 import { Route, Routes, useParams } from "react-router-dom";
 import {
-    CommunitySettings,
+    AddMemberRequest,
+    CommunitySummary,
     MyCommunitySettings,
-    MyProfile
 } from "../../pages";
 import { AppFooter } from "../AppFooter/app-footer.component.tsx";
 import {
@@ -66,14 +66,15 @@ export function Community () {
                 </Header>
                 <Content className="content">
                     <Routes>
-                        <Route path='settings' element={
-                                <CommunitySettings communityId={id}/>
-                            }
-                        />
+                        <Route path='summary' element={
+                            <CommunitySummary communityId={id} />
+                        } />
                         <Route path='my-settings' element={
                             <MyCommunitySettings communityId={id} />
                         } />
-                        <Route path='my-profile' element={<MyProfile />} />
+                        <Route path='add-member' element={
+                            <AddMemberRequest communityId={id} />
+                        } />
                     </Routes>
                 </Content>
                 <Footer className="footer">

@@ -6,7 +6,6 @@ import {
     message,
     Space,
     Spin,
-    Typography
 } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { CrudDataSourceService } from "../../../services";
@@ -83,12 +82,8 @@ export function CommunitySettings(props: any) {
     return (
         <Layout>
             {contextHolder}
-            <Typography.Title
-                level={4}
-                style={{ marginLeft: 20 }}
-            >Общие настройки сообщества</Typography.Title>
             <Space
-                style={{ marginTop: 30 }}
+                style={{ marginTop: 10, marginBottom: 30 }}
             >
                 <Spin
                     tip="Загрузка данных"
@@ -134,7 +129,7 @@ export function CommunitySettings(props: any) {
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
-                            <Checkbox />
+                            <Checkbox disabled />
                         </Form.Item>
                         <Form.Item
                             name='is_can_offer'
@@ -142,7 +137,7 @@ export function CommunitySettings(props: any) {
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
-                            <Checkbox />
+                            <Checkbox disabled />
                         </Form.Item>
                         <Form.Item
                             name='is_minority_not_participate'
@@ -150,11 +145,11 @@ export function CommunitySettings(props: any) {
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
-                            <Checkbox />
+                            <Checkbox disabled />
                         </Form.Item>
                         <Form.Item
                             name='creator'
-                            label='Создатель'
+                            label='Создатель сообщества'
                             labelCol={{ span: 24 }}
                         >
                             <Input readOnly />
