@@ -184,7 +184,6 @@ export function AuthHeaderIcons() {
                         <Button
                             type='primary'
                             htmlType='submit'
-                            className='registration-form-button'
                             block
                         >
                             Сохранить

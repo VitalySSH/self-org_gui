@@ -36,11 +36,6 @@ export function MainApp () {
         icons = <NotAuthHeaderIcons />;
     }
 
-    let aboutPage = <div />;
-    if (location.pathname === '/') {
-        aboutPage = <AboutPage />;
-    }
-
     return (
         <Layout className="app">
             <Layout>
@@ -49,7 +44,7 @@ export function MainApp () {
                     {icons}
                 </Header>
                 <Content className="main-content">
-                    {aboutPage}
+                    {location.pathname === '/' && <AboutPage />}
                     <Routes>
                         <Route path='/communities' element={<AllCommunities/>} />
                         <Route path='/my-communities' element={<MyCommunities/>} />
