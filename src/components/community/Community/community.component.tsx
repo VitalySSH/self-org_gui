@@ -5,16 +5,16 @@ import {
     AddMemberRequest,
     CommunitySummary,
     MyCommunitySettings,
-} from "../../pages";
-import { AppFooter } from "../AppFooter/app-footer.component.tsx";
+} from "../../../pages";
+import { AppFooter } from "../../AppFooter/app-footer.component.tsx";
 import {
     CommunitySider
 } from "../CommunitySider/community-sider.component.tsx";
 import {
     AuthHeaderIcons
-} from "../AuthHeaderIcons/auth-header-icons.component.tsx";
-import { CrudDataSourceService } from "../../services";
-import { CommunityModel } from "../../models";
+} from "../../AuthHeaderIcons/auth-header-icons.component.tsx";
+import { CrudDataSourceService } from "../../../services";
+import { CommunityModel } from "../../../models";
 import { useEffect, useState } from "react";
 
 
