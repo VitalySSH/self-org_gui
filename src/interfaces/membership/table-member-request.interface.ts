@@ -3,5 +3,6 @@ export interface TableMemberRequest {
     member: string;
     status: string;
     reason: string;
-    created?: Date;
+    creator?: string;
+    created?: string;
 }

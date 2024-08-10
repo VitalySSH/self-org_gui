@@ -7,18 +7,18 @@ import {
     TableColumnsType,
     TableColumnType
 } from "antd";
-import moment from "moment";
-import { useEffect, useRef, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import { TableMemberRequest } from "../../../interfaces";
 import { CrudDataSourceService } from "../../../services";
 import { CommunityModel } from "../../../models";
 import { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
+import moment from "moment/moment";
 
 type DataIndex = keyof TableMemberRequest;
 
-export function CommonAddMemberRequests(props: any) {
+export function CommonRemoveMemberRequests(props: any) {
 
     const [loading, setLoading] =
         useState(true);
@@ -134,7 +134,7 @@ export function CommonAddMemberRequests(props: any) {
 
     const columns: TableColumnsType<TableMemberRequest> = [
         {
-            title: 'Кандидат на члентсво',
+            title: 'Кандидат на исключение',
             dataIndex: 'member',
             key: 'member',
             width: '30%',
@@ -155,6 +155,13 @@ export function CommonAddMemberRequests(props: any) {
             width: '20%',
         },
         {
+            title: 'Инициатор',
+            dataIndex: 'creator',
+            key: 'creator',
+            width: '30%',
+            ...getColumnSearchProps('creator'),
+        },
+        {
             title: 'Дата создания',
             dataIndex: 'created',
             key: 'created',
@@ -170,17 +177,21 @@ export function CommonAddMemberRequests(props: any) {
                 .get(communityId,
                     [
                         'main_settings.adding_members.member',
+                        'main_settings.adding_members.creator',
                         'main_settings.adding_members.status',
                     ])
                 .then(community => {
                     const items: TableMemberRequest[] = [];
-                    (community.main_settings?.adding_members || [])
+                    (community.main_settings?.removal_members || [])
                         .forEach(requestMember => {
                             const memberName =
                                 `${requestMember.member?.firstname} ${requestMember.member?.surname}`;
+                            const creatorName =
+                                `${requestMember.creator?.firstname} ${requestMember.creator?.surname}`;
                             const item = {
                                 key: requestMember.id || '',
                                 member: memberName,
+                                creator: creatorName,
                                 reason: requestMember.reason || '',
                                 status: requestMember.status?.name || '',
                                 created: moment(requestMember.created).format('DD.MM.yyyy HH:mm:ss'),
