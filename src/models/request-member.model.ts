@@ -11,9 +11,6 @@ export class RequestMemberModel extends ApiModel{
     @oneToMany('user')
     member?: UserModel;
 
-    @oneToMany('user')
-    creator?: UserModel;
-
     @oneToMany('community')
     community?: CommunityModel;
 
@@ -28,9 +25,6 @@ export class RequestMemberModel extends ApiModel{
 
     @attribute()
     parent_id?: string;
-
-    @attribute()
-    is_removal?: boolean;
 
     @attribute()
     created?: Date;

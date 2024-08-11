@@ -7,7 +7,6 @@ import {
     BulbOutlined,
     ToolOutlined,
     UserAddOutlined,
-    UserDeleteOutlined,
     BarChartOutlined,
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -44,8 +43,6 @@ const items: MenuItem[] = [
         'menu-item', <TeamOutlined className="menu-icon" />),
     getItem('Заявки на вступление', 'add-member',
         'menu-item', <UserAddOutlined className="menu-icon" />),
-    getItem('Заявки на исключение', 'remove-member',
-        'menu-item', <UserDeleteOutlined className="menu-icon" />),
 ];
 
 export function CommunitySider() {

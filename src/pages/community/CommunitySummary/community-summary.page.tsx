@@ -8,9 +8,6 @@ import {
 import {
     CommonAddMemberRequests
 } from "../../membership/CommonAddMemberRequests/common-add-member-requests.page.tsx";
-import {
-    CommonRemoveMemberRequests
-} from "../../membership/CommonRemoveMemberRequests/common-remove-member-requests.page.tsx";
 
 export function CommunitySummary(props: any) {
 
@@ -26,11 +23,6 @@ export function CommunitySummary(props: any) {
             label: 'Заявки на вступление',
             key: '2',
             children: <CommonAddMemberRequests communityId={communityId} />,
-        },
-        {
-            label: 'Заявки на исключение',
-            key: '3',
-            children: <CommonRemoveMemberRequests communityId={communityId} />,
         }
     ];
 

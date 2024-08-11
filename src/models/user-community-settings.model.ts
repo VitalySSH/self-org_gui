@@ -53,7 +53,4 @@ export class UserCommunitySettingsModel extends ApiModel{
     @manyToMany('request_member')
     adding_members?: RequestMemberModel[];
 
-    @manyToMany('request_member')
-    removal_members?: RequestMemberModel[];
-
 }

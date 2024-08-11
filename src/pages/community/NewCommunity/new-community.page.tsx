@@ -17,6 +17,8 @@ import {
     CommunityModel,
     CommunityNameModel,
     CommunitySettingsModel,
+    RequestMemberModel,
+    StatusModel,
     UserCommunitySettingsModel,
 } from "../../../models";
 import { useNavigate } from "react-router-dom";
@@ -108,9 +110,7 @@ export function NewCommunity() {
                                                     .then(() => {
                                                         setButtonLoading(false);
                                                         successInfo('Сообщество создано');
-                                                        setTimeout(() => {
-                                                            navigate('/my-communities');
-                                                        }, 2000);
+                                                        createMemberRequest(community);
                                                     }).catch((error) => {
                                                     setButtonLoading(false);
                                                     errorInfo(`Ошибка сохранения сообщества: ${error}`);
@@ -135,6 +135,40 @@ export function NewCommunity() {
             setButtonLoading(false);
             errorInfo(`Ошибка создания настроек сообщества: ${error}`);
         });
+    }
+
+    const createMemberRequest = (communityModel: CommunityModel) => {
+        const statusService =
+            new CrudDataSourceService(StatusModel);
+        const requestMemberService =
+            new CrudDataSourceService(RequestMemberModel);
+        statusService.list(
+            [
+                {
+                    field: 'code',
+                    op: 'equals',
+                    val: 'request_successful',
+                }
+            ]
+        ).then((statuses) => {
+            const status =
+                statuses.length ? statuses[0] : undefined;
+            const requestMember = new RequestMemberModel();
+            requestMember.reason = 'Создатель сообщества';
+            requestMember.member = userRelation;
+            requestMember.community = communityModel;
+            requestMember.status = status;
+            requestMemberService.save(requestMember).then(() => {
+                setTimeout(() => {
+                    navigate('/my-communities');
+                }, 2000);
+            }).catch((error) => {
+                errorInfo(`Ошибка создания запроса на добавление нового члена сообщества: ${error}`);
+            });
+        }).catch((error) => {
+            errorInfo(`Ошибка получения статусов: ${error}`);
+        });
+
     }
 
     return (

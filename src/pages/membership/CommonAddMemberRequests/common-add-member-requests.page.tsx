@@ -109,7 +109,7 @@ export function CommonAddMemberRequests(props: any) {
         ),
         onFilter: (value, record) =>
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
+            // @ts-ignore
             record[dataIndex]
                 .toString()
                 .toLowerCase()

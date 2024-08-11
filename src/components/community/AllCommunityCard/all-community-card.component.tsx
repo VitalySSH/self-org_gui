@@ -98,9 +98,7 @@ export function AllCommunityCard(props: any) {
             (statuses) => {
                 if (statuses.length) {
                     const status = statuses[0];
-                    const userRelation = authData.getUserRelation();
-                    requestMember.member = userRelation;
-                    requestMember.creator = userRelation;
+                    requestMember.member = authData.getUserRelation();
                     const communityRelation =
                         communityService.createRecord();
                     communityRelation.id = communityItem.id;

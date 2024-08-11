@@ -1,25 +1,30 @@
 import {
     Button,
-    Input, InputRef,
+    Input,
+    InputRef,
     Layout,
     Space,
     Table,
     TableColumnsType,
-    TableColumnType
+    TableColumnType,
 } from "antd";
-import {useEffect, useRef, useState} from "react";
-import { TableMemberRequest } from "../../../interfaces";
+import moment from "moment";
+import { useEffect, useRef, useState } from "react";
+import {AuthContextProvider, TableMemberRequest} from "../../../interfaces";
 import { CrudDataSourceService } from "../../../services";
-import { CommunityModel } from "../../../models";
+import { UserCommunitySettingsModel } from "../../../models";
 import { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
-import moment from "moment/moment";
+import {
+    SearchOutlined,
+} from '@ant-design/icons';
+import {useAuth} from "../../../hooks";
 
 type DataIndex = keyof TableMemberRequest;
 
-export function CommonRemoveMemberRequests(props: any) {
+export function AddMemberRequestsForMe(props: any) {
 
+    const authData: AuthContextProvider = useAuth();
     const [loading, setLoading] =
         useState(true);
     const [dataSource, setDataSource] =
@@ -30,8 +35,8 @@ export function CommonRemoveMemberRequests(props: any) {
         useState('');
 
     const communityId = props?.communityId;
-    const communityService =
-        new CrudDataSourceService(CommunityModel);
+    const userCommunitySettingsService =
+        new CrudDataSourceService(UserCommunitySettingsModel);
 
     const searchInput = useRef<InputRef>(null);
 
@@ -109,7 +114,7 @@ export function CommonRemoveMemberRequests(props: any) {
         ),
         onFilter: (value, record) =>
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
+            // @ts-ignore
             record[dataIndex]
                 .toString()
                 .toLowerCase()
@@ -132,9 +137,13 @@ export function CommonRemoveMemberRequests(props: any) {
             ),
     });
 
+    const toVote = () => {
+
+    }
+
     const columns: TableColumnsType<TableMemberRequest> = [
         {
-            title: 'Кандидат на исключение',
+            title: 'Кандидат на члентсво',
             dataIndex: 'member',
             key: 'member',
             width: '30%',
@@ -155,50 +164,65 @@ export function CommonRemoveMemberRequests(props: any) {
             width: '20%',
         },
         {
-            title: 'Инициатор',
-            dataIndex: 'creator',
-            key: 'creator',
-            width: '30%',
-            ...getColumnSearchProps('creator'),
-        },
-        {
             title: 'Дата создания',
             dataIndex: 'created',
             key: 'created',
             ...getColumnSearchProps('created'),
             width: '20%',
         },
+        {
+            title: 'Действие',
+            dataIndex: '',
+            key: 'action',
+            render: () => {
+                return (
+                    <Button onClick={toVote}>
+                        Проголосовать
+                    </Button>
+                );
+            },
+        },
     ];
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const loadData = () => {
         if (loading && communityId) {
-            communityService
-                .get(communityId,
-                    [
-                        'main_settings.adding_members.member',
-                        'main_settings.adding_members.creator',
-                        'main_settings.adding_members.status',
-                    ])
-                .then(community => {
-                    const items: TableMemberRequest[] = [];
-                    (community.main_settings?.removal_members || [])
-                        .forEach(requestMember => {
-                            const memberName =
-                                `${requestMember.member?.firstname} ${requestMember.member?.surname}`;
-                            const creatorName =
-                                `${requestMember.creator?.firstname} ${requestMember.creator?.surname}`;
-                            const item = {
-                                key: requestMember.id || '',
-                                member: memberName,
-                                creator: creatorName,
-                                reason: requestMember.reason || '',
-                                status: requestMember.status?.name || '',
-                                created: moment(requestMember.created).format('DD.MM.yyyy HH:mm:ss'),
-                            };
-                            items.push(item);
-                        });
-                    setDataSource(items);
+            userCommunitySettingsService.list(
+                [
+                    {
+                        field: 'community_id',
+                        op: 'equals',
+                        val: communityId,
+                    },
+                    {
+                        field: 'user_id',
+                        op: 'equals',
+                        val: authData.user?.id,
+                    },
+                ],
+                undefined, undefined,
+                [
+                    'adding_members.status',
+                    'adding_members.member',
+                ]
+            ).then(settingsList => {
+                const settings =
+                    settingsList.length ? settingsList[0] : undefined;
+                const items: TableMemberRequest[] = [];
+                (settings?.adding_members || [])
+                    .forEach(requestMember => {
+                        const memberName =
+                            `${requestMember.member?.firstname} ${requestMember.member?.surname}`;
+                        const item = {
+                            key: requestMember.id || '',
+                            member: memberName,
+                            reason: requestMember.reason || '',
+                            status: requestMember.status?.name || '',
+                            created: moment(requestMember.created).format('DD.MM.yyyy HH:mm:ss'),
+                        };
+                        items.push(item);
+                    });
+                setDataSource(items);
                 }).catch((error) => {
                 console.log(error);
             }).finally(() => {
@@ -213,7 +237,7 @@ export function CommonRemoveMemberRequests(props: any) {
 
     return (
         <Layout
-            style={{height: '100%', overflowY: "scroll"}}
+            style={{height: '100%', overflowY: "scroll", marginTop: 30}}
         >
             <Table
                 columns={columns}

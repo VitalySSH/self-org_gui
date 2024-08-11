@@ -1,4 +1,7 @@
-import { Layout, Space, Typography } from "antd";
+import { Layout, Typography } from "antd";
+import {
+    AddMemberRequestsForMe
+} from "../AddMemberRequestsForMe/add-member-requests-for-me.page.tsx";
 
 export function AddMemberRequest(props: any) {
 
@@ -6,14 +9,10 @@ export function AddMemberRequest(props: any) {
 
     return (
         <Layout
-            style={{height: '100%', overflowY: "scroll"}}
+            style={{height: '100%'}}
         >
-            <Space
-                direction="vertical"
-                className="communities"
-            >
-                <Typography.Title level={3}>Заявки пользователей на вступление в сообщество</Typography.Title>
-            </Space>
+            <Typography.Title level={3}>Заявки пользователей на вступление в сообщество</Typography.Title>
+            <AddMemberRequestsForMe communityId={communityId} />
         </Layout>
     );
 }
