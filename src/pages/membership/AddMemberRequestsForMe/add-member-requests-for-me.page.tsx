@@ -10,7 +10,7 @@ import {
 } from "antd";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
-import {AuthContextProvider, TableMemberRequest} from "../../../interfaces";
+import { AuthContextProvider, TableMemberRequest } from "../../../interfaces";
 import { CrudDataSourceService } from "../../../services";
 import { UserCommunitySettingsModel } from "../../../models";
 import { FilterDropdownProps } from "antd/es/table/interface";
@@ -18,13 +18,15 @@ import Highlighter from 'react-highlight-words';
 import {
     SearchOutlined,
 } from '@ant-design/icons';
-import {useAuth} from "../../../hooks";
+import { useAuth } from "../../../hooks";
+import { MemberRequestVoteButton } from "../../../components";
 
 type DataIndex = keyof TableMemberRequest;
 
 export function AddMemberRequestsForMe(props: any) {
 
     const authData: AuthContextProvider = useAuth();
+    const currentUserId = authData.user?.id;
     const [loading, setLoading] =
         useState(true);
     const [dataSource, setDataSource] =
@@ -137,13 +139,9 @@ export function AddMemberRequestsForMe(props: any) {
             ),
     });
 
-    const toVote = () => {
-
-    }
-
     const columns: TableColumnsType<TableMemberRequest> = [
         {
-            title: 'Кандидат на члентсво',
+            title: 'Участник сообщества',
             dataIndex: 'member',
             key: 'member',
             width: '30%',
@@ -174,11 +172,9 @@ export function AddMemberRequestsForMe(props: any) {
             title: 'Действие',
             dataIndex: '',
             key: 'action',
-            render: () => {
+            render: (item: TableMemberRequest) => {
                 return (
-                    <Button onClick={toVote}>
-                        Проголосовать
-                    </Button>
+                    <MemberRequestVoteButton tableRow={item} />
                 );
             },
         },
@@ -197,7 +193,7 @@ export function AddMemberRequestsForMe(props: any) {
                     {
                         field: 'user_id',
                         op: 'equals',
-                        val: authData.user?.id,
+                        val: currentUserId,
                     },
                 ],
                 undefined, undefined,
@@ -211,14 +207,20 @@ export function AddMemberRequestsForMe(props: any) {
                 const items: TableMemberRequest[] = [];
                 (settings?.adding_members || [])
                     .forEach(requestMember => {
+                        const isMyRequest =
+                            requestMember.member?.id === currentUserId;
                         const memberName =
-                            `${requestMember.member?.firstname} ${requestMember.member?.surname}`;
+                            `${requestMember.member?.firstname} 
+                            ${requestMember.member?.surname}`;
                         const item = {
                             key: requestMember.id || '',
                             member: memberName,
                             reason: requestMember.reason || '',
                             status: requestMember.status?.name || '',
-                            created: moment(requestMember.created).format('DD.MM.yyyy HH:mm:ss'),
+                            created: moment(requestMember.created)
+                                .format('DD.MM.yyyy HH:mm:ss'),
+                            isMyRequest: isMyRequest,
+                            vote: requestMember.vote,
                         };
                         items.push(item);
                     });
@@ -233,7 +235,7 @@ export function AddMemberRequestsForMe(props: any) {
 
     useEffect(() => {
         loadData();
-    }, [loadData]);
+    }, [loadData, loading]);
 
     return (
         <Layout

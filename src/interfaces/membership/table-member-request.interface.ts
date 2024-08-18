@@ -4,4 +4,6 @@ export interface TableMemberRequest {
     status: string;
     reason: string;
     created: string;
+    vote?: boolean | undefined;
+    isMyRequest?: boolean;
 }

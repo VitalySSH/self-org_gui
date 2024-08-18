@@ -9,17 +9,19 @@ import {
 } from "antd";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
-import { TableMemberRequest } from "../../../interfaces";
+import { AuthContextProvider, TableMemberRequest } from "../../../interfaces";
 import { CrudDataSourceService } from "../../../services";
 import { CommunityModel } from "../../../models";
 import { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
+import { useAuth } from "../../../hooks";
 
 type DataIndex = keyof TableMemberRequest;
 
 export function CommonAddMemberRequests(props: any) {
 
+    const authData: AuthContextProvider = useAuth();
     const [loading, setLoading] =
         useState(true);
     const [dataSource, setDataSource] =
@@ -176,6 +178,8 @@ export function CommonAddMemberRequests(props: any) {
                     const items: TableMemberRequest[] = [];
                     (community.main_settings?.adding_members || [])
                         .forEach(requestMember => {
+                            const isMyRequest =
+                                requestMember.member?.id === authData.user?.id;
                             const memberName =
                                 `${requestMember.member?.firstname} ${requestMember.member?.surname}`;
                             const item = {
@@ -183,7 +187,9 @@ export function CommonAddMemberRequests(props: any) {
                                 member: memberName,
                                 reason: requestMember.reason || '',
                                 status: requestMember.status?.name || '',
-                                created: moment(requestMember.created).format('DD.MM.yyyy HH:mm:ss'),
+                                created: moment(requestMember.created)
+                                    .format('DD.MM.yyyy HH:mm:ss'),
+                                isMyRequest: isMyRequest,
                             };
                             items.push(item);
                         });

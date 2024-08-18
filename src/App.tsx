@@ -13,7 +13,6 @@ import {
     SignUp,
     Verify2FA,
     NewCommunity,
-    CommunitySettings,
     MyCommunitySettings,
     AddMemberRequest, CommunitySummary,
 } from "./pages";
