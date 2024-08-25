@@ -147,7 +147,7 @@ export function NewCommunity() {
                 {
                     field: 'code',
                     op: 'equals',
-                    val: 'request_successful',
+                    val: 'community_member',
                 }
             ]
         ).then((statuses) => {
@@ -158,6 +158,7 @@ export function NewCommunity() {
             requestMember.member = userRelation;
             requestMember.community = communityModel;
             requestMember.status = status;
+            requestMember.vote = true;
             requestMemberService.save(requestMember).then(() => {
                 setTimeout(() => {
                     navigate('/my-communities');

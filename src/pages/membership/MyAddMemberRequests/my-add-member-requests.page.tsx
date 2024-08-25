@@ -7,38 +7,43 @@ import {
     Table,
     TableColumnsType,
     TableColumnType,
+    Typography,
 } from "antd";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
-import { AuthContextProvider, TableMemberRequest } from "../../../interfaces";
+import {
+    AuthContextProvider,
+    TableMyMemberRequest
+} from "../../../interfaces";
 import { CrudDataSourceService } from "../../../services";
-import { UserCommunitySettingsModel } from "../../../models";
+import { RequestMemberModel } from "../../../models";
 import { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from 'react-highlight-words';
 import {
     SearchOutlined,
 } from '@ant-design/icons';
 import { useAuth } from "../../../hooks";
-import { MemberRequestVoteButton } from "../../../components";
+import {
+    MemberRequestRemoveButton,
+} from "../../../components";
 
-type DataIndex = keyof TableMemberRequest;
+type DataIndex = keyof TableMyMemberRequest;
 
-export function AddMemberRequestsForMe(props: any) {
+export function MyAddMemberRequests() {
 
     const authData: AuthContextProvider = useAuth();
     const currentUserId = authData.user?.id;
     const [loading, setLoading] =
         useState(true);
     const [dataSource, setDataSource] =
-        useState([] as TableMemberRequest[]);
+        useState([] as TableMyMemberRequest[]);
     const [searchText, setSearchText] =
         useState('');
     const [searchedColumn, setSearchedColumn] =
         useState('');
 
-    const communityId = props?.communityId;
-    const userCommunitySettingsService =
-        new CrudDataSourceService(UserCommunitySettingsModel);
+    const requestMemberService =
+        new CrudDataSourceService(RequestMemberModel);
 
     const searchInput = useRef<InputRef>(null);
 
@@ -58,7 +63,7 @@ export function AddMemberRequestsForMe(props: any) {
     };
 
     const getColumnSearchProps =
-        (dataIndex: DataIndex): TableColumnType<TableMemberRequest> => ({
+        (dataIndex: DataIndex): TableColumnType<TableMyMemberRequest> => ({
         filterDropdown: (
             { setSelectedKeys, selectedKeys,
               confirm, clearFilters, close }) => (
@@ -139,13 +144,20 @@ export function AddMemberRequestsForMe(props: any) {
             ),
     });
 
-    const columns: TableColumnsType<TableMemberRequest> = [
+    const columns: TableColumnsType<TableMyMemberRequest> = [
         {
-            title: 'Участник сообщества',
-            dataIndex: 'member',
-            key: 'member',
-            width: '30%',
-            ...getColumnSearchProps('member'),
+            title: 'Наименование сообщества',
+            dataIndex: 'communityName',
+            key: 'communityName',
+            width: '20%',
+            ...getColumnSearchProps('communityName'),
+        },
+        {
+            title: 'Описание сообщества',
+            dataIndex: 'communityDescription',
+            key: 'communityDescription',
+            width: '20%',
+            ...getColumnSearchProps('communityDescription'),
         },
         {
             title: 'Сопроводительное письмо',
@@ -161,6 +173,13 @@ export function AddMemberRequestsForMe(props: any) {
             width: '20%',
         },
         {
+            title: 'Решение',
+            dataIndex: 'solution',
+            key: 'solution',
+            ...getColumnSearchProps('solution'),
+            width: '20%',
+        },
+        {
             title: 'Дата создания',
             dataIndex: 'created',
             key: 'created',
@@ -171,9 +190,12 @@ export function AddMemberRequestsForMe(props: any) {
             title: 'Действие',
             dataIndex: '',
             key: 'action',
-            render: (item: TableMemberRequest) => {
+            render: (item: TableMyMemberRequest) => {
                 return (
-                    <MemberRequestVoteButton tableRow={item} />
+                    <MemberRequestRemoveButton
+                        tableRow={item}
+                        setLoading={setLoading}
+                    />
                 );
             },
         },
@@ -181,48 +203,47 @@ export function AddMemberRequestsForMe(props: any) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const loadData = () => {
-        if (loading && communityId) {
-            userCommunitySettingsService.list(
+        if (loading) {
+            requestMemberService.list(
                 [
                     {
-                        field: 'community_id',
-                        op: 'equals',
-                        val: communityId,
+                        field: 'parent_id',
+                        op: 'null',
+                        val: true,
                     },
                     {
-                        field: 'user_id',
+                        field: 'member_id',
                         op: 'equals',
                         val: currentUserId,
                     },
                 ],
                 undefined, undefined,
                 [
-                    'adding_members.status',
-                    'adding_members.member',
+                    'status',
+                    'community.main_settings.name',
+                    'community.main_settings.description',
                 ]
-            ).then(settingsList => {
-                const settings =
-                    settingsList.length ? settingsList[0] : undefined;
-                const items: TableMemberRequest[] = [];
-                (settings?.adding_members || [])
-                    .forEach(requestMember => {
-                        const isMyRequest =
-                            requestMember.member?.id === currentUserId;
-                        const memberName =
-                            `${requestMember.member?.firstname} 
-                            ${requestMember.member?.surname}`;
-                        const item = {
-                            key: requestMember.id || '',
-                            member: memberName,
-                            reason: requestMember.reason || '',
-                            status: requestMember.status?.name || '',
-                            created: moment(requestMember.created)
-                                .format('DD.MM.yyyy HH:mm:ss'),
-                            isMyRequest: isMyRequest,
-                            vote: requestMember.vote,
-                        };
-                        items.push(item);
-                    });
+            ).then(memberRequests => {
+                const items: TableMyMemberRequest[] = [];
+                memberRequests.forEach(requestMember => {
+                    const communityName =
+                        requestMember.community?.main_settings?.name?.name;
+                    const communityDescription =
+                        requestMember.community?.main_settings?.description?.value;
+                    const solution = requestMember.vote ? 'Да' : 'Нет';
+                    const item: TableMyMemberRequest = {
+                        key: requestMember.id || '',
+                        communityName: communityName || '',
+                        communityDescription: communityDescription || '',
+                        reason: requestMember.reason || '',
+                        status: requestMember.status?.name || '',
+                        statusCode: requestMember.status?.code || '',
+                        created: moment(requestMember.created)
+                            .format('DD.MM.yyyy HH:mm:ss'),
+                        solution: solution,
+                    };
+                    items.push(item);
+                });
                 setDataSource(items);
                 }).catch((error) => {
                 console.log(error);
@@ -238,13 +259,28 @@ export function AddMemberRequestsForMe(props: any) {
 
     return (
         <Layout
-            style={{height: '100%', overflowY: "scroll", marginTop: 30}}
+            style={{height: '100%', overflowY: "scroll" }}
         >
+            <Space
+                direction="vertical"
+                className="communities"
+            >
+                <Typography.Title
+                    level={3}
+                >
+                    Мои заявки на вступление в сообщества
+                </Typography.Title>
+            </Space>
             <Table
                 columns={columns}
                 loading={loading}
                 dataSource={dataSource}
                 locale={{emptyText: "Заявки не найдены"}}
+                style={{
+                    marginRight: 20,
+                    marginLeft: 20,
+                    marginBottom: 20
+                }}
             />
         </Layout>
     );

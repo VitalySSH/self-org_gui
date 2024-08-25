@@ -12,6 +12,7 @@ import {
 import {
     AboutPage,
     AllCommunities,
+    MyAddMemberRequests,
     MyCommunities,
     NewCommunity
 } from "../../pages";
@@ -46,9 +47,10 @@ export function MainApp () {
                 <Content className="main-content">
                     {location.pathname === '/' && <AboutPage />}
                     <Routes>
-                        <Route path='/communities' element={<AllCommunities/>} />
-                        <Route path='/my-communities' element={<MyCommunities/>} />
-                        <Route path='/new-community' element={<NewCommunity/>} />
+                        <Route path='/communities' element={<AllCommunities />} />
+                        <Route path='/my-communities' element={<MyCommunities />} />
+                        <Route path='/new-community' element={<NewCommunity />} />
+                        <Route path='/my-add-requests' element={<MyAddMemberRequests />} />
                     </Routes>
                 </Content>
                 <Footer className="footer">

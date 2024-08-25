@@ -14,9 +14,9 @@ import {
     Verify2FA,
     NewCommunity,
     MyCommunitySettings,
-    AddMemberRequest, CommunitySummary,
+    AddMemberRequest,
+    CommunitySummary, MyAddMemberRequests,
 } from "./pages";
-
 
 function App() {
       return (
@@ -37,7 +37,12 @@ function App() {
                       </Route>
                       <Route path='new-community' element={
                           <ProtectedRoute>
-                            <NewCommunity/>
+                            <NewCommunity />
+                          </ProtectedRoute>
+                      } />
+                      <Route path='my-add-requests' element={
+                          <ProtectedRoute>
+                              <MyAddMemberRequests />
                           </ProtectedRoute>
                       } />
                   </Route>

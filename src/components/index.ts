@@ -9,3 +9,4 @@ export * from './AuthHeaderIcons/auth-header-icons.component';
 export * from './NotAuthHeaderIcons/not-auth-header-icons.component';
 export * from './RightMenu/right-menu.component';
 export * from './MemberRequestVoteButton/member-request-vote-button.component';
+export * from './MemberRequestRemoveButton/member-request-remove-button.component';

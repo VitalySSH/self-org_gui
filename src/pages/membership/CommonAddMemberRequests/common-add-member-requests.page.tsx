@@ -1,11 +1,12 @@
 import {
     Button,
-    Input, InputRef,
+    Input,
+    InputRef,
     Layout,
     Space,
     Table,
     TableColumnsType,
-    TableColumnType
+    TableColumnType,
 } from "antd";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
@@ -14,7 +15,9 @@ import { CrudDataSourceService } from "../../../services";
 import { CommunityModel } from "../../../models";
 import { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
+import {
+    SearchOutlined,
+} from '@ant-design/icons';
 import { useAuth } from "../../../hooks";
 
 type DataIndex = keyof TableMemberRequest;
@@ -147,7 +150,6 @@ export function CommonAddMemberRequests(props: any) {
             dataIndex: 'reason',
             key: 'reason',
             width: '20%',
-            ...getColumnSearchProps('reason'),
         },
         {
             title: 'Статус',
@@ -204,7 +206,7 @@ export function CommonAddMemberRequests(props: any) {
 
     useEffect(() => {
         loadData();
-    }, [loadData]);
+    }, [loadData, loading]);
 
     return (
         <Layout

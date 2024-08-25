@@ -11,4 +11,5 @@ export * from './crud/pagination.interface';
 export * from './community/community-card.interface';
 export * from './community/community-settings.interface';
 export * from './membership/table-member-request.interface';
+export * from './membership/table-my-member-request.interface';
 export * from './voting/simple-voting.interface';

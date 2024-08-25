@@ -203,5 +203,9 @@ export class CrudDataSourceService<T extends ApiModel>
         }
     }
 
+    async delete(id: string) {
+        const url = `/${this.model.entityName}/${id}`;
+        await this.http.delete<void>(url);
+}
 
 }

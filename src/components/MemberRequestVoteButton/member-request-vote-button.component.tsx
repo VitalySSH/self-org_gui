@@ -92,6 +92,7 @@ export function MemberRequestVoteButton(props: any) {
                 setVote(r.vote);
                 successInfo('Голос отдан');
                 setModalOpen(false);
+                setDisabled(true);
             }).catch((error) => {
                     errorInfo(`Ошибка сохранения запроса: ${error}`);
                 });
