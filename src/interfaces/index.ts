@@ -13,3 +13,4 @@ export * from './community/community-settings.interface';
 export * from './membership/table-member-request.interface';
 export * from './membership/table-my-member-request.interface';
 export * from './voting/simple-voting.interface';
+export * from './components/select.interface';

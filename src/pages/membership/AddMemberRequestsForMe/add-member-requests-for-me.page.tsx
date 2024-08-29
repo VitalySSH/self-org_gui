@@ -20,11 +20,13 @@ import {
 } from '@ant-design/icons';
 import { useAuth } from "../../../hooks";
 import { MemberRequestVoteButton } from "../../../components";
+import { useNavigate } from "react-router-dom";
 
 type DataIndex = keyof TableMemberRequest;
 
 export function AddMemberRequestsForMe(props: any) {
 
+    const navigate = useNavigate();
     const authData: AuthContextProvider = useAuth();
     const currentUserId = authData.user?.id;
     const [loading, setLoading] =
@@ -204,6 +206,7 @@ export function AddMemberRequestsForMe(props: any) {
                 const settings =
                     settingsList.length ? settingsList[0] : undefined;
                 const items: TableMemberRequest[] = [];
+                if (!settings) navigate('/no-much-page');
                 (settings?.adding_members || [])
                     .forEach(requestMember => {
                         const isMyRequest =

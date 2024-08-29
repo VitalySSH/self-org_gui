@@ -24,6 +24,7 @@ import {
 } from '@ant-design/icons';
 import { useAuth } from "../../../hooks";
 import {
+    MemberRequestJoinButton,
     MemberRequestRemoveButton,
 } from "../../../components";
 
@@ -192,9 +193,14 @@ export function MyAddMemberRequests() {
             key: 'action',
             render: (item: TableMyMemberRequest) => {
                 return (
-                    <MemberRequestRemoveButton
+                  item.statusCode !== 'request_successful' ?
+                    <MemberRequestJoinButton
                         tableRow={item}
                         setLoading={setLoading}
+                    /> :
+                    <MemberRequestRemoveButton
+                      tableRow={item}
+                      setLoading={setLoading}
                     />
                 );
             },
@@ -235,6 +241,7 @@ export function MyAddMemberRequests() {
                         key: requestMember.id || '',
                         communityName: communityName || '',
                         communityDescription: communityDescription || '',
+                        communityId: requestMember.community?.id || '',
                         reason: requestMember.reason || '',
                         status: requestMember.status?.name || '',
                         statusCode: requestMember.status?.code || '',

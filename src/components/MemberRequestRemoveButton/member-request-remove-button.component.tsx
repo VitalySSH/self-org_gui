@@ -53,6 +53,7 @@ export function MemberRequestRemoveButton(props: any) {
                 <Button
                     danger
                     disabled={tableRow.statusCode !== 'on_consideration'}
+                    style={{ width: '90%' }}
                 >
                     Удалить заявку
                 </Button>

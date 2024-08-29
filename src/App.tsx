@@ -6,46 +6,19 @@ import {
     ProtectedRoute,
 } from "./components";
 import {
-    AllCommunities,
-    MyCommunities,
-    NoMatchPage,
     SignIn,
     SignUp,
     Verify2FA,
-    NewCommunity,
     MyCommunitySettings,
     AddMemberRequest,
-    CommunitySummary, MyAddMemberRequests,
+    CommunitySummary,
 } from "./pages";
 
 function App() {
       return (
           <AuthProvider>
               <Routes>
-                  <Route path='/*' element={<MainApp />}
-                  >
-                      <Route path='communities' element={
-                          <ProtectedRoute>
-                              <AllCommunities />
-                          </ProtectedRoute>
-                      } />
-                      <Route path='my-communities' element={
-                          <ProtectedRoute>
-                            <MyCommunities />
-                          </ProtectedRoute>
-                      }>
-                      </Route>
-                      <Route path='new-community' element={
-                          <ProtectedRoute>
-                            <NewCommunity />
-                          </ProtectedRoute>
-                      } />
-                      <Route path='my-add-requests' element={
-                          <ProtectedRoute>
-                              <MyAddMemberRequests />
-                          </ProtectedRoute>
-                      } />
-                  </Route>
+                  <Route path='/*' element={<MainApp />}/>
                   <Route path='/verify-2fa' element={<Verify2FA />} />
                   <Route path='/sign-in' element={<SignIn />} />
                   <Route path='/sign-up' element={<SignUp />} />
@@ -61,8 +34,6 @@ function App() {
                       } />
                       <Route path='add-member' element={<AddMemberRequest />} />
                   </Route>
-
-                  <Route path="*" element={<NoMatchPage />} />
 
               </Routes>
           </AuthProvider>

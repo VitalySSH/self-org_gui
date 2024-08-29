@@ -19,11 +19,13 @@ import {
     SearchOutlined,
 } from '@ant-design/icons';
 import { useAuth } from "../../../hooks";
+import { useNavigate } from "react-router-dom";
 
 type DataIndex = keyof TableMemberRequest;
 
 export function CommonAddMemberRequests(props: any) {
 
+    const navigate = useNavigate();
     const authData: AuthContextProvider = useAuth();
     const [loading, setLoading] =
         useState(true);
@@ -196,8 +198,8 @@ export function CommonAddMemberRequests(props: any) {
                             items.push(item);
                         });
                     setDataSource(items);
-                }).catch((error) => {
-                console.log(error);
+                }).catch(() => {
+                navigate('/no-much-page');
             }).finally(() => {
                 setLoading(false);
             });

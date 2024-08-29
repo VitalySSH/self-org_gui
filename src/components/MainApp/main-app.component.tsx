@@ -12,11 +12,14 @@ import {
 import {
     AboutPage,
     AllCommunities,
+    JoinCommunity,
     MyAddMemberRequests,
     MyCommunities,
-    NewCommunity
+    NewCommunity,
+    NoMatchPage
 } from "../../pages";
 import { Route, Routes, useLocation } from "react-router-dom";
+import { ProtectedRoute } from "../ProtectedRoute/protected-route.component.tsx";
 
 
 const {
@@ -47,10 +50,32 @@ export function MainApp () {
                 <Content className="main-content">
                     {location.pathname === '/' && <AboutPage />}
                     <Routes>
-                        <Route path='/communities' element={<AllCommunities />} />
-                        <Route path='/my-communities' element={<MyCommunities />} />
-                        <Route path='/new-community' element={<NewCommunity />} />
-                        <Route path='/my-add-requests' element={<MyAddMemberRequests />} />
+                        <Route path='/communities' element={
+                            <ProtectedRoute>
+                                <AllCommunities />
+                            </ProtectedRoute>
+                        } />
+                        <Route path='/my-communities' element={
+                            <ProtectedRoute>
+                                <MyCommunities />
+                            </ProtectedRoute>
+                        } />
+                        <Route path='/new-community' element={
+                            <ProtectedRoute>
+                                <NewCommunity />
+                            </ProtectedRoute>
+                        } />
+                        <Route path='/my-add-requests' element={
+                            <ProtectedRoute>
+                                <MyAddMemberRequests />
+                            </ProtectedRoute>
+                        } />
+                        <Route path='/my-add-requests/:id' element={
+                            <ProtectedRoute>
+                                <JoinCommunity />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="*" element={<NoMatchPage />} />
                     </Routes>
                 </Content>
                 <Footer className="footer">

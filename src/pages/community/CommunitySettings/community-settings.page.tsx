@@ -3,7 +3,6 @@ import {
     Form,
     Input,
     Layout,
-    message,
     Space,
     Spin,
 } from "antd";
@@ -13,11 +12,11 @@ import {
     CommunityModel,
 } from "../../../models";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function CommunitySettings(props: any) {
 
-    const [messageApi, contextHolder] =
-        message.useMessage();
+    const navigate = useNavigate();
     const [settingsLoading, setSettingsLoading] =
         useState(true);
     const communityService =
@@ -25,13 +24,6 @@ export function CommunitySettings(props: any) {
 
     const communityId = props?.communityId;
     const [form] = Form.useForm();
-
-    const errorInfo = (content: string) => {
-        messageApi.open({
-            type: 'error',
-            content: content,
-        }).then();
-    };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const getCommunitySettings = () => {
@@ -63,8 +55,8 @@ export function CommunitySettings(props: any) {
                     form.setFieldValue('is_minority_not_participate',
                         settingsInst?.is_minority_not_participate || false);
                     form.setFieldValue('creator', creatorFio);
-            }).catch((error) => {
-                errorInfo(`Ошибка получения сообщества: ${error}`);
+            }).catch(() => {
+                navigate('/no-much-page');
             }).finally(() => {
                 setSettingsLoading(false);
             });
@@ -81,7 +73,6 @@ export function CommunitySettings(props: any) {
 
     return (
         <Layout>
-            {contextHolder}
             <Space
                 style={{ marginTop: 10, marginBottom: 30 }}
             >

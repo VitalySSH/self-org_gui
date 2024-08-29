@@ -4,6 +4,7 @@ export * from './community/NewCommunity/new-community.page';
 export * from './community/CommunitySettings/community-settings.page';
 export * from './community/MyCommunitySettings/my-community-settings.page';
 export * from './community/CommunitySummary/community-summary.page';
+export * from './community/JoinCommunity/join-community.page';
 export * from './shared/NoMatchPage/no-match.page';
 export * from './shared/AboutPage/about.page';
 export * from './profile/MyProfile/my-profile.page';
