@@ -70,7 +70,7 @@ export function MainApp () {
                                 <MyAddMemberRequests />
                             </ProtectedRoute>
                         } />
-                        <Route path='/my-add-requests/:id' element={
+                        <Route path='/my-add-requests/community/:id' element={
                             <ProtectedRoute>
                                 <JoinCommunity />
                             </ProtectedRoute>

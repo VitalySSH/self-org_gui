@@ -9,6 +9,7 @@ export function MemberRequestRemoveButton(props: any) {
     const tableRow = props.tableRow;
     const [messageApi, contextHolder] =
         message.useMessage();
+    const statusCodes = ['community_member', 'excluded'];
 
     const successInfo = (content: string) => {
         messageApi.open({
@@ -55,7 +56,10 @@ export function MemberRequestRemoveButton(props: any) {
                     disabled={tableRow.statusCode !== 'on_consideration'}
                     style={{ width: '90%' }}
                 >
-                    Удалить заявку
+                    {
+                        statusCodes.includes(tableRow.statusCode) ?
+                            'Покинуть сообщество' : 'Удалить заявку'
+                    }
                 </Button>
             </Popconfirm>
         </>

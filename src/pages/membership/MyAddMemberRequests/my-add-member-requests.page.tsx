@@ -24,6 +24,7 @@ import {
 } from '@ant-design/icons';
 import { useAuth } from "../../../hooks";
 import {
+    MemberRequestDisputeButton,
     MemberRequestJoinButton,
     MemberRequestRemoveButton,
 } from "../../../components";
@@ -145,6 +146,64 @@ export function MyAddMemberRequests() {
             ),
     });
 
+    const renderAction = (row: TableMyMemberRequest) => {
+        switch (row.statusCode) {
+            case 'on_consideration':
+                return (
+                    <MemberRequestRemoveButton
+                        tableRow={row}
+                        setLoading={setLoading}
+                    />
+                );
+            case 'request_successful':
+                return (
+                    <>
+                        <MemberRequestJoinButton
+                            tableRow={row}
+                            setLoading={setLoading}
+                        />
+                        <div
+                            style={{
+                                marginTop: 10
+                            }}
+                        >
+                            <MemberRequestRemoveButton
+                                tableRow={row}
+                                setLoading={setLoading}
+                            />
+                        </div>
+                    </>
+                );
+            case 'community_member':
+                return (
+                    <MemberRequestRemoveButton
+                        tableRow={row}
+                        setLoading={setLoading}
+                    />
+                );
+            case 'excluded':
+                return (
+                    <>
+                        <MemberRequestDisputeButton
+                            tableRow={row}
+                            setLoading={setLoading}
+                        />
+                        <div
+                            style={{
+                                marginTop: 10
+                            }}
+                        >
+                            <MemberRequestRemoveButton
+                                tableRow={row}
+                                setLoading={setLoading}
+                            />
+                        </div>
+                    </>
+                );
+        }
+
+    }
+
     const columns: TableColumnsType<TableMyMemberRequest> = [
         {
             title: 'Наименование сообщества',
@@ -192,17 +251,7 @@ export function MyAddMemberRequests() {
             dataIndex: '',
             key: 'action',
             render: (item: TableMyMemberRequest) => {
-                return (
-                  item.statusCode !== 'request_successful' ?
-                    <MemberRequestJoinButton
-                        tableRow={item}
-                        setLoading={setLoading}
-                    /> :
-                    <MemberRequestRemoveButton
-                      tableRow={item}
-                      setLoading={setLoading}
-                    />
-                );
+                return renderAction(item);
             },
         },
     ];

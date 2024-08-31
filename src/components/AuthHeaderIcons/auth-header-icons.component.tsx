@@ -113,6 +113,7 @@ export function AuthHeaderIcons() {
             >
                 <div className="profile-avatar">
                     <Avatar
+                        draggable
                         size={{ xs: 64, sm: 90, md: 128, lg: 200, xl: 256, xxl: 300 }}
                         icon={<UserOutlined />}
                     />

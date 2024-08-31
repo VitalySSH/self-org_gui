@@ -1,9 +1,8 @@
 import { Card, Layout, List, Space, Typography } from "antd";
 import { useEffect, useState } from "react";
 import {
-    CommunityAoDataSourceService,
+    CommunityAOService,
 } from "../../../services";
-import { CommunityModel } from "../../../models";
 import { CloseSquareOutlined, CheckSquareOutlined } from "@ant-design/icons";
 import Meta from "antd/es/card/Meta";
 import { useNavigate } from "react-router-dom";
@@ -17,8 +16,7 @@ export function MyCommunities() {
     const [dataSource, setDataSource] =
         useState([] as CommunityCard[]);
 
-    const communityService =
-        new CommunityAoDataSourceService(CommunityModel);
+    const communityService = new CommunityAOService();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const loadData = () => {

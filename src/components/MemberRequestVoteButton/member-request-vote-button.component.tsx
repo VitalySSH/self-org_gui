@@ -166,7 +166,7 @@ export function MemberRequestVoteButton(props: any) {
                 </Form>
             </Modal>
             <Button
-                disabled={!tableRow.isMyRequest}
+                disabled={tableRow.isMyRequest}
                 onClick={toVote}
             >
                 Проголосовать

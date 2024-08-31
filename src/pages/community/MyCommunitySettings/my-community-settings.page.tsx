@@ -16,7 +16,7 @@ import {
     CommunityNameModel,
     UserCommunitySettingsModel
 } from "../../../models";
-import { AuthContextProvider, CommunitySettings } from "../../../interfaces";
+import { AuthContextProvider, CommunitySettingsInterface } from "../../../interfaces";
 import { useAuth } from "../../../hooks";
 import { useNavigate } from "react-router-dom";
 import { SelectWithAddValue } from "../../../components";
@@ -131,7 +131,7 @@ export function MyCommunitySettings(props: any) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const getCommunityNames = () => {
-        if (nameLoading && authData.user && communityId) {
+        if (nameLoading && communityId) {
             nameService.list(
                 [
                     {
@@ -152,7 +152,7 @@ export function MyCommunitySettings(props: any) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const getCommunityDescriptions = () => {
-        if (descLoading && authData.user && communityId) {
+        if (descLoading && communityId) {
             descriptionService.list(
                 [
                     {
@@ -221,7 +221,7 @@ export function MyCommunitySettings(props: any) {
         }
     };
 
-    const onFinish = (formData: CommunitySettings) => {
+    const onFinish = (formData: CommunitySettingsInterface) => {
         settings.name = name;
         settings.description = description;
         settings.vote = formData.vote;

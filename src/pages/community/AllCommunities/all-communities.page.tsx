@@ -43,7 +43,7 @@ export function AllCommunities() {
                             (community.main_settings?.adding_members || [])
                                 .filter(
                                     (rm) =>
-                                        rm.creator?.id === authData.user?.id
+                                        rm.member?.id === authData.user?.id
                                 ).length > 0;
                         const item = {
                             id: community.id || '',

@@ -4,13 +4,17 @@ import {
     Checkbox,
     Form,
     Input,
+    InputNumber,
     Layout,
     message,
     Space,
     Typography
 } from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import {AuthContextProvider, CommunitySettings} from "../../../interfaces";
+import {
+    AuthContextProvider,
+    CommunitySettingsInterface
+} from "../../../interfaces";
 import { CrudDataSourceService } from "../../../services";
 import {
     CommunityDescriptionModel,
@@ -33,6 +37,10 @@ export function NewCommunity() {
         message.useMessage();
     const [buttonLoading, setButtonLoading] =
         useState(false);
+    const [disabled, setDisabled] =
+        useState(true);
+
+    const [form] = Form.useForm();
 
     const communityId = v4();
     const userRelation = authData.getUserRelation();
@@ -62,7 +70,17 @@ export function NewCommunity() {
         }).then();
     };
 
-    const onFinish = (formData: CommunitySettings) => {
+    const handleFormChange = () => {
+        const formData = form.getFieldsValue();
+        const isValid =
+            Boolean(formData.name) &&
+            Boolean(formData.description) &&
+            Boolean(formData.quorum) &&
+            Boolean(formData.vote);
+        setDisabled(!isValid);
+    }
+
+    const onFinish = (formData: CommunitySettingsInterface) => {
         setButtonLoading(true);
         let community =
             communityService.createRecord();
@@ -153,7 +171,8 @@ export function NewCommunity() {
         ).then((statuses) => {
             const status =
                 statuses.length ? statuses[0] : undefined;
-            const requestMember = new RequestMemberModel();
+            const requestMember =
+                requestMemberService.createRecord();
             requestMember.reason = 'Создатель сообщества';
             requestMember.member = userRelation;
             requestMember.community = communityModel;
@@ -186,37 +205,85 @@ export function NewCommunity() {
                     style={{ textAlign: "center" }}
                 >Новое сообщество</Typography.Title>
                 <Form
+                    form={form}
                     name='new-community-settings'
                     onFinish={onFinish}
                     style={{ width: 600 }}
+                    onFieldsChange={handleFormChange}
                 >
                     <Form.Item
                         name='name'
                         label='Наименование'
                         labelCol={{ span: 24 }}
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Пожалуйста, укажите наименование сообщества',
+                            },
+                        ]}
+                        hasFeedback
                     >
-                        <Input required />
+                        <Input />
                     </Form.Item>
                     <Form.Item
                         name='description'
                         label='Описание'
                         labelCol={{ span: 24 }}
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Пожалуйста, заполните описание сообщества',
+                            },
+                        ]}
+                        hasFeedback
                     >
-                        <TextArea required rows={5} />
+                        <TextArea rows={5} />
                     </Form.Item>
                     <Form.Item
                         name='quorum'
-                        label='Кворум'
+                        label='Кворум (%)'
                         labelCol={{ span: 24 }}
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Пожалуйста, укажите кворум сообщества, значение от 1 до 100%.',
+                            },
+                        ]}
+                        hasFeedback
                     >
-                        <Input type="number" required />
+                        <InputNumber
+                            type="number"
+                            controls={false}
+                            max={100}
+                            min={1}
+                            step={1}
+                            style={{
+                                width: '20%'
+                            }}
+                        />
                     </Form.Item>
                     <Form.Item
                         name='vote'
-                        label='Принятие решения'
+                        label='Решение (%)'
                         labelCol={{ span: 24 }}
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Пожалуйста, укажите процент голосов для принятия решения, значение от 50 до 100%.',
+                            },
+                        ]}
+                        hasFeedback
                     >
-                        <Input type="number" required />
+                        <InputNumber
+                            type="number"
+                            controls={false}
+                            max={100}
+                            min={50}
+                            step={1}
+                            style={{
+                                width: '20%'
+                            }}
+                        />
                     </Form.Item>
                     <Form.Item
                         name='is_secret_ballot'
@@ -263,6 +330,7 @@ export function NewCommunity() {
                             type='primary'
                             htmlType='submit'
                             loading={buttonLoading}
+                            disabled={disabled}
                         >
                             Сохранить
                         </Button>

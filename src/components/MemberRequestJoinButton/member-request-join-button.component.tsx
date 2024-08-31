@@ -8,7 +8,7 @@ export function MemberRequestJoinButton(props: any) {
     const navigate = useNavigate();
 
     const join = () => {
-        navigate(tableRow.communityId)
+        navigate(`community/${tableRow.communityId}`)
 
     }
 

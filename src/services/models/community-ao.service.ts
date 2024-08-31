@@ -1,14 +1,15 @@
 import { CrudDataSourceService } from "../crud-data-source.service.ts";
 import { CommunityModel } from "../../models";
-import { Filters, ModelType, Orders } from "../../types";
+import { Filters, Orders } from "../../types";
 import { CrudApiDataInterface, Pagination } from "../../interfaces";
+import { AOApiPath } from "../../shared/config.ts";
 
 
-export class CommunityAoDataSourceService
+export class CommunityAOService
     extends CrudDataSourceService<CommunityModel>{
 
-    constructor(modelType: ModelType<CommunityModel>) {
-        super(modelType, 'http://localhost:8080/api/v1/ao');
+    constructor() {
+        super(CommunityModel, AOApiPath);
     }
 
     async myList(

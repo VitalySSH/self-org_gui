@@ -1,4 +1,4 @@
-export interface CommunitySettings {
+export interface CommunitySettingsInterface {
     name: string;
     description: string;
     quorum: number;
