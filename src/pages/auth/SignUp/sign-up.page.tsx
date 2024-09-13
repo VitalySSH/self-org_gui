@@ -23,7 +23,7 @@ export function SignUp(){
         userModel.hashed_password = btoa(encryptPassword(formData.password));
 
         userService.save(userModel).then(() => {
-            navigate('/sign-in', { preventScrollReset: true });
+            navigate('/sign-in', { preventScrollReset: true , state: { signUp: true }});
         }).catch((error) => {
             console.log(error);
         });

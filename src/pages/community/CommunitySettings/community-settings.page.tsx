@@ -3,6 +3,7 @@ import {
     Form,
     Input,
     Layout,
+    Select,
     Space,
     Spin,
 } from "antd";
@@ -30,9 +31,10 @@ export function CommunitySettings(props: any) {
         if (settingsLoading && communityId) {
             communityService.get(communityId,
                 [
+                    'creator',
                     'main_settings.name',
                     'main_settings.description',
-                    'creator',
+                    'main_settings.init_categories',
                 ])
                 .then(community => {
                     const firstname =
@@ -42,6 +44,9 @@ export function CommunitySettings(props: any) {
                     const creatorFio = `${firstname} ${surname}`;
                     const settingsInst =
                         community.main_settings;
+                    const initCategories =
+                        (settingsInst?.init_categories || [])
+                            .map((it) => it.name);
                     form.setFieldValue('name', settingsInst?.name?.name);
                     form.setFieldValue(
                         'description',
@@ -55,6 +60,7 @@ export function CommunitySettings(props: any) {
                     form.setFieldValue('is_minority_not_participate',
                         settingsInst?.is_minority_not_participate || false);
                     form.setFieldValue('creator', creatorFio);
+                    form.setFieldValue('init_categories', initCategories);
             }).catch(() => {
                 navigate('/no-much-page');
             }).finally(() => {
@@ -102,17 +108,25 @@ export function CommunitySettings(props: any) {
                         </Form.Item>
                         <Form.Item
                             name='quorum'
-                            label='Кворум'
+                            label='Кворум (%)'
                             labelCol={{ span: 24 }}
                         >
-                            <Input type="number" readOnly />
+                            <Input
+                                type="number"
+                                style={{ width: '20%'}}
+                                readOnly
+                            />
                         </Form.Item>
                         <Form.Item
                             name='vote'
-                            label='Принятие решения'
+                            label='Решение (%)'
                             labelCol={{ span: 24 }}
                         >
-                            <Input type="number" readOnly />
+                            <Input
+                                type="number"
+                                style={{ width: '20%'}}
+                                readOnly
+                            />
                         </Form.Item>
                         <Form.Item
                             name='is_secret_ballot'
@@ -137,6 +151,19 @@ export function CommunitySettings(props: any) {
                             valuePropName="checked"
                         >
                             <Checkbox disabled />
+                        </Form.Item>
+                        <Form.Item
+                            name='init_categories'
+                            label='Категории инициатив'
+                            labelCol={{ span: 24 }}
+                        >
+                            <Select
+                                mode="multiple"
+                                disabled={true}
+                                showArrow={false}
+                            >
+
+                            </Select>
                         </Form.Item>
                         <Form.Item
                             name='creator'

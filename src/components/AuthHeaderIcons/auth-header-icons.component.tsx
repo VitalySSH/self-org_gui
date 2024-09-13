@@ -55,7 +55,7 @@ export function AuthHeaderIcons() {
             user[key] = value;
         }
 
-        authData.login(user as UserInterface);
+        authData.login(user as UserInterface, false);
 
         userService.save(userModel).then(() => {
             setModalOpen(false);

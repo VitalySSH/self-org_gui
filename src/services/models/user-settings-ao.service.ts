@@ -1,6 +1,7 @@
 import { CrudDataSourceService } from "../crud-data-source.service.ts";
 import { UserCommunitySettingsModel } from "../../models";
 import { AOApiPath } from "../../shared/config.ts";
+import { CommunitySettingsInterface } from "../../interfaces";
 
 
 export class UserSettingsAoService
@@ -23,6 +24,14 @@ export class UserSettingsAoService
         }
 
         return this.http.post<void>(url, data);
+    }
+
+    async createCommunity(
+        settings: CommunitySettingsInterface
+    ) {
+        const url = `/${this.model.entityName}/create_community`;
+
+        return this.http.post<void>(url, settings);
     }
 
 }

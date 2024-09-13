@@ -18,4 +18,5 @@ export interface SelectInterface {
     setNewTextValue: SetNewTextValue;
     bindLabel: string;
     placeholder: string;
+    multiple?: boolean;
 }

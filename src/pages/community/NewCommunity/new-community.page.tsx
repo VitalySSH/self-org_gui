@@ -1,4 +1,3 @@
-import { v4 } from "uuid";
 import {
     Button,
     Checkbox,
@@ -10,29 +9,21 @@ import {
     Space,
     Typography
 } from "antd";
+import {
+    MinusCircleOutlined,
+    PlusOutlined,
+} from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import {
-    AuthContextProvider,
     CommunitySettingsInterface
 } from "../../../interfaces";
-import { CrudDataSourceService } from "../../../services";
-import {
-    CommunityDescriptionModel,
-    CommunityModel,
-    CommunityNameModel,
-    CommunitySettingsModel,
-    RequestMemberModel,
-    StatusModel,
-    UserCommunitySettingsModel,
-} from "../../../models";
+import { UserSettingsAoService } from "../../../services";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../hooks";
 import { useState } from "react";
 
 export function NewCommunity() {
 
     const navigate = useNavigate();
-    const authData: AuthContextProvider = useAuth();
     const [messageApi, contextHolder] =
         message.useMessage();
     const [buttonLoading, setButtonLoading] =
@@ -41,27 +32,6 @@ export function NewCommunity() {
         useState(true);
 
     const [form] = Form.useForm();
-
-    const communityId = v4();
-    const userRelation = authData.getUserRelation();
-
-    const communityService =
-        new CrudDataSourceService(CommunityModel);
-    const settingsService =
-        new CrudDataSourceService(CommunitySettingsModel);
-    const userSettingsService =
-        new CrudDataSourceService(UserCommunitySettingsModel);
-    const nameService =
-        new CrudDataSourceService(CommunityNameModel);
-    const descriptionService =
-        new CrudDataSourceService(CommunityDescriptionModel);
-
-    const successInfo = (content: string) => {
-        messageApi.open({
-            type: 'success',
-            content: content,
-        }).then();
-    };
 
     const errorInfo = (content: string) => {
         messageApi.open({
@@ -82,113 +52,17 @@ export function NewCommunity() {
 
     const onFinish = (formData: CommunitySettingsInterface) => {
         setButtonLoading(true);
-        let community =
-            communityService.createRecord();
-        const mainSettings =
-            settingsService.createRecord();
-        const userSettings =
-            userSettingsService.createRecord();
-        settingsService.save(mainSettings)
-            .then((settingsInst) => {
-                community.id = communityId;
-                community.creator = userRelation;
-                community.main_settings = settingsInst;
-                communityService.save(community, true)
-                    .then((communityInst) => {
-                        community = communityInst;
-                        const name =
-                            nameService.createRecord();
-                        name.name = formData.name;
-                        name.creator_id = authData.user?.id;
-                        name.community_id = community.id;
-                        nameService.save(name)
-                            .then((nameInst) => {
-                                userSettings.name = nameInst;
-                                const description =
-                                    descriptionService.createRecord();
-                                description.value = formData.description;
-                                description.creator_id = authData.user?.id;
-                                description.community_id = community.id;
-                                descriptionService.save(description)
-                                    .then((descriptionInst) => {
-                                        userSettings.description = descriptionInst;
-                                        userSettings.vote = formData.vote;
-                                        userSettings.quorum = formData.quorum;
-                                        userSettings.is_not_delegate = formData.is_not_delegate;
-                                        userSettings.is_can_offer = formData.is_can_offer;
-                                        userSettings.is_default_add_member = formData.is_default_add_member;
-                                        userSettings.is_secret_ballot = formData.is_secret_ballot;
-                                        userSettings.is_minority_not_participate = formData.is_minority_not_participate;
-                                        userSettings.community_id = community.id;
-                                        userSettings.user = userRelation;
-                                        userSettingsService.save(userSettings)
-                                            .then((userSettingsInst) => {
-                                                community.user_settings = [userSettingsInst];
-                                                communityService.save(community)
-                                                    .then(() => {
-                                                        setButtonLoading(false);
-                                                        successInfo('Сообщество создано');
-                                                        createMemberRequest(community);
-                                                    }).catch((error) => {
-                                                    setButtonLoading(false);
-                                                    errorInfo(`Ошибка сохранения сообщества: ${error}`);
-                                                });
-                                            }).catch((error) => {
-                                            setButtonLoading(false);
-                                            errorInfo(`Ошибка создания пользовательских настроек: ${error}`);
-                                        });
-                                    }).catch((error) => {
-                                    setButtonLoading(false);
-                                    errorInfo(`Ошибка создания описания сообщества: ${error}`);
-                                });
-                            }).catch((error) => {
-                            setButtonLoading(false);
-                            errorInfo(`Ошибка создания наименования сообщества: ${error}`);
-                        });
-                    }).catch((error) => {
-                    setButtonLoading(false);
-                    errorInfo(`Ошибка создания сообщества: ${error}`);
-                });
-        }).catch((error) => {
+        const userSettingsAOService =
+            new UserSettingsAoService();
+        userSettingsAOService.createCommunity(formData)
+            .then(() => {
+                setButtonLoading(false);
+                navigate('/my-communities', { preventScrollReset: true });
+            }
+        ).catch((error) => {
             setButtonLoading(false);
-            errorInfo(`Ошибка создания настроек сообщества: ${error}`);
+            errorInfo(`Ошибка создания сообщества: ${error}`);
         });
-    }
-
-    const createMemberRequest = (communityModel: CommunityModel) => {
-        const statusService =
-            new CrudDataSourceService(StatusModel);
-        const requestMemberService =
-            new CrudDataSourceService(RequestMemberModel);
-        statusService.list(
-            [
-                {
-                    field: 'code',
-                    op: 'equals',
-                    val: 'community_member',
-                }
-            ]
-        ).then((statuses) => {
-            const status =
-                statuses.length ? statuses[0] : undefined;
-            const requestMember =
-                requestMemberService.createRecord();
-            requestMember.reason = 'Создатель сообщества';
-            requestMember.member = userRelation;
-            requestMember.community = communityModel;
-            requestMember.status = status;
-            requestMember.vote = true;
-            requestMemberService.save(requestMember).then(() => {
-                setTimeout(() => {
-                    navigate('/my-communities');
-                }, 2000);
-            }).catch((error) => {
-                errorInfo(`Ошибка создания запроса на добавление нового члена сообщества: ${error}`);
-            });
-        }).catch((error) => {
-            errorInfo(`Ошибка получения статусов: ${error}`);
-        });
-
     }
 
     return (
@@ -325,6 +199,48 @@ export function NewCommunity() {
                     >
                         <Checkbox />
                     </Form.Item>
+                    <Form.List name="categories">
+                        {(fields, { add, remove }) => (
+                            <>
+                                {fields.map(({ key, name, ...restField }) => (
+                                    <Space
+                                        key={key}
+                                        style={{ display: 'flex', marginBottom: 8, width: '100%' }}
+                                        align="baseline"
+                                    >
+                                        <Form.Item
+                                            {...restField}
+                                            labelCol={{ span: 24 }}
+                                            name={[name, 'name']}
+                                            rules={
+                                                [
+                                                    {
+                                                        required: true,
+                                                        message: 'Пожалуйста, укажите наименование категории'
+                                                    }
+                                                ]
+                                            }
+                                            hasFeedback
+                                        >
+                                            <Input placeholder="Наименование категории" />
+                                        </Form.Item>
+                                        <MinusCircleOutlined
+                                            onClick={() => remove(name)} />
+                                    </Space>
+                                ))}
+                                <Form.Item>
+                                    <Button
+                                        type="dashed"
+                                        onClick={() => add()}
+                                        block
+                                        icon={<PlusOutlined />}
+                                    >
+                                        Добавить категорию инициатив
+                                    </Button>
+                                </Form.Item>
+                            </>
+                        )}
+                    </Form.List>
                     <Form.Item>
                         <Button
                             type='primary'

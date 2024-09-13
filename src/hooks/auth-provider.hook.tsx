@@ -19,9 +19,11 @@ export const AuthProvider = (component: ProviderComponent) => {
     const userService =
         new CrudDataSourceService(UserModel);
 
-    const login = (user: UserInterface) => {
+    const login = (user: UserInterface, toMainPage: boolean = false) => {
         setUser(user);
-        navigate(-1);
+        if (toMainPage) {
+            navigate('/', { preventScrollReset: true });
+        } else navigate(-1);
     };
     const logout = () => {
         setUser(null);

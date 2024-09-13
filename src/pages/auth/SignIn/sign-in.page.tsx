@@ -1,14 +1,28 @@
-import { Button, Card, Checkbox, Form, Image, Input, message, Space } from 'antd';
+import {
+    Button,
+    Card,
+    Checkbox,
+    Form,
+    Image,
+    Input,
+    message,
+    Space
+} from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 
-import { useNavigate} from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../hooks";
 import { encryptPassword } from "../../../utils";
-import { AuthContextProvider, SignInFormDataInterface } from "../../../interfaces";
+import {
+    AuthContextProvider,
+    SignInFormDataInterface
+} from "../../../interfaces";
 import AuthApiClientService from "../../../services/auth-api-client.service.ts";
 
-export function SignIn() {
 
+export function SignIn() {
+    const location = useLocation();
+    const isSignUp = location.state?.signUp || false;
     const navigate = useNavigate();
     const authData: AuthContextProvider = useAuth();
 
@@ -23,17 +37,22 @@ export function SignIn() {
         AuthApiClientService.login(formData.email, secret_password)
             .then(async () => {
                 if (!authData.user) {
-                    const currentUser = await AuthApiClientService.getCurrentUser();
+                    const currentUser =
+                        await AuthApiClientService.getCurrentUser();
                     currentUser.secret_password = secret_password;
-                    authData.login(currentUser);
+                    authData.login(currentUser, isSignUp);
                 } else {
-                    navigate(-1);
+                    if (isSignUp) {
+                        navigate('/', { preventScrollReset: true });
+                    } else navigate(-1);
                 }
             }).catch((error: { response: { status: number; }; }) => {
             if (error.response.status == 401) {
-                message.warning('Введён некорректный email или пароль').then();
+                message.warning(
+                    'Введён некорректный email или пароль').then();
             } else if (error.response.status == 404) {
-                message.warning('Указанный адрес электронной почты не найден').then();
+                message.warning(
+                    'Указанный адрес электронной почты не найден').then();
             }
         });
     }

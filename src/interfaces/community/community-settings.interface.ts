@@ -1,6 +1,7 @@
 export interface CommunitySettingsInterface {
     name: string;
     description: string;
+    categories: { name: string }[];
     quorum: number;
     vote: number;
     is_secret_ballot: boolean;

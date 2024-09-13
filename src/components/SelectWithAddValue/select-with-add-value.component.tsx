@@ -50,6 +50,7 @@ export function SelectWithAddValue(props: SelectInterface) {
                 onChange={onValueChange}
                 showSearch={true}
                 value={props.formValue}
+                mode={ props.multiple ? 'multiple' : undefined }
                 dropdownRender={(menu) => (
                     <>
                         {menu}

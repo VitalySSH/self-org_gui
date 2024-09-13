@@ -4,7 +4,7 @@ import { UserModel } from "../../models";
 export interface AuthContextProvider {
     user?: UserInterface;
     is2FAVerified?: boolean;
-    login: (user: UserInterface) => void;
+    login: (user: UserInterface, toMainPage: boolean) => void;
     logout: () => void;
     getUserRelation: () => UserModel;
 }
