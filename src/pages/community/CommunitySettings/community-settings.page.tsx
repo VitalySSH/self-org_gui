@@ -175,7 +175,6 @@ export function CommunitySettings(props: any) {
                                 open={false}
                                 removeIcon={null}
                             >
-
                             </Select>
                         </Form.Item>
                         <Form.Item

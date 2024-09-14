@@ -1,21 +1,20 @@
-import React from "react";
+import { FormInstance } from "antd";
+import { CrudDataSourceService } from "../../services";
 
-type AddNewObj =
-    (e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => void;
-type SetObj = (a: any) => void;
-type SetFormValue = (a: string) => void;
-type SetNewTextValue = (a: string) => void;
+type SetFieldData = (d: any[]) => void;
+type SetOptions = (d: any[]) => void;
 type FieldType = 'input' | 'textarea';
 
+
 export interface SelectInterface {
-    objs: any[];
-    addNewObj: AddNewObj;
+    options: any[];
+    setOptions: SetOptions;
+    form: FormInstance;
+    fieldService: CrudDataSourceService<any>;
     fieldType: FieldType;
-    setObj: SetObj;
-    formValue: string | undefined;
-    setFormValue: SetFormValue;
-    newTextValue: string;
-    setNewTextValue: SetNewTextValue;
+    fieldData: any[];
+    setFieldData: SetFieldData;
+    formField: string;
     bindLabel: string;
     placeholder: string;
     multiple?: boolean;

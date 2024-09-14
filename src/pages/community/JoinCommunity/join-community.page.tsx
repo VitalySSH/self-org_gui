@@ -1,10 +1,12 @@
+import { v4 } from 'uuid';
 import {
     Button,
     Form,
     InputNumber,
     Layout,
     message,
-    Space, Spin,
+    Space,
+    Spin,
     Switch,
     Typography
 } from "antd";
@@ -20,12 +22,14 @@ import {
     CommunityDescriptionModel,
     CommunityModel,
     CommunityNameModel,
+    CommunitySettingsModel,
+    CategoryModel,
     UserCommunitySettingsModel,
 } from "../../../models";
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../../hooks";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { SelectWithAddValue } from "../../../components";
 
 export function JoinCommunity() {
@@ -35,32 +39,24 @@ export function JoinCommunity() {
     const [messageApi, contextHolder] =
         message.useMessage();
     const authData: AuthContextProvider = useAuth();
-    const [disabled, setDisabled] =
-        useState(false);
-    const [settingsLoading, setSettingsLoading] =
-        useState(true);
-    const [nameLoading, setNameLoading] =
-        useState(true);
-    const [descLoading, setDescLoading] =
-        useState(true);
+    const [settings, setSettings] =
+        useState({} as CommunitySettingsModel);
     const [requestMemberId, setRequestMemberId] =
         useState('');
     const [names, setNames] =
         useState([] as CommunityNameModel[]);
     const [descriptions, setDescriptions] =
         useState([] as CommunityDescriptionModel[]);
+    const [categories, setCategories] =
+        useState([] as CategoryModel[]);
     const [name, setName] =
-        useState({} as CommunityNameModel);
+        useState([] as CommunityNameModel[]);
     const [description, setDescription] =
-        useState({} as CommunityDescriptionModel);
-    const [nameValue, setNameValue] =
-        useState('');
-    const [descriptionValue, setDescriptionValue] =
-        useState('');
-    const [newNameValue, setNewNameValue] =
-        useState('');
-    const [newDescriptionValue, setNewDescriptionValue] =
-        useState('');
+        useState([] as CommunityDescriptionModel[]);
+    const [category, setCategory] =
+        useState([] as CategoryModel[]);
+    const [systemCategory, setSystemCategory] =
+        useState({} as CategoryModel);
     const [buttonLoading, setButtonLoading] =
         useState(false);
 
@@ -72,6 +68,8 @@ export function JoinCommunity() {
         new CrudDataSourceService(CommunityNameModel);
     const descriptionService =
         new CrudDataSourceService(CommunityDescriptionModel);
+    const categoryService =
+        new CrudDataSourceService(CategoryModel);
 
     const [form] = Form.useForm();
 
@@ -91,24 +89,38 @@ export function JoinCommunity() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const getCommunitySettings = () => {
-        if (settingsLoading && authData.user && id) {
+        if (authData.user && id && settings.id) {
             communityService.get(id,
                 ['main_settings.name',
                     'main_settings.description',
-                    'main_settings.adding_members.member']
+                    'main_settings.adding_members.member',
+                    'init_categories.status']
             ).then(communityInst => {
                 if (communityInst.main_settings) {
                     const settingsInst =
                         communityInst.main_settings;
-                    if (settingsInst.name) setName(settingsInst.name);
+                    setSettings(settingsInst);
+                    const initCategories: CategoryModel[] = [];
+                    (settingsInst?.init_categories || [])
+                        .forEach((cat) => {
+                            if (cat.status?.code === 'system_category') {
+                                setSystemCategory(cat);
+                            } else {
+                                initCategories.push(cat);
+                            }
+                        });
+                    if (settingsInst.name) {
+                        setName([settingsInst.name]);
+                    }
                     if (settingsInst.description) {
-                        setDescription(settingsInst.description);
+                        setDescription([settingsInst.description]);
+                    }
+                    if (initCategories) {
+                        setCategory(initCategories);
                     }
                     const nameValue = settingsInst.name?.name || '';
-                    setNameValue(nameValue);
                     const descValue =
                         settingsInst.description?.value || '';
-                    setDescriptionValue(descValue);
                     form.setFieldValue('name', nameValue);
                     form.setFieldValue('description', descValue);
                     form.setFieldValue('quorum', settingsInst.quorum);
@@ -128,26 +140,20 @@ export function JoinCommunity() {
                             (request) =>
                                 request.member?.id === authData.user?.id );
                     if (filtered.length) {
-                        setRequestMemberId(filtered[0].id || '');
+                        setRequestMemberId(filtered[0].id);
                     }
                 } else {
                     errorInfo(`Ошибка получения сообщества с id: ${id}`);
                 }
             }).catch(() => {
                 navigate('/no-much-page');
-            }).finally(() => {
-                setSettingsLoading(false);
             });
-        } else {
-            if (settingsLoading) {
-                setSettingsLoading(false);
-            }
         }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const getCommunityNames = () => {
-        if (nameLoading && id) {
+        if (id && !names.length) {
             nameService.list(
                 [
                     {
@@ -160,15 +166,13 @@ export function JoinCommunity() {
                 setNames(communityNames);
             }).catch((error) => {
                 errorInfo(`Ошибка получения наименований: ${error}`);
-            }).finally(() => {
-                setNameLoading(false);
             });
         }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const getCommunityDescriptions = () => {
-        if (descLoading && id) {
+        if (id && !descriptions.length) {
             descriptionService.list(
                 [
                     {
@@ -181,8 +185,30 @@ export function JoinCommunity() {
                 setDescriptions(communityDescriptions);
             }).catch((error) => {
                 errorInfo(`Ошибка получения описаний: ${error}`);
-            }).finally(() => {
-                setDescLoading(false);
+            });
+        }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const getInitiativeCategories = () => {
+        if (id && !categories.length) {
+            categoryService.list(
+                [
+                    {
+                        field: 'community_id',
+                        op: 'equals',
+                        val: id,
+                    }
+                ], undefined, undefined,
+                ['status']
+            ).then(initiativeCategories => {
+                const filtered = initiativeCategories
+                    .filter((cat) =>
+                        cat.status?.code !== 'system_category');
+                setCategories(filtered);
+            }).catch((error) => {
+                errorInfo(
+                    `Ошибка получения категорий инициатив: ${error}`);
             });
         }
     }
@@ -191,56 +217,13 @@ export function JoinCommunity() {
         getCommunitySettings();
         getCommunityNames();
         getCommunityDescriptions();
+        getInitiativeCategories();
     }, [
         getCommunitySettings,
         getCommunityNames,
         getCommunityDescriptions,
+        getInitiativeCategories,
     ]);
-
-    const addName = (
-        e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
-        e.preventDefault();
-        if (newNameValue) {
-            const newName = nameService.createRecord();
-            newName.name = newNameValue;
-            newName.community_id = id;
-            newName.creator_id = authData.user?.id;
-            nameService.save(newName).then(nameInst => {
-                setNameValue(newNameValue);
-                setName(nameInst);
-                names.push(nameInst);
-                setNames(names);
-            }).finally(() => {
-                setNewNameValue('');
-            });
-        }
-    };
-
-    const addDescription = (
-        e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
-        e.preventDefault();
-        if (newDescriptionValue) {
-            const newDesc =
-                descriptionService.createRecord();
-            newDesc.value = newDescriptionValue;
-            newDesc.community_id = id;
-            newDesc.creator_id = authData.user?.id;
-            descriptionService.save(newDesc)
-                .then(descInst => {
-                    setDescriptionValue(newDescriptionValue);
-                    setDescription(descInst);
-                    descriptions.push(descInst);
-                    setDescriptions(descriptions);
-                }).finally(() => {
-                setNewDescriptionValue('');
-            });
-        }
-    };
-
-    const handleFormChange = () => {
-        const hasErrors = form.getFieldsError().some(({ errors }) => errors.length);
-        setDisabled(hasErrors);
-    }
 
     const onFinish = (formData: CommunitySettingsInterface) => {
         setButtonLoading(true);
@@ -248,24 +231,25 @@ export function JoinCommunity() {
             new UserSettingsAoService();
         const userSettings =
             userSettingsService.createRecord();
-        userSettings.user = authData.getUserRelation();
-        userSettings.community_id = id;
-        userSettings.name = name;
-        userSettings.description = description;
-        userSettings.vote = formData.vote;
-        userSettings.quorum = formData.quorum;
-        userSettings.is_secret_ballot = formData.is_secret_ballot;
-        userSettings.is_can_offer = formData.is_can_offer;
-        userSettings.is_minority_not_participate =
-            formData.is_minority_not_participate;
-        userSettings.is_default_add_member = formData.is_default_add_member;
-        userSettings.is_not_delegate = formData.is_not_delegate;
-        userSettingsService.save(userSettings)
-            .then((userSettingsInst) => {
+        if (systemCategory.id) {
+            category.push(systemCategory);
+        }
+        const userSettingsId = v4();
+        userSettings.id = userSettingsId;
+
+        userSettingsAOService.saveSettings(
+            userSettings,
+            formData,
+            name,
+            description,
+            category,
+            id || '',
+            authData.getUserRelation(),
+        ).then(() => {
                 userSettingsAOService.update_data_after_join(
                     id || '',
-                    userSettingsInst.id || '',
-                    requestMemberId
+                    userSettingsId,
+                    requestMemberId,
                 ).then(() => {
                     successInfo('Настройки сохранены');
                     navigate(`/my-communities/${id}`);
@@ -295,7 +279,7 @@ export function JoinCommunity() {
                 <Spin
                     tip="Загрузка данных"
                     size="large"
-                    spinning={settingsLoading}
+                    spinning={Boolean(!settings.id)}
                 >
                     <Form
                         name='join-community'
@@ -303,7 +287,6 @@ export function JoinCommunity() {
                         onFinish={onFinish}
                         preserve={true}
                         style={{ width: 600 }}
-                        onFieldsChange={handleFormChange}
                     >
                         <Form.Item
                             name='name'
@@ -315,20 +298,19 @@ export function JoinCommunity() {
                                     message: 'Пожалуйста, выберите наименование сообщества',
                                 },
                             ]}
-                            hasFeedback
                             required
                         >
                             <SelectWithAddValue
-                                objs={names}
-                                addNewObj={addName}
+                                options={names}
+                                setOptions={setNames}
+                                form={form}
+                                fieldService={nameService}
                                 fieldType="input"
+                                formField="name"
                                 bindLabel="name"
                                 placeholder="Введите своё наименование"
-                                setObj={setName}
-                                formValue={nameValue}
-                                setFormValue={setNameValue}
-                                newTextValue={newNameValue}
-                                setNewTextValue={setNewNameValue}
+                                fieldData={name}
+                                setFieldData={setName}
                             />
                         </Form.Item>
                         <Form.Item
@@ -341,19 +323,18 @@ export function JoinCommunity() {
                                     message: 'Пожалуйста, выберите описание сообщества',
                                 },
                             ]}
-                            hasFeedback
                         >
                             <SelectWithAddValue
-                                objs={descriptions}
-                                addNewObj={addDescription}
+                                options={descriptions}
+                                setOptions={setDescriptions}
+                                form={form}
+                                fieldService={descriptionService}
                                 fieldType="textarea"
+                                formField="description"
                                 bindLabel="value"
                                 placeholder="Введите своё описание"
-                                setObj={setDescription}
-                                formValue={descriptionValue}
-                                setFormValue={setDescriptionValue}
-                                newTextValue={newDescriptionValue}
-                                setNewTextValue={setNewDescriptionValue}
+                                fieldData={description}
+                                setFieldData={setDescription}
                             />
                         </Form.Item>
                         <Form.Item
@@ -366,7 +347,6 @@ export function JoinCommunity() {
                                     message: 'Пожалуйста, укажите кворум сообщества, значение от 1 до 100%.',
                                 },
                             ]}
-                            hasFeedback
                         >
                             <InputNumber
                                 type="number"
@@ -389,7 +369,6 @@ export function JoinCommunity() {
                                     message: 'Пожалуйста, укажите процент голосов для принятия решения, значение от 50 до 100%.',
                                 },
                             ]}
-                            hasFeedback
                         >
                             <InputNumber
                                 type="number"
@@ -457,12 +436,30 @@ export function JoinCommunity() {
                                 unCheckedChildren={<CloseOutlined />}
                             />
                         </Form.Item>
+                        <Form.Item
+                            name='init_categories'
+                            label='Категории инициатив'
+                            labelCol={{ span: 24 }}
+                        >
+                            <SelectWithAddValue
+                                options={categories}
+                                setOptions={setCategories}
+                                form={form}
+                                fieldService={categoryService}
+                                fieldType="input"
+                                formField="init_categories"
+                                bindLabel="name"
+                                placeholder="Введите свою категорию"
+                                fieldData={category}
+                                setFieldData={setCategory}
+                                multiple={true}
+                            />
+                        </Form.Item>
                         <Form.Item>
                             <Button
                                 type='primary'
                                 htmlType='submit'
                                 loading={buttonLoading}
-                                disabled={disabled}
                             >
                                 Сохранить
                             </Button>

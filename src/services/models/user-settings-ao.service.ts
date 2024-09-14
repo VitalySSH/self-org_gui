@@ -1,7 +1,16 @@
 import { CrudDataSourceService } from "../crud-data-source.service.ts";
-import { UserCommunitySettingsModel } from "../../models";
-import { CommunitySettingsInterface } from "../../interfaces";
+import {
+    CommunityDescriptionModel,
+    CommunityNameModel, 
+    CategoryModel, 
+    StatusModel,
+    UserCommunitySettingsModel,
+    UserModel
+} from "../../models";
 import { AOApiUrl } from "../../config/configuration.ts";
+import {
+    CommunitySettingsInterface,
+} from "../../interfaces";
 
 
 export class UserSettingsAoService
@@ -32,6 +41,172 @@ export class UserSettingsAoService
         const url = `/${this.model.entityName}/create_community`;
 
         return this.http.post<void>(url, settings);
+    }
+
+    async saveSettings(
+        settings: UserCommunitySettingsModel,
+        formData: CommunitySettingsInterface,
+        nameFieldData: CommunityNameModel[],
+        descriptionFieldData: CommunityDescriptionModel[],
+        categoriesFieldData: CategoryModel[],
+        communityId: string,
+        user: UserModel,
+        create: boolean = false,
+    ) {
+        const settingsService =
+            new CrudDataSourceService(UserCommunitySettingsModel);
+        if (create) {
+            settings.user = user;
+            settings.community_id = communityId;
+        }
+        const name =
+            await this._getOrCreateName(nameFieldData, communityId, user.id);
+        const description = await this._getOrCreateDescription(
+            descriptionFieldData, communityId, user.id);
+        const categories =
+            await this._getOrCreateCategories(
+                categoriesFieldData, communityId, user);
+        settings.name = name as CommunityNameModel;
+        settings.description = description as CommunityDescriptionModel;
+        settings.init_categories = categories as CategoryModel[];
+        settings.vote = formData.vote;
+        settings.quorum = formData.quorum;
+        settings.is_secret_ballot = formData.is_secret_ballot;
+        settings.is_can_offer = formData.is_can_offer;
+        settings.is_minority_not_participate =
+            formData.is_minority_not_participate;
+        settings.is_default_add_member = formData.is_default_add_member;
+        settings.is_not_delegate = formData.is_not_delegate;
+
+        return settingsService.save(settings, create);
+    }
+
+    private async _getOrCreateName(
+        fieldData: CommunityNameModel[],
+        communityId: string,
+        userId: string,
+    ) {
+        if (fieldData.length) {
+            const obj = fieldData[0];
+            if (obj === undefined) {
+                return undefined
+            } else if (obj.id) {
+                return obj;
+            } else {
+                return await this._createName(obj.name, communityId, userId);
+            }
+        } else {
+            return undefined;
+        }
+    }
+
+    private async _createName(
+        name: string | undefined,
+        communityId: string,
+        userId: string,
+    ) {
+        const nameService =
+            new CrudDataSourceService(CommunityNameModel);
+        const nameObj = nameService.createRecord();
+        nameObj.name = name;
+        nameObj.creator_id = userId;
+        nameObj.community_id = communityId
+
+        return nameService.save(nameObj, true);
+    }
+
+    private async _getOrCreateDescription(
+        fieldData: CommunityDescriptionModel[],
+        communityId: string,
+        userId: string,
+    ) {
+        if (fieldData.length) {
+            const obj = fieldData[0];
+            if (obj === undefined) {
+                return undefined
+            } else if (obj.id) {
+                return obj;
+            } else {
+                return await this._createDescription(
+                    obj.value, communityId, userId);
+            }
+        } else {
+            return undefined;
+        }
+    }
+
+    private async _createDescription(
+        value: string | undefined,
+        communityId: string,
+        userId: string,
+    ) {
+        const descriptionService =
+            new CrudDataSourceService(CommunityDescriptionModel);
+        const descriptionObj =
+            descriptionService.createRecord();
+        descriptionObj.value = value;
+        descriptionObj.creator_id = userId;
+        descriptionObj.community_id = communityId
+
+        return descriptionService.save(descriptionObj, true);
+    }
+
+    private async _getOrCreateCategories(
+        fieldData: CategoryModel[],
+        communityId: string,
+        user: UserModel,
+    ) {
+        if (fieldData.length) {
+            const categories: CategoryModel[] = [];
+            for (const category of fieldData) {
+                if (category) {
+                    if (category.id) {
+                        categories.push(category);
+                    } else {
+                        const newCategory =
+                            await this._createCategories(
+                                category.name, communityId, user);
+                        categories.push(newCategory);
+                    }
+                }
+            }
+            return categories;
+        } else {
+            return undefined;
+        }
+    }
+
+    private async _createCategories(
+        name: string | undefined,
+        communityId: string,
+        user: UserModel,
+    ) {
+        const categoryService =
+            new CrudDataSourceService(CategoryModel);
+        const status =
+            await this._getStatusByCode('on_consideration');
+        const categoryObj =
+            categoryService.createRecord();
+        categoryObj.name = name;
+        categoryObj.creator = user;
+        categoryObj.community_id = communityId;
+        categoryObj.status = status;
+
+        return await categoryService.save(categoryObj, true);
+    }
+
+    private async _getStatusByCode(code: string) {
+        const statusService =
+            new CrudDataSourceService(StatusModel);
+        const statuses = await statusService.list([
+            {
+                field: 'code',
+                op: 'equals',
+                val: code,
+            }
+        ]);
+
+        return statuses.length ? statuses[0] : undefined;
     }
 
 }
