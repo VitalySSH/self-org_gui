@@ -162,7 +162,6 @@ export function CommunitySettings(props: any) {
                                 disabled={true}
                                 showArrow={false}
                             >
-
                             </Select>
                         </Form.Item>
                         <Form.Item

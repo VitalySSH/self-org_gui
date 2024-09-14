@@ -1,7 +1,7 @@
 import { ModelConfig } from "../interfaces";
 
 export class ApiModel {
-    id?: string;
+    id!: string;
     [key: string]: any;
 
     get entityName(): string {

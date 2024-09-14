@@ -1,6 +1,5 @@
 import { ApiModel } from "./api-model.model.ts";
-import { modelConfig, attribute, manyToMany } from "../annotations";
-import { RequestMemberModel } from "./request-member.model.ts";
+import { modelConfig, attribute } from "../annotations";
 
 @modelConfig({
     entityName: 'user',
@@ -27,7 +26,7 @@ export class UserModel extends ApiModel{
     @attribute()
     hashed_password?: string;
 
-    @manyToMany('request_member')
-    adding_communities?: RequestMemberModel[]
+    @attribute()
+    created?: Date;
 
 }

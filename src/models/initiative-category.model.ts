@@ -8,10 +8,10 @@ import { StatusModel } from "./status.model.ts";
 })
 export class InitiativeCategoryModel extends ApiModel{
     @attribute()
-    name?: boolean;
+    name?: string;
 
     @attribute()
-    community_id?: boolean;
+    community_id?: string;
 
     @oneToMany('user')
     creator?: UserModel;
