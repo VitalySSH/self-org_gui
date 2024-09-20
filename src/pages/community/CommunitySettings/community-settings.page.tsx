@@ -160,7 +160,7 @@ export function CommunitySettings(props: any) {
                             <Select
                                 mode="multiple"
                                 disabled={true}
-                                showArrow={false}
+                                suffixIcon={null}
                             >
 
                             </Select>

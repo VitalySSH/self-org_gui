@@ -16,7 +16,7 @@ import {
     MyAddMemberRequests,
     MyCommunities,
     NewCommunity,
-    NoMatchPage
+    // NoMatchPage
 } from "../../pages";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { ProtectedRoute } from "../ProtectedRoute/protected-route.component.tsx";
@@ -75,7 +75,7 @@ export function MainApp () {
                                 <JoinCommunity />
                             </ProtectedRoute>
                         } />
-                        <Route path="*" element={<NoMatchPage />} />
+                        {/*<Route path="*" element={<NoMatchPage />} />*/}
                     </Routes>
                 </Content>
                 <Footer className="footer">

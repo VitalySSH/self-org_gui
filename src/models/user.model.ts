@@ -16,7 +16,7 @@ export class UserModel extends ApiModel{
     about_me?: string;
 
     @attribute()
-    foto_id?: string;
+    foto_id?: string | null;
 
     @attribute()
     email?: string;

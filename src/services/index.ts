@@ -1,5 +1,6 @@
 export * from './current-user.service';
 export * from './data-source.service';
 export * from './crud-data-source.service';
+export * from './file-storage.service';
 export * from './models/community-ao.service';
 export * from './models/user-settings-ao.service';

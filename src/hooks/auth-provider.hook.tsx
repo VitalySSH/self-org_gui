@@ -30,6 +30,11 @@ export const AuthProvider = (component: ProviderComponent) => {
         navigate('/', { preventScrollReset: true });
     };
 
+    const changeFotoId =(fotoId: string | null) => {
+        user.foto_id = fotoId;
+        setUser(user);
+    }
+
     const getUserRelation = (): UserModel => {
         const userModel = userService.createRecord();
         userModel.id = user.id;
@@ -42,6 +47,7 @@ export const AuthProvider = (component: ProviderComponent) => {
         login,
         logout,
         getUserRelation,
+        changeFotoId,
     };
 
 

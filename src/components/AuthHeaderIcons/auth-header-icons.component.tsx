@@ -20,15 +20,19 @@ import { CrudDataSourceService } from "../../services";
 import { UserModel } from "../../models";
 import { AuthContextProvider, UserInterface } from "../../interfaces";
 import { RightMenu } from "../RightMenu/right-menu.component.tsx";
+import { UploadAvatar } from "../UploadAvatar/upload-avatar.component.tsx";
+import FileStorageService from "../../services/file-storage.service.ts";
 
 export function AuthHeaderIcons() {
+
+    const authData: AuthContextProvider = useAuth();
+    const fileStorageService = FileStorageService;
 
     const [modalOpen, setModalOpen] =
         useState(false);
     const [drawerOpen, setDrawerOpen] =
         useState(false);
 
-    const authData: AuthContextProvider = useAuth();
     let userName = '';
     if (authData.user) {
         userName = `${authData.user.firstname } ${authData.user.surname }`;
@@ -47,23 +51,23 @@ export function AuthHeaderIcons() {
         const userService =
             new CrudDataSourceService(UserModel);
         const userModel = userService.createRecord();
-        userModel.id = authData.user?.id;
-        const user = authData.user as { [key: string]: any };
+        if (authData.user?.id) {
+            userModel.id = authData.user?.id;
+            const user = authData.user as { [key: string]: any };
 
-        for (const [key, value] of Object.entries(submitData)) {
-            userModel[key] = value;
-            user[key] = value;
+            for (const [key, value] of Object.entries(submitData)) {
+                userModel[key] = value;
+                user[key] = value;
+            }
+            authData.login(user as UserInterface, false);
+
+            userService.save(userModel).then(() => {
+                setModalOpen(false);
+            }).catch((error) => {
+                console.log(error);
+                setModalOpen(false);
+            });
         }
-
-        authData.login(user as UserInterface, false);
-
-        userService.save(userModel).then(() => {
-            setModalOpen(false);
-        }).catch((error) => {
-            console.log(error);
-            setModalOpen(false);
-        });
-
     }
 
     const handleCancel = () => {
@@ -88,6 +92,7 @@ export function AuthHeaderIcons() {
                         cursor: "pointer",
                         marginBottom: 10,
                     }}
+                    src={fileStorageService.getFileUrl(authData.user?.foto_id)}
                     onClick={avatarOnClick}
                 />
                 <div className="icon-text">
@@ -112,11 +117,7 @@ export function AuthHeaderIcons() {
                 style={{ top: 50 }}
             >
                 <div className="profile-avatar">
-                    <Avatar
-                        draggable
-                        size={{ xs: 64, sm: 90, md: 128, lg: 200, xl: 256, xxl: 300 }}
-                        icon={<UserOutlined />}
-                    />
+                    <UploadAvatar />
                 </div>
                 <Form
                     name='profile'

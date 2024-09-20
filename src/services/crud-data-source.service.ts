@@ -117,7 +117,9 @@ export class CrudDataSourceService<T extends ApiModel>
         const relations: { [key: string]: any } = {};
 
         Object.keys(model.attributes).forEach((attr) => {
-            attributes[attr] = model[attr];
+            if (model[attr] !== undefined) {
+                attributes[attr] = model[attr];
+            }
         });
         Object.keys(model.oneToMany).forEach((attr) => {
             if (model[attr]) {

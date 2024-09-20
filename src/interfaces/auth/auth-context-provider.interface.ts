@@ -7,4 +7,5 @@ export interface AuthContextProvider {
     login: (user: UserInterface, toMainPage: boolean) => void;
     logout: () => void;
     getUserRelation: () => UserModel;
+    changeFotoId: (fotoId: string | null) => void;
 }
