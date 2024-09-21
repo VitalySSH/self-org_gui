@@ -21,12 +21,10 @@ import { UserModel } from "../../models";
 import { AuthContextProvider, UserInterface } from "../../interfaces";
 import { RightMenu } from "../RightMenu/right-menu.component.tsx";
 import { UploadAvatar } from "../UploadAvatar/upload-avatar.component.tsx";
-import FileStorageService from "../../services/file-storage.service.ts";
 
 export function AuthHeaderIcons() {
 
     const authData: AuthContextProvider = useAuth();
-    const fileStorageService = FileStorageService;
 
     const [modalOpen, setModalOpen] =
         useState(false);
@@ -92,7 +90,7 @@ export function AuthHeaderIcons() {
                         cursor: "pointer",
                         marginBottom: 10,
                     }}
-                    src={fileStorageService.getFileUrl(authData.user?.foto_id)}
+                    src={authData.avatarUrl}
                     onClick={avatarOnClick}
                 />
                 <div className="icon-text">

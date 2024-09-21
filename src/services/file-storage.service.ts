@@ -89,7 +89,8 @@ class FileStorageService extends DataSourceService{
     async getFile(id: string) {
         return this.http.get<Blob>(
             `file/stream/${id}`,
-            { headers: {'accept': 'application/json'} }
+            { headers: {'accept': 'application/json'},
+                responseType: 'blob' }
         );
     }
 

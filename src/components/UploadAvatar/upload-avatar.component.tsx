@@ -14,12 +14,12 @@ import {
     Upload,
     UploadProps
 } from "antd";
-import {  useState } from "react";
+import { useState } from "react";
 import FileStorageService from "../../services/file-storage.service.ts";
 import { AuthContextProvider } from "../../interfaces";
 import { CrudDataSourceService } from "../../services";
 import { UserModel } from "../../models";
-import {useAuth} from "../../hooks";
+import { useAuth } from "../../hooks";
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -50,8 +50,7 @@ export function UploadAvatar() {
 
     const [loading, setLoading] =
         useState(false);
-    const [imageUrl, setImageUrl] =
-        useState<string>(fileStorageService.getFileUrl(authData.user?.foto_id));
+        (fileStorageService.getFileUrl(authData.user?.foto_id));
     const [fileId, setFileId] =
         useState(authData.user?.foto_id);
 
@@ -99,16 +98,16 @@ export function UploadAvatar() {
     const handleChange: UploadProps['onChange'] =
         (info) => {
             if (info.file.status === 'uploading') {
-                getBase64(info.file.originFileObj as FileType,
-                    (url) => {
-                        setLoading(false);
-                        setImageUrl(url);
-                    });
                 setLoading(true);
                 return;
             } else if (info.file.status === 'done') {
-                message.success(
-                    `Файл ${info.file.name} загружен`).then();
+                getBase64(info.file.originFileObj as FileType,
+                    (url) => {
+                        setLoading(false);
+                        authData.changeAvatarUrl(fileId, url);
+                        message.success(
+                            `Файл ${info.file.name} загружен`).then();
+                });
             } else if (info.file.status === 'error') {
                 setLoading(false);
                 message.error('Ошибка загрузки файла').then();
@@ -119,9 +118,9 @@ export function UploadAvatar() {
         if (fileId) {
             fileStorageService.deleteFile(fileId)
                 .then(() => {
-                    setImageUrl('');
                     message.success('Файл удалён').then();
                     saveUser(null);
+                    authData.changeAvatarUrl(fileId, '');
                     // FIXME: сделать, чтобы после удаления Avatar появлялась icon
                 });
         }
@@ -136,14 +135,14 @@ export function UploadAvatar() {
                         xs: 64, sm: 90, md: 128, lg: 200, xl: 256, xxl: 300
                     }}
                     icon={<UserOutlined />}
-                    src={imageUrl}
+                    src={authData.avatarUrl}
                 />
             </Flex>
             <div style={{ justifyItems: "right" }}>
                 <Button
-                    style={{ marginTop: 16 }}
+                    style={{ marginTop: 16, marginLeft: 16, width: '100%' }}
                     onClick={onDeleteFile}
-                    disabled={!Boolean(fileId)}
+                    disabled={!fileId}
                 >
                     <DeleteOutlined/>
                     Удалить
@@ -157,7 +156,7 @@ export function UploadAvatar() {
                 >
                     <Button
                         type="primary"
-                        style={{ marginTop: 16 }}
+                        style={{ marginTop: 16, marginLeft: 16, width: '100%' }}
                     >
                         {loading ? <LoadingOutlined /> : <PlusOutlined />}
                         Загрузить
