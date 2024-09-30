@@ -8,6 +8,8 @@ import {
     ToolOutlined,
     UserAddOutlined,
     BarChartOutlined,
+    ExceptionOutlined,
+    ThunderboltOutlined,
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
@@ -37,8 +39,12 @@ const items: MenuItem[] = [
         'menu-item', <BarChartOutlined className="menu-icon" />),
     getItem('Мои настройки', 'my-settings',
         'menu-item', <ToolOutlined className="menu-icon" />),
+    getItem('Правила', 'rules',
+        'menu-item', <ExceptionOutlined className="menu-icon" />),
     getItem('Инициативы', 'initiatives',
         'menu-item', <BulbOutlined className="menu-icon" />),
+    getItem('Споры', 'disputes',
+        'menu-item', <ThunderboltOutlined className="menu-icon" />),
     getItem('Мои делегаты', 'my-delegates',
         'menu-item', <TeamOutlined className="menu-icon" />),
     getItem('Заявки на вступление', 'add-member',

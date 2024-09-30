@@ -9,9 +9,6 @@ import {
     SignIn,
     SignUp,
     Verify2FA,
-    MyCommunitySettings,
-    AddMemberRequest,
-    CommunitySummary,
 } from "./pages";
 
 function App() {
@@ -28,11 +25,6 @@ function App() {
                           <Community />
                       </ProtectedRoute>
                   }>
-                      <Route path='summary' element={<CommunitySummary />} />
-                      <Route path='my-settings' element={
-                          <MyCommunitySettings />
-                      } />
-                      <Route path='add-member' element={<AddMemberRequest />} />
                   </Route>
 
               </Routes>

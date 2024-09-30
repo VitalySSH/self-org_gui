@@ -15,3 +15,5 @@ export * from './membership/AddMemberRequest/add-member-request.page';
 export * from './membership/CommonAddMemberRequests/common-add-member-requests.page';
 export * from './membership/AddMemberRequestsForMe/add-member-requests-for-me.page';
 export * from './membership/MyAddMemberRequests/my-add-member-requests.page';
+export * from './initiative/Initiatives/initiatives.page';
+export * from './rule/Rules/rules.page';
