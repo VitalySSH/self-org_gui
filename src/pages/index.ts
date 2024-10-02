@@ -17,3 +17,4 @@ export * from './membership/AddMemberRequestsForMe/add-member-requests-for-me.pa
 export * from './membership/MyAddMemberRequests/my-add-member-requests.page';
 export * from './initiative/Initiatives/initiatives.page';
 export * from './rule/Rules/rules.page';
+export * from './dispute/Disputes/disputes.page';

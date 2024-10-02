@@ -7,6 +7,7 @@ import {
     MyCommunitySettings,
     Initiatives,
     Rules,
+    Disputes,
 } from "../../../pages";
 import { AppFooter } from "../../AppFooter/app-footer.component.tsx";
 import {
@@ -79,6 +80,9 @@ export function Community () {
                         } />
                         <Route path='initiatives' element={
                             <Initiatives communityId={id} />
+                        } />
+                        <Route path='disputes' element={
+                            <Disputes communityId={id} />
                         } />
                         <Route path='add-member' element={
                             <AddMemberRequest communityId={id} />
