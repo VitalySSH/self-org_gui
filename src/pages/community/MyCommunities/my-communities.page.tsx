@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import {
     CommunityAOService,
 } from "../../../services";
-import { CloseSquareOutlined, CheckSquareOutlined } from "@ant-design/icons";
 import Meta from "antd/es/card/Meta";
 import { useNavigate } from "react-router-dom";
 import { CommunityCard } from "../../../interfaces";
@@ -76,51 +75,12 @@ export function MyCommunities() {
                     renderItem={(item: CommunityCard) => (
                         <List.Item>
                             <Card
-                                actions={[
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            color: "black",
-                                            alignContent: "center",
-                                            justifyContent: "center",
-                                        }}
-                                        onClick={() => {
-                                            const path =
-                                                `/my-communities/${item.id}`;
-                                            navigate(path);
-                                        }}
-                                    >
-                                        <CheckSquareOutlined
-                                            style={{
-                                                fontSize: 18
-                                            }}
-                                        />
-                                        <span
-                                            style={{
-                                                marginLeft: 10
-                                            }}
-                                        >Перейти</span>
-                                    </div>,
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            color: "black",
-                                            alignContent: "center",
-                                            justifyContent: "center",
-                                        }}
-                                    >
-                                        <CloseSquareOutlined
-                                            style={{
-                                                fontSize: 18
-                                            }}
-                                        />
-                                        <span
-                                            style={{
-                                                marginLeft: 10
-                                            }}
-                                        >Покинуть</span>
-                                    </div>,
-                                ]}
+                                onClick={() => {
+                                    const path =
+                                        `/my-communities/${item.id}`;
+                                    navigate(path);
+                                }}
+                                style={{ cursor: "pointer" }}
                             >
                                 <Meta
                                     title={item.title}

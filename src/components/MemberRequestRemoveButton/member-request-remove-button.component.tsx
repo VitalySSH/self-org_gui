@@ -2,6 +2,10 @@ import { Button, Popconfirm, message } from "antd";
 import { CrudDataSourceService } from "../../services";
 import { RequestMemberModel } from "../../models";
 import { QuestionCircleOutlined } from "@ant-design/icons";
+import {
+    CommunityMemberCode,
+    RequestExcludedCode
+} from "../../consts";
 
 
 export function MemberRequestRemoveButton(props: any) {
@@ -9,7 +13,7 @@ export function MemberRequestRemoveButton(props: any) {
     const tableRow = props.tableRow;
     const [messageApi, contextHolder] =
         message.useMessage();
-    const statusCodes = ['community_member', 'excluded'];
+    const statusCodes = [CommunityMemberCode, RequestExcludedCode];
 
     const successInfo = (content: string) => {
         messageApi.open({
@@ -53,7 +57,6 @@ export function MemberRequestRemoveButton(props: any) {
             >
                 <Button
                     danger
-                    disabled={tableRow.statusCode !== 'on_consideration'}
                     style={{ width: '90%' }}
                 >
                     {

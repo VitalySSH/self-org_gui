@@ -1,7 +1,11 @@
 import { CrudDataSourceService } from "../crud-data-source.service.ts";
 import { CommunityModel } from "../../models";
 import { Filters, Orders } from "../../types";
-import { CrudApiDataInterface, Pagination } from "../../interfaces";
+import {
+    CrudApiDataInterface,
+    Pagination,
+    SettingsInPercenInterface,
+} from "../../interfaces";
 import { AOApiPath } from "../../shared/config.ts";
 
 
@@ -33,7 +37,15 @@ export class CommunityAOService
             const record = this.jsonApiToModel(item);
             records.push(record);
         });
+
         return records;
+    }
+
+    async settingsInPercen(communityId: string) {
+        const url =
+            `/${this.model.entityName}/settings_in_percen/${communityId}`;
+
+        return this.http.get<SettingsInPercenInterface>(url);
     }
 
 }

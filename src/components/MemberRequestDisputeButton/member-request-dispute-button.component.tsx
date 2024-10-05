@@ -1,4 +1,5 @@
 import { Button, message } from "antd";
+import { RequestExcludedCode } from "../../consts";
 
 
 export function MemberRequestDisputeButton(props: any) {
@@ -26,7 +27,7 @@ export function MemberRequestDisputeButton(props: any) {
         <>
             {contextHolder}
             <Button
-                disabled={tableRow.statusCode !== 'excluded'}
+                disabled={tableRow.statusCode !== RequestExcludedCode}
                 style={{ width: '90%' }}
             >
                 Оспорить

@@ -28,6 +28,12 @@ import {
     MemberRequestJoinButton,
     MemberRequestRemoveButton,
 } from "../../../components";
+import {
+    CommunityMemberCode,
+    OnConsiderationCode,
+    RequestExcludedCode,
+    RequestSuccessfulCode
+} from "../../../consts";
 
 type DataIndex = keyof TableMyMemberRequest;
 
@@ -148,14 +154,14 @@ export function MyAddMemberRequests() {
 
     const renderAction = (row: TableMyMemberRequest) => {
         switch (row.statusCode) {
-            case 'on_consideration':
+            case OnConsiderationCode:
                 return (
                     <MemberRequestRemoveButton
                         tableRow={row}
                         setLoading={setLoading}
                     />
                 );
-            case 'request_successful':
+            case RequestSuccessfulCode:
                 return (
                     <>
                         <MemberRequestJoinButton
@@ -174,14 +180,14 @@ export function MyAddMemberRequests() {
                         </div>
                     </>
                 );
-            case 'community_member':
+            case CommunityMemberCode:
                 return (
                     <MemberRequestRemoveButton
                         tableRow={row}
                         setLoading={setLoading}
                     />
                 );
-            case 'excluded':
+            case RequestExcludedCode:
                 return (
                     <>
                         <MemberRequestDisputeButton
