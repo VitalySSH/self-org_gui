@@ -1,4 +1,5 @@
 import {
+    ConfigProvider,
     Layout,
     Tabs,
 } from "antd";
@@ -20,19 +21,37 @@ export function CommunitySummary(props: any) {
             children: <CommunitySettings communityId={communityId} />,
         },
         {
-            label: 'Заявки на вступление',
+            label: 'Статистика параметров',
             key: '2',
+            children: <CommunitySettings communityId={communityId} />,
+        },
+        {
+            label: 'Заявки на вступление',
+            key: '3',
             children: <CommonAddMemberRequests communityId={communityId} />,
         }
     ];
 
     return (
         <Layout>
-            <Tabs
-                defaultActiveKey="1"
-                centered
-                items={items}
-            />
+            <ConfigProvider
+                theme={{
+                    components: {
+                        Tabs: {
+                            itemSelectedColor: 'black',
+                            itemColor: '#7e7f80',
+                            itemHoverColor: 'red',
+                            titleFontSize: 16,
+                        },
+                    },
+                }}
+            >
+                <Tabs
+                    defaultActiveKey="1"
+                    type="card"
+                    items={items}
+                />
+            </ConfigProvider>
         </Layout>
     );
 }

@@ -8,6 +8,7 @@ import {
     Initiatives,
     Rules,
     Disputes,
+    Challenges,
 } from "../../../pages";
 import { AppFooter } from "../../AppFooter/app-footer.component.tsx";
 import {
@@ -80,6 +81,9 @@ export function Community () {
                         } />
                         <Route path='initiatives' element={
                             <Initiatives communityId={id} />
+                        } />
+                        <Route path='challenges' element={
+                            <Challenges communityId={id} />
                         } />
                         <Route path='disputes' element={
                             <Disputes communityId={id} />
