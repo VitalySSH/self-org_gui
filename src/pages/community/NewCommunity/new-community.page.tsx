@@ -1,17 +1,19 @@
 import {
     Button,
-    Checkbox,
     Form,
     Input,
     InputNumber,
     Layout,
     message,
     Space,
+    Switch,
     Typography
 } from "antd";
 import {
     MinusCircleOutlined,
     PlusOutlined,
+    CheckOutlined,
+    CloseOutlined,
 } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import {
@@ -165,7 +167,10 @@ export function NewCommunity() {
                         labelCol={{ span: 24 }}
                         valuePropName="checked"
                     >
-                        <Checkbox />
+                        <Switch
+                            checkedChildren={<CheckOutlined />}
+                            unCheckedChildren={<CloseOutlined />}
+                        />
                     </Form.Item>
                     <Form.Item
                         name='is_can_offer'
@@ -173,7 +178,10 @@ export function NewCommunity() {
                         labelCol={{ span: 24 }}
                         valuePropName="checked"
                     >
-                        <Checkbox />
+                        <Switch
+                            checkedChildren={<CheckOutlined />}
+                            unCheckedChildren={<CloseOutlined />}
+                        />
                     </Form.Item>
                     <Form.Item
                         name='is_minority_not_participate'
@@ -181,7 +189,10 @@ export function NewCommunity() {
                         labelCol={{ span: 24 }}
                         valuePropName="checked"
                     >
-                        <Checkbox />
+                        <Switch
+                            checkedChildren={<CheckOutlined />}
+                            unCheckedChildren={<CloseOutlined />}
+                        />
                     </Form.Item>
                     <Form.Item
                         name='is_default_add_member'
@@ -189,7 +200,10 @@ export function NewCommunity() {
                         labelCol={{ span: 24 }}
                         valuePropName="checked"
                     >
-                        <Checkbox />
+                        <Switch
+                            checkedChildren={<CheckOutlined />}
+                            unCheckedChildren={<CloseOutlined />}
+                        />
                     </Form.Item>
                     <Form.Item
                         name='is_not_delegate'
@@ -197,7 +211,10 @@ export function NewCommunity() {
                         labelCol={{ span: 24 }}
                         valuePropName="checked"
                     >
-                        <Checkbox />
+                        <Switch
+                            checkedChildren={<CheckOutlined />}
+                            unCheckedChildren={<CloseOutlined />}
+                        />
                     </Form.Item>
                     <Form.List name="categories">
                         {(fields, { add, remove }) => (
@@ -235,7 +252,7 @@ export function NewCommunity() {
                                         block
                                         icon={<PlusOutlined />}
                                     >
-                                        Добавить категорию инициатив
+                                        Добавить категорию
                                     </Button>
                                 </Form.Item>
                             </>

@@ -3,17 +3,21 @@ import {
     AuthContextProvider,
     ProviderComponent,
     UserInterface
-} from "../interfaces";
+} from '../interfaces';
 import { AuthContext } from './const/hooks.const.ts';
-import { useNavigate } from "react-router-dom";
-import { CrudDataSourceService } from "../services";
-import { UserModel } from "../models";
-import FileStorageService from "../services/file-storage.service.ts";
+import { useLocation, useNavigate } from 'react-router-dom';
+import { CrudDataSourceService } from '../services';
+import { UserModel } from '../models';
+import FileStorageService from '../services/file-storage.service.ts';
+import { useEffect, useRef } from 'react';
 
+const exemptedRoutes = ['/sign-in', '/sign-up', '/no-much-page'];
 
 export const AuthProvider = (component: ProviderComponent) => {
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const timeoutRef = useRef<NodeJS.Timeout>();
     const [user, setUser] = useLocalStorage('user', null);
     const [avatarUrl, setAvatarUrl] =
         useLocalStorage('avatar', null);
@@ -30,6 +34,7 @@ export const AuthProvider = (component: ProviderComponent) => {
         } else navigate(-1);
     };
     const logout = () => {
+        setAvatarUrl(null);
         setUser(null);
         navigate('/', { preventScrollReset: true });
     };
@@ -84,6 +89,35 @@ export const AuthProvider = (component: ProviderComponent) => {
         changeAvatarUrl,
     };
 
+    useEffect(() => {
+        if (!user || exemptedRoutes.includes(location.pathname)) return;
+        const handleWindowEvents = () => {
+            clearTimeout(timeoutRef.current);
 
-    return <AuthContext.Provider value={value} children={ component.children }/>;
+            timeoutRef.current = setTimeout(() => {
+                setAvatarUrl(null);
+                setUser(null);
+                navigate('/sign-in', { preventScrollReset: true });
+            }, 1800000);
+        };
+
+        window.addEventListener('mousemove', handleWindowEvents);
+        window.addEventListener('keydown', handleWindowEvents);
+        window.addEventListener('click', handleWindowEvents);
+        window.addEventListener('scroll', handleWindowEvents);
+
+        handleWindowEvents();
+
+        return () => {
+            window.removeEventListener('mousemove', handleWindowEvents);
+            window.removeEventListener('keydown', handleWindowEvents);
+            window.removeEventListener('click', handleWindowEvents);
+            window.removeEventListener('scroll', handleWindowEvents);
+        };
+    }, [navigate, location.pathname, user, setAvatarUrl, setUser]);
+
+
+    return <AuthContext.Provider
+        value={value} children={ component.children }
+    />;
 };

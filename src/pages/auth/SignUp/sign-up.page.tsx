@@ -23,10 +23,15 @@ export function SignUp(){
         userModel.hashed_password = btoa(encryptPassword(formData.password));
 
         userService.save(userModel).then(() => {
-            navigate('/sign-in', { preventScrollReset: true , state: { signUp: true }});
+            navigate('/sign-in',
+                { preventScrollReset: true , state: { signUp: true }});
         }).catch((error) => {
             console.log(error);
         });
+    }
+
+    const onClickImage = () => {
+        navigate('/', { preventScrollReset: true });
     }
 
     return (
@@ -48,6 +53,8 @@ export function SignUp(){
                         height={60}
                         preview={false}
                         src="/utu_logo.png"
+                        onClick={onClickImage}
+                        style={{cursor: "pointer"}}
                     >
                     </Image>
                 </div>

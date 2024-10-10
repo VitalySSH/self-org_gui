@@ -1,14 +1,14 @@
 import {
     Button,
-    Checkbox,
     Form,
     Input,
     Layout,
     message,
     Space,
-    Spin,
+    Spin, Switch,
     Typography
 } from "antd";
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from "react";
 import { CrudDataSourceService } from "../../../services";
 import {
@@ -16,7 +16,10 @@ import {
     CommunityNameModel,
     UserCommunitySettingsModel
 } from "../../../models";
-import { AuthContextProvider, CommunitySettingsInterface } from "../../../interfaces";
+import {
+    AuthContextProvider,
+    CommunitySettingsInterface
+} from "../../../interfaces";
 import { useAuth } from "../../../hooks";
 import { useNavigate } from "react-router-dom";
 import { SelectWithAddValue } from "../../../components";
@@ -99,7 +102,13 @@ export function MyCommunitySettings(props: any) {
                     const settingsInst =
                         communitySettings[0];
                     setSettings(settingsInst);
+                    if (settingsInst.name) {
+                        setName(settingsInst.name);
+                    }
                     setNameValue(settingsInst.name?.name || '');
+                    if (settingsInst.description) {
+                        setDescription(settingsInst.description);
+                    }
                     setDescriptionValue(
                         settingsInst.description?.value || '');
                     form.setFieldValue('quorum', settingsInst.quorum);
@@ -247,7 +256,7 @@ export function MyCommunitySettings(props: any) {
                 style={{ marginLeft: 20 }}
             >Мои настройки сообщества</Typography.Title>
             <Space
-                style={{ marginTop: 30 }}
+                style={{ marginTop: 20 }}
             >
                 <Spin
                     tip="Загрузка данных"
@@ -317,7 +326,10 @@ export function MyCommunitySettings(props: any) {
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
-                            <Checkbox />
+                            <Switch
+                                checkedChildren={<CheckOutlined />}
+                                unCheckedChildren={<CloseOutlined />}
+                            />
                         </Form.Item>
                         <Form.Item
                             name='is_can_offer'
@@ -325,7 +337,10 @@ export function MyCommunitySettings(props: any) {
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
-                            <Checkbox />
+                            <Switch
+                                checkedChildren={<CheckOutlined />}
+                                unCheckedChildren={<CloseOutlined />}
+                            />
                         </Form.Item>
                         <Form.Item
                             name='is_minority_not_participate'
@@ -333,7 +348,10 @@ export function MyCommunitySettings(props: any) {
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
-                            <Checkbox />
+                            <Switch
+                                checkedChildren={<CheckOutlined />}
+                                unCheckedChildren={<CloseOutlined />}
+                            />
                         </Form.Item>
                         <Form.Item
                             name='is_default_add_member'
@@ -341,7 +359,10 @@ export function MyCommunitySettings(props: any) {
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
-                            <Checkbox />
+                            <Switch
+                                checkedChildren={<CheckOutlined />}
+                                unCheckedChildren={<CloseOutlined />}
+                            />
                         </Form.Item>
                         <Form.Item
                             name='is_not_delegate'
@@ -349,7 +370,10 @@ export function MyCommunitySettings(props: any) {
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
-                            <Checkbox />
+                            <Switch
+                                checkedChildren={<CheckOutlined />}
+                                unCheckedChildren={<CloseOutlined />}
+                            />
                         </Form.Item>
                         <Form.Item>
                             <Button

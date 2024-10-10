@@ -151,7 +151,7 @@ export function MemberRequestVoteButton(props: any) {
                     </Form.Item>
                     <Form.Item
                         style={{
-                            marginTop: 30
+                            marginTop: 20
                         }}
                     >
                         <Button

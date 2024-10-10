@@ -1,11 +1,11 @@
 import {
     Button,
-    Checkbox,
     Form,
     InputNumber,
     Layout,
     message,
     Space, Spin,
+    Switch,
     Typography
 } from "antd";
 import {
@@ -22,6 +22,7 @@ import {
     CommunityNameModel,
     UserCommunitySettingsModel,
 } from "../../../models";
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../../hooks";
 import React, { useEffect, useState } from "react";
@@ -407,7 +408,10 @@ export function JoinCommunity() {
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
-                            <Checkbox />
+                            <Switch
+                                checkedChildren={<CheckOutlined />}
+                                unCheckedChildren={<CloseOutlined />}
+                            />
                         </Form.Item>
                         <Form.Item
                             name='is_can_offer'
@@ -415,7 +419,10 @@ export function JoinCommunity() {
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
-                            <Checkbox />
+                            <Switch
+                                checkedChildren={<CheckOutlined />}
+                                unCheckedChildren={<CloseOutlined />}
+                            />
                         </Form.Item>
                         <Form.Item
                             name='is_minority_not_participate'
@@ -423,7 +430,10 @@ export function JoinCommunity() {
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
-                            <Checkbox />
+                            <Switch
+                                checkedChildren={<CheckOutlined />}
+                                unCheckedChildren={<CloseOutlined />}
+                            />
                         </Form.Item>
                         <Form.Item
                             name='is_default_add_member'
@@ -431,7 +441,10 @@ export function JoinCommunity() {
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
-                            <Checkbox />
+                            <Switch
+                                checkedChildren={<CheckOutlined />}
+                                unCheckedChildren={<CloseOutlined />}
+                            />
                         </Form.Item>
                         <Form.Item
                             name='is_not_delegate'
@@ -439,7 +452,10 @@ export function JoinCommunity() {
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
-                            <Checkbox />
+                            <Switch
+                                checkedChildren={<CheckOutlined />}
+                                unCheckedChildren={<CloseOutlined />}
+                            />
                         </Form.Item>
                         <Form.Item>
                             <Button

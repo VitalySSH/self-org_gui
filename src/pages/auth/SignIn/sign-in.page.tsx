@@ -64,6 +64,10 @@ export function SignIn() {
         navigate('/sign-up', { preventScrollReset: true });
     };
 
+    const onClickImage = () => {
+        navigate('/', { preventScrollReset: true });
+    }
+
     return (
         <Space
             style={{
@@ -79,6 +83,8 @@ export function SignIn() {
                         height={60}
                         preview={false}
                         src="/utu_logo.png"
+                        onClick={onClickImage}
+                        style={{cursor: "pointer"}}
                     >
                     </Image>
                 </div>

@@ -1,12 +1,12 @@
 import {
-    Checkbox,
     Form,
     Input,
     Layout,
     Select,
     Space,
-    Spin,
+    Spin, Switch,
 } from "antd";
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import TextArea from "antd/lib/input/TextArea";
 import { CrudDataSourceService } from "../../../services";
 import {
@@ -134,7 +134,11 @@ export function CommunitySettings(props: any) {
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
-                            <Checkbox disabled />
+                            <Switch
+                                checkedChildren={<CheckOutlined />}
+                                unCheckedChildren={<CloseOutlined />}
+                                disabled
+                            />
                         </Form.Item>
                         <Form.Item
                             name='is_can_offer'
@@ -142,7 +146,11 @@ export function CommunitySettings(props: any) {
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
-                            <Checkbox disabled />
+                            <Switch
+                                checkedChildren={<CheckOutlined />}
+                                unCheckedChildren={<CloseOutlined />}
+                                disabled
+                            />
                         </Form.Item>
                         <Form.Item
                             name='is_minority_not_participate'
@@ -150,17 +158,22 @@ export function CommunitySettings(props: any) {
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
-                            <Checkbox disabled />
+                            <Switch
+                                checkedChildren={<CheckOutlined />}
+                                unCheckedChildren={<CloseOutlined />}
+                                disabled
+                            />
                         </Form.Item>
                         <Form.Item
                             name='init_categories'
-                            label='Категории инициатив'
+                            label='Категории'
                             labelCol={{ span: 24 }}
                         >
                             <Select
                                 mode="multiple"
-                                disabled={true}
                                 suffixIcon={null}
+                                open={false}
+                                removeIcon={null}
                             >
 
                             </Select>
