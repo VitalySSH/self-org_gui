@@ -5,6 +5,7 @@ export * from './ProtectedRoute/protected-route.component';
 export * from './Logo/logo.component';
 export * from './community/CommunitySider/community-sider.component';
 export * from './community/AllCommunityCard/all-community-card.component';
+export * from './community/SettingsStatistics/settings-statistics.component';
 export * from './AuthHeaderIcons/auth-header-icons.component';
 export * from './NotAuthHeaderIcons/not-auth-header-icons.component';
 export * from './RightMenu/right-menu.component';

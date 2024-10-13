@@ -9,6 +9,9 @@ import {
 import {
     CommonAddMemberRequests
 } from "../../membership/CommonAddMemberRequests/common-add-member-requests.page.tsx";
+import {
+    ParameterStatistics
+} from "../ParameterStatistics/parameter-statistics.page.tsx";
 
 export function CommunitySummary(props: any) {
 
@@ -23,7 +26,7 @@ export function CommunitySummary(props: any) {
         {
             label: 'Статистика параметров',
             key: '2',
-            children: <CommunitySettings communityId={communityId} />,
+            children: <ParameterStatistics communityId={communityId} />,
         },
         {
             label: 'Заявки на вступление',
