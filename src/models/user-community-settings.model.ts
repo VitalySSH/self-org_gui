@@ -50,6 +50,9 @@ export class UserCommunitySettingsModel extends ApiModel{
     @attribute()
     is_default_add_member?: boolean;
 
+    @attribute()
+    is_blocked?: boolean;
+
     @manyToMany('request_member')
     adding_members?: RequestMemberModel[];
 

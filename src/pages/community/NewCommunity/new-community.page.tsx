@@ -59,7 +59,8 @@ export function NewCommunity() {
         userSettingsAOService.createCommunity(formData)
             .then(() => {
                 setButtonLoading(false);
-                navigate('/my-communities', { preventScrollReset: true });
+                navigate('/my-communities',
+                    { preventScrollReset: true });
             }
         ).catch((error) => {
             setButtonLoading(false);

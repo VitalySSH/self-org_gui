@@ -1,15 +1,19 @@
 import { Card, Layout, List, Space, Typography } from "antd";
 import { useEffect, useState } from "react";
+import { StopOutlined } from "@ant-design/icons";
 import {
     CommunityAOService,
 } from "../../../services";
 import Meta from "antd/es/card/Meta";
 import { useNavigate } from "react-router-dom";
-import { CommunityCard } from "../../../interfaces";
+import { AuthContextProvider, CommunityCard } from "../../../interfaces";
+import { useAuth } from "../../../hooks";
 
 export function MyCommunities() {
 
     const navigate = useNavigate();
+    const authData: AuthContextProvider = useAuth();
+
     const [loading, setLoading] =
         useState(true);
     const [dataSource, setDataSource] =
@@ -17,19 +21,54 @@ export function MyCommunities() {
 
     const communityService = new CommunityAOService();
 
+    // FIXME: переделать на функционал оспаривания решения
+    const getActions = (item: CommunityCard) => {
+        if (item.isBlocked) {
+            return [
+                <div
+                    style={{
+                        display: "flex",
+                        color: "black",
+                        alignContent: "center",
+                        justifyContent: "center",
+                        cursor: "auto",
+                    }}
+                >
+                    <StopOutlined
+                        style={{ fontSize: 24 }}
+                        disabled
+                    />
+                    <span
+                        style={{
+                            marginLeft: 10
+                        }}
+                    >Вы заблокированы большинством голосов</span>
+                </div>
+            ];
+        } else {
+            return [];
+        }
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const loadData = () => {
         if (loading) {
             communityService
                 .myList(undefined, undefined, undefined,
                     [
-                        'user_settings',
+                        'user_settings.user',
                         'main_settings.name',
                         'main_settings.description',
                     ])
                 .then(data => {
                     const communities: CommunityCard[] = [];
                     data.forEach(community => {
+                        const settings =
+                            (community.user_settings || [])
+                                .filter((settings) =>
+                                    settings.user?.id === authData.user?.id);
+                        const isBlocked =
+                            settings.length ? settings[0].is_blocked : false;
                         const communityItem = {
                             id: community.id || '',
                             title: community
@@ -37,6 +76,7 @@ export function MyCommunities() {
                             description: community
                                 .main_settings?.description?.value || '',
                             members: (community.user_settings || []).length,
+                            isBlocked: isBlocked,
                         };
                         communities.push(communityItem);
                     });
@@ -52,6 +92,18 @@ export function MyCommunities() {
     useEffect(() => {
         loadData();
     }, [loadData]);
+
+    const getOnClick = (item: CommunityCard) => {
+        const onClick = () => {
+            navigate(`/my-communities/${item.id}`);
+        }
+
+        return !item.isBlocked ? onClick : undefined;
+    }
+
+    const getCardStyle = (item: CommunityCard) => {
+        return !item.isBlocked ? { cursor: "pointer" } : {};
+    }
 
     return (
         <Layout
@@ -75,19 +127,16 @@ export function MyCommunities() {
                     renderItem={(item: CommunityCard) => (
                         <List.Item>
                             <Card
-                                onClick={() => {
-                                    const path =
-                                        `/my-communities/${item.id}`;
-                                    navigate(path);
-                                }}
-                                style={{ cursor: "pointer" }}
+                                onClick={ getOnClick(item) }
+                                style={ getCardStyle(item) }
+                                actions={ getActions(item) }
                             >
                                 <Meta
-                                    title={item.title}
-                                    description={item.description}
+                                    title={ item.title }
+                                    description={ item.description }
                                 />
                                 <div className="community-members">
-                                    Участников: {item.members}
+                                    Участников: { item.members }
                                 </div>
                             </Card>
                         </List.Item>

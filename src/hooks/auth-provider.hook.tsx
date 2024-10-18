@@ -11,7 +11,7 @@ import { UserModel } from '../models';
 import FileStorageService from '../services/file-storage.service.ts';
 import { useEffect, useRef } from 'react';
 
-const exemptedRoutes = ['/sign-in', '/sign-up', '/no-much-page'];
+const exemptedRoutes = ['/sign-in', '/sign-up'];
 
 export const AuthProvider = (component: ProviderComponent) => {
 
