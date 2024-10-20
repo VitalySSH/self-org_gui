@@ -60,19 +60,12 @@ export class CrudDataSourceService<T extends ApiModel>
         if (!model) model = new this.modelType();
         model.id = apiData.id;
         const attributes = model.attributes;
-        const readonly = model.readonly;
         const oneToMany = model.oneToMany;
         const manyToMany = model.manyToMany;
 
         const attributesData = apiData.attributes || {};
         for (const [key, value] of Object.entries(attributesData)) {
             if (attributes[key]) {
-                model[key] = value;
-            }
-        }
-        const readonlyData = apiData.readonly || {};
-        for (const [key, value] of Object.entries(readonlyData)) {
-            if (readonly[key]) {
                 model[key] = value;
             }
         }

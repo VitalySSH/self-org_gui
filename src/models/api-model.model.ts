@@ -18,10 +18,6 @@ export class ApiModel {
         return Reflect.getMetadata('Attribute', this);
     }
 
-    public get readonly(): object {
-        return Reflect.getMetadata('Readonly', this) || {};
-    }
-
     public get oneToMany(): object {
         return Reflect.getMetadata('OneToMany', this) || {};
     }
