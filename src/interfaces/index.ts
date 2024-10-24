@@ -3,6 +3,8 @@ export * from './auth/user.interface';
 export * from './auth/auth-context-provider.interface';
 export * from './auth/sign-in-form-data.interface';
 export * from './auth/sign-up-form-data.interface';
+export * from './auth/user-create.interface';
+export * from './auth/user-update.interface';
 export * from './shared/provider-component.interface';
 export * from './crud/model-config.interface';
 export * from './crud/filter-item.interface';

@@ -16,10 +16,9 @@ import {
 } from "antd";
 import { useState } from "react";
 import FileStorageService from "../../services/file-storage.service.ts";
-import { AuthContextProvider } from "../../interfaces";
-import { CrudDataSourceService } from "../../services";
-import { UserModel } from "../../models";
+import {AuthContextProvider, UserUpdateInterface} from "../../interfaces";
 import { useAuth } from "../../hooks";
+import AuthApiClientService from "../../services/auth-api-client.service.ts";
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -34,7 +33,8 @@ const beforeUpload = (file: FileType) => {
     const isJpgOrPng =
         file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
-        message.error('Вы можете загрузить изображение только форматов JPG или PNG ').then();
+        message.error('Вы можете загрузить изображение только форматов JPG или PNG ')
+            .then();
     }
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
@@ -54,21 +54,19 @@ export function UploadAvatar() {
     const [fileId, setFileId] =
         useState(authData.user?.foto_id);
 
-    const userService =
-        new CrudDataSourceService(UserModel);
-
     const saveUser = (fileId: string | null) => {
         if (authData.user?.id) {
-            const userModel = userService.createRecord();
-            userModel.id = authData.user?.id;
-            userModel.foto_id = fileId;
-            userService.save(userModel).then(() => {
-                authData.changeFotoId(fileId);
-                setFileId(fileId);
-                message.success(
-                    'Пользовательские данные обновлены').then();
-            }).catch((error) => {
-                console.log(`Ошибка сохранения данных пользователя: ${error}`);
+            const userData: UserUpdateInterface = {
+                foto_id: fileId
+            };
+            AuthApiClientService.updateUser(authData.user?.id, userData)
+                .then(() => {
+                    authData.changeFotoId(fileId);
+                    setFileId(fileId);
+                    message.success(
+                        'Пользовательские данные обновлены').then();
+                }).catch((error) => {
+                    console.log(`Ошибка сохранения данных пользователя: ${error}`);
             });
         }
     }

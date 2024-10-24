@@ -1,14 +1,14 @@
 import { CrudDataSourceService } from "../crud-data-source.service.ts";
 import { UserCommunitySettingsModel } from "../../models";
-import { AOApiPath } from "../../shared/config.ts";
 import { CommunitySettingsInterface } from "../../interfaces";
+import { AOApiUrl } from "../../config/configuration.ts";
 
 
 export class UserSettingsAoService
     extends CrudDataSourceService<UserCommunitySettingsModel>{
 
     constructor() {
-        super(UserCommunitySettingsModel, AOApiPath);
+        super(UserCommunitySettingsModel, AOApiUrl);
     }
 
     async update_data_after_join(

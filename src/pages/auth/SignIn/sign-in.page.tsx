@@ -78,7 +78,11 @@ export function SignIn() {
             }}
         >
             <Card style={{ width: 500 }}>
-                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 30 }}>
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginBottom: 30
+                }}>
                     <Image
                         height={60}
                         preview={false}
@@ -131,8 +135,8 @@ export function SignIn() {
                                 whitespace: false,
                             },
                             {
-                                pattern: /[\s\w.,<>_/|\\{}$&^%?@#\-+=~`№':;()[\]]/,
-                                message: 'Используйте латинские буквы и цифры',
+                                pattern: /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])/g,
+                                message: 'Используйте латинские буквы в разном регистре и цифры',
                             }
                         ]}
                         hasFeedback

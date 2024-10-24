@@ -1,14 +1,15 @@
 import {
     FileMetadataInterface
 } from "../interfaces/fileStorage/file-metadata.interface.ts";
-import {DataSourceService} from "./data-source.service.ts";
+import { DataSourceService } from "./data-source.service.ts";
+import { baseApiUrl } from "../config/configuration.ts";
 
 class FileStorageService extends DataSourceService{
 
 
 
     constructor() {
-        super('http://localhost:8080/api/v1');
+        super(baseApiUrl);
 
     }
 
@@ -95,7 +96,7 @@ class FileStorageService extends DataSourceService{
     }
 
     getFileUrl(id?: string | null): string {
-        return id ? `http://localhost:8080/api/v1/file/stream/${id}` : '';
+        return id ? `${baseApiUrl}/file/stream/${id}` : '';
     }
 
 }

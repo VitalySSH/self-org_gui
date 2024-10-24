@@ -23,7 +23,4 @@ export class UserModel extends ApiModel{
     @attribute()
     is_active?: boolean;
 
-    @attribute()
-    hashed_password?: string;
-
 }

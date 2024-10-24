@@ -21,13 +21,18 @@ export const CONTAINER_CONTEXT = Symbol('CONTAINER_CONTEXT');
 export class Container {
 
     private static context = new Container();
+    private static register: IRegister = {};
+    private instances: IInstances = {};
 
     public static add(target: ClassType) {
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         if (!target[CONTAINER_ID]) {
-            // @ts-ignore
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
             target[CONTAINER_ID] = v4();
-            // @ts-ignore
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
             this.register[target[CONTAINER_ID]] = {
                 Target: target
             }
@@ -42,15 +47,12 @@ export class Container {
         this.register[target[CONTAINER_ID]].alias = alias;
     }
 
-    private static register: IRegister = {};
-
-    private instances: IInstances = {};
-
     public get<T>(target: any): T {
         const instanceKey = target[CONTAINER_ID];
 
         if (!this.instances[instanceKey]) {
-            const { alias, Target } = Container.register[instanceKey];
+            const { alias, Target } =
+                Container.register[instanceKey];
             const model = alias ? alias(this) : new Target();
 
             this.instances[instanceKey] = model;

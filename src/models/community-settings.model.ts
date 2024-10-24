@@ -3,7 +3,7 @@ import { attribute, manyToMany, modelConfig, oneToMany } from "../annotations";
 import { CommunityDescriptionModel } from "./community-description.model.ts";
 import { CommunityNameModel } from "./community-name.model.ts";
 import { RequestMemberModel } from "./request-member.model.ts";
-import { InitiativeCategoryModel } from "./initiative-category.model.ts";
+import { CategoryModel } from "./category.model.ts";
 
 @modelConfig({
     entityName: 'community_settings',
@@ -30,8 +30,8 @@ export class CommunitySettingsModel extends ApiModel{
     @attribute()
     is_minority_not_participate?: boolean;
 
-    @manyToMany('initiative_category')
-    init_categories?: InitiativeCategoryModel[];
+    @manyToMany('category')
+    categories?: CategoryModel[];
 
     @manyToMany('request_member')
     adding_members?: RequestMemberModel[];

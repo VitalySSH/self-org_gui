@@ -1,5 +1,10 @@
 import axios, { AxiosInstance } from "axios";
-import { UserInterface } from "../interfaces";
+import {
+    UserCreateInterface,
+    UserInterface,
+    UserUpdateInterface
+} from "../interfaces";
+import { baseApiUrl } from "../config/configuration.ts";
 
 class AuthApiClientService {
 
@@ -7,7 +12,7 @@ class AuthApiClientService {
 
     constructor() {
         this.http = axios.create({
-            baseURL: 'http://localhost:8080/api/v1',
+            baseURL: baseApiUrl,
             headers: {
                 'accept': '*/*',
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -30,8 +35,33 @@ class AuthApiClientService {
     }
 
     async getCurrentUser() {
-        return this.http.get<UserInterface>('/auth/user')
+        return this.http.get<UserInterface>('/auth/user/me')
             .then(r => { return r.data });
+    }
+
+    async createUser(data: UserCreateInterface) {
+        return this.http.post<void>(
+            '/auth/user', data,
+            {
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            }
+        );
+    }
+
+    async updateUser(
+        userId: string,data: UserUpdateInterface) {
+        return this.http.patch<void>(
+            `/auth/user/${userId}`, data,
+            {
+                headers: {
+                    'accept': 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            }
+        );
     }
 
 }

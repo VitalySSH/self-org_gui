@@ -7,5 +7,5 @@ export * from './community-description.model';
 export * from './community-name.model';
 export * from './community-settings.model';
 export * from './delegate-settings.model';
-export * from './initiative-category.model';
+export * from './category.model';
 export * from './user-community-settings.model';

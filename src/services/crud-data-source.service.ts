@@ -7,7 +7,7 @@ import {
     CommunityNameModel,
     CommunitySettingsModel,
     DelegateSettingsModel,
-    InitiativeCategoryModel,
+    CategoryModel,
     RequestMemberModel,
     StatusModel,
     UserCommunitySettingsModel,
@@ -16,18 +16,19 @@ import {
 import { Filters, ModelType, Orders } from "../types";
 import { dataSourceConfig } from "../annotations";
 import { DataSourceService } from "./data-source.service.ts";
+import { baseApiUrl } from "../config/configuration.ts";
 
 @dataSourceConfig({
     models: {
         user: UserModel,
-        request_member: RequestMemberModel,
+        category: CategoryModel,
         status: StatusModel,
         community: CommunityModel,
+        request_member: RequestMemberModel,
         community_description: CommunityDescriptionModel,
         community_name: CommunityNameModel,
         community_settings: CommunitySettingsModel,
         delegate_settings: DelegateSettingsModel,
-        initiative_category: InitiativeCategoryModel,
         user_community_settings: UserCommunitySettingsModel,
     }
 })
@@ -39,11 +40,16 @@ export class CrudDataSourceService<T extends ApiModel>
 
     constructor(
         modelType: ModelType<T>,
-        baseURL = 'http://localhost:8080/api/v1/crud',
+        baseURL = `${baseApiUrl}/crud`,
     ) {
         super(baseURL);
         this.modelType = modelType;
         this.model = new this.modelType();
+        if (this.model instanceof UserModel) {
+            throw new Error(
+                'Модель пользователя User не предназначена для операций CRUD'
+            );
+        }
     }
 
     private getModel(entityName: string): ModelType<any> {

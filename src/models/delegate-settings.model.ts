@@ -1,17 +1,17 @@
 import { ApiModel } from "./api-model.model.ts";
-import { modelConfig, oneToMany, manyToMany } from "../annotations";
+import { modelConfig, oneToMany, manyToMany, attribute } from "../annotations";
 import { UserModel } from "./user.model.ts";
-import { InitiativeCategoryModel } from "./initiative-category.model.ts";
+import { CategoryModel } from "./category.model.ts";
 
 @modelConfig({
     entityName: 'delegate_settings',
 })
 export class DelegateSettingsModel extends ApiModel{
-    @oneToMany('initiative_category')
-    init_category?: InitiativeCategoryModel;
+    @oneToMany('category')
+    category?: CategoryModel;
 
-    @oneToMany('user')
-    user?: UserModel;
+    @attribute()
+    user_id?: string;
 
     @manyToMany('user')
     delegates?: UserModel[];

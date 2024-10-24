@@ -3,9 +3,9 @@ import { attribute, manyToMany, modelConfig, oneToMany } from "../annotations";
 import { UserModel } from "./user.model.ts";
 import { CommunityNameModel } from "./community-name.model.ts";
 import { CommunityDescriptionModel } from "./community-description.model.ts";
-import {InitiativeCategoryModel} from "./initiative-category.model.ts";
-import {RequestMemberModel} from "./request-member.model.ts";
-import {DelegateSettingsModel} from "./delegate-settings.model.ts";
+import { CategoryModel } from "./category.model.ts";
+import { RequestMemberModel } from "./request-member.model.ts";
+import { DelegateSettingsModel } from "./delegate-settings.model.ts";
 
 @modelConfig({
     entityName: 'user_community_settings',
@@ -38,8 +38,8 @@ export class UserCommunitySettingsModel extends ApiModel{
     @attribute()
     is_minority_not_participate?: boolean;
 
-    @manyToMany('initiative_category')
-    init_categories?: InitiativeCategoryModel[];
+    @manyToMany('category')
+    categories?: CategoryModel[];
 
     @manyToMany('delegate_settings')
     delegate_settings?: DelegateSettingsModel[];

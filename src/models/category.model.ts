@@ -1,20 +1,19 @@
 import { ApiModel } from "./api-model.model.ts";
 import { modelConfig, attribute, oneToMany } from "../annotations";
-import { UserModel } from "./user.model.ts";
 import { StatusModel } from "./status.model.ts";
 
 @modelConfig({
-    entityName: 'initiative_category',
+    entityName: 'category',
 })
-export class InitiativeCategoryModel extends ApiModel{
+export class CategoryModel extends ApiModel{
     @attribute()
-    name?: boolean;
+    name?: string;
 
     @attribute()
-    community_id?: boolean;
+    community_id?: string;
 
-    @oneToMany('user')
-    creator?: UserModel;
+    @attribute()
+    creator_id?: string;
 
     @oneToMany('status')
     status?: StatusModel;

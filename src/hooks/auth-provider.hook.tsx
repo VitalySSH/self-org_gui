@@ -6,7 +6,6 @@ import {
 } from '../interfaces';
 import { AuthContext } from './const/hooks.const.ts';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CrudDataSourceService } from '../services';
 import { UserModel } from '../models';
 import FileStorageService from '../services/file-storage.service.ts';
 import { useEffect, useRef } from 'react';
@@ -23,8 +22,6 @@ export const AuthProvider = (component: ProviderComponent) => {
         useLocalStorage('avatar', null);
 
     const fileStorageService = FileStorageService;
-    const userService =
-        new CrudDataSourceService(UserModel);
 
     const login = (user: UserInterface, toMainPage: boolean = false) => {
         setUser(user);
@@ -73,7 +70,7 @@ export const AuthProvider = (component: ProviderComponent) => {
     }
 
     const getUserRelation = (): UserModel => {
-        const userModel = userService.createRecord();
+        const userModel = new UserModel();
         userModel.id = user.id;
 
         return userModel;

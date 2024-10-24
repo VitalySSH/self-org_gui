@@ -6,14 +6,14 @@ import {
     Pagination,
     SettingsInPercenInterface,
 } from "../../interfaces";
-import { AOApiPath } from "../../shared/config.ts";
+import { AOApiUrl } from "../../config/configuration.ts";
 
 
 export class CommunityAOService
     extends CrudDataSourceService<CommunityModel>{
 
     constructor() {
-        super(CommunityModel, AOApiPath);
+        super(CommunityModel, AOApiUrl);
     }
 
     async myList(

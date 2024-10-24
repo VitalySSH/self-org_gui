@@ -16,11 +16,14 @@ import { useAuth } from "../../hooks";
 import './auth-header-icons.component.css';
 import { useState } from "react";
 import TextArea from "antd/lib/input/TextArea";
-import { CrudDataSourceService } from "../../services";
-import { UserModel } from "../../models";
-import { AuthContextProvider, UserInterface } from "../../interfaces";
+import {
+    AuthContextProvider,
+    UserInterface,
+    UserUpdateInterface
+} from "../../interfaces";
 import { RightMenu } from "../RightMenu/right-menu.component.tsx";
 import { UploadAvatar } from "../UploadAvatar/upload-avatar.component.tsx";
+import AuthApiClientService from "../../services/auth-api-client.service.ts";
 
 export function AuthHeaderIcons() {
 
@@ -46,25 +49,22 @@ export function AuthHeaderIcons() {
 
     const onFinish = (formData: object) => {
         const submitData = Object.assign({}, formData);
-        const userService =
-            new CrudDataSourceService(UserModel);
-        const userModel = userService.createRecord();
         if (authData.user?.id) {
-            userModel.id = authData.user?.id;
-            const user = authData.user as { [key: string]: any };
-
+            const user = authData.user;
+            const userData: UserUpdateInterface = {};
             for (const [key, value] of Object.entries(submitData)) {
-                userModel[key] = value;
-                user[key] = value;
+                userData[key as keyof UserUpdateInterface] = value;
+                user[key as keyof UserInterface] = value;
             }
-            authData.login(user as UserInterface, false);
+            authData.login(user, false);
 
-            userService.save(userModel).then(() => {
-                setModalOpen(false);
-            }).catch((error) => {
-                console.log(error);
-                setModalOpen(false);
-            });
+            AuthApiClientService.updateUser(authData.user?.id, userData)
+                .then(() => {
+                    setModalOpen(false);
+                }).catch((error) => {
+                    console.log(error);
+                    setModalOpen(false);
+                });
         }
     }
 

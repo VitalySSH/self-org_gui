@@ -5,6 +5,6 @@ export interface SignUpFormDataInterface {
     email: string;
     password: string;
     confirm_password?: string;
-    hashed_password?: string
+    secret_password?: string
     agreement?: boolean
 }

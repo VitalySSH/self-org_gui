@@ -3,26 +3,27 @@ import { LockOutlined, UserAddOutlined } from '@ant-design/icons';
 
 import { useNavigate } from "react-router-dom";
 import TextArea from "antd/lib/input/TextArea";
-import { CrudDataSourceService } from "../../../services";
-import { UserModel } from "../../../models";
-import { SignUpFormDataInterface } from "../../../interfaces";
+import {
+    SignUpFormDataInterface,
+    UserCreateInterface
+} from "../../../interfaces";
 import { encryptPassword } from "../../../utils";
+import AuthApiClientService from "../../../services/auth-api-client.service.ts";
 
 export function SignUp(){
 
     const navigate = useNavigate();
-    const userService =
-        new CrudDataSourceService(UserModel);
 
     const onFinish = (formData: SignUpFormDataInterface) => {
-        const userModel = userService.createRecord();
-        userModel.firstname = formData.firstname;
-        userModel.surname = formData.surname;
-        userModel.about_me = formData.about_me;
-        userModel.email = formData.email;
-        userModel.hashed_password = btoa(encryptPassword(formData.password));
+        const userData: UserCreateInterface = {
+            firstname: formData.firstname,
+            surname: formData.surname,
+            about_me: formData.about_me,
+            email: formData.email,
+            secret_password: btoa(encryptPassword(formData.password)),
+        }
 
-        userService.save(userModel).then(() => {
+        AuthApiClientService.createUser(userData).then(() => {
             navigate('/sign-in',
                 { preventScrollReset: true , state: { signUp: true }});
         }).catch((error) => {
@@ -135,9 +136,9 @@ export function SignUp(){
                                 whitespace: false,
                             },
                             {
-                                pattern: /[\s\w.,<>_/|\\{}$&^%?@#\-+=~`№':;()[\]]/,
-                                message: 'Используйте латинские буквы и цифры',
-                            }
+                                pattern: /(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}/g,
+                                message: 'Пароль должен содержать латинские буквы (разного регистра), цифры и спецсимволы и быть не короче 8 символов',
+                            },
                         ]}
                         hasFeedback
                     >
@@ -159,10 +160,6 @@ export function SignUp(){
                             },
                             {
                                 whitespace: false,
-                            },
-                            {
-                                pattern: /[\s\w.,<>_/|\\{}$&^%?@#\-+=~`№':;()[\]]/,
-                                message: 'Используйте латинские буквы и цифры',
                             },
                             ({getFieldValue}) => ({
                                 validator(_, value) {

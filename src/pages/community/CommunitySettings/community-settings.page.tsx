@@ -34,7 +34,7 @@ export function CommunitySettings(props: any) {
                     'creator',
                     'main_settings.name',
                     'main_settings.description',
-                    'main_settings.init_categories',
+                    'main_settings.categories',
                 ])
                 .then(community => {
                     const firstname =
@@ -45,7 +45,7 @@ export function CommunitySettings(props: any) {
                     const settingsInst =
                         community.main_settings;
                     const initCategories =
-                        (settingsInst?.init_categories || [])
+                        (settingsInst?.categories || [])
                             .map((it) => it.name);
                     form.setFieldValue('name', settingsInst?.name?.name);
                     form.setFieldValue(
@@ -60,7 +60,7 @@ export function CommunitySettings(props: any) {
                     form.setFieldValue('is_minority_not_participate',
                         settingsInst?.is_minority_not_participate || false);
                     form.setFieldValue('creator', creatorFio);
-                    form.setFieldValue('init_categories', initCategories);
+                    form.setFieldValue('categories', initCategories);
             }).catch(() => {
                 navigate('/no-much-page');
             }).finally(() => {
@@ -165,7 +165,7 @@ export function CommunitySettings(props: any) {
                             />
                         </Form.Item>
                         <Form.Item
-                            name='init_categories'
+                            name='categories'
                             label='Категории'
                             labelCol={{ span: 24 }}
                         >
