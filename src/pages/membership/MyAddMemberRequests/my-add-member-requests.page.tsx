@@ -31,8 +31,9 @@ import {
 import {
     CommunityMemberCode,
     OnConsiderationCode,
-    RequestExcludedCode,
-    RequestSuccessfulCode
+    MemberExcludedCode,
+    RequestSuccessfulCode,
+    RequestDeniedCode
 } from "../../../consts";
 
 type DataIndex = keyof TableMyMemberRequest;
@@ -160,6 +161,13 @@ export function MyAddMemberRequests() {
                         setLoading={setLoading}
                     />
                 );
+            case RequestDeniedCode:
+                return (
+                    <MemberRequestRemoveButton
+                        tableRow={row}
+                        setLoading={setLoading}
+                    />
+                );
             case RequestSuccessfulCode:
                 return (
                     <>
@@ -186,7 +194,7 @@ export function MyAddMemberRequests() {
                         setLoading={setLoading}
                     />
                 );
-            case RequestExcludedCode:
+            case MemberExcludedCode:
                 return (
                     <>
                         <MemberRequestDisputeButton

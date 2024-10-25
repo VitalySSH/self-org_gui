@@ -4,7 +4,7 @@ import { RequestMemberModel } from "../../models";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import {
     CommunityMemberCode,
-    RequestExcludedCode
+    MemberExcludedCode
 } from "../../consts";
 
 
@@ -13,7 +13,7 @@ export function MemberRequestRemoveButton(props: any) {
     const tableRow = props.tableRow;
     const [messageApi, contextHolder] =
         message.useMessage();
-    const statusCodes = [CommunityMemberCode, RequestExcludedCode];
+    const statusCodes = [CommunityMemberCode, MemberExcludedCode];
 
     const successInfo = (content: string) => {
         messageApi.open({
