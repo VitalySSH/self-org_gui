@@ -16,5 +16,6 @@ export * from './membership/table-member-request.interface';
 export * from './membership/table-my-member-request.interface';
 export * from './voting/simple-voting.interface';
 export * from './components/select.interface';
+export * from './components/select-data.interface.ts';
 export * from './ao/settings-statistics.interface';
 export * from './ao/settings-in-percen.interface';

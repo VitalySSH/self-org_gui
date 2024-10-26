@@ -11,6 +11,7 @@ import { AOApiUrl } from "../../config/configuration.ts";
 import {
     CommunitySettingsInterface,
 } from "../../interfaces";
+import { OnConsiderationCode } from "../../consts";
 
 
 export class UserSettingsAoService
@@ -65,10 +66,10 @@ export class UserSettingsAoService
             descriptionFieldData, communityId, user.id);
         const categories =
             await this._getOrCreateCategories(
-                categoriesFieldData, communityId, user);
+                categoriesFieldData, communityId, user.id);
         settings.name = name as CommunityNameModel;
         settings.description = description as CommunityDescriptionModel;
-        settings.init_categories = categories as CategoryModel[];
+        settings.categories = categories as CategoryModel[];
         settings.vote = formData.vote;
         settings.quorum = formData.quorum;
         settings.is_secret_ballot = formData.is_secret_ballot;
@@ -154,7 +155,7 @@ export class UserSettingsAoService
     private async _getOrCreateCategories(
         fieldData: CategoryModel[],
         communityId: string,
-        user: UserModel,
+        userId: string,
     ) {
         if (fieldData.length) {
             const categories: CategoryModel[] = [];
@@ -164,8 +165,8 @@ export class UserSettingsAoService
                         categories.push(category);
                     } else {
                         const newCategory =
-                            await this._createCategories(
-                                category.name, communityId, user);
+                            await this._createCategory(
+                                category, communityId, userId);
                         categories.push(newCategory);
                     }
                 }
@@ -176,23 +177,20 @@ export class UserSettingsAoService
         }
     }
 
-    private async _createCategories(
-        name: string | undefined,
+    private async _createCategory(
+        category: CategoryModel,
         communityId: string,
-        user: UserModel,
+        userId: string,
     ) {
         const categoryService =
             new CrudDataSourceService(CategoryModel);
         const status =
-            await this._getStatusByCode('on_consideration');
-        const categoryObj =
-            categoryService.createRecord();
-        categoryObj.name = name;
-        categoryObj.creator = user;
-        categoryObj.community_id = communityId;
-        categoryObj.status = status;
+            await this._getStatusByCode(OnConsiderationCode);
+        category.creator_id = userId;
+        category.community_id = communityId;
+        category.status = status;
 
-        return await categoryService.save(categoryObj, true);
+        return await categoryService.save(category, true);
     }
 
     private async _getStatusByCode(code: string) {

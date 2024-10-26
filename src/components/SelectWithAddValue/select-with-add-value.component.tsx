@@ -10,7 +10,7 @@ import {
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { SelectInterface } from "../../interfaces";
-import React, { ChangeEvent, useEffect, useRef, useState} from "react";
+import React, { ChangeEvent, useRef, useState} from "react";
 import TextArea, { TextAreaRef } from "antd/lib/input/TextArea";
 
 
@@ -21,32 +21,12 @@ export function SelectWithAddValue(props: SelectInterface) {
         useRef<TextAreaRef>(null);
     const [newTextValue, setNewTextValue] =
         useState('');
-    const [currentValue, setCurrentValue] =
-        useState([] as any[]);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const currentFieldValue = () => {
-        if (!currentValue.length) {
-            const values =
-                props.fieldData.map((it) => it[props.bindLabel]);
-            setCurrentValue(values);
-        }
-    }
-
-    useEffect(() => {
-        currentFieldValue();
-    }, [currentFieldValue, setCurrentValue])
 
     const onValueChange = (value: string, option: any) => {
-        if (Array.isArray(value)) {
-            setCurrentValue(value);
-        } else {
-            setCurrentValue([value]);
-        }
         if (Array.isArray(option)) {
-            props.setFieldData(option.map((it) => it.obj));
+            props.fieldData.currentValues = option.map((it) => it.obj);
         } else {
-            props.setFieldData([option?.obj]);
+            props.fieldData.currentValues = option?.obj ? [option.obj] : [];
         }
         props.form.setFieldValue(props.formField, value);
     }
@@ -65,16 +45,40 @@ export function SelectWithAddValue(props: SelectInterface) {
     const addNewValue = (
         e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
         e.preventDefault();
+        if (!Array.isArray(props.fieldData.options)) {
+            props.fieldData.options = [];
+        }
         const currentValues =
-            props.options.map((it) => it[props.bindLabel]);
+            (props.fieldData.currentValues || [])
+                .map((it) => it[props.bindLabel]);
         if (!currentValues.includes(newTextValue)) {
             const newObj = props.fieldService.createRecord();
             newObj[props.bindLabel] = newTextValue;
-            props.options.push(newObj);
-            props.setOptions(props.options);
+            props.fieldData.options.push(newObj);
         }
         setNewTextValue('');
 
+    }
+
+    const getCurrentValue = () => {
+        if (props.multiple) {
+            if (Array.isArray(props.fieldData.currentValues)) {
+                return props.fieldData.currentValues
+                    .map((it) => it[props.bindLabel]);
+            } else {
+                return [];
+            }
+        } else {
+            if (Array.isArray(props.fieldData.currentValues)) {
+                if (props.fieldData.currentValues.length > 0) {
+                    return props.fieldData.currentValues[0][props.bindLabel];
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        }
     }
 
     return (
@@ -89,11 +93,7 @@ export function SelectWithAddValue(props: SelectInterface) {
             <Select
                 onChange={onValueChange}
                 showSearch={true}
-                // FIXME: у параметра value типы не поддерживают массив со
-                // строками, хотя в данном случае компонент работает корректно.
-                // Разобраться
-                value={currentValue.length === 1 ? currentValue[0] :
-                    currentValue.length > 1 ? currentValue : null }
+                value={ getCurrentValue() }
                 mode={ props.multiple ? 'multiple' : undefined }
                 dropdownRender={(menu) => (
                     <>
@@ -133,16 +133,16 @@ export function SelectWithAddValue(props: SelectInterface) {
                     </>
                 )}
                 options={
-                    props.options.map((item: any) => (
-                        {
-                            value: item[props.bindLabel],
-                            obj: item,
-                        }
-                    ))
+                    (props.fieldData.options || [])
+                        .map((item: any) => (
+                            {
+                                value: item[props.bindLabel],
+                                obj: item,
+                            }
+                        ))
                 }
-                optionLabelProp="optionLabelProp"
                 allowClear={true}
             />
         </ConfigProvider>
-    )
+    );
 }

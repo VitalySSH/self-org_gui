@@ -5,22 +5,26 @@ import {
     Layout,
     message,
     Space,
-    Spin, 
+    Spin,
     Switch,
     Typography
 } from "antd";
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { useEffect, useState } from "react";
-import {CrudDataSourceService, UserSettingsAoService} from "../../../services";
+import {CheckOutlined, CloseOutlined} from '@ant-design/icons';
+import {useEffect, useState} from "react";
 import {
-    CommunityDescriptionModel,
-    CommunityNameModel, 
+    CrudDataSourceService,
+    UserSettingsAoService,
+} from "../../../services";
+import {
     CategoryModel,
+    CommunityDescriptionModel,
+    CommunityNameModel,
     UserCommunitySettingsModel
 } from "../../../models";
 import {
     AuthContextProvider,
     CommunitySettingsInterface,
+    SelectDataInterface,
 } from "../../../interfaces";
 import { useAuth } from "../../../hooks";
 import { useNavigate } from "react-router-dom";
@@ -34,18 +38,12 @@ export function MyCommunitySettings(props: any) {
     const authData: AuthContextProvider = useAuth();
     const [settings, setSettings] =
         useState({} as UserCommunitySettingsModel);
-    const [names, setNames] =
-        useState([] as CommunityNameModel[]);
-    const [descriptions, setDescriptions] =
-        useState([] as CommunityDescriptionModel[]);
-    const [categories, setCategories] =
-        useState([] as CategoryModel[]);
-    const [name, setName] =
-        useState([] as CommunityNameModel[]);
-    const [description, setDescription] =
-        useState([] as CommunityDescriptionModel[]);
-    const [category, setCategory] =
-        useState([] as CategoryModel[]);
+    const [nameSelect] =
+        useState({} as SelectDataInterface<CommunityNameModel>);
+    const [descriptionSelect] =
+        useState({} as SelectDataInterface<CommunityDescriptionModel>);
+    const [categoriesSelect] =
+        useState({} as SelectDataInterface<CommunityDescriptionModel>);
     const [systemCategory, setSystemCategory] =
         useState({} as CategoryModel);
     const [buttonLoading, setButtonLoading] =
@@ -101,24 +99,21 @@ export function MyCommunitySettings(props: any) {
                     const settingsInst =
                         communitySettings[0];
                     setSettings(settingsInst);
-                    const initCategories: CategoryModel[] = [];
+                    const categories: CategoryModel[] = [];
                         (settingsInst?.categories || [])
                             .forEach((cat) => {
                                 if (cat.status?.code === 'system_category') {
                                     setSystemCategory(cat);
                                 } else {
-                                    initCategories.push(cat);
+                                    categories.push(cat);
                                 }
                             });
-                    if (settingsInst.name) {
-                        setName([settingsInst.name]);
-                    }
-                    if (settingsInst.description) {
-                        setDescription([settingsInst.description]);
-                    }
-                    if (initCategories) {
-                        setCategory(initCategories);
-                    }
+                    nameSelect.currentValues =
+                        settingsInst.name ? [settingsInst.name] : [];
+                    descriptionSelect.currentValues =
+                        settingsInst.description ?
+                            [settingsInst.description] : [];
+                    categoriesSelect.currentValues = categories;
                     form.setFieldValue('name', settingsInst.name?.name);
                     form.setFieldValue(
                         'description', settingsInst.description?.value);
@@ -145,7 +140,7 @@ export function MyCommunitySettings(props: any) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const getCommunityNames = () => {
-        if (communityId && !names.length) {
+        if (communityId && nameSelect.options === undefined) {
             nameService.list(
                 [
                     {
@@ -155,7 +150,7 @@ export function MyCommunitySettings(props: any) {
                     }
                 ]
             ).then(communityNames => {
-                setNames(communityNames);
+                nameSelect.options = communityNames;
             }).catch((error) => {
                 errorInfo(`Ошибка получения наименований: ${error}`);
             });
@@ -164,7 +159,7 @@ export function MyCommunitySettings(props: any) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const getCommunityDescriptions = () => {
-        if (communityId && !descriptions.length) {
+        if (communityId && descriptionSelect.options === undefined) {
             descriptionService.list(
                 [
                     {
@@ -174,7 +169,7 @@ export function MyCommunitySettings(props: any) {
                     }
                 ]
             ).then(communityDescriptions => {
-                setDescriptions(communityDescriptions);
+                descriptionSelect.options = communityDescriptions;
             }).catch((error) => {
                 errorInfo(`Ошибка получения описаний: ${error}`);
             });
@@ -182,8 +177,8 @@ export function MyCommunitySettings(props: any) {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const getInitiativeCategories = () => {
-        if (communityId && !categories.length) {
+    const getCategories = () => {
+        if (communityId && categoriesSelect.options === undefined) {
             categoryService.list(
                 [
                     {
@@ -194,13 +189,12 @@ export function MyCommunitySettings(props: any) {
                 ], undefined, undefined,
                 ['status']
             ).then(initiativeCategories => {
-                const filtered = initiativeCategories
+                categoriesSelect.options = initiativeCategories
                     .filter((cat) =>
                         cat.status?.code !== 'system_category');
-                setCategories(filtered);
             }).catch((error) => {
                 errorInfo(
-                    `Ошибка получения категорий инициатив: ${error}`);
+                    `Ошибка получения категорий: ${error}`);
             });
         }
     }
@@ -210,27 +204,28 @@ export function MyCommunitySettings(props: any) {
         getUserCommunitySettings();
         getCommunityNames();
         getCommunityDescriptions();
-        getInitiativeCategories();
+        getCategories();
     }, [
         getUserCommunitySettings,
         getCommunityNames,
         getCommunityDescriptions,
-        getInitiativeCategories,
+        getCategories,
     ]);
 
     const onFinish = (formData: CommunitySettingsInterface) => {
         setButtonLoading(true);
         const userSettingsAoService =
             new UserSettingsAoService();
-        if (systemCategory.id) {
-            category.push(systemCategory);
+        if (systemCategory.id &&
+            Array.isArray(categoriesSelect.currentValues)) {
+            categoriesSelect.currentValues.push(systemCategory);
         }
         userSettingsAoService.saveSettings(
             settings,
             formData,
-            name,
-            description,
-            category,
+            nameSelect.currentValues || [],
+            descriptionSelect.currentValues || [],
+            categoriesSelect.currentValues || [],
             communityId,
             authData.getUserRelation(),
         ).then(() => {
@@ -276,16 +271,13 @@ export function MyCommunitySettings(props: any) {
                             ]}
                         >
                             <SelectWithAddValue
-                                options={names}
-                                setOptions={setNames}
+                                fieldData={nameSelect}
                                 form={form}
                                 fieldService={nameService}
                                 fieldType="input"
                                 formField="name"
                                 bindLabel="name"
                                 placeholder="Введите своё наименование"
-                                fieldData={name}
-                                setFieldData={setName}
                             />
                         </Form.Item>
                         <Form.Item
@@ -300,16 +292,13 @@ export function MyCommunitySettings(props: any) {
                             ]}
                         >
                             <SelectWithAddValue
-                                options={descriptions}
-                                setOptions={setDescriptions}
+                                fieldData={descriptionSelect}
                                 form={form}
                                 fieldService={descriptionService}
                                 fieldType="textarea"
                                 formField="description"
                                 bindLabel="value"
                                 placeholder="Введите своё описание"
-                                fieldData={description}
-                                setFieldData={setDescription}
                             />
                         </Form.Item>
                         <Form.Item
@@ -413,20 +402,17 @@ export function MyCommunitySettings(props: any) {
                         </Form.Item>
                         <Form.Item
                             name='categories'
-                            label='Категории инициатив'
+                            label='Категории'
                             labelCol={{ span: 24 }}
                         >
                             <SelectWithAddValue
-                                options={categories}
-                                setOptions={setCategories}
+                                fieldData={categoriesSelect}
                                 form={form}
                                 fieldService={categoryService}
                                 fieldType="input"
                                 formField="categories"
                                 bindLabel="name"
                                 placeholder="Введите свою категорию"
-                                fieldData={category}
-                                setFieldData={setCategory}
                                 multiple={true}
                             />
                         </Form.Item>

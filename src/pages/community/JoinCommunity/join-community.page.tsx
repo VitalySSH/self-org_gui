@@ -1,4 +1,3 @@
-import { v4 } from 'uuid';
 import {
     Button,
     Form,
@@ -12,7 +11,8 @@ import {
 } from "antd";
 import {
     AuthContextProvider,
-    CommunitySettingsInterface
+    CommunitySettingsInterface,
+    SelectDataInterface,
 } from "../../../interfaces";
 import {
     CrudDataSourceService,
@@ -43,22 +43,16 @@ export function JoinCommunity() {
         useState({} as CommunitySettingsModel);
     const [requestMemberId, setRequestMemberId] =
         useState('');
-    const [names, setNames] =
-        useState([] as CommunityNameModel[]);
-    const [descriptions, setDescriptions] =
-        useState([] as CommunityDescriptionModel[]);
-    const [categories, setCategories] =
-        useState([] as CategoryModel[]);
-    const [name, setName] =
-        useState([] as CommunityNameModel[]);
-    const [description, setDescription] =
-        useState([] as CommunityDescriptionModel[]);
-    const [category, setCategory] =
-        useState([] as CategoryModel[]);
     const [systemCategory, setSystemCategory] =
         useState({} as CategoryModel);
     const [buttonLoading, setButtonLoading] =
         useState(false);
+    const [nameSelect] =
+        useState({} as SelectDataInterface<CommunityNameModel>);
+    const [descriptionSelect] =
+        useState({} as SelectDataInterface<CommunityDescriptionModel>);
+    const [categoriesSelect] =
+        useState({} as SelectDataInterface<CommunityDescriptionModel>);
 
     const communityService =
         new CrudDataSourceService(CommunityModel);
@@ -89,40 +83,35 @@ export function JoinCommunity() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const getCommunitySettings = () => {
-        if (authData.user && id && settings.id) {
+        if (authData.user && id && !settings.id) {
             communityService.get(id,
                 ['main_settings.name',
                     'main_settings.description',
                     'main_settings.adding_members.member',
-                    'init_categories.status']
+                    'main_settings.categories.status']
             ).then(communityInst => {
                 if (communityInst.main_settings) {
                     const settingsInst =
                         communityInst.main_settings;
                     setSettings(settingsInst);
-                    const initCategories: CategoryModel[] = [];
-                    (settingsInst?.init_categories || [])
+                    const categories: CategoryModel[] = [];
+                    (settingsInst?.categories || [])
                         .forEach((cat) => {
                             if (cat.status?.code === 'system_category') {
                                 setSystemCategory(cat);
                             } else {
-                                initCategories.push(cat);
+                                categories.push(cat);
                             }
                         });
-                    if (settingsInst.name) {
-                        setName([settingsInst.name]);
-                    }
-                    if (settingsInst.description) {
-                        setDescription([settingsInst.description]);
-                    }
-                    if (initCategories) {
-                        setCategory(initCategories);
-                    }
-                    const nameValue = settingsInst.name?.name || '';
-                    const descValue =
-                        settingsInst.description?.value || '';
-                    form.setFieldValue('name', nameValue);
-                    form.setFieldValue('description', descValue);
+                    nameSelect.currentValues =
+                        settingsInst.name ? [settingsInst.name] : [];
+                    descriptionSelect.currentValues =
+                        settingsInst.description ?
+                            [settingsInst.description] : [];
+                    categoriesSelect.currentValues = categories;
+                    form.setFieldValue('name', settingsInst.name?.name);
+                    form.setFieldValue(
+                        'description', settingsInst.description?.value);
                     form.setFieldValue('quorum', settingsInst.quorum);
                     form.setFieldValue('vote', settingsInst.vote);
                     form.setFieldValue('is_secret_ballot',
@@ -145,7 +134,8 @@ export function JoinCommunity() {
                 } else {
                     errorInfo(`Ошибка получения сообщества с id: ${id}`);
                 }
-            }).catch(() => {
+            }).catch((error) => {
+                console.log(error);
                 navigate('/no-much-page');
             });
         }
@@ -153,7 +143,7 @@ export function JoinCommunity() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const getCommunityNames = () => {
-        if (id && !names.length) {
+        if (id && nameSelect.options === undefined) {
             nameService.list(
                 [
                     {
@@ -163,7 +153,7 @@ export function JoinCommunity() {
                     }
                 ]
             ).then(communityNames => {
-                setNames(communityNames);
+                nameSelect.options = communityNames;
             }).catch((error) => {
                 errorInfo(`Ошибка получения наименований: ${error}`);
             });
@@ -172,7 +162,7 @@ export function JoinCommunity() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const getCommunityDescriptions = () => {
-        if (id && !descriptions.length) {
+        if (id && descriptionSelect.options === undefined) {
             descriptionService.list(
                 [
                     {
@@ -182,7 +172,7 @@ export function JoinCommunity() {
                     }
                 ]
             ).then(communityDescriptions => {
-                setDescriptions(communityDescriptions);
+                descriptionSelect.options = communityDescriptions;
             }).catch((error) => {
                 errorInfo(`Ошибка получения описаний: ${error}`);
             });
@@ -190,8 +180,8 @@ export function JoinCommunity() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const getInitiativeCategories = () => {
-        if (id && !categories.length) {
+    const getCategories = () => {
+        if (id && categoriesSelect.options === undefined) {
             categoryService.list(
                 [
                     {
@@ -202,10 +192,9 @@ export function JoinCommunity() {
                 ], undefined, undefined,
                 ['status']
             ).then(initiativeCategories => {
-                const filtered = initiativeCategories
+                categoriesSelect.options = initiativeCategories
                     .filter((cat) =>
                         cat.status?.code !== 'system_category');
-                setCategories(filtered);
             }).catch((error) => {
                 errorInfo(
                     `Ошибка получения категорий инициатив: ${error}`);
@@ -217,12 +206,12 @@ export function JoinCommunity() {
         getCommunitySettings();
         getCommunityNames();
         getCommunityDescriptions();
-        getInitiativeCategories();
+        getCategories();
     }, [
         getCommunitySettings,
         getCommunityNames,
         getCommunityDescriptions,
-        getInitiativeCategories,
+        getCategories,
     ]);
 
     const onFinish = (formData: CommunitySettingsInterface) => {
@@ -231,32 +220,32 @@ export function JoinCommunity() {
             new UserSettingsAoService();
         const userSettings =
             userSettingsService.createRecord();
-        if (systemCategory.id) {
-            category.push(systemCategory);
+        if (systemCategory.id &&
+            Array.isArray(categoriesSelect.currentValues)) {
+            categoriesSelect.currentValues.push(systemCategory);
         }
-        const userSettingsId = v4();
-        userSettings.id = userSettingsId;
 
         userSettingsAOService.saveSettings(
             userSettings,
             formData,
-            name,
-            description,
-            category,
+            nameSelect.currentValues || [],
+            descriptionSelect.currentValues || [],
+            categoriesSelect.currentValues || [],
             id || '',
             authData.getUserRelation(),
-        ).then(() => {
-                userSettingsAOService.update_data_after_join(
-                    id || '',
-                    userSettingsId,
-                    requestMemberId,
-                ).then(() => {
-                    successInfo('Настройки сохранены');
-                    navigate(`/my-communities/${id}`);
-                }).catch((error) => {
-                    setButtonLoading(false);
-                    errorInfo(`Ошибка обновления данных настроек: ${error}`);
-                });
+            true
+        ).then((userSettingsInst) => {
+            userSettingsAOService.update_data_after_join(
+                id || '',
+                userSettingsInst.id,
+                requestMemberId,
+            ).then(() => {
+                successInfo('Настройки сохранены');
+                navigate(`/my-communities/${id}`);
+            }).catch((error) => {
+                setButtonLoading(false);
+                errorInfo(`Ошибка обновления данных настроек: ${error}`);
+            });
         }).catch((error) => {
             setButtonLoading(false);
             errorInfo(`Ошибка сохранения настроек: ${error}`);
@@ -298,19 +287,15 @@ export function JoinCommunity() {
                                     message: 'Пожалуйста, выберите наименование сообщества',
                                 },
                             ]}
-                            required
                         >
                             <SelectWithAddValue
-                                options={names}
-                                setOptions={setNames}
+                                fieldData={nameSelect}
                                 form={form}
                                 fieldService={nameService}
                                 fieldType="input"
                                 formField="name"
                                 bindLabel="name"
                                 placeholder="Введите своё наименование"
-                                fieldData={name}
-                                setFieldData={setName}
                             />
                         </Form.Item>
                         <Form.Item
@@ -325,16 +310,13 @@ export function JoinCommunity() {
                             ]}
                         >
                             <SelectWithAddValue
-                                options={descriptions}
-                                setOptions={setDescriptions}
+                                fieldData={descriptionSelect}
                                 form={form}
                                 fieldService={descriptionService}
                                 fieldType="textarea"
                                 formField="description"
                                 bindLabel="value"
                                 placeholder="Введите своё описание"
-                                fieldData={description}
-                                setFieldData={setDescription}
                             />
                         </Form.Item>
                         <Form.Item
@@ -437,21 +419,18 @@ export function JoinCommunity() {
                             />
                         </Form.Item>
                         <Form.Item
-                            name='init_categories'
-                            label='Категории инициатив'
+                            name='categories'
+                            label='Категории'
                             labelCol={{ span: 24 }}
                         >
                             <SelectWithAddValue
-                                options={categories}
-                                setOptions={setCategories}
+                                fieldData={categoriesSelect}
                                 form={form}
                                 fieldService={categoryService}
                                 fieldType="input"
-                                formField="init_categories"
+                                formField="categories"
                                 bindLabel="name"
                                 placeholder="Введите свою категорию"
-                                fieldData={category}
-                                setFieldData={setCategory}
                                 multiple={true}
                             />
                         </Form.Item>

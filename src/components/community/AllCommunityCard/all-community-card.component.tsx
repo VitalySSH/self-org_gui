@@ -11,6 +11,7 @@ import {
 } from "../../../models";
 import TextArea from "antd/lib/input/TextArea";
 import { useAuth } from "../../../hooks";
+import { OnConsiderationCode } from "../../../consts";
 
 
 export function AllCommunityCard(props: any) {
@@ -91,7 +92,7 @@ export function AllCommunityCard(props: any) {
                 {
                     field: 'code',
                     op: 'equals',
-                    val: 'on_consideration',
+                    val: OnConsiderationCode,
                 }
             ]
         ).then(

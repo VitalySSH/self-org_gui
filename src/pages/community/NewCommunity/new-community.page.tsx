@@ -87,6 +87,13 @@ export function NewCommunity() {
                     onFinish={onFinish}
                     style={{ width: 600 }}
                     onFieldsChange={handleFormChange}
+                    initialValues={{
+                        is_secret_ballot: false,
+                        is_can_offer: false,
+                        is_minority_not_participate: false,
+                        is_default_add_member: false,
+                        is_not_delegate: false,
+                    }}
                 >
                     <Form.Item
                         name='name'

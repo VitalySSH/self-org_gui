@@ -6,6 +6,7 @@ import {
     ProtectedRoute,
 } from "./components";
 import {
+    NoMatchPage,
     SignIn,
     SignUp,
     Verify2FA,
@@ -27,6 +28,7 @@ function App() {
                   }>
                   </Route>
 
+                  <Route path='/no-much-page' element={<NoMatchPage />} />
               </Routes>
           </AuthProvider>
       )
