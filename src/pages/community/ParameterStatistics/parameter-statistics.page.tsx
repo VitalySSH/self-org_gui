@@ -3,6 +3,7 @@ import { CommunityAOService } from "../../../services";
 import { SettingsInPercenInterface } from "../../../interfaces";
 import { Collapse, CollapseProps } from "antd";
 import { SettingsStatistics } from "../../../components";
+import {IsMinorityNotParticipateLabel} from "../../../consts";
 
 
 export function ParameterStatistics(props: any) {
@@ -54,7 +55,7 @@ export function ParameterStatistics(props: any) {
         },
         {
             key: '5',
-            label: 'Меньшинство обязано подчиниться большинству?',
+            label: IsMinorityNotParticipateLabel,
             children: <SettingsStatistics data={
                 parameters.minority_not_participate} />,
         },

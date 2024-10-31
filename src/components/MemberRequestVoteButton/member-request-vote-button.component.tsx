@@ -8,7 +8,7 @@ import { RequestMemberModel, StatusModel } from "../../models";
 export function MemberRequestVoteButton(props: any) {
 
     const tableRow = props.tableRow;
-    const modalTitle = `${tableRow?.member} с нами?`;
+    const modalTitle = tableRow ? `${tableRow?.member} с нами?` : '';
     const [messageApi, contextHolder] =
         message.useMessage();
     const [modalOpen, setModalOpen] =
@@ -16,10 +16,10 @@ export function MemberRequestVoteButton(props: any) {
     const [loadFormData, setLoadFormData] =
         useState(false);
     const [vote, setVote] =
-        useState(tableRow.vote as boolean | undefined);
+        useState(tableRow?.vote as boolean | undefined);
     const [disabled, setDisabled] =
         useState(true);
-    const [form] = Form.useForm();
+    const [voteForm] = Form.useForm();
 
     const successInfo = (content: string) => {
         messageApi.open({
@@ -37,16 +37,17 @@ export function MemberRequestVoteButton(props: any) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const updateForm = () => {
+        // FIXME: разобраться, почему заходит сюда дважды
         if (!loadFormData) {
             if (vote === undefined) {
-                form.setFieldValue('yes', false);
-                form.setFieldValue('no', false);
+                voteForm.setFieldValue('yes', false);
+                voteForm.setFieldValue('no', false);
             } else if (vote) {
-                form.setFieldValue('yes', true);
-                form.setFieldValue('no', false);
+                voteForm.setFieldValue('yes', true);
+                voteForm.setFieldValue('no', false);
             } else {
-                form.setFieldValue('yes', false);
-                form.setFieldValue('no', true);
+                voteForm.setFieldValue('yes', false);
+                voteForm.setFieldValue('no', true);
             }
             setLoadFormData(true);
         }
@@ -54,7 +55,7 @@ export function MemberRequestVoteButton(props: any) {
 
     useEffect(() => {
         updateForm();
-    }, [updateForm, loadFormData, vote]);
+    }, [updateForm, setLoadFormData, loadFormData, vote, voteForm]);
 
     const handleCancel = () => {
         setModalOpen(false);
@@ -82,7 +83,7 @@ export function MemberRequestVoteButton(props: any) {
             const status =
                 statuses.length ? statuses[0] : undefined;
             const requestMember = new RequestMemberModel();
-            requestMember.id = tableRow.key;
+            requestMember.id = tableRow?.key;
             if (status) {
                 requestMember.status = status;
             }
@@ -104,13 +105,13 @@ export function MemberRequestVoteButton(props: any) {
 
     const onValuesChange = (formData: SimpleVoting ) => {
         if (formData.yes !== undefined) {
-            if (formData.yes && form.getFieldValue('no')) {
-                form.setFieldValue('no', false);
+            if (formData.yes && voteForm.getFieldValue('no')) {
+                voteForm.setFieldValue('no', false);
             }
         }
-        if (formData.no !== undefined) {
-            if (formData.no && form.getFieldValue('yes')) {
-                form.setFieldValue('yes', false);
+        else if (formData.no !== undefined) {
+            if (formData.no && voteForm.getFieldValue('yes')) {
+                voteForm.setFieldValue('yes', false);
             }
         }
         if (disabled) {
@@ -130,7 +131,7 @@ export function MemberRequestVoteButton(props: any) {
             >
                 <Form
                     name='vote-member-request'
-                    form={form}
+                    form={voteForm}
                     onFinish={onFinish}
                     onValuesChange={onValuesChange}
                 >
@@ -166,7 +167,7 @@ export function MemberRequestVoteButton(props: any) {
                 </Form>
             </Modal>
             <Button
-                disabled={tableRow.isMyRequest}
+                disabled={tableRow?.isMyRequest || false}
                 onClick={toVote}
             >
                 Проголосовать

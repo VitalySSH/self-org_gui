@@ -72,6 +72,7 @@ export class UserSettingsAoService
         settings.categories = categories as CategoryModel[];
         settings.vote = formData.vote;
         settings.quorum = formData.quorum;
+        settings.significant_minority = formData.significant_minority;
         settings.is_secret_ballot = formData.is_secret_ballot;
         settings.is_can_offer = formData.is_can_offer;
         settings.is_minority_not_participate =

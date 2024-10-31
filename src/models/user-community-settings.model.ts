@@ -30,6 +30,9 @@ export class UserCommunitySettingsModel extends ApiModel{
     vote?: number;
 
     @attribute()
+    significant_minority?: number;
+
+    @attribute()
     is_secret_ballot?: boolean;
 
     @attribute()

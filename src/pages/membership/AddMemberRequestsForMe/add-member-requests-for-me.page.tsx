@@ -68,7 +68,8 @@ export function AddMemberRequestsForMe(props: any) {
                 <Input
                     ref={searchInput}
                     value={selectedKeys[0]}
-                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onChange={(e) =>
+                        setSelectedKeys(e.target.value ? [e.target.value] : [])}
                     onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
                     style={{ marginBottom: 8, display: 'block' }}
                 />

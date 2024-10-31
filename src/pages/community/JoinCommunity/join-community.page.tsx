@@ -31,6 +31,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../../hooks";
 import { useEffect, useState } from "react";
 import { SelectWithAddValue } from "../../../components";
+import {
+    IsMinorityNotParticipateLabel,
+    IsSecretBallotLabel,
+    QuorumLabel,
+    SignificantMinorityLabel,
+    VoteLabel
+} from "../../../consts";
 
 export function JoinCommunity() {
 
@@ -114,6 +121,8 @@ export function JoinCommunity() {
                         'description', settingsInst.description?.value);
                     form.setFieldValue('quorum', settingsInst.quorum);
                     form.setFieldValue('vote', settingsInst.vote);
+                    form.setFieldValue('significant_minority',
+                        settingsInst.significant_minority);
                     form.setFieldValue('is_secret_ballot',
                         settingsInst.is_secret_ballot || false);
                     form.setFieldValue('is_can_offer',
@@ -321,7 +330,7 @@ export function JoinCommunity() {
                         </Form.Item>
                         <Form.Item
                             name='quorum'
-                            label='Кворум (%)'
+                            label={ QuorumLabel }
                             labelCol={{ span: 24 }}
                             rules={[
                                 {
@@ -343,7 +352,7 @@ export function JoinCommunity() {
                         </Form.Item>
                         <Form.Item
                             name='vote'
-                            label='Решение (%)'
+                            label={ VoteLabel }
                             labelCol={{ span: 24 }}
                             rules={[
                                 {
@@ -364,8 +373,30 @@ export function JoinCommunity() {
                             />
                         </Form.Item>
                         <Form.Item
+                            name='significant_minority'
+                            label={ SignificantMinorityLabel }
+                            labelCol={{ span: 24 }}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Пожалуйста, укажите процент общественно-значимого меньшинства, значение от 1 до 49%.',
+                                },
+                            ]}
+                        >
+                            <InputNumber
+                                type="number"
+                                controls={false}
+                                max={49}
+                                min={1}
+                                step={1}
+                                style={{
+                                    width: '20%'
+                                }}
+                            />
+                        </Form.Item>
+                        <Form.Item
                             name='is_secret_ballot'
-                            label='Тайное голосавание?'
+                            label={ IsSecretBallotLabel }
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
@@ -387,7 +418,7 @@ export function JoinCommunity() {
                         </Form.Item>
                         <Form.Item
                             name='is_minority_not_participate'
-                            label='Меньшинство обязано подчиниться большинству?'
+                            label={ IsMinorityNotParticipateLabel }
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >

@@ -4,7 +4,8 @@ import {
     Layout,
     Select,
     Space,
-    Spin, Switch,
+    Spin,
+    Switch,
 } from "antd";
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import TextArea from "antd/lib/input/TextArea";
@@ -14,6 +15,13 @@ import {
 } from "../../../models";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+    IsMinorityNotParticipateLabel,
+    IsSecretBallotLabel,
+    QuorumLabel,
+    SignificantMinorityLabel,
+    VoteLabel
+} from "../../../consts";
 
 export function CommunitySettings(props: any) {
 
@@ -53,6 +61,8 @@ export function CommunitySettings(props: any) {
                         settingsInst?.description?.value || '');
                     form.setFieldValue('quorum', settingsInst?.quorum);
                     form.setFieldValue('vote', settingsInst?.vote);
+                    form.setFieldValue('significant_minority',
+                        settingsInst?.significant_minority);
                     form.setFieldValue('is_secret_ballot',
                         settingsInst?.is_secret_ballot || false);
                     form.setFieldValue('is_can_offer',
@@ -108,7 +118,7 @@ export function CommunitySettings(props: any) {
                         </Form.Item>
                         <Form.Item
                             name='quorum'
-                            label='Кворум (%)'
+                            label={ QuorumLabel }
                             labelCol={{ span: 24 }}
                         >
                             <Input
@@ -119,7 +129,18 @@ export function CommunitySettings(props: any) {
                         </Form.Item>
                         <Form.Item
                             name='vote'
-                            label='Решение (%)'
+                            label={ VoteLabel }
+                            labelCol={{ span: 24 }}
+                        >
+                            <Input
+                                type="number"
+                                style={{ width: '20%'}}
+                                readOnly
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            name='significant_minority'
+                            label={ SignificantMinorityLabel }
                             labelCol={{ span: 24 }}
                         >
                             <Input
@@ -130,7 +151,7 @@ export function CommunitySettings(props: any) {
                         </Form.Item>
                         <Form.Item
                             name='is_secret_ballot'
-                            label='Тайное голосавание?'
+                            label={ IsSecretBallotLabel }
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
@@ -154,7 +175,7 @@ export function CommunitySettings(props: any) {
                         </Form.Item>
                         <Form.Item
                             name='is_minority_not_participate'
-                            label='Меньшинство обязано подчиниться большинству?'
+                            label={ IsMinorityNotParticipateLabel }
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
