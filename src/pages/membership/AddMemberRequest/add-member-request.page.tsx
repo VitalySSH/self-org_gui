@@ -11,7 +11,9 @@ export function AddMemberRequest(props: any) {
         <Layout
             style={{height: '100%'}}
         >
-            <Typography.Title level={3}>Заявки пользователей на вступление в сообщество</Typography.Title>
+            <Typography.Title
+                level={3}>Заявки пользователей на вступление в сообщество
+            </Typography.Title>
             <AddMemberRequestsForMe communityId={communityId} />
         </Layout>
     );

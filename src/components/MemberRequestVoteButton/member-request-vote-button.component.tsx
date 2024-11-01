@@ -1,4 +1,4 @@
-import {Button, Checkbox, Form, message, Modal} from "antd";
+import { Button, Checkbox, Form, message, Modal } from "antd";
 import { useEffect, useState } from "react";
 import { SimpleVoting } from "../../interfaces";
 import { CrudDataSourceService } from "../../services";
@@ -37,8 +37,7 @@ export function MemberRequestVoteButton(props: any) {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const updateForm = () => {
-        // FIXME: разобраться, почему заходит сюда дважды
-        if (!loadFormData) {
+        if (modalOpen && !loadFormData) {
             if (vote === undefined) {
                 voteForm.setFieldValue('yes', false);
                 voteForm.setFieldValue('no', false);
@@ -130,7 +129,7 @@ export function MemberRequestVoteButton(props: any) {
                 footer={[]}
             >
                 <Form
-                    name='vote-member-request'
+                    name={`vote-member-request_${tableRow?.key}`}
                     form={voteForm}
                     onFinish={onFinish}
                     onValuesChange={onValuesChange}

@@ -175,7 +175,7 @@ export function AddMemberRequestsForMe(props: any) {
             key: 'action',
             render: (item: TableMemberRequest) => {
                 return (
-                    <MemberRequestVoteButton tableRow={item} />
+                    <MemberRequestVoteButton key={item.key} tableRow={item} />
                 );
             },
         },
