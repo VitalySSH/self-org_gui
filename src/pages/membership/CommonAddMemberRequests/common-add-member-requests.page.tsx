@@ -20,6 +20,9 @@ import {
 } from '@ant-design/icons';
 import { useAuth } from "../../../hooks";
 import { useNavigate } from "react-router-dom";
+import {
+    MemberRequestVotesButton
+} from "../../../components";
 
 type DataIndex = keyof TableMemberRequest;
 
@@ -66,14 +69,18 @@ export function CommonAddMemberRequests(props: any) {
                 <Input
                     ref={searchInput}
                     value={selectedKeys[0]}
-                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                    onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                    onChange={(e) =>
+                        setSelectedKeys(
+                            e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => handleSearch(
+                        selectedKeys as string[], confirm, dataIndex)}
                     style={{ marginBottom: 8, display: 'block' }}
                 />
                 <Space>
                     <Button
                         type="primary"
-                        onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                        onClick={() => handleSearch(
+                            selectedKeys as string[], confirm, dataIndex)}
                         icon={<SearchOutlined />}
                         size="small"
                         style={{ width: 90 }}
@@ -140,7 +147,7 @@ export function CommonAddMemberRequests(props: any) {
 
     const columns: TableColumnsType<TableMemberRequest> = [
         {
-            title: 'Кандидат на члентсво',
+            title: 'Кандидат на членство',
             dataIndex: 'member',
             key: 'member',
             width: '30%',
@@ -166,6 +173,16 @@ export function CommonAddMemberRequests(props: any) {
             ...getColumnSearchProps('created'),
             width: '20%',
         },
+        {
+            title: 'Действие',
+            dataIndex: '',
+            key: 'action',
+            render: (item: TableMemberRequest) => {
+                return (
+                    <MemberRequestVotesButton key={item.key} tableRow={item} />
+                );
+            },
+        },
     ];
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -184,7 +201,8 @@ export function CommonAddMemberRequests(props: any) {
                             const isMyRequest =
                                 requestMember.member?.id === authData.user?.id;
                             const memberName =
-                                `${requestMember.member?.firstname} ${requestMember.member?.surname}`;
+                                `${requestMember.member?.firstname}` +
+                                ` ${requestMember.member?.surname}`;
                             const item = {
                                 key: requestMember.id || '',
                                 member: memberName,
