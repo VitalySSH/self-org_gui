@@ -12,6 +12,7 @@ export * from './crud/order-item.interface';
 export * from './crud/pagination.interface';
 export * from './community/community-card.interface';
 export * from './community/community-settings.interface';
+export * from './rule/rule-card.interface';
 export * from './membership/table-member-request.interface';
 export * from './membership/table-my-member-request.interface';
 export * from './voting/simple-voting.interface';

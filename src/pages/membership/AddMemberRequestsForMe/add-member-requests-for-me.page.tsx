@@ -241,7 +241,7 @@ export function AddMemberRequestsForMe(props: any) {
 
     return (
         <Layout
-            style={{height: '100%', overflowY: "scroll", marginTop: 20}}
+            style={{height: '100%', overflowY: "auto", marginTop: 20}}
         >
             <Table
                 columns={columns}

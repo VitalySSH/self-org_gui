@@ -250,7 +250,7 @@ export function MyCommunitySettings(props: any) {
         <Layout>
             {contextHolder}
             <Typography.Title
-                level={4}
+                level={3}
                 style={{ marginLeft: 20 }}
             >Мои настройки сообщества</Typography.Title>
             <Space

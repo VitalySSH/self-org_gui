@@ -1,4 +1,4 @@
-import {Button, Card, List, message, Modal} from "antd";
+import { Button, Card, List, message, Modal } from "antd";
 import { useEffect, useState } from "react";
 import { SettingsStatisticsInterface } from "../../interfaces";
 import {
@@ -28,6 +28,7 @@ export function MemberRequestVotesButton(props: any) {
         }).then();
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const getVotes = () => {
         if (votes === undefined && tableRow?.key) {
             requestMemberAoService.votesInPercen(tableRow.key)

@@ -71,22 +71,27 @@ export function AllCommunities() {
 
     return (
         <Layout
-            style={{height: '100%', overflowY: "scroll"}}
+            style={{height: '100%', overflowY: "auto"}}
         >
             <Space
                 direction="vertical"
                 className="communities"
             >
-                <Typography.Title level={3}>Сообщества</Typography.Title>
+                <Typography.Title
+                    level={3}
+                    style={{ textAlign: "center" }}
+                >
+                    Сообщества
+                </Typography.Title>
                 <List
                     itemLayout="vertical"
                     dataSource={dataSource}
                     loading={loading}
                     locale={{emptyText: "Нет сообществ"}}
-                    pagination={{
+                    pagination={ dataSource.length >= 20 ? {
                         position: 'bottom',
-                        align: 'center'
-                    }}
+                        align: 'end'
+                    } : false }
                     size="large"
                     renderItem={(item: CommunityCard) => (
                         <List.Item>

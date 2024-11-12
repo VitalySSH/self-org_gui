@@ -12,7 +12,10 @@ export function AddMemberRequest(props: any) {
             style={{height: '100%'}}
         >
             <Typography.Title
-                level={3}>Заявки пользователей на вступление в сообщество
+                level={3}
+                style={{ textAlign: "center" }}
+            >
+                Заявки на вступление в сообщество
             </Typography.Title>
             <AddMemberRequestsForMe communityId={communityId} />
         </Layout>

@@ -2,7 +2,6 @@ import {
     Button,
     Form,
     Input,
-    InputNumber,
     Layout,
     message, Row,
     Space,
@@ -23,22 +22,26 @@ import { UserSettingsAoService } from "../../../services";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
-    IsMinorityNotParticipateLabel,
-    IsSecretBallotLabel,
-    QuorumLabel,
-    SignificantMinorityLabel,
-    VoteLabel
+    IsExtraOptionsLabel,
+    IsMultiSelectLabel,
 } from "../../../consts";
 
-export function NewCommunity() {
+export function NewRule(props: any) {
+
+    const communityId = props.communityId;
 
     const navigate = useNavigate();
     const [messageApi, contextHolder] =
         message.useMessage();
+
     const [buttonLoading, setButtonLoading] =
         useState(false);
     const [disabled, setDisabled] =
         useState(true);
+    const [isExtraOptions, setIsExtraOptions] =
+        useState(false);
+    const [isMultiSelect, setIsMultiSelect] =
+        useState(false);
 
     const [form] = Form.useForm();
 
@@ -87,31 +90,32 @@ export function NewCommunity() {
                     level={3}
                     style={{ textAlign: "center" }}
                 >
-                    Новое сообщество
+                    Новое правило
                 </Typography.Title>
                 <Row justify="center" align="middle">
                     <Form
                         form={form}
-                        name='new-community-settings'
+                        name='new-rule'
                         onFinish={onFinish}
                         style={{ width: '40%', justifyContent: "center"}}
                         onFieldsChange={handleFormChange}
                         initialValues={{
-                            is_secret_ballot: false,
-                            is_can_offer: false,
-                            is_minority_not_participate: false,
-                            is_default_add_member: false,
-                            is_not_delegate: false,
+                            is_extra_options: false,
+                            is_multi_select: false,
                         }}
                     >
                         <Form.Item
-                            name='name'
-                            label='Наименование'
+                            name='title'
+                            label='Заголовок'
                             labelCol={{ span: 24 }}
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Пожалуйста, укажите наименование сообщества',
+                                    message: 'Пожалуйста, укажите заголовок для правила',
+                                },
+                                {
+                                    max: 140,
+                                    message: 'Текст заголовка не должен привышать 140 символов',
                                 },
                             ]}
                             hasFeedback
@@ -119,90 +123,40 @@ export function NewCommunity() {
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            name='description'
-                            label='Описание'
+                            name='question'
+                            label='Вопрос для голосования'
                             labelCol={{ span: 24 }}
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Пожалуйста, заполните описание сообщества',
+                                    message: 'Пожалуйста, укажите вопрос, на которой должны ответить при голосовании',
+                                },
+                                {
+                                    max: 140,
+                                    message: 'Текст вопроса не должен привышать 140 символов',
                                 },
                             ]}
                             hasFeedback
                         >
-                            <TextArea rows={5} />
+                            <Input />
                         </Form.Item>
                         <Form.Item
-                            name='quorum'
-                            label={ QuorumLabel }
+                            name='content'
+                            label='Описание правила'
                             labelCol={{ span: 24 }}
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Пожалуйста, укажите кворум сообщества, значение от 1 до 100%.',
+                                    message: 'Пожалуйста, подробно опишите цель и содержание правила',
                                 },
                             ]}
                             hasFeedback
                         >
-                            <InputNumber
-                                type="number"
-                                controls={false}
-                                max={100}
-                                min={1}
-                                step={1}
-                                style={{
-                                    width: '20%'
-                                }}
-                            />
+                            <TextArea rows={10} />
                         </Form.Item>
                         <Form.Item
-                            name='vote'
-                            label={ VoteLabel }
-                            labelCol={{ span: 24 }}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Пожалуйста, укажите процент голосов для принятия решения, значение от 50 до 100%.',
-                                },
-                            ]}
-                            hasFeedback
-                        >
-                            <InputNumber
-                                type="number"
-                                controls={false}
-                                max={100}
-                                min={50}
-                                step={1}
-                                style={{
-                                    width: '20%'
-                                }}
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='significant_minority'
-                            label={ SignificantMinorityLabel }
-                            labelCol={{ span: 24 }}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Пожалуйста, укажите процент общественно-значимого меньшинства, значение от 1 до 49%.',
-                                },
-                            ]}
-                        >
-                            <InputNumber
-                                type="number"
-                                controls={false}
-                                max={49}
-                                min={1}
-                                step={1}
-                                style={{
-                                    width: '20%'
-                                }}
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='is_secret_ballot'
-                            label={ IsSecretBallotLabel }
+                            name='is_extra_options'
+                            label={ IsExtraOptionsLabel }
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
@@ -212,8 +166,8 @@ export function NewCommunity() {
                             />
                         </Form.Item>
                         <Form.Item
-                            name='is_can_offer'
-                            label='Оказываем услуги другим сообществам?'
+                            name='is_multi_select'
+                            label={ IsMultiSelectLabel }
                             labelCol={{ span: 24 }}
                             valuePropName="checked"
                         >
@@ -222,40 +176,7 @@ export function NewCommunity() {
                                 unCheckedChildren={<CloseOutlined />}
                             />
                         </Form.Item>
-                        <Form.Item
-                            name='is_minority_not_participate'
-                            label={ IsMinorityNotParticipateLabel }
-                            labelCol={{ span: 24 }}
-                            valuePropName="checked"
-                        >
-                            <Switch
-                                checkedChildren={<CheckOutlined />}
-                                unCheckedChildren={<CloseOutlined />}
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='is_default_add_member'
-                            label='Даю предварительное согласие на добавление любого нового члена сообщества'
-                            labelCol={{ span: 24 }}
-                            valuePropName="checked"
-                        >
-                            <Switch
-                                checkedChildren={<CheckOutlined />}
-                                unCheckedChildren={<CloseOutlined />}
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='is_not_delegate'
-                            label='Не хочу выступать в качестве делегата'
-                            labelCol={{ span: 24 }}
-                            valuePropName="checked"
-                        >
-                            <Switch
-                                checkedChildren={<CheckOutlined />}
-                                unCheckedChildren={<CloseOutlined />}
-                            />
-                        </Form.Item>
-                        <Form.List name="categories">
+                        <Form.List name="extra_options">
                             {(fields, { add, remove }) => (
                                 <>
                                     {fields.map(({ key, name, ...restField }) => (
@@ -272,13 +193,13 @@ export function NewCommunity() {
                                                     [
                                                         {
                                                             required: true,
-                                                            message: 'Пожалуйста, укажите наименование категорий'
+                                                            message: 'Пожалуйста, укажите дополнительный параметр для голосования'
                                                         }
                                                     ]
                                                 }
                                                 hasFeedback
                                             >
-                                                <Input placeholder="Наименование категории" />
+                                                <Input placeholder="Параметр" />
                                             </Form.Item>
                                             <MinusCircleOutlined
                                                 onClick={() => remove(name)} />
@@ -291,7 +212,7 @@ export function NewCommunity() {
                                             block
                                             icon={<PlusOutlined />}
                                         >
-                                            Добавить категорию
+                                            Добавить параметр
                                         </Button>
                                     </Form.Item>
                                 </>
@@ -305,7 +226,7 @@ export function NewCommunity() {
                                 disabled={disabled}
                                 block
                             >
-                                Создать сообщество
+                                Создать правило
                             </Button>
                         </Form.Item>
                     </Form>

@@ -263,7 +263,7 @@ export function JoinCommunity() {
 
     return (
         <Layout
-            style={{ height: "100%", overflowY: "scroll" }}
+            style={{ height: "100%", overflowY: "auto" }}
         >
             <Space
                 direction="vertical"
@@ -271,7 +271,7 @@ export function JoinCommunity() {
             >
             {contextHolder}
                 <Typography.Title
-                    level={4}
+                    level={3}
                     style={{ marginLeft: 20 }}
                 >Мои настройки сообщества</Typography.Title>
                 <Spin

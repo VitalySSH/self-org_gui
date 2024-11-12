@@ -6,7 +6,7 @@
     padding: 25px;
     flex-direction: column;
     align-content: flex-start;
-    overflow: scroll;
+    overflow: auto;
 }
 
 .community-name {

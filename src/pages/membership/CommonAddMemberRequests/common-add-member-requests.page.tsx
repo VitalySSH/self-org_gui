@@ -229,7 +229,7 @@ export function CommonAddMemberRequests(props: any) {
 
     return (
         <Layout
-            style={{height: '100%', overflowY: "scroll"}}
+            style={{height: '100%', overflowY: "auto"}}
         >
             <Table
                 columns={columns}

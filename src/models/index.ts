@@ -9,3 +9,8 @@ export * from './community-settings.model';
 export * from './delegate-settings.model';
 export * from './category.model';
 export * from './user-community-settings.model';
+export * from './rule.model';
+export * from './voting-result.model';
+export * from './voting-option.model';
+export * from './user-voting-result.model';
+export * from './opinion.model';

@@ -328,7 +328,7 @@ export function MyAddMemberRequests() {
 
     return (
         <Layout
-            style={{height: '100%', overflowY: "scroll" }}
+            style={{height: '100%', overflowY: "auto" }}
         >
             <Space
                 direction="vertical"
