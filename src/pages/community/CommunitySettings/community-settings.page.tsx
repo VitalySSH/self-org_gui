@@ -9,10 +9,8 @@ import {
 } from "antd";
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import TextArea from "antd/lib/input/TextArea";
-import { CrudDataSourceService } from "../../../services";
-import {
-    CommunityModel,
-} from "../../../models";
+import { CrudDataSourceService } from "src/services";
+import { CommunityModel } from "src/models";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -21,7 +19,7 @@ import {
     QuorumLabel,
     SignificantMinorityLabel,
     VoteLabel
-} from "../../../consts";
+} from "src/consts";
 
 export function CommunitySettings(props: any) {
 

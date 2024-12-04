@@ -1,10 +1,10 @@
 import {
     FileMetadataInterface
-} from "../interfaces/fileStorage/file-metadata.interface.ts";
+} from "src/interfaces";
 import { DataSourceService } from "./data-source.service.ts";
-import { baseApiUrl } from "../config/configuration.ts";
+import { baseApiUrl } from "src/config/configuration";
 
-class FileStorageService extends DataSourceService{
+export class FileStorageService extends DataSourceService{
 
 
 
@@ -100,5 +100,3 @@ class FileStorageService extends DataSourceService{
     }
 
 }
-
-export default new FileStorageService();

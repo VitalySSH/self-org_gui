@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CurrentUserService } from "../services";
+import { CurrentUserService } from "src/services";
 
 export const useLocalStorage = (keyName: string, defaultValue: any) => {
 

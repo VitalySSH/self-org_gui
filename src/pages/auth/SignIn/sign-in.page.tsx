@@ -11,13 +11,13 @@ import {
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../../hooks";
-import { encryptPassword } from "../../../utils";
+import { useAuth } from "src/hooks";
+import { encryptPassword } from "src/utils";
 import {
     AuthContextProvider,
     SignInFormDataInterface
-} from "../../../interfaces";
-import AuthApiClientService from "../../../services/auth-api-client.service.ts";
+} from "src/interfaces";
+import { AuthApiClientService } from "src/services";
 
 
 export function SignIn() {
@@ -25,6 +25,7 @@ export function SignIn() {
     const isSignUp = location.state?.signUp || false;
     const navigate = useNavigate();
     const authData: AuthContextProvider = useAuth();
+    const authApiClientService = new AuthApiClientService();
 
     const onFinish = (formData: SignInFormDataInterface) => {
         const secret_password = btoa(encryptPassword(formData.password));
@@ -34,11 +35,11 @@ export function SignIn() {
             localStorage.setItem('password', formData.password);
         }
 
-        AuthApiClientService.login(formData.email, secret_password)
+        authApiClientService.login(formData.email, secret_password)
             .then(async () => {
                 if (!authData.user) {
                     const currentUser =
-                        await AuthApiClientService.getCurrentUser();
+                        await authApiClientService.getCurrentUser();
                     currentUser.secret_password = secret_password;
                     authData.login(currentUser, isSignUp);
                 } else {

@@ -1,5 +1,5 @@
-import { ClassType } from "../types";
-import { Container } from "../shared/container.ts";
+import { ClassType } from "src/types";
+import { Container } from "./container.ts";
 
 export function Injectable(target: ClassType) {
     Container.add(target);

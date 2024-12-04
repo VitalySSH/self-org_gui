@@ -1,4 +1,4 @@
-import { FilterItem } from "../interfaces";
+import { FilterItem } from "src/interfaces";
 
 
 export type Filters = FilterItem[];

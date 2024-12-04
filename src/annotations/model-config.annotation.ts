@@ -1,4 +1,4 @@
-import { ModelConfig } from "../interfaces";
+import { ModelConfig } from "src/interfaces";
 
 export function modelConfig(config: ModelConfig) {
     return (target: any) => {

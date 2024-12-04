@@ -1,7 +1,7 @@
-import { CrudDataSourceService } from "../crud-data-source.service.ts";
-import { RequestMemberModel} from "../../models";
-import { SettingsStatisticsInterface } from "../../interfaces";
-import { AOApiUrl } from "../../config/configuration.ts";
+import { CrudDataSourceService } from "src/services";
+import { RequestMemberModel} from "src/models";
+import { SettingsStatisticsInterface } from "src/interfaces";
+import { AOApiUrl } from "src/config/configuration";
 
 
 export class RequestMemberAoService

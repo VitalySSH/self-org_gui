@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import { CrudApiDataInterface, Pagination } from "../interfaces";
+import { CrudApiDataInterface, Pagination } from "src/interfaces";
 import {
     ApiModel,
     CommunityDescriptionModel,
@@ -12,11 +12,11 @@ import {
     StatusModel,
     UserCommunitySettingsModel,
     UserModel,
-} from "../models";
-import { Filters, ModelType, Orders } from "../types";
-import { dataSourceConfig } from "../annotations";
+} from "src/models";
+import { Filters, ModelType, Orders } from "src/types";
+import { dataSourceConfig } from "src/annotations";
 import { DataSourceService } from "./data-source.service.ts";
-import { baseApiUrl } from "../config/configuration.ts";
+import { baseApiUrl } from "src/config/configuration";
 
 @dataSourceConfig({
     models: {

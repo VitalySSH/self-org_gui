@@ -1,4 +1,4 @@
-import { Container, CONTAINER_CONTEXT } from "../shared/container.ts";
+import { Container, CONTAINER_CONTEXT } from "./container.ts";
 
 export function resolve(target: any, propertyName: string) {
     const original = Reflect.getMetadata('design:type', target.constructor.prototype, propertyName);

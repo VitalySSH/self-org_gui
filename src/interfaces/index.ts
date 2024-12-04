@@ -20,3 +20,4 @@ export * from './components/select.interface';
 export * from './components/select-data.interface.ts';
 export * from './ao/settings-statistics.interface';
 export * from './ao/settings-in-percen.interface';
+export * from './fileStorage/file-metadata.interface';

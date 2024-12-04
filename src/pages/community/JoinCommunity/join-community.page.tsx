@@ -13,11 +13,11 @@ import {
     AuthContextProvider,
     CommunitySettingsInterface,
     SelectDataInterface,
-} from "../../../interfaces";
+} from "src/interfaces";
 import {
     CrudDataSourceService,
     UserSettingsAoService
-} from "../../../services";
+} from "src/services";
 import {
     CommunityDescriptionModel,
     CommunityModel,
@@ -25,19 +25,19 @@ import {
     CommunitySettingsModel,
     CategoryModel,
     UserCommunitySettingsModel,
-} from "../../../models";
+} from "src/models";
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../../../hooks";
+import { useAuth } from "src/hooks";
 import { useEffect, useState } from "react";
-import { SelectWithAddValue } from "../../../components";
+import { SelectWithAddValue } from "src/components";
 import {
     IsMinorityNotParticipateLabel,
     IsSecretBallotLabel,
     QuorumLabel,
     SignificantMinorityLabel,
     VoteLabel
-} from "../../../consts";
+} from "src/consts";
 
 export function JoinCommunity() {
 

@@ -1,8 +1,8 @@
 import { Button, Checkbox, Form, message, Modal } from "antd";
 import { useEffect, useState } from "react";
-import { SimpleVoting } from "../../interfaces";
-import { CrudDataSourceService } from "../../services";
-import { RequestMemberModel, StatusModel } from "../../models";
+import { SimpleVoting } from "src/interfaces";
+import { CrudDataSourceService } from "src/services";
+import { RequestMemberModel, StatusModel } from "src/models";
 
 
 export function MemberRequestVoteButton(props: any) {

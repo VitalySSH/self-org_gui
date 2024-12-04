@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { CommunityAOService } from "../../../services";
-import { SettingsInPercenInterface } from "../../../interfaces";
+import { CommunityAOService } from "src/services";
+import { SettingsInPercenInterface } from "src/interfaces";
 import { Collapse, CollapseProps } from "antd";
-import { SettingsStatistics } from "../../../components";
-import {IsMinorityNotParticipateLabel} from "../../../consts";
+import { SettingsStatistics } from "src/components";
+import {IsMinorityNotParticipateLabel} from "src/consts";
 
 
 export function ParameterStatistics(props: any) {

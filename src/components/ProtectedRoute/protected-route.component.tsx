@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../../hooks';
-import { AuthContextProvider } from "../../interfaces";
+import { useAuth } from 'src/hooks';
+import { AuthContextProvider } from "src/interfaces";
 
 
 export function ProtectedRoute(children: { children: any }) {

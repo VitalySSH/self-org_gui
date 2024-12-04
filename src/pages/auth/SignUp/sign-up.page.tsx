@@ -6,13 +6,14 @@ import TextArea from "antd/lib/input/TextArea";
 import {
     SignUpFormDataInterface,
     UserCreateInterface
-} from "../../../interfaces";
-import { encryptPassword } from "../../../utils";
-import AuthApiClientService from "../../../services/auth-api-client.service.ts";
+} from "src/interfaces";
+import { encryptPassword } from "src/utils";
+import { AuthApiClientService } from "src/services";
 
 export function SignUp(){
 
     const navigate = useNavigate();
+    const authApiClientService = new AuthApiClientService();
 
     const onFinish = (formData: SignUpFormDataInterface) => {
         const userData: UserCreateInterface = {
@@ -23,7 +24,7 @@ export function SignUp(){
             secret_password: btoa(encryptPassword(formData.password)),
         }
 
-        AuthApiClientService.createUser(userData).then(() => {
+        authApiClientService.createUser(userData).then(() => {
             navigate('/sign-in',
                 { preventScrollReset: true , state: { signUp: true }});
         }).catch((error) => {

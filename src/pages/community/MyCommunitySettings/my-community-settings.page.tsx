@@ -14,28 +14,28 @@ import { useEffect, useState } from "react";
 import {
     CrudDataSourceService,
     UserSettingsAoService,
-} from "../../../services";
+} from "src/services";
 import {
     CategoryModel,
     CommunityDescriptionModel,
     CommunityNameModel,
     UserCommunitySettingsModel
-} from "../../../models";
+} from "src/models";
 import {
     AuthContextProvider,
     CommunitySettingsInterface,
     SelectDataInterface,
-} from "../../../interfaces";
-import { useAuth } from "../../../hooks";
+} from "src/interfaces";
+import { useAuth } from "src/hooks";
 import { useNavigate } from "react-router-dom";
-import { SelectWithAddValue } from "../../../components";
+import { SelectWithAddValue } from "src/components";
 import {
     IsMinorityNotParticipateLabel,
     IsSecretBallotLabel,
     QuorumLabel,
     SignificantMinorityLabel,
     VoteLabel
-} from "../../../consts";
+} from "src/consts";
 
 export function MyCommunitySettings(props: any) {
 

@@ -1,17 +1,9 @@
+import { ConfigProvider, Layout, Tabs } from "antd";
 import {
-    ConfigProvider,
-    Layout,
-    Tabs,
-} from "antd";
-import {
-    CommunitySettings
-} from "../CommunitySettings/community-settings.page.tsx";
-import {
-    CommonAddMemberRequests
-} from "../../membership/CommonAddMemberRequests/common-add-member-requests.page.tsx";
-import {
+    CommunitySettings,
+    CommonAddMemberRequests,
     ParameterStatistics
-} from "../ParameterStatistics/parameter-statistics.page.tsx";
+} from "src/pages";
 
 export function CommunitySummary(props: any) {
 

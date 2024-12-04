@@ -1,4 +1,4 @@
-import { ModelConfig } from "../interfaces";
+import { ModelConfig } from "src/interfaces";
 
 export class ApiModel {
     id!: string;

@@ -1,5 +1,5 @@
 import { ApiModel } from "./api-model.model.ts";
-import { modelConfig, attribute, oneToMany } from "../annotations";
+import { modelConfig, attribute, oneToMany } from "src/annotations";
 import { UserModel } from "./user.model.ts";
 import { StatusModel } from "./status.model.ts";
 import { CommunityModel } from "./community.model.ts";

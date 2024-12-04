@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { StopOutlined } from "@ant-design/icons";
 import {
     CommunityAOService,
-} from "../../../services";
+} from "src/services";
 import Meta from "antd/es/card/Meta";
 import { useNavigate } from "react-router-dom";
-import { AuthContextProvider, CommunityCard } from "../../../interfaces";
-import { useAuth } from "../../../hooks";
+import { AuthContextProvider, CommunityCard } from "src/interfaces";
+import { useAuth } from "src/hooks";
 
 export function MyCommunities() {
 

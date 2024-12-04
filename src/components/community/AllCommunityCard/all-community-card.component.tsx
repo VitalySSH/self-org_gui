@@ -1,17 +1,17 @@
 import { Button, Card, Form, message, Modal } from "antd";
 import Meta from "antd/es/card/Meta";
-import { AuthContextProvider } from "../../../interfaces";
+import { AuthContextProvider } from "src/interfaces";
 import { SolutionOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import { CrudDataSourceService } from "../../../services";
+import { CrudDataSourceService } from "src/services";
 import {
     CommunityModel,
     RequestMemberModel,
     StatusModel
-} from "../../../models";
+} from "src/models";
 import TextArea from "antd/lib/input/TextArea";
-import { useAuth } from "../../../hooks";
-import { OnConsiderationCode } from "../../../consts";
+import { useAuth } from "src/hooks";
+import { OnConsiderationCode } from "src/consts";
 
 
 export function AllCommunityCard(props: any) {

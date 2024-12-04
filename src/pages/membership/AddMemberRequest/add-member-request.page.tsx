@@ -1,7 +1,7 @@
 import { Layout, Typography } from "antd";
 import {
     AddMemberRequestsForMe
-} from "../AddMemberRequestsForMe/add-member-requests-for-me.page.tsx";
+} from "src/pages";
 
 export function AddMemberRequest(props: any) {
 

@@ -1,7 +1,7 @@
 import {Card, List} from "antd";
 import {
     SettingsStatisticsInterface
-} from "../../../interfaces";
+} from "src/interfaces";
 import Meta from "antd/es/card/Meta";
 
 

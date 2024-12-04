@@ -1,5 +1,5 @@
 import { ApiModel } from "./api-model.model.ts";
-import { attribute, manyToMany, modelConfig } from "../annotations";
+import { attribute, manyToMany, modelConfig } from "src/annotations";
 import { VotingOptionModel } from "./voting-option.model.ts";
 
 @modelConfig({

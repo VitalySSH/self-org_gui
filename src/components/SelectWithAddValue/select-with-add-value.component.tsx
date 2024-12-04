@@ -9,7 +9,7 @@ import {
     Space
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { SelectInterface } from "../../interfaces";
+import { SelectInterface } from "src/interfaces";
 import React, { ChangeEvent, useRef, useState} from "react";
 import TextArea, { TextAreaRef } from "antd/lib/input/TextArea";
 

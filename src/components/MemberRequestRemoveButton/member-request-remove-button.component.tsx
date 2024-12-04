@@ -1,11 +1,11 @@
 import { Button, Popconfirm, message } from "antd";
-import { CrudDataSourceService } from "../../services";
-import { RequestMemberModel } from "../../models";
+import { CrudDataSourceService } from "src/services";
+import { RequestMemberModel } from "src/models";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import {
     CommunityMemberCode,
     MemberExcludedCode
-} from "../../consts";
+} from "src/consts";
 
 
 export function MemberRequestRemoveButton(props: any) {

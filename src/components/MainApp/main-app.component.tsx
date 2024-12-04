@@ -1,14 +1,14 @@
 import { Layout } from "antd";
-import { AppFooter } from "../AppFooter/app-footer.component.tsx";
+import { AppFooter } from "src/components";
 import {
     NotAuthHeaderIcons
-} from "../NotAuthHeaderIcons/not-auth-header-icons.component.tsx";
-import { Logo } from "../Logo/logo.component.tsx";
-import { AuthContextProvider } from "../../interfaces";
-import { useAuth } from "../../hooks";
+} from "src/components";
+import { Logo } from "src/components";
+import { AuthContextProvider } from "src/interfaces";
+import { useAuth } from "src/hooks";
 import {
     AuthHeaderIcons
-} from "../AuthHeaderIcons/auth-header-icons.component.tsx";
+} from "src/components";
 import {
     AboutPage,
     AllCommunities,
@@ -17,9 +17,9 @@ import {
     MyCommunities,
     NewCommunity,
     // NoMatchPage
-} from "../../pages";
+} from "src/pages";
 import { Route, Routes, useLocation } from "react-router-dom";
-import { ProtectedRoute } from "../ProtectedRoute/protected-route.component.tsx";
+import { ProtectedRoute } from "src/components";
 
 
 const {

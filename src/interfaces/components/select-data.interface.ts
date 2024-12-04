@@ -1,4 +1,4 @@
-import { ApiModel } from "../../models";
+import { ApiModel } from "src/models";
 
 export interface SelectDataInterface<T extends ApiModel> {
     options?: T[];

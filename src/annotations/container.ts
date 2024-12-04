@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { v4 } from 'uuid';
-import { ClassType } from "../types";
+import { ClassType } from "src/types";
 
 type AliasType = (modelMetadata: Container) => ClassType;
 
@@ -25,14 +25,8 @@ export class Container {
     private instances: IInstances = {};
 
     public static add(target: ClassType) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
         if (!target[CONTAINER_ID]) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
             target[CONTAINER_ID] = v4();
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
             this.register[target[CONTAINER_ID]] = {
                 Target: target
             }

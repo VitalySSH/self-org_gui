@@ -1,10 +1,11 @@
 import axios, { AxiosInstance } from "axios";
-import AuthApiClientService from "./auth-api-client.service.ts";
+import { AuthApiClientService } from "./auth-api-client.service.ts";
 import { CurrentUserService } from "./current-user.service.ts";
 
 
 export class DataSourceService {
     http: AxiosInstance;
+    authApiClientService = new AuthApiClientService();
 
     constructor(baseURL: string) {
         this.http = axios.create({
@@ -24,9 +25,11 @@ export class DataSourceService {
                 const originalConfig = error.config;
                 const userData = CurrentUserService.user;
 
-                if (userData && userData.secret_password && error.response?.status === 401 && !originalConfig._retry) {
+                if (userData && userData.secret_password &&
+                    error.response?.status === 401 && !originalConfig._retry) {
                     originalConfig._retry = true;
-                    await AuthApiClientService.asyncLogin(userData.email, userData.secret_password);
+                    await this.authApiClientService.asyncLogin(
+                        userData.email, userData.secret_password);
 
                     return this.http(originalConfig);
                 }

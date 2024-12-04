@@ -1,5 +1,5 @@
 import { ApiModel } from "./api-model.model.ts";
-import { attribute, modelConfig } from "../annotations";
+import { attribute, modelConfig } from "src/annotations";
 
 @modelConfig({
     entityName: 'voting_option',

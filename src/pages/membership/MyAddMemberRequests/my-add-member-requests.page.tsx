@@ -14,27 +14,27 @@ import { useEffect, useRef, useState } from "react";
 import {
     AuthContextProvider,
     TableMyMemberRequest
-} from "../../../interfaces";
-import { CrudDataSourceService } from "../../../services";
-import { RequestMemberModel } from "../../../models";
+} from "src/interfaces";
+import { CrudDataSourceService } from "src/services";
+import { RequestMemberModel } from "src/models";
 import { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from 'react-highlight-words';
 import {
     SearchOutlined,
 } from '@ant-design/icons';
-import { useAuth } from "../../../hooks";
+import { useAuth } from "src/hooks";
 import {
     MemberRequestDisputeButton,
     MemberRequestJoinButton,
     MemberRequestRemoveButton,
-} from "../../../components";
+} from "src/components";
 import {
     CommunityMemberCode,
     OnConsiderationCode,
     MemberExcludedCode,
     RequestSuccessfulCode,
     RequestDeniedCode
-} from "../../../consts";
+} from "src/consts";
 
 type DataIndex = keyof TableMyMemberRequest;
 

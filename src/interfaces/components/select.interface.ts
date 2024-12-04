@@ -1,6 +1,6 @@
 import { FormInstance } from "antd";
-import { CrudDataSourceService } from "../../services";
-import { SelectDataInterface } from "./select-data.interface.ts";
+import { CrudDataSourceService } from "src/services";
+import { SelectDataInterface } from "src/interfaces";
 
 type FieldType = 'input' | 'textarea';
 

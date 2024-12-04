@@ -1,10 +1,10 @@
 import { Layout, List, Space, Typography } from "antd";
-import { CrudDataSourceService } from "../../../services";
-import { CommunityModel } from "../../../models";
+import { CrudDataSourceService } from "src/services";
+import { CommunityModel } from "src/models";
 import { useEffect, useState } from "react";
-import { AuthContextProvider, CommunityCard } from "../../../interfaces";
-import { useAuth } from "../../../hooks";
-import { AllCommunityCard } from "../../../components";
+import { AuthContextProvider, CommunityCard } from "src/interfaces";
+import { useAuth } from "src/hooks";
+import { AllCommunityCard } from "src/components";
 
 
 

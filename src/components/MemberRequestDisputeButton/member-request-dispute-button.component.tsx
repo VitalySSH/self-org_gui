@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import { MemberExcludedCode } from "../../consts";
+import { MemberExcludedCode } from "src/consts";
 
 
 export function MemberRequestDisputeButton(props: any) {

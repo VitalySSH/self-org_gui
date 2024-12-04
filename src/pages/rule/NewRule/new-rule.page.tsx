@@ -17,14 +17,14 @@ import {
 import TextArea from "antd/lib/input/TextArea";
 import {
     CommunitySettingsInterface
-} from "../../../interfaces";
-import { UserSettingsAoService } from "../../../services";
+} from "src/interfaces";
+import { UserSettingsAoService } from "src/services";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
     IsExtraOptionsLabel,
     IsMultiSelectLabel,
-} from "../../../consts";
+} from "src/consts";
 
 export function NewRule(props: any) {
 

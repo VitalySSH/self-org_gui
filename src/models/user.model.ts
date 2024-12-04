@@ -1,5 +1,5 @@
 import { ApiModel } from "./api-model.model.ts";
-import { modelConfig, attribute } from "../annotations";
+import { modelConfig, attribute } from "src/annotations";
 
 @modelConfig({
     entityName: 'user',

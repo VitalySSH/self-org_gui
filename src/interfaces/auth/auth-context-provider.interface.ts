@@ -1,5 +1,5 @@
-import { UserInterface } from "./user.interface.ts";
-import { UserModel } from "../../models";
+import { UserInterface } from "src/interfaces";
+import { UserModel } from "src/models";
 
 export interface AuthContextProvider {
     user?: UserInterface;

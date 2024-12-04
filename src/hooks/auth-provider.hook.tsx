@@ -3,11 +3,11 @@ import {
     AuthContextProvider,
     ProviderComponent,
     UserInterface
-} from '../interfaces';
+} from 'src/interfaces';
 import { AuthContext } from './const/hooks.const.ts';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { UserModel } from '../models';
-import FileStorageService from '../services/file-storage.service.ts';
+import { UserModel } from 'src/models';
+import { FileStorageService} from 'src/services';
 import { useEffect, useRef } from 'react';
 
 const exemptedRoutes = ['/sign-in', '/sign-up'];
@@ -21,7 +21,7 @@ export const AuthProvider = (component: ProviderComponent) => {
     const [avatarUrl, setAvatarUrl] =
         useLocalStorage('avatar', null);
 
-    const fileStorageService = FileStorageService;
+    const fileStorageService = new FileStorageService();
 
     const login = (user: UserInterface, toMainPage: boolean = false) => {
         setUser(user);

@@ -1,4 +1,4 @@
-import { CrudDataSourceService } from "../crud-data-source.service.ts";
+import { CrudDataSourceService } from "src/services";
 import {
     CommunityDescriptionModel,
     CommunityNameModel, 
@@ -6,12 +6,12 @@ import {
     StatusModel,
     UserCommunitySettingsModel,
     UserModel
-} from "../../models";
-import { AOApiUrl } from "../../config/configuration.ts";
+} from "src/models";
+import { AOApiUrl } from "src/config/configuration";
 import {
     CommunitySettingsInterface,
-} from "../../interfaces";
-import { OnConsiderationCode } from "../../consts";
+} from "src/interfaces";
+import { OnConsiderationCode } from "src/consts";
 
 
 export class UserSettingsAoService

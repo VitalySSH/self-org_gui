@@ -1,12 +1,12 @@
-import { CrudDataSourceService } from "../crud-data-source.service.ts";
-import { CommunityModel } from "../../models";
-import { Filters, Orders } from "../../types";
+import { CrudDataSourceService } from "src/services";
+import { CommunityModel } from "src/models";
+import { Filters, Orders } from "src/types";
 import {
     CrudApiDataInterface,
     Pagination,
     SettingsInPercenInterface,
-} from "../../interfaces";
-import { AOApiUrl } from "../../config/configuration.ts";
+} from "src/interfaces";
+import { AOApiUrl } from "src/config/configuration";
 
 
 export class CommunityAOService

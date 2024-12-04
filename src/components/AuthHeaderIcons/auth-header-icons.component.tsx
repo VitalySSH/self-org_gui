@@ -12,7 +12,7 @@ import {
     Modal,
     Space,
 } from "antd";
-import { useAuth } from "../../hooks";
+import { useAuth } from "src/hooks";
 import './auth-header-icons.component.css';
 import { useState } from "react";
 import TextArea from "antd/lib/input/TextArea";
@@ -20,14 +20,14 @@ import {
     AuthContextProvider,
     UserInterface,
     UserUpdateInterface
-} from "../../interfaces";
-import { RightMenu } from "../RightMenu/right-menu.component.tsx";
-import { UploadAvatar } from "../UploadAvatar/upload-avatar.component.tsx";
-import AuthApiClientService from "../../services/auth-api-client.service.ts";
+} from "src/interfaces";
+import { RightMenu, UploadAvatar } from "src/components";
+import { AuthApiClientService } from "src/services";
 
 export function AuthHeaderIcons() {
 
     const authData: AuthContextProvider = useAuth();
+    const authApiClientService = new AuthApiClientService();
 
     const [modalOpen, setModalOpen] =
         useState(false);
@@ -58,13 +58,10 @@ export function AuthHeaderIcons() {
             }
             authData.login(user, false);
 
-            AuthApiClientService.updateUser(authData.user?.id, userData)
+            authApiClientService.updateUser(authData.user?.id, userData)
                 .then(() => {
                     setModalOpen(false);
-                }).catch((error) => {
-                    console.log(error);
-                    setModalOpen(false);
-                });
+                }).catch(() => setModalOpen(false));
         }
     }
 

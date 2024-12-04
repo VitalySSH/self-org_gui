@@ -15,10 +15,9 @@ import {
     UploadProps
 } from "antd";
 import { useState } from "react";
-import FileStorageService from "../../services/file-storage.service.ts";
-import {AuthContextProvider, UserUpdateInterface} from "../../interfaces";
-import { useAuth } from "../../hooks";
-import AuthApiClientService from "../../services/auth-api-client.service.ts";
+import {AuthContextProvider, UserUpdateInterface} from "src/interfaces";
+import { useAuth } from "src/hooks";
+import { AuthApiClientService, FileStorageService } from "src/services";
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -46,7 +45,8 @@ const beforeUpload = (file: FileType) => {
 export function UploadAvatar() {
 
     const authData: AuthContextProvider = useAuth();
-    const fileStorageService = FileStorageService;
+    const authApiClientService = new AuthApiClientService();
+    const fileStorageService = new FileStorageService();
 
     const [loading, setLoading] =
         useState(false);
@@ -59,7 +59,7 @@ export function UploadAvatar() {
             const userData: UserUpdateInterface = {
                 foto_id: fileId
             };
-            AuthApiClientService.updateUser(authData.user?.id, userData)
+            authApiClientService.updateUser(authData.user?.id, userData)
                 .then(() => {
                     authData.changeFotoId(fileId);
                     setFileId(fileId);

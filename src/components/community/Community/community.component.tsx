@@ -10,16 +10,10 @@ import {
     Disputes,
     Challenges,
     NewRule,
-} from "../../../pages";
-import { AppFooter } from "../../AppFooter/app-footer.component.tsx";
-import {
-    CommunitySider
-} from "../CommunitySider/community-sider.component.tsx";
-import {
-    AuthHeaderIcons
-} from "../../AuthHeaderIcons/auth-header-icons.component.tsx";
-import { CrudDataSourceService } from "../../../services";
-import { CommunityModel } from "../../../models";
+} from "src/pages";
+import { AppFooter, CommunitySider, AuthHeaderIcons } from "src/components";
+import { CrudDataSourceService } from "src/services";
+import { CommunityModel } from "src/models";
 import { useEffect, useState } from "react";
 
 

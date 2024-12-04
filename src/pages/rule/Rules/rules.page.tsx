@@ -1,9 +1,9 @@
 import { Button, Card, Flex, Layout, List, Space, Typography } from "antd";
-import { RuleCardInterface } from "../../../interfaces";
+import { RuleCardInterface } from "src/interfaces";
 import Meta from "antd/es/card/Meta";
 import { useEffect, useState } from "react";
-import { CrudDataSourceService } from "../../../services";
-import { RuleModel } from "../../../models";
+import { CrudDataSourceService } from "src/services";
+import { RuleModel } from "src/models";
 import { FilterOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 

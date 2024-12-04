@@ -1,9 +1,9 @@
 import { Button, Card, List, message, Modal } from "antd";
 import { useEffect, useState } from "react";
-import { SettingsStatisticsInterface } from "../../interfaces";
+import { SettingsStatisticsInterface } from "src/interfaces";
 import {
     RequestMemberAoService
-} from "../../services/models/request-member-ao.service.ts";
+} from "src/services";
 import Meta from "antd/es/card/Meta";
 
 

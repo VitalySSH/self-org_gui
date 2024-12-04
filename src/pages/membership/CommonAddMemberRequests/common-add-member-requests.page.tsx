@@ -10,19 +10,19 @@ import {
 } from "antd";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
-import { AuthContextProvider, TableMemberRequest } from "../../../interfaces";
-import { CrudDataSourceService } from "../../../services";
-import { CommunityModel } from "../../../models";
+import { AuthContextProvider, TableMemberRequest } from "src/interfaces";
+import { CrudDataSourceService } from "src/services";
+import { CommunityModel } from "src/models";
 import { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from 'react-highlight-words';
 import {
     SearchOutlined,
 } from '@ant-design/icons';
-import { useAuth } from "../../../hooks";
+import { useAuth } from "src/hooks";
 import { useNavigate } from "react-router-dom";
 import {
     MemberRequestVotesButton
-} from "../../../components";
+} from "src/components";
 
 type DataIndex = keyof TableMemberRequest;
 

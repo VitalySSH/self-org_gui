@@ -3,10 +3,10 @@ import {
     UserCreateInterface,
     UserInterface,
     UserUpdateInterface
-} from "../interfaces";
-import { baseApiUrl } from "../config/configuration.ts";
+} from "src/interfaces";
+import { baseApiUrl } from "src/config/configuration";
 
-class AuthApiClientService {
+export class AuthApiClientService {
 
     http: AxiosInstance;
 
@@ -52,7 +52,9 @@ class AuthApiClientService {
     }
 
     async updateUser(
-        userId: string,data: UserUpdateInterface) {
+        userId: string | undefined,
+        data: UserUpdateInterface
+    ) {
         return this.http.patch<void>(
             `/auth/user/${userId}`, data,
             {
@@ -65,5 +67,3 @@ class AuthApiClientService {
     }
 
 }
-
-export default new AuthApiClientService();

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Button, Card, Form, Input, message, Space } from "antd";
-import { AuthContextProvider } from "../../../interfaces";
-import { useAuth } from "../../../hooks";
+import { AuthContextProvider } from "src/interfaces";
+import { useAuth } from "src/hooks";
 
 
 export const Verify2FA = () => {
