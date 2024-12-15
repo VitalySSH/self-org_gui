@@ -14,5 +14,5 @@ export * from './MemberRequestRemoveButton/member-request-remove-button.componen
 export * from './MemberRequestVotesButton/member-request-votes-button.component';
 export * from './MemberRequestJoinButton/member-request-join-button.component';
 export * from './MemberRequestDisputeButton/member-request-dispute-button.component';
-export * from './SelectWithAddValue/select-with-add-value.component';
+export * from './CustomSelect/custom-select.component';
 export * from './UploadAvatar/upload-avatar.component';

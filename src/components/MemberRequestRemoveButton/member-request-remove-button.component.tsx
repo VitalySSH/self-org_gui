@@ -39,7 +39,7 @@ export function MemberRequestRemoveButton(props: any) {
                 props.setLoading(true);
             }).catch((error) => {
             errorInfo(`Ошибка удаления заявки: ${error}`);
-        })
+        });
 
     }
 

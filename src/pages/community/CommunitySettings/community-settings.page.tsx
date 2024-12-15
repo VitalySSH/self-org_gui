@@ -50,9 +50,9 @@ export function CommunitySettings(props: any) {
                     const creatorFio = `${firstname} ${surname}`;
                     const settingsInst =
                         community.main_settings;
-                    const initCategories =
+                    const categories =
                         (settingsInst?.categories || [])
-                            .map((it) => it.name);
+                            .map((category) => category.name);
                     form.setFieldValue('name', settingsInst?.name?.name);
                     form.setFieldValue(
                         'description',
@@ -68,7 +68,7 @@ export function CommunitySettings(props: any) {
                     form.setFieldValue('is_minority_not_participate',
                         settingsInst?.is_minority_not_participate || false);
                     form.setFieldValue('creator', creatorFio);
-                    form.setFieldValue('categories', initCategories);
+                    form.setFieldValue('categories', categories);
             }).catch(() => {
                 navigate('/no-much-page');
             }).finally(() => {

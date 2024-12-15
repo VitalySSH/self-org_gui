@@ -80,7 +80,9 @@ export function CommunitySider() {
 
     useEffect(() => {
         const pathname = location.pathname.split('/');
-        setSelectedKeys([pathname[pathname.length - 1]]);
+        if (pathname.length >= 3) {
+            setSelectedKeys([pathname[3]]);
+        }
     }, [location])
 
     return (

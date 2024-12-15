@@ -1,7 +1,13 @@
+import {
+    CategoryModel,
+    CommunityDescriptionModel,
+    CommunityNameModel
+} from "src/models";
+
 export interface CommunitySettingsInterface {
-    name: string;
-    description: string;
-    categories: { name: string }[];
+    name: CommunityNameModel;
+    description: CommunityDescriptionModel;
+    categories: CategoryModel[];
     quorum: number;
     vote: number;
     significant_minority: number;

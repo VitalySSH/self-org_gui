@@ -71,13 +71,12 @@ export function Community () {
                         <Route path='my-settings' element={
                             <MyCommunitySettings communityId={id} />
                         } />
-                        <Route path='rules/*' element={
+                        <Route path='rules' element={
                             <Rules communityId={id} />
-                        } >
-                            <Route path='rules/new' element={
-                                <NewRule communityId={id} />
-                            } />
-                        </Route>
+                        } />
+                        <Route path='rules/new' element={
+                            <NewRule communityId={id} />
+                        } />
                         <Route path='initiatives' element={
                             <Initiatives communityId={id} />
                         } />

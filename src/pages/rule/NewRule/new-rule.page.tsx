@@ -3,7 +3,8 @@ import {
     Form,
     Input,
     Layout,
-    message, Row,
+    message,
+    Row,
     Space,
     Switch,
     Typography
@@ -16,15 +17,22 @@ import {
 } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import {
-    CommunitySettingsInterface
+    CreatingRuleInterface,
+    RuleFormInterface,
 } from "src/interfaces";
-import { UserSettingsAoService } from "src/services";
+import {CrudDataSourceService, RuleAoService} from "src/services";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
+    CategoryLabel,
     IsExtraOptionsLabel,
     IsMultiSelectLabel,
 } from "src/consts";
+import { CustomSelect } from "src/components";
+import {
+    CategoryModel,
+    CommunityModel,
+} from "src/models";
 
 export function NewRule(props: any) {
 
@@ -40,10 +48,21 @@ export function NewRule(props: any) {
         useState(true);
     const [isExtraOptions, setIsExtraOptions] =
         useState(false);
-    const [isMultiSelect, setIsMultiSelect] =
-        useState(false);
+
+    const communityService =
+        new CrudDataSourceService(CommunityModel);
+    const categoryService =
+        new CrudDataSourceService(CategoryModel);
+    const ruleAoService = new RuleAoService();
 
     const [form] = Form.useForm();
+
+    const successInfo = (content: string) => {
+        messageApi.open({
+            type: 'success',
+            content: content,
+        }).then();
+    };
 
     const errorInfo = (content: string) => {
         messageApi.open({
@@ -52,30 +71,113 @@ export function NewRule(props: any) {
         }).then();
     };
 
+    const onCustomSelectChange = (fieldName: string, value: any) => {
+        form.setFieldValue(fieldName, value);
+    }
+
     const handleFormChange = () => {
         const formData = form.getFieldsValue();
+        setIsExtraOptions(Boolean(formData.is_extra_options));
+        const isValidOptions =
+            formData.is_extra_options ?
+                (formData.extra_options || []).length > 0 : true;
         const isValid =
-            Boolean(formData.name) &&
-            Boolean(formData.description) &&
-            Boolean(formData.quorum) &&
-            Boolean(formData.vote);
+            Boolean(formData.title) &&
+            Boolean(formData.question) &&
+            Boolean(formData.content) &&
+            Boolean(formData.category) &&
+            isValidOptions;
         setDisabled(!isValid);
     }
 
-    const onFinish = (formData: CommunitySettingsInterface) => {
+    const getCategories = async () => {
+        const _community = await communityService.get(
+            communityId, ['main_settings.categories']
+        );
+        return _community.main_settings?.categories || [];
+    }
+
+    const extraOptions = (
+        <>
+            <Form.Item
+                name='is_multi_select'
+                label={ IsMultiSelectLabel }
+                labelCol={{ span: 24 }}
+                valuePropName="checked"
+            >
+                <Switch
+                    checkedChildren={<CheckOutlined />}
+                    unCheckedChildren={<CloseOutlined />}
+                />
+            </Form.Item>
+            <Form.List name="extra_options">
+                {(fields, { add, remove }) => (
+                    <>
+                        {fields.map(({ key, name, ...restField }) => (
+                            <Space
+                                key={key}
+                                style={{ display: 'flex', marginBottom: 8, width: '100%' }}
+                                align="baseline"
+                            >
+                                <Form.Item
+                                    {...restField}
+                                    labelCol={{ span: 24 }}
+                                    name={[name, 'name']}
+                                    rules={
+                                        [
+                                            {
+                                                required: true,
+                                                message: 'Пожалуйста, укажите дополнительный параметр для голосования'
+                                            }
+                                        ]
+                                    }
+                                    hasFeedback
+                                >
+                                    <Input placeholder="Параметр" />
+                                </Form.Item>
+                                <MinusCircleOutlined
+                                    onClick={() => remove(name)} />
+                            </Space>
+                        ))}
+                        <Form.Item>
+                            <Button
+                                type="dashed"
+                                onClick={() => add()}
+                                icon={<PlusOutlined />}
+                            >
+                                Добавить параметр
+                            </Button>
+                        </Form.Item>
+                    </>
+                )}
+            </Form.List>
+        </>
+    );
+
+    const onFinish = (formData: RuleFormInterface) => {
         setButtonLoading(true);
-        const userSettingsAOService =
-            new UserSettingsAoService();
-        userSettingsAOService.createCommunity(formData)
+        if (formData.question[formData.question.length - 1] !== '?') {
+            formData.question += '?';
+        }
+        const ruleData: CreatingRuleInterface = {
+            title: formData.title,
+            question: formData.question,
+            content: formData.content,
+            is_extra_options: formData.is_extra_options,
+            is_multi_select: formData.is_multi_select || false,
+            community_id: communityId,
+            category_id: formData.category.id,
+            extra_options: (formData.extra_options || [])
+                .map((it) => it.name),
+        };
+
+        ruleAoService.create_rule(ruleData)
             .then(() => {
-                setButtonLoading(false);
-                navigate('/my-communities',
-                    { preventScrollReset: true });
-            }
-        ).catch((error) => {
-            setButtonLoading(false);
-            errorInfo(`Ошибка создания сообщества: ${error}`);
-        });
+                successInfo('Правило создано');
+                navigate(-1);
+            }).catch((error) => {
+            errorInfo(`Ошибка создания правила: ${error}`);
+        }).finally(() => setButtonLoading(false));
     }
 
     return (
@@ -155,6 +257,26 @@ export function NewRule(props: any) {
                             <TextArea rows={10} />
                         </Form.Item>
                         <Form.Item
+                            name='category'
+                            label={CategoryLabel}
+                            labelCol={{ span: 24 }}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Пожалуйста, выберите категорию',
+                                },
+                            ]}
+                            hasFeedback
+                        >
+                            <CustomSelect
+                                fieldService={categoryService}
+                                requestOptions={getCategories}
+                                onChange={onCustomSelectChange}
+                                formField="category"
+                                bindLabel="name"
+                            />
+                        </Form.Item>
+                        <Form.Item
                             name='is_extra_options'
                             label={ IsExtraOptionsLabel }
                             labelCol={{ span: 24 }}
@@ -165,59 +287,7 @@ export function NewRule(props: any) {
                                 unCheckedChildren={<CloseOutlined />}
                             />
                         </Form.Item>
-                        <Form.Item
-                            name='is_multi_select'
-                            label={ IsMultiSelectLabel }
-                            labelCol={{ span: 24 }}
-                            valuePropName="checked"
-                        >
-                            <Switch
-                                checkedChildren={<CheckOutlined />}
-                                unCheckedChildren={<CloseOutlined />}
-                            />
-                        </Form.Item>
-                        <Form.List name="extra_options">
-                            {(fields, { add, remove }) => (
-                                <>
-                                    {fields.map(({ key, name, ...restField }) => (
-                                        <Space
-                                            key={key}
-                                            style={{ display: 'flex', marginBottom: 8, width: '100%' }}
-                                            align="baseline"
-                                        >
-                                            <Form.Item
-                                                {...restField}
-                                                labelCol={{ span: 24 }}
-                                                name={[name, 'name']}
-                                                rules={
-                                                    [
-                                                        {
-                                                            required: true,
-                                                            message: 'Пожалуйста, укажите дополнительный параметр для голосования'
-                                                        }
-                                                    ]
-                                                }
-                                                hasFeedback
-                                            >
-                                                <Input placeholder="Параметр" />
-                                            </Form.Item>
-                                            <MinusCircleOutlined
-                                                onClick={() => remove(name)} />
-                                        </Space>
-                                    ))}
-                                    <Form.Item>
-                                        <Button
-                                            type="dashed"
-                                            onClick={() => add()}
-                                            block
-                                            icon={<PlusOutlined />}
-                                        >
-                                            Добавить параметр
-                                        </Button>
-                                    </Form.Item>
-                                </>
-                            )}
-                        </Form.List>
+                        {isExtraOptions && extraOptions}
                         <Form.Item>
                             <Button
                                 type='primary'

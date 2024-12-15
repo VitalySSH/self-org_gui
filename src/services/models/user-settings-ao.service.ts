@@ -47,10 +47,7 @@ export class UserSettingsAoService
     async saveSettings(
         settings: UserCommunitySettingsModel,
         formData: CommunitySettingsInterface,
-        nameFieldData: CommunityNameModel[],
-        descriptionFieldData: CommunityDescriptionModel[],
-        categoriesFieldData: CategoryModel[],
-        communityId: string,
+        communityId: string | undefined,
         user: UserModel,
         create: boolean = false,
     ) {
@@ -61,12 +58,12 @@ export class UserSettingsAoService
             settings.community_id = communityId;
         }
         const name =
-            await this._getOrCreateName(nameFieldData, communityId, user.id);
+            await this._getOrCreateName(formData.name, communityId, user.id);
         const description = await this._getOrCreateDescription(
-            descriptionFieldData, communityId, user.id);
+            formData.description, communityId, user.id);
         const categories =
             await this._getOrCreateCategories(
-                categoriesFieldData, communityId, user.id);
+                formData.categories, communityId, user.id);
         settings.name = name as CommunityNameModel;
         settings.description = description as CommunityDescriptionModel;
         settings.categories = categories as CategoryModel[];
@@ -84,27 +81,22 @@ export class UserSettingsAoService
     }
 
     private async _getOrCreateName(
-        fieldData: CommunityNameModel[],
-        communityId: string,
+        nameInst: CommunityNameModel,
+        communityId: string | undefined,
         userId: string,
     ) {
-        if (fieldData.length) {
-            const obj = fieldData[0];
-            if (obj === undefined) {
-                return undefined
-            } else if (obj.id) {
-                return obj;
-            } else {
-                return await this._createName(obj.name, communityId, userId);
-            }
+        if (nameInst === undefined) {
+            return undefined
+        } else if (nameInst.id) {
+            return nameInst;
         } else {
-            return undefined;
+            return await this._createName(nameInst.name, communityId, userId);
         }
     }
 
     private async _createName(
         name: string | undefined,
-        communityId: string,
+        communityId: string | undefined,
         userId: string,
     ) {
         const nameService =
@@ -118,28 +110,23 @@ export class UserSettingsAoService
     }
 
     private async _getOrCreateDescription(
-        fieldData: CommunityDescriptionModel[],
-        communityId: string,
+        descriptionInst: CommunityDescriptionModel,
+        communityId: string | undefined,
         userId: string,
     ) {
-        if (fieldData.length) {
-            const obj = fieldData[0];
-            if (obj === undefined) {
-                return undefined
-            } else if (obj.id) {
-                return obj;
-            } else {
-                return await this._createDescription(
-                    obj.value, communityId, userId);
-            }
+        if (descriptionInst === undefined) {
+            return undefined
+        } else if (descriptionInst.id) {
+            return descriptionInst;
         } else {
-            return undefined;
+            return await this._createDescription(
+                descriptionInst.value, communityId, userId);
         }
     }
 
     private async _createDescription(
         value: string | undefined,
-        communityId: string,
+        communityId: string | undefined,
         userId: string,
     ) {
         const descriptionService =
@@ -154,13 +141,13 @@ export class UserSettingsAoService
     }
 
     private async _getOrCreateCategories(
-        fieldData: CategoryModel[],
-        communityId: string,
+        categoriesInst: CategoryModel[],
+        communityId: string | undefined,
         userId: string,
     ) {
-        if (fieldData.length) {
+        if (categoriesInst.length) {
             const categories: CategoryModel[] = [];
-            for (const category of fieldData) {
+            for (const category of categoriesInst) {
                 if (category) {
                     if (category.id) {
                         categories.push(category);
@@ -180,7 +167,7 @@ export class UserSettingsAoService
 
     private async _createCategory(
         category: CategoryModel,
-        communityId: string,
+        communityId: string | undefined,
         userId: string,
     ) {
         const categoryService =

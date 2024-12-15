@@ -6,3 +6,4 @@ export * from './file-storage.service';
 export * from './models/community-ao.service';
 export * from './models/user-settings-ao.service';
 export * from './models/request-member-ao.service';
+export * from './models/rule-ao.service';

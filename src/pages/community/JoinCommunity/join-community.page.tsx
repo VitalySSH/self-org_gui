@@ -12,7 +12,6 @@ import {
 import {
     AuthContextProvider,
     CommunitySettingsInterface,
-    SelectDataInterface,
 } from "src/interfaces";
 import {
     CrudDataSourceService,
@@ -30,12 +29,13 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "src/hooks";
 import { useEffect, useState } from "react";
-import { SelectWithAddValue } from "src/components";
+import { CustomSelect } from "src/components";
 import {
     IsMinorityNotParticipateLabel,
     IsSecretBallotLabel,
     QuorumLabel,
     SignificantMinorityLabel,
+    SystemCategoryCode,
     VoteLabel
 } from "src/consts";
 
@@ -54,12 +54,8 @@ export function JoinCommunity() {
         useState({} as CategoryModel);
     const [buttonLoading, setButtonLoading] =
         useState(false);
-    const [nameSelect] =
-        useState({} as SelectDataInterface<CommunityNameModel>);
-    const [descriptionSelect] =
-        useState({} as SelectDataInterface<CommunityDescriptionModel>);
-    const [categoriesSelect] =
-        useState({} as SelectDataInterface<CommunityDescriptionModel>);
+    const [categories, setCategories] =
+        useState([] as CategoryModel[]);
 
     const communityService =
         new CrudDataSourceService(CommunityModel);
@@ -104,21 +100,17 @@ export function JoinCommunity() {
                     const categories: CategoryModel[] = [];
                     (settingsInst?.categories || [])
                         .forEach((cat) => {
-                            if (cat.status?.code === 'system_category') {
+                            if (cat.status?.code === SystemCategoryCode) {
                                 setSystemCategory(cat);
                             } else {
                                 categories.push(cat);
                             }
                         });
-                    nameSelect.currentValues =
-                        settingsInst.name ? [settingsInst.name] : [];
-                    descriptionSelect.currentValues =
-                        settingsInst.description ?
-                            [settingsInst.description] : [];
-                    categoriesSelect.currentValues = categories;
-                    form.setFieldValue('name', settingsInst.name?.name);
+                    setCategories(categories);
+                    form.setFieldValue('categories', categories);
+                    form.setFieldValue('name', settingsInst.name);
                     form.setFieldValue(
-                        'description', settingsInst.description?.value);
+                        'description', settingsInst.description);
                     form.setFieldValue('quorum', settingsInst.quorum);
                     form.setFieldValue('vote', settingsInst.vote);
                     form.setFieldValue('significant_minority',
@@ -150,78 +142,53 @@ export function JoinCommunity() {
         }
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const getCommunityNames = () => {
-        if (id && nameSelect.options === undefined) {
-            nameService.list(
-                [
-                    {
-                        field: 'community_id',
-                        op: 'equals',
-                        val: id,
-                    }
-                ]
-            ).then(communityNames => {
-                nameSelect.options = communityNames;
-            }).catch((error) => {
-                errorInfo(`Ошибка получения наименований: ${error}`);
-            });
-        }
+    const getCommunityNames = async () => {
+        return await nameService.list(
+            [
+                {
+                    field: 'community_id',
+                    op: 'equals',
+                    val: id,
+                }
+            ]
+        )
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const getCommunityDescriptions = () => {
-        if (id && descriptionSelect.options === undefined) {
-            descriptionService.list(
-                [
-                    {
-                        field: 'community_id',
-                        op: 'equals',
-                        val: id,
-                    }
-                ]
-            ).then(communityDescriptions => {
-                descriptionSelect.options = communityDescriptions;
-            }).catch((error) => {
-                errorInfo(`Ошибка получения описаний: ${error}`);
-            });
-        }
+    const getCommunityDescriptions = async () => {
+        return await descriptionService.list(
+            [
+                {
+                    field: 'community_id',
+                    op: 'equals',
+                    val: id,
+                }
+            ]
+        );
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const getCategories = () => {
-        if (id && categoriesSelect.options === undefined) {
-            categoryService.list(
-                [
-                    {
-                        field: 'community_id',
-                        op: 'equals',
-                        val: id,
-                    }
-                ], undefined, undefined,
-                ['status']
-            ).then(initiativeCategories => {
-                categoriesSelect.options = initiativeCategories
-                    .filter((cat) =>
-                        cat.status?.code !== 'system_category');
-            }).catch((error) => {
-                errorInfo(
-                    `Ошибка получения категорий инициатив: ${error}`);
-            });
-        }
+    const getCategories = async () => {
+        const categories = await categoryService.list(
+            [
+                {
+                    field: 'community_id',
+                    op: 'equals',
+                    val: id,
+                }
+            ], undefined, undefined, ['status']
+        );
+        return categories.filter((cat) =>
+            cat.status?.code !== SystemCategoryCode);
     }
 
     useEffect(() => {
         getCommunitySettings();
-        getCommunityNames();
-        getCommunityDescriptions();
-        getCategories();
     }, [
         getCommunitySettings,
-        getCommunityNames,
-        getCommunityDescriptions,
-        getCategories,
     ]);
+
+    const onCustomSelectChange = (fieldName: string, value: any) => {
+        form.setFieldValue(fieldName, value);
+    }
 
     const onFinish = (formData: CommunitySettingsInterface) => {
         setButtonLoading(true);
@@ -229,18 +196,14 @@ export function JoinCommunity() {
             new UserSettingsAoService();
         const userSettings =
             userSettingsService.createRecord();
-        if (systemCategory.id &&
-            Array.isArray(categoriesSelect.currentValues)) {
-            categoriesSelect.currentValues.push(systemCategory);
+        if (systemCategory.id) {
+            formData.categories.push(systemCategory);
         }
 
         userSettingsAOService.saveSettings(
             userSettings,
             formData,
-            nameSelect.currentValues || [],
-            descriptionSelect.currentValues || [],
-            categoriesSelect.currentValues || [],
-            id || '',
+            id,
             authData.getUserRelation(),
             true
         ).then((userSettingsInst) => {
@@ -297,14 +260,15 @@ export function JoinCommunity() {
                                 },
                             ]}
                         >
-                            <SelectWithAddValue
-                                fieldData={nameSelect}
-                                form={form}
+                            <CustomSelect
                                 fieldService={nameService}
-                                fieldType="input"
+                                requestOptions={getCommunityNames}
+                                onChange={onCustomSelectChange}
+                                value={settings?.name}
                                 formField="name"
                                 bindLabel="name"
-                                placeholder="Введите своё наименование"
+                                addOwnValue={true}
+                                ownValuePlaceholder="Введите своё наименование"
                             />
                         </Form.Item>
                         <Form.Item
@@ -318,14 +282,16 @@ export function JoinCommunity() {
                                 },
                             ]}
                         >
-                            <SelectWithAddValue
-                                fieldData={descriptionSelect}
-                                form={form}
+                            <CustomSelect
                                 fieldService={descriptionService}
-                                fieldType="textarea"
+                                requestOptions={getCommunityDescriptions}
+                                onChange={onCustomSelectChange}
+                                value={settings?.description}
                                 formField="description"
                                 bindLabel="value"
-                                placeholder="Введите своё описание"
+                                addOwnValue={true}
+                                ownValuePlaceholder="Введите своё описание"
+                                ownFieldTextarea={true}
                             />
                         </Form.Item>
                         <Form.Item
@@ -454,15 +420,16 @@ export function JoinCommunity() {
                             label='Категории'
                             labelCol={{ span: 24 }}
                         >
-                            <SelectWithAddValue
-                                fieldData={categoriesSelect}
-                                form={form}
+                            <CustomSelect
                                 fieldService={categoryService}
-                                fieldType="input"
+                                requestOptions={getCategories}
+                                onChange={onCustomSelectChange}
+                                value={categories}
                                 formField="categories"
                                 bindLabel="name"
-                                placeholder="Введите свою категорию"
                                 multiple={true}
+                                addOwnValue={true}
+                                ownValuePlaceholder="Введите свою категорию"
                             />
                         </Form.Item>
                         <Form.Item>

@@ -21,7 +21,7 @@ export function Rules(props: any) {
         new CrudDataSourceService(RuleModel);
 
     const addNewRule = () => {
-        navigate('new');
+        navigate("new", { preventScrollReset: true });
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -30,18 +30,19 @@ export function Rules(props: any) {
             ruleService
                 .list([
                         {
-                            field: 'community_id',
-                            op: 'equals',
+                            field: "community_id",
+                            op: "equals",
                             val: props.communityId,
                         }
                     ], undefined, undefined,
-                    ['creator', 'status', 'category'])
+                    ["creator", "status", "category"])
                 .then(resp => {
                     const rules: RuleCardInterface[] = [];
                     resp.forEach(rule => {
                         const ruleItem = {
                             id: rule.id,
                             title: rule.title,
+                            description: rule.content,
                             creator: `${rule.creator?.firstname} ` +
                                 rule.creator?.surname,
                             status: rule.status?.name,
@@ -64,20 +65,22 @@ export function Rules(props: any) {
 
     return (
         <Layout
-            style={{ height: '100%', overflowY: "auto" }}
+            style={{ height: "100%", overflowY: "auto" }}
         >
             <Space
                 style={{
                     justifyContent: "space-between",
-                    alignItems: "flex-end",
                     alignContent: "center",
-                    marginLeft: '30%',
-                    marginRight: '30%',
+                    marginLeft: "30%",
+                    marginRight: "30%",
                 }}
             >
                 <Typography.Title
                     level={3}
-                    style={{ minWidth: 120 }}
+                    style={{ 
+                        minWidth: 120,
+                        alignContent: "center",
+                    }}
                 >
                     Правила сообщества
                 </Typography.Title>
@@ -105,17 +108,27 @@ export function Rules(props: any) {
                 loading={loading}
                 locale={{emptyText: "Ещё нет ни одного правила"}}
                 pagination={ dataSource.length >= 20 ? {
-                    position: 'bottom',
-                    align: 'end'
+                    position: "bottom",
+                    align: "end"
                 } : false }
                 size="large"
+                style={{
+                    display: "inline-flex",
+                    justifyContent: "center",
+                }}
                 renderItem={(item: RuleCardInterface) => (
-                    <List.Item>
+                    <List.Item
+                        style={{
+                            width: "40vw",
+                            cursor: "pointer",
+                        }}
+                    >
                         <Card>
                             <Meta
                                 title={item.title}
+                                description={ item.description }
                             />
-                            <div style={{marginTop: 10}}>
+                            <div style={{marginTop: 20}}>
                                 Автор: {item.creator}
                             </div>
                             <div style={{marginTop: 10}}>
