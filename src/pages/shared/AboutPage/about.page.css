@@ -1,4 +1,9 @@
-.about-page-card {
+.main-text {
+    display: flex;
+    flex-direction: column;
     padding: 30px;
+    font-size: 18px !important;
     justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
 }

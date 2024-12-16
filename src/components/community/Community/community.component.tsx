@@ -53,7 +53,7 @@ export function Community () {
     }, [getCommunity]);
 
     return (
-        <Layout className="app">
+        <Layout className="community">
             <CommunitySider />
             <Layout>
                 <Header className="header">
