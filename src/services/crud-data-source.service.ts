@@ -13,7 +13,7 @@ import {
     UserCommunitySettingsModel,
     UserModel,
 } from "src/models";
-import { Filters, ModelType, Orders } from "src/types";
+import { Filters, ModelType, Orders } from "src/shared/types";
 import { dataSourceConfig } from "src/annotations";
 import { DataSourceService } from "./data-source.service.ts";
 import { baseApiUrl } from "src/config/configuration";

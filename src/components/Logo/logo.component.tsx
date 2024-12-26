@@ -15,13 +15,7 @@ export function Logo() {
                 preview={false}
                 src="/utu_logo.png"
                 onClick={onClickImage}
-                style={{
-                    width: "auto",
-                    cursor: "pointer",
-                    position: "absolute",
-                    bottom: 10,
-                    marginLeft: 21,
-                }}
+                className="logo"
             >
             </Image>
         </Flex>

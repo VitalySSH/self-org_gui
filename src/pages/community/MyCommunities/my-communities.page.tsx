@@ -1,4 +1,4 @@
-import { Card, Layout, List, Space, Typography } from "antd";
+import { Card, Layout, List, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { StopOutlined } from "@ant-design/icons";
 import {
@@ -106,48 +106,41 @@ export function MyCommunities() {
     }
 
     return (
-        <Layout
-            style={{ height: '100%', overflowY: "auto" }}
-        >
-            <Space
-                direction="vertical"
-                className="communities"
+        <Layout className="communities-list">
+            <Typography.Title
+                level={3}
+                style={{ textAlign: "center" }}
             >
-                <Typography.Title
-                    level={3}
-                    style={{ textAlign: "center" }}
-                >
-                    Мои сообщества
-                </Typography.Title>
-                <List
-                    itemLayout="vertical"
-                    dataSource={dataSource}
-                    loading={loading}
-                    locale={{emptyText: "Нет сообществ"}}
-                    pagination={ dataSource.length >= 20 ? {
-                        position: 'bottom',
-                        align: 'end'
-                    } : false }
-                    size="large"
-                    renderItem={(item: CommunityCard) => (
-                        <List.Item>
-                            <Card
-                                onClick={ getOnClick(item) }
-                                style={ getCardStyle(item) }
-                                actions={ getActions(item) }
-                            >
-                                <Meta
-                                    title={ item.title }
-                                    description={ item.description }
-                                />
-                                <div className="community-members">
-                                    Участников: { item.members }
-                                </div>
-                            </Card>
-                        </List.Item>
-                    )}
-                />
-            </Space>
+                Мои сообщества
+            </Typography.Title>
+            <List
+                itemLayout="vertical"
+                dataSource={dataSource}
+                loading={loading}
+                locale={{emptyText: "Нет сообществ"}}
+                pagination={ dataSource.length >= 20 ? {
+                    position: 'bottom',
+                    align: 'end'
+                } : false }
+                size="large"
+                renderItem={(item: CommunityCard) => (
+                    <List.Item>
+                        <Card
+                            onClick={ getOnClick(item) }
+                            style={ getCardStyle(item) }
+                            actions={ getActions(item) }
+                        >
+                            <Meta
+                                title={ item.title }
+                                description={ item.description }
+                            />
+                            <div className="community-members">
+                                Участников: { item.members }
+                            </div>
+                        </Card>
+                    </List.Item>
+                )}
+            />
         </Layout>
     );
 }

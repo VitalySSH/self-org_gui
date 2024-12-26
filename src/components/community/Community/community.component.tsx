@@ -91,9 +91,9 @@ export function Community () {
                         } />
                     </Routes>
                 </Content>
-                <Footer className="footer">
-                    <AppFooter />
-                </Footer>
+                {/*<Footer className="footer">*/}
+                {/*    <AppFooter />*/}
+                {/*</Footer>*/}
             </Layout>
         </Layout>
     );

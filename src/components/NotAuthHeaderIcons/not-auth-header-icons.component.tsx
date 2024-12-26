@@ -1,5 +1,5 @@
 import { LoginOutlined } from "@ant-design/icons";
-import { Flex, Space } from "antd";
+import { Flex } from "antd";
 import { useNavigate } from "react-router-dom";
 
 export function NotAuthHeaderIcons() {
@@ -12,17 +12,20 @@ export function NotAuthHeaderIcons() {
 
     return (
         <Flex>
-            <Space>
-                <LoginOutlined style={{
+            <LoginOutlined
+                style={{
                     fontSize: 24,
-                    cursor: "pointer"
+                    cursor: "pointer",
+                    marginRight: 12
                 }}
+            onClick={loginOnClick}
+            />
+            <div
+                className="icon-text"
                 onClick={loginOnClick}
-                />
-                <div className="icon-text">
-                    <span>Войти</span>
-                </div>
-            </Space>
+            >
+                <span>Войти</span>
+            </div>
         </Flex>
     )
 }

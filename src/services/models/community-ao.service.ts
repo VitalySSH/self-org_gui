@@ -1,6 +1,6 @@
 import { CrudDataSourceService } from "src/services";
 import { CommunityModel } from "src/models";
-import { Filters, Orders } from "src/types";
+import { Filters, Orders } from "src/shared/types";
 import {
     CrudApiDataInterface,
     Pagination,

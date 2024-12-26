@@ -1,4 +1,5 @@
 export * from './MainApp/main-app.component';
+export * from './SiderBar/sider-bar.component';
 export * from './community/Community/community.component';
 export * from './AppFooter/app-footer.component';
 export * from './ProtectedRoute/protected-route.component';
@@ -16,3 +17,4 @@ export * from './MemberRequestJoinButton/member-request-join-button.component';
 export * from './MemberRequestDisputeButton/member-request-dispute-button.component';
 export * from './CustomSelect/custom-select.component';
 export * from './UploadAvatar/upload-avatar.component';
+export * from './AuthCard/auth-card.component';

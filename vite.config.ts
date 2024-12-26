@@ -14,5 +14,14 @@ export default defineConfig({
     postcss: {
       plugins: [tailwindcss()]
     },
+    // preprocessorOptions: {
+    //   scss: {
+    //     api: 'modern-compile',
+    //     quietDeps: true,
+    //     additionalData: `
+    //       @use 'src/shared/assets/scss/variables' as *'
+    //     ` + ';',
+    //   }
+    // },
   },
 })

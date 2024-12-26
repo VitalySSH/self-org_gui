@@ -1,5 +1,5 @@
-import { Menu, MenuProps } from "antd";
-import './right-menu.component.css'
+import { Menu } from "antd";
+import './right-menu.component.scss'
 import React from "react";
 import {
     TeamOutlined,
@@ -7,8 +7,7 @@ import {
     UserAddOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-
-type MenuItem = Required<MenuProps>['items'][number];
+import { MenuItem } from "src/shared/types.ts";
 
 function getItem(
     label: React.ReactNode,
@@ -50,9 +49,7 @@ export function RightMenu(props: any) {
                 props.setDrawerOpen(false);
                 navigate(`/${item.key}`, { preventScrollReset: true });
             }}
-            style={{
-                width: 450
-            }}
+            className="right-menu"
         />
     )
 }

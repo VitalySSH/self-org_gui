@@ -1,4 +1,4 @@
-import { FilterOperations } from "src/types";
+import { FilterOperations } from "src/shared/types";
 
 type FilterValueType = string | number | boolean | Array<any>;
 

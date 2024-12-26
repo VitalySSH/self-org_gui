@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { v4 } from 'uuid';
-import { ClassType } from "src/types";
+import { ClassType } from "src/shared/types";
 
 type AliasType = (modelMetadata: Container) => ClassType;
 

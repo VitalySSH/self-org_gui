@@ -1,0 +1,19 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+.ant-drawer {
+
+    .ant-drawer-body {
+        padding: 4px !important;
+        overflow-x: hidden;
+        background-color: $secondary-color;
+    }
+
+    .ant-drawer-content {
+        background-color: $secondary-color;
+    }
+}
+
+.right-menu {
+    width: 450px;
+    background-color: $secondary-color;
+}

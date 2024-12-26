@@ -1,11 +1,10 @@
-import { Layout, List, Space, Typography } from "antd";
+import { Layout, List, Typography } from "antd";
 import { CrudDataSourceService } from "src/services";
 import { CommunityModel } from "src/models";
 import { useEffect, useState } from "react";
 import { AuthContextProvider, CommunityCard } from "src/interfaces";
 import { useAuth } from "src/hooks";
 import { AllCommunityCard } from "src/components";
-
 
 
 export function AllCommunities() {
@@ -70,36 +69,29 @@ export function AllCommunities() {
     }, [loadData]);
 
     return (
-        <Layout
-            style={{height: '100%', overflowY: "auto"}}
-        >
-            <Space
-                direction="vertical"
-                className="communities"
+        <Layout className="communities-list">
+            <Typography.Title
+                level={3}
+                style={{ textAlign: "center" }}
             >
-                <Typography.Title
-                    level={3}
-                    style={{ textAlign: "center" }}
-                >
-                    Сообщества
-                </Typography.Title>
-                <List
-                    itemLayout="vertical"
-                    dataSource={dataSource}
-                    loading={loading}
-                    locale={{emptyText: "Нет сообществ"}}
-                    pagination={ dataSource.length >= 20 ? {
-                        position: 'bottom',
-                        align: 'end'
-                    } : false }
-                    size="large"
-                    renderItem={(item: CommunityCard) => (
-                        <List.Item>
-                            <AllCommunityCard key={item.id} item={item} />
-                        </List.Item>
-                    )}
-                />
-            </Space>
+                Сообщества
+            </Typography.Title>
+            <List
+                itemLayout="vertical"
+                dataSource={dataSource}
+                loading={loading}
+                locale={{emptyText: "Нет сообществ"}}
+                pagination={ dataSource.length >= 20 ? {
+                    position: 'bottom',
+                    align: 'end'
+                } : false }
+                size="large"
+                renderItem={(item: CommunityCard) => (
+                    <List.Item>
+                        <AllCommunityCard key={item.id} item={item} />
+                    </List.Item>
+                )}
+            />
         </Layout>
     );
 }

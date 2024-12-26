@@ -1,0 +1,84 @@
+@use 'src/shared/assets/scss/variables' as *;
+@forward 'src/shared/assets/scss/forms/form';
+
+.content {
+  //padding: 24px;
+  height: 100%;
+  ////TODO: разобраться, почемы съезжает вправо
+  //width: calc(100vw - 68px);
+  //overflow-x: hidden;
+  //background-color: $secondary-color;
+  //color: $text-color;
+  //border-radius: 16px;
+  //margin: 6px 24px 6px 24px;
+  //box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  //flex: 1;
+  //padding: 20px;
+  //background-color: green;
+  //border-radius: $border-radius;
+  //box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  p {
+    font-size: 16px;
+    color: $text-color
+  }
+
+  .content-container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .communities-list {
+    max-width: 1246px;
+    margin: 20px auto;
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 1246px) {
+  .content {
+    padding: 10px;
+    .content-container {
+      h1 {
+        font-size: 28px;
+      }
+
+      p {
+        font-size: 16px;
+      }
+    }
+  }
+
+  .communities-list {
+    margin: 10px;
+    .ant-list-item {
+      font-size: 14px;
+    }
+  }
+}
+
+//@media (max-width: 1024px) {}
+
+@media (max-width: 768px) {
+  .content {
+    .content-container {
+      h1 {
+        font-size: 24px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+    }
+
+    .communities-list {
+      margin: 5px;
+      .ant-list-item {
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+//@media (max-width: 480px) {}

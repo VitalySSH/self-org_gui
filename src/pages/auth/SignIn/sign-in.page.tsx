@@ -71,14 +71,9 @@ export function SignIn() {
 
     return (
         <Space
-            style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100vh',
-            }}
+            className="auth-space"
         >
-            <Card style={{ width: 500 }}>
+            <Card style={{ maxWidth: 500 }}>
                 <div style={{
                     display: 'flex',
                     justifyContent: 'center',

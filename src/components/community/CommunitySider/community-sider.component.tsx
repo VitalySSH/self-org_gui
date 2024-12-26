@@ -91,7 +91,7 @@ export function CommunitySider() {
             collapsible
             collapsed={collapsed}
             trigger={null}
-            width={250}
+            width={300}
             className="sider"
             breakpoint="md"
             onBreakpoint={(broken) => {
@@ -116,7 +116,6 @@ export function CommunitySider() {
                 </Flex>
                 <Menu
                     mode="inline"
-                    className="menu-bar"
                     items={items}
                     onClick={(item) => {
                         setSelectedKeys([item.key]);

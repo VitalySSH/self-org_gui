@@ -1,0 +1,50 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+.header {
+  height: $header-height;
+  border-bottom: 1px solid $border-color;
+  border-left: 1px solid $border-color;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  padding: 15px 20px;
+  margin-left: 8px;
+
+  .logo {
+    width: auto;
+    cursor: pointer;
+    position: absolute;
+    margin-left: 21px;
+  }
+
+  .avatar {
+    border-color: $border-color;
+    border-width: 2px;
+    background-color: $secondary-color;
+    cursor: pointer;
+  }
+
+  .icon-text {
+    margin-right: 20px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+}
+
+// Адаптивные стили
+//@media (max-width: 1246px) {
+//  .header {}
+//}
+//
+//@media (max-width: 1024px) {
+//  .header {}
+//}
+//
+//@media (max-width: 768px) {
+//  .header {}
+//}
+//
+//@media (max-width: 480px) {
+//  .header {}
+//}

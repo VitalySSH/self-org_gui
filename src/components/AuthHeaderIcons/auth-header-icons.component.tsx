@@ -13,7 +13,7 @@ import {
     Space,
 } from "antd";
 import { useAuth } from "src/hooks";
-import './auth-header-icons.component.css';
+import './auth-header-icons.component.scss';
 import { useState } from "react";
 import TextArea from "antd/lib/input/TextArea";
 import {
@@ -74,23 +74,21 @@ export function AuthHeaderIcons() {
     }
 
     return (
-        <Flex>
+        <Flex
+            style={{ marginRight: 8 }}
+        >
             <Space>
                 <Avatar
                     icon={<UserOutlined/>}
                     size={40}
-                    style={{
-                        color: "black",
-                        background: "white",
-                        borderWidth: 2,
-                        borderColor: "black",
-                        cursor: "pointer",
-                        marginBottom: 10,
-                    }}
                     src={authData.avatarUrl}
                     onClick={avatarOnClick}
+                    className="avatar"
                 />
-                <div className="icon-text">
+                <div
+                    className="icon-text"
+                    onClick={avatarOnClick}
+                >
                     <span>{userName}</span>
                 </div>
                 <MenuOutlined style={{
@@ -109,7 +107,7 @@ export function AuthHeaderIcons() {
                         Выйти
                     </Button>,
                 ]}
-                style={{ top: 50 }}
+                className="profile-moda"
             >
                 <div className="profile-avatar">
                     <UploadAvatar />
@@ -123,6 +121,7 @@ export function AuthHeaderIcons() {
                         about_me: authData.user?.about_me,
                         email: authData.user?.email,
                     }}
+                    className="form-container"
                 >
                     <Form.Item
                         name='firstname'

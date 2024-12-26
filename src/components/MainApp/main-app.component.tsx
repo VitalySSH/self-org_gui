@@ -1,9 +1,8 @@
 import { Layout } from "antd";
-import { AppFooter } from "src/components";
+import { SiderBar } from "src/components";
 import {
     NotAuthHeaderIcons
 } from "src/components";
-import { Logo } from "src/components";
 import { AuthContextProvider } from "src/interfaces";
 import { useAuth } from "src/hooks";
 import {
@@ -20,20 +19,20 @@ import {
 } from "src/pages";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { ProtectedRoute } from "src/components";
+import { JSX } from "react/jsx-runtime";
 
 
 const {
     Header,
     Content,
-    Footer,
 } = Layout;
 
-export function MainApp () {
+export function MainApp() {
 
     const location = useLocation();
     const authData: AuthContextProvider = useAuth();
 
-    let icons;
+    let icons: JSX.Element | undefined;
     if (authData.user) {
         icons = <AuthHeaderIcons />;
     } else {
@@ -41,13 +40,17 @@ export function MainApp () {
     }
 
     return (
-        <Layout className="app">
+        <Layout>
+            <SiderBar
+                isCommunityWS={false}
+                isNotAuthorized={!Boolean(authData.user)}
+            />
             <Layout>
                 <Header className="header">
-                    <Logo />
+                    {/*<Logo />*/}
                     {icons}
                 </Header>
-                <Content className="main-content">
+                <Content className="content">
                     {location.pathname === '/' && <AboutPage />}
                     <Routes>
                         <Route path='/communities' element={
@@ -78,9 +81,6 @@ export function MainApp () {
                         {/*<Route path="*" element={<NoMatchPage />} />*/}
                     </Routes>
                 </Content>
-                <Footer className="footer">
-                    <AppFooter />
-                </Footer>
             </Layout>
         </Layout>
     );
