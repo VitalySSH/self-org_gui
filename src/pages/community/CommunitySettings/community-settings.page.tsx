@@ -1,9 +1,8 @@
 import {
+    Col,
     Form,
-    Input,
-    Layout,
+    Input, Row,
     Select,
-    Space,
     Spin,
     Switch,
 } from "antd";
@@ -86,127 +85,140 @@ export function CommunitySettings(props: any) {
     }, [getCommunitySettings]);
 
     return (
-        <Layout>
-            <Space
-                style={{ marginTop: 10, marginBottom: 30 }}
+            <Spin
+                tip="Загрузка данных"
+                size="large"
+                spinning={settingsLoading}
             >
-                <Spin
-                    tip="Загрузка данных"
-                    size="large"
-                    spinning={settingsLoading}
+                <Form
+                    name='community-settings'
+                    form={form}
                 >
-                    <Form
-                        name='community-settings'
-                        form={form}
-                        style={{ width: 600 }}
-                    >
-                        <Form.Item
-                            name='name'
-                            label='Наименование'
-                            labelCol={{ span: 24 }}
-                        >
-                            <Input readOnly />
-                        </Form.Item>
-                        <Form.Item
-                            name='description'
-                            label='Описание'
-                            labelCol={{ span: 24 }}
-                        >
-                            <TextArea readOnly rows={5} />
-                        </Form.Item>
-                        <Form.Item
-                            name='quorum'
-                            label={ QuorumLabel }
-                            labelCol={{ span: 24 }}
-                        >
-                            <Input
-                                type="number"
-                                style={{ width: '20%'}}
-                                readOnly
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='vote'
-                            label={ VoteLabel }
-                            labelCol={{ span: 24 }}
-                        >
-                            <Input
-                                type="number"
-                                style={{ width: '20%'}}
-                                readOnly
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='significant_minority'
-                            label={ SignificantMinorityLabel }
-                            labelCol={{ span: 24 }}
-                        >
-                            <Input
-                                type="number"
-                                style={{ width: '20%'}}
-                                readOnly
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='is_secret_ballot'
-                            label={ IsSecretBallotLabel }
-                            labelCol={{ span: 24 }}
-                            valuePropName="checked"
-                        >
-                            <Switch
-                                checkedChildren={<CheckOutlined />}
-                                unCheckedChildren={<CloseOutlined />}
-                                disabled
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='is_can_offer'
-                            label='Оказываем услуги другим сообществам?'
-                            labelCol={{ span: 24 }}
-                            valuePropName="checked"
-                        >
-                            <Switch
-                                checkedChildren={<CheckOutlined />}
-                                unCheckedChildren={<CloseOutlined />}
-                                disabled
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='is_minority_not_participate'
-                            label={ IsMinorityNotParticipateLabel }
-                            labelCol={{ span: 24 }}
-                            valuePropName="checked"
-                        >
-                            <Switch
-                                checkedChildren={<CheckOutlined />}
-                                unCheckedChildren={<CloseOutlined />}
-                                disabled
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='categories'
-                            label='Категории'
-                            labelCol={{ span: 24 }}
-                        >
-                            <Select
-                                mode="multiple"
-                                suffixIcon={null}
-                                open={false}
-                                removeIcon={null}
+                    <Row gutter={16}>
+                        <Col xs={24} sm={12}>
+                            <Form.Item
+                                name='name'
+                                label='Наименование'
+                                labelCol={{ span: 24 }}
                             >
-                            </Select>
-                        </Form.Item>
-                        <Form.Item
-                            name='creator'
-                            label='Создатель сообщества'
-                            labelCol={{ span: 24 }}
+                                <Input readOnly />
+                            </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={12}>
+                            <Form.Item
+                                name='creator'
+                                label='Инициатор сообщества'
+                                labelCol={{ span: 24 }}
+                            >
+                                <Input readOnly />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Form.Item
+                        name='description'
+                        label='Описание'
+                        labelCol={{ span: 24 }}
+                    >
+                        <TextArea readOnly rows={2} />
+                    </Form.Item>
+                    <Row gutter={16}>
+                        <Col xs={24} sm={12}>
+                            <Form.Item
+                                name='quorum'
+                                label={ QuorumLabel }
+                                labelCol={{ span: 24 }}
+                            >
+                                <Input
+                                    type="number"
+                                    style={{ width: '20%'}}
+                                    readOnly
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={12}>
+                            <Form.Item
+                                name='vote'
+                                label={ VoteLabel }
+                                labelCol={{ span: 24 }}
+                            >
+                                <Input
+                                    type="number"
+                                    style={{ width: '20%'}}
+                                    readOnly
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={12}>
+                            <Form.Item
+                                name='significant_minority'
+                                label={ SignificantMinorityLabel }
+                                labelCol={{ span: 24 }}
+                            >
+                                <Input
+                                    type="number"
+                                    style={{ width: '20%'}}
+                                    readOnly
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={12}>
+                            <Form.Item
+                                name='is_secret_ballot'
+                                label={ IsSecretBallotLabel }
+                                labelCol={{ span: 24 }}
+                                valuePropName="checked"
+                            >
+                                <Switch
+                                    checkedChildren={<CheckOutlined />}
+                                    unCheckedChildren={<CloseOutlined />}
+                                    disabled
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={12}>
+                            <Form.Item
+                                name='is_can_offer'
+                                label='Оказываем услуги другим сообществам?'
+                                labelCol={{ span: 24 }}
+                                valuePropName="checked"
+                            >
+                                <Switch
+                                    checkedChildren={<CheckOutlined />}
+                                    unCheckedChildren={<CloseOutlined />}
+                                    disabled
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={12}>
+                            <Form.Item
+                                name='is_minority_not_participate'
+                                label={ IsMinorityNotParticipateLabel }
+                                labelCol={{ span: 24 }}
+                                valuePropName="checked"
+                            >
+                                <Switch
+                                    checkedChildren={<CheckOutlined />}
+                                    unCheckedChildren={<CloseOutlined />}
+                                    disabled
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Form.Item
+                        name='categories'
+                        label='Категории'
+                        labelCol={{ span: 24 }}
+                    >
+                        <Select
+                            mode="multiple"
+                            suffixIcon={null}
+                            open={false}
+                            removeIcon={null}
                         >
-                            <Input readOnly />
-                        </Form.Item>
-                    </Form>
-                </Spin>
-            </Space>
-        </Layout>
+                        </Select>
+                    </Form.Item>
+                </Form>
+            </Spin>
     );
 }
 

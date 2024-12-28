@@ -1,23 +1,11 @@
-@use 'src/shared/assets/scss/variables' as *;
+@use 'src/shared/assets/scss/mixins' as *;
 
 .profile-avatar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    @include flex-center;
     margin: 6px 10px;
     padding: 5px;
 }
 
 .profile-modal {
     top: 64px;
-}
-
-.ant-modal {
-    .ant-modal-title {
-        background-color: $secondary-color;
-    }
-
-    .ant-modal-content {
-        background-color: $secondary-color;
-    }
 }

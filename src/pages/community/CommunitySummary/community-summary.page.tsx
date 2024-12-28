@@ -1,4 +1,4 @@
-import { ConfigProvider, Layout, Tabs } from "antd";
+import { Layout, Tabs } from "antd";
 import {
     CommunitySettings,
     CommonAddMemberRequests,
@@ -16,37 +16,29 @@ export function CommunitySummary(props: any) {
             children: <CommunitySettings communityId={communityId} />,
         },
         {
-            label: 'Статистика параметров',
+            label: 'Внутренние сообщества',
             key: '2',
             children: <ParameterStatistics communityId={communityId} />,
         },
         {
-            label: 'Заявки на вступление',
+            label: 'Статистика параметров',
             key: '3',
+            children: <ParameterStatistics communityId={communityId} />,
+        },
+        {
+            label: 'Заявки на вступление',
+            key: '4',
             children: <CommonAddMemberRequests communityId={communityId} />,
         }
     ];
 
     return (
-        <Layout>
-            <ConfigProvider
-                theme={{
-                    components: {
-                        Tabs: {
-                            itemSelectedColor: 'black',
-                            itemColor: '#7e7f80',
-                            itemHoverColor: 'red',
-                            titleFontSize: 16,
-                        },
-                    },
-                }}
-            >
-                <Tabs
-                    defaultActiveKey="1"
-                    type="card"
-                    items={items}
-                />
-            </ConfigProvider>
+        <Layout className="community-work-space">
+            <Tabs
+                defaultActiveKey="1"
+                type="card"
+                items={items}
+            />
         </Layout>
     );
 }

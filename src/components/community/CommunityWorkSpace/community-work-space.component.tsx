@@ -1,5 +1,4 @@
-import { Layout, Typography } from "antd";
-import './community.component.css';
+import { Layout } from "antd";
 import { Route, Routes, useParams } from "react-router-dom";
 import {
     AddMemberRequest,
@@ -11,7 +10,7 @@ import {
     Challenges,
     NewRule,
 } from "src/pages";
-import { AppFooter, CommunitySider, AuthHeaderIcons } from "src/components";
+import { AuthHeaderIcons, SiderBar } from "src/components";
 import { CrudDataSourceService } from "src/services";
 import { CommunityModel } from "src/models";
 import { useEffect, useState } from "react";
@@ -20,10 +19,9 @@ import { useEffect, useState } from "react";
 const {
     Header,
     Content,
-    Footer,
 } = Layout;
 
-export function Community () {
+export function CommunityWorkSpace() {
 
     const { id } = useParams();
     const [loading, setLoading] =
@@ -54,13 +52,13 @@ export function Community () {
 
     return (
         <Layout className="community">
-            <CommunitySider />
+            <SiderBar isCommunityWS={true}/>
             <Layout>
-                <Header className="header">
-                    <Typography.Title
-                        level={4}
-                        className="community-name"
-                    >{communityName}</Typography.Title>
+                <Header
+                    className="header"
+                    style={{ justifyContent: "space-between" }}
+                >
+                    <div className="community-name">{communityName}</div>
                     <AuthHeaderIcons />
                 </Header>
                 <Content className="content">
@@ -91,9 +89,6 @@ export function Community () {
                         } />
                     </Routes>
                 </Content>
-                {/*<Footer className="footer">*/}
-                {/*    <AppFooter />*/}
-                {/*</Footer>*/}
             </Layout>
         </Layout>
     );

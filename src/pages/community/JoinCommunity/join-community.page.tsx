@@ -1,13 +1,12 @@
 import {
     Button,
+    Row,
+    Col,
     Form,
     InputNumber,
-    Layout,
     message,
-    Space,
     Spin,
-    Switch,
-    Typography
+    Switch, Tooltip,
 } from "antd";
 import {
     AuthContextProvider,
@@ -25,13 +24,23 @@ import {
     CategoryModel,
     UserCommunitySettingsModel,
 } from "src/models";
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import {
+    CheckOutlined,
+    CloseOutlined,
+    QuestionCircleOutlined
+} from '@ant-design/icons';
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "src/hooks";
 import { useEffect, useState } from "react";
 import { CustomSelect } from "src/components";
 import {
+    CategoriesLabel,
+    CommunityDescriptionLabel,
+    CommunityNameLabel,
+    IsCanOfferLabel,
+    IsDefaultAddMemberLabel,
     IsMinorityNotParticipateLabel,
+    IsNotDelegateLabel,
     IsSecretBallotLabel,
     QuorumLabel,
     SignificantMinorityLabel,
@@ -56,6 +65,8 @@ export function JoinCommunity() {
         useState(false);
     const [categories, setCategories] =
         useState([] as CategoryModel[]);
+    const [disabled, setDisabled] =
+        useState(false);
 
     const communityService =
         new CrudDataSourceService(CommunityModel);
@@ -190,8 +201,20 @@ export function JoinCommunity() {
         form.setFieldValue(fieldName, value);
     }
 
-    const onFinish = (formData: CommunitySettingsInterface) => {
+    const handleFormChange = () => {
+        const formData = form.getFieldsValue();
+        const isValid =
+            Boolean(formData.name) &&
+            Boolean(formData.description) &&
+            Boolean(formData.quorum) &&
+            Boolean(formData.significant_minority) &&
+            Boolean(formData.vote);
+        setDisabled(!isValid);
+    }
+
+    const onFinish = () => {
         setButtonLoading(true);
+        const formData: CommunitySettingsInterface = form.getFieldsValue();
         const userSettingsAOService =
             new UserSettingsAoService();
         const userSettings =
@@ -225,18 +248,12 @@ export function JoinCommunity() {
     }
 
     return (
-        <Layout
-            style={{ height: "100%", overflowY: "auto" }}
-        >
-            <Space
-                direction="vertical"
-                className="communities"
-            >
-            {contextHolder}
-                <Typography.Title
-                    level={3}
-                    style={{ marginLeft: 20 }}
-                >Мои настройки сообщества</Typography.Title>
+        <>
+            <div className="form-container">
+                {contextHolder}
+                <div className="form-header">
+                    Настройка сообщества перед вступлением
+                </div>
                 <Spin
                     tip="Загрузка данных"
                     size="large"
@@ -245,14 +262,21 @@ export function JoinCommunity() {
                     <Form
                         name='join-community'
                         form={form}
-                        onFinish={onFinish}
+                        onFieldsChange={handleFormChange}
                         preserve={true}
-                        style={{ width: 600 }}
                     >
                         <Form.Item
                             name='name'
-                            label='Наименование'
-                            labelCol={{ span: 24 }}
+                            label={
+                                <span>
+                                    {CommunityNameLabel}&nbsp;
+                                    <Tooltip
+                                        title="Выберите из доступных вариантов понравившееся название для сообщества или предложите своё.">
+                                        <QuestionCircleOutlined/>
+                                    </Tooltip>
+                                </span>
+                            }
+                            labelCol={{span: 24}}
                             rules={[
                                 {
                                     required: true,
@@ -273,8 +297,16 @@ export function JoinCommunity() {
                         </Form.Item>
                         <Form.Item
                             name='description'
-                            label='Описание'
-                            labelCol={{ span: 24 }}
+                            label={
+                                <span>
+                                    {CommunityDescriptionLabel}&nbsp;
+                                    <Tooltip
+                                        title="Выберите из доступных вариантов наилучшее описание сообщества или предложите своё.">
+                                        <QuestionCircleOutlined/>
+                                    </Tooltip>
+                                </span>
+                            }
+                            labelCol={{span: 24}}
                             rules={[
                                 {
                                     required: true,
@@ -294,131 +326,185 @@ export function JoinCommunity() {
                                 ownFieldTextarea={true}
                             />
                         </Form.Item>
-                        <Form.Item
-                            name='quorum'
-                            label={ QuorumLabel }
-                            labelCol={{ span: 24 }}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Пожалуйста, укажите кворум сообщества, значение от 1 до 100%.',
-                                },
-                            ]}
-                        >
-                            <InputNumber
-                                type="number"
-                                controls={false}
-                                max={100}
-                                min={1}
-                                step={1}
-                                style={{
-                                    width: '20%'
-                                }}
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='vote'
-                            label={ VoteLabel }
-                            labelCol={{ span: 24 }}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Пожалуйста, укажите процент голосов для принятия решения, значение от 50 до 100%.',
-                                },
-                            ]}
-                        >
-                            <InputNumber
-                                type="number"
-                                controls={false}
-                                max={100}
-                                min={50}
-                                step={1}
-                                style={{
-                                    width: '20%'
-                                }}
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='significant_minority'
-                            label={ SignificantMinorityLabel }
-                            labelCol={{ span: 24 }}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Пожалуйста, укажите процент общественно-значимого меньшинства, значение от 1 до 49%.',
-                                },
-                            ]}
-                        >
-                            <InputNumber
-                                type="number"
-                                controls={false}
-                                max={49}
-                                min={1}
-                                step={1}
-                                style={{
-                                    width: '20%'
-                                }}
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='is_secret_ballot'
-                            label={ IsSecretBallotLabel }
-                            labelCol={{ span: 24 }}
-                            valuePropName="checked"
-                        >
-                            <Switch
-                                checkedChildren={<CheckOutlined />}
-                                unCheckedChildren={<CloseOutlined />}
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='is_can_offer'
-                            label='Оказываем услуги другим сообществам?'
-                            labelCol={{ span: 24 }}
-                            valuePropName="checked"
-                        >
-                            <Switch
-                                checkedChildren={<CheckOutlined />}
-                                unCheckedChildren={<CloseOutlined />}
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='is_minority_not_participate'
-                            label={ IsMinorityNotParticipateLabel }
-                            labelCol={{ span: 24 }}
-                            valuePropName="checked"
-                        >
-                            <Switch
-                                checkedChildren={<CheckOutlined />}
-                                unCheckedChildren={<CloseOutlined />}
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='is_default_add_member'
-                            label='Даю предварительное согласие на добавление любого нового члена сообщества'
-                            labelCol={{ span: 24 }}
-                            valuePropName="checked"
-                        >
-                            <Switch
-                                checkedChildren={<CheckOutlined />}
-                                unCheckedChildren={<CloseOutlined />}
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='is_not_delegate'
-                            label='Не хочу выступать в качестве делегата'
-                            labelCol={{ span: 24 }}
-                            valuePropName="checked"
-                        >
-                            <Switch
-                                checkedChildren={<CheckOutlined />}
-                                unCheckedChildren={<CloseOutlined />}
-                            />
-                        </Form.Item>
+                        <Row gutter={16}>
+                            <Col xs={24} sm={12}>
+                                <Form.Item
+                                    name='quorum'
+                                    label={
+                                        <span>
+                                            {QuorumLabel}&nbsp;
+                                            <Tooltip
+                                                title="Введите минимальный процент от числа участников сообщества, требующийся для правомочности голосования. Значение от 1 до 100%.">
+                                            <QuestionCircleOutlined/>
+                                          </Tooltip>
+                                        </span>
+                                    }
+                                    labelCol={{span: 24}}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Пожалуйста, укажите кворум сообщества, значение от 1 до 100%.',
+                                        },
+                                    ]}
+                                >
+                                    <InputNumber
+                                        type="number"
+                                        controls={false}
+                                        max={100}
+                                        min={1}
+                                        step={1}
+                                        style={{
+                                            width: '20%'
+                                        }}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col xs={24} sm={12}>
+                                <Form.Item
+                                    name='vote'
+                                    label={
+                                        <span>
+                                            {VoteLabel}&nbsp;
+                                            <Tooltip
+                                                title="Введите минимальный процент от всех голосов, который должен получить вариант, требующийся для победы в голосовании. Значение от 50 до 100%.">
+                                                <QuestionCircleOutlined/>
+                                            </Tooltip>
+                                        </span>
+                                    }
+                                    labelCol={{span: 24}}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Пожалуйста, укажите процент голосов для принятия решения, значение от 50 до 100%.',
+                                        },
+                                    ]}
+                                >
+                                    <InputNumber
+                                        type="number"
+                                        controls={false}
+                                        max={100}
+                                        min={50}
+                                        step={1}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col xs={24} sm={12}>
+                                <Form.Item
+                                    name='significant_minority'
+                                    label={
+                                        <span>
+                                            {SignificantMinorityLabel}&nbsp;
+                                            <Tooltip
+                                                title="Введите минимальный процент от всех голосов, при достижении которого вариант голосования будет считаться общественно-значимым. Значение от 1 до 50%.">
+                                                <QuestionCircleOutlined/>
+                                            </Tooltip>
+                                    </span>
+                                    }
+                                    labelCol={{span: 24}}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Пожалуйста, укажите процент общественно-значимого меньшинства, значение от 1 до 50%.',
+                                        },
+                                    ]}
+                                >
+                                    <InputNumber
+                                        type="number"
+                                        controls={false}
+                                        max={50}
+                                        min={1}
+                                        step={1}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col xs={24} sm={12}>
+                                <Form.Item
+                                    name='is_secret_ballot'
+                                    label={IsSecretBallotLabel}
+                                    labelCol={{span: 24}}
+                                    valuePropName="checked"
+                                >
+                                    <Switch
+                                        checkedChildren={<CheckOutlined/>}
+                                        unCheckedChildren={<CloseOutlined/>}
+                                    />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row gutter={16}>
+                            <Col xs={24} sm={12}>
+                                <Form.Item
+                                    name='is_can_offer'
+                                    label={IsCanOfferLabel}
+                                    labelCol={{span: 24}}
+                                    valuePropName="checked"
+                                >
+                                    <Switch
+                                        checkedChildren={<CheckOutlined/>}
+                                        unCheckedChildren={<CloseOutlined/>}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col xs={24} sm={12}>
+                                <Form.Item
+                                    name='is_minority_not_participate'
+                                    label={
+                                        <span>
+                                          {IsMinorityNotParticipateLabel}&nbsp;
+                                            <Tooltip
+                                                title="В случае утверждения инициативы, меньшинство, которое её не поддержало обязано принимать участие в её исполнении или достаточно того, что оно не должно препятствовать?">
+                                            <QuestionCircleOutlined/>
+                                          </Tooltip>
+                                        </span>
+                                    }
+                                    labelCol={{span: 24}}
+                                    valuePropName="checked"
+                                >
+                                    <Switch
+                                        checkedChildren={<CheckOutlined/>}
+                                        unCheckedChildren={<CloseOutlined/>}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col xs={24} sm={12}>
+                                <Form.Item
+                                    name='is_default_add_member'
+                                    label={IsDefaultAddMemberLabel}
+                                    labelCol={{span: 24}}
+                                    valuePropName="checked"
+                                >
+                                    <Switch
+                                        checkedChildren={<CheckOutlined/>}
+                                        unCheckedChildren={<CloseOutlined/>}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col xs={24} sm={12}>
+                            <Form.Item
+                                name='is_not_delegate'
+                                label={IsNotDelegateLabel}
+                                labelCol={{span: 24}}
+                                valuePropName="checked"
+                            >
+                                <Switch
+                                    checkedChildren={<CheckOutlined/>}
+                                    unCheckedChildren={<CloseOutlined/>}
+                                />
+                            </Form.Item>
+                            </Col>
+                        </Row>
                         <Form.Item
                             name='categories'
-                            label='Категории'
-                            labelCol={{ span: 24 }}
+                            label={
+                                <span>
+                                    {CategoriesLabel}&nbsp;
+                                    <Tooltip
+                                        title="Категории - это темы или направления для голосований. Они помогают структурировать вопросы и выбирать делегатов.">
+                                            <QuestionCircleOutlined/>
+                                    </Tooltip>
+                                </span>
+                            }
+                            labelCol={{span: 24}}
                         >
                             <CustomSelect
                                 fieldService={categoryService}
@@ -432,19 +518,22 @@ export function JoinCommunity() {
                                 ownValuePlaceholder="Введите свою категорию"
                             />
                         </Form.Item>
-                        <Form.Item>
-                            <Button
-                                type='primary'
-                                htmlType='submit'
-                                loading={buttonLoading}
-                            >
-                                Сохранить
-                            </Button>
-                        </Form.Item>
                     </Form>
                 </Spin>
-            </Space>
-        </Layout>
+            </div>
+            <div className="toolbar">
+                <Button
+                    type='primary'
+                    htmlType='submit'
+                    loading={buttonLoading}
+                    onClick={onFinish}
+                    disabled={disabled}
+                    className="toolbar-button"
+                >
+                    Вступить в сообщество
+                </Button>
+            </div>
+        </>
     );
 }
 

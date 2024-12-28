@@ -132,13 +132,13 @@ export function UploadAvatar() {
                     size={{
                         xs: 64, sm: 90, md: 128, lg: 200, xl: 256, xxl: 300
                     }}
-                    icon={<UserOutlined />}
+                    icon={<UserOutlined style={{ fontSize: 72 }} />}
                     src={authData.avatarUrl}
                 />
             </Flex>
-            <div style={{ justifyItems: "right" }}>
+            <div style={{ justifyItems: "right", margin: 8 }}>
                 <Button
-                    style={{ marginTop: 16, marginLeft: 16, width: '100%' }}
+                    style={{ margin: "auto", marginBottom: 12, width: "100%" }}
                     onClick={onDeleteFile}
                     disabled={!fileId}
                 >
@@ -153,8 +153,7 @@ export function UploadAvatar() {
                     customRequest={customRequest}
                 >
                     <Button
-                        type="primary"
-                        style={{ marginTop: 16, marginLeft: 16, width: '100%' }}
+                        style={{ margin: "auto", width: "100%" }}
                     >
                         {loading ? <LoadingOutlined /> : <PlusOutlined />}
                         Загрузить

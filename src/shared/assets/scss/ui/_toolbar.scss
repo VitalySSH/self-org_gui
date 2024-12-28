@@ -1,0 +1,22 @@
+@use 'src/shared/assets/scss/mixins' as *;
+@use 'src/shared/assets/scss/variables' as *;
+
+.toolbar {
+  height: $footer-height;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: $sider-background-color;
+  border-top: 1px solid $border-color;
+  border-left: 1px solid $border-color;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 16px 4px 16px;
+  margin-left: 24px;
+
+  .toolbar-button {
+    margin: 0 10px;
+    @include button-style($primary-color, $sider-background-color);
+  }
+}

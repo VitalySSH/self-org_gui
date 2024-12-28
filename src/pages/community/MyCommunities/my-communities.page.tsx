@@ -1,4 +1,4 @@
-import { Card, Layout, List, Typography } from "antd";
+import { Card, List } from "antd";
 import { useEffect, useState } from "react";
 import { StopOutlined } from "@ant-design/icons";
 import {
@@ -106,42 +106,39 @@ export function MyCommunities() {
     }
 
     return (
-        <Layout className="communities-list">
-            <Typography.Title
-                level={3}
-                style={{ textAlign: "center" }}
-            >
+        <div className="communities-list">
+            <div className="page-header">
                 Мои сообщества
-            </Typography.Title>
+            </div>
             <List
                 itemLayout="vertical"
                 dataSource={dataSource}
                 loading={loading}
                 locale={{emptyText: "Нет сообществ"}}
-                pagination={ dataSource.length >= 20 ? {
+                pagination={dataSource.length >= 20 ? {
                     position: 'bottom',
                     align: 'end'
-                } : false }
+                } : false}
                 size="large"
                 renderItem={(item: CommunityCard) => (
                     <List.Item>
                         <Card
-                            onClick={ getOnClick(item) }
-                            style={ getCardStyle(item) }
-                            actions={ getActions(item) }
+                            onClick={getOnClick(item)}
+                            style={getCardStyle(item)}
+                            actions={getActions(item)}
                         >
                             <Meta
-                                title={ item.title }
-                                description={ item.description }
+                                title={item.title}
+                                description={item.description}
                             />
                             <div className="community-members">
-                                Участников: { item.members }
+                                Участников: {item.members}
                             </div>
                         </Card>
                     </List.Item>
                 )}
             />
-        </Layout>
+        </div>
     );
 }
 

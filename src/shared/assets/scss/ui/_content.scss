@@ -1,26 +1,20 @@
 @use 'src/shared/assets/scss/variables' as *;
-@forward 'src/shared/assets/scss/forms/form';
 
 .content {
-  //padding: 24px;
-  height: 100%;
-  ////TODO: разобраться, почемы съезжает вправо
-  //width: calc(100vw - 68px);
-  //overflow-x: hidden;
-  //background-color: $secondary-color;
-  //color: $text-color;
-  //border-radius: 16px;
-  //margin: 6px 24px 6px 24px;
-  //box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  //flex: 1;
-  //padding: 20px;
-  //background-color: green;
-  //border-radius: $border-radius;
-  //box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex: 1;
 
   p {
     font-size: 16px;
     color: $text-color
+  }
+
+  .page-header {
+    font-size: 20px;
+    font-weight: bold;
+    color: $text-color;
+    text-align: center;
+    margin-bottom: 16px;
   }
 
   .content-container {
@@ -29,10 +23,71 @@
     text-align: left;
   }
 
+  .table-container {
+    width: 100%;
+    margin: 8px 8px 0 12px;
+    padding: 12px;
+
+    .table-header {
+      font-size: 20px;
+      font-weight: bold;
+      color: $text-color;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+  }
+
+  .form-container {
+    width: 800px;
+    margin: 16px auto calc($footer-height + 16px) auto;
+
+    .form-header {
+      font-size: 20px;
+      font-weight: bold;
+      color: $text-color;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+  }
+
   .communities-list {
     max-width: 1246px;
     margin: 20px auto;
   }
+
+  .community-work-space {
+    width: 100%;
+    margin: 8px 8px 0 12px;
+    padding: 12px;
+
+    .section-header {
+      font-size: 20px;
+      font-weight: bold;
+      color: $text-color;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+  }
+
+  .community-work-space-with-toolbar {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    margin: 8px 8px calc($footer-height + 8px) 12px;
+    padding: 12px;
+
+    .section-header {
+      font-size: 20px;
+      font-weight: bold;
+      color: $text-color;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+  }
+
 }
 
 // Адаптивные стили

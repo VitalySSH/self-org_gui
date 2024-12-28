@@ -1,16 +1,4 @@
 // Цвета
-//$primary-accent: #A3D4F7; // Светлый пастельный голубой для header
-//$background-dark: #1A1A1A; // Глубокий темный фон для футуристичного стиля
-//$background-light: #F4F4F4; // Светлый фон для контента
-//$subtle-gray: #D1D1D1; // Нейтральный серый для текста и границ
-//$subtle-gold: #B89E68; // Теплый золотой для тонких акцентов и элементов
-//$button-hover: #6B7280; // Темный серый при наведении
-//$gradient-background: linear-gradient(145deg, #1A1A1A, #2B2B2B); // Легкий футуристичный градиент
-//$border-gray: #757575; // Границы и разделители
-//$icon-muted: #7F7F7F; // Приглушенный цвет для иконок
-//$accent-red: #C73B3A; // Красный для мелких акцентов
-// Цвета
-//$primary-color: #C73B3A;
 $primary-color: #CC0000;
 $secondary-color: #F9F9F9;
 $text-color: #333333;
@@ -22,13 +10,13 @@ $accent-yellow: #FFD700;
 
 // Размеры и радиусы
 $header-height: 64px;
-$footer-height: 50px;
+$footer-height: 64px;
 $border-radius: 8px;
 $transition-speed: 0.3s;
 
 
 // Шрифт
-$font-family: 'Roboto', sans-serif;
+$font-family: 'Noto Sans', sans-serif;
 
 // Адаптивные точки
 $breakpoint-lg: 1200px;

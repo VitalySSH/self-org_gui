@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './hooks';
 import {
-    Community,
+    CommunityWorkSpace,
     MainApp,
     ProtectedRoute,
 } from "./components";
@@ -23,7 +23,7 @@ function App() {
 
                   <Route path='my-communities/:id/*' element={
                       <ProtectedRoute>
-                          <Community />
+                          <CommunityWorkSpace />
                       </ProtectedRoute>
                   }>
                   </Route>

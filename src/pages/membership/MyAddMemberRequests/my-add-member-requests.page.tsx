@@ -2,12 +2,10 @@ import {
     Button,
     Input,
     InputRef,
-    Layout,
     Space,
     Table,
     TableColumnsType,
     TableColumnType,
-    Typography,
 } from "antd";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
@@ -327,19 +325,10 @@ export function MyAddMemberRequests() {
     }, [loadData, loading]);
 
     return (
-        <Layout
-            style={{height: '100%', overflowY: "auto" }}
-        >
-            <Space
-                direction="vertical"
-                className="communities"
-            >
-                <Typography.Title
-                    level={3}
-                >
-                    Мои заявки на вступление в сообщества
-                </Typography.Title>
-            </Space>
+        <div className="table-container">
+            <div className="table-header">
+                Мои заявки на вступление в сообщества
+            </div>
             <Table
                 columns={columns}
                 loading={loading}
@@ -351,6 +340,6 @@ export function MyAddMemberRequests() {
                     marginBottom: 20
                 }}
             />
-        </Layout>
+        </div>
     );
 }

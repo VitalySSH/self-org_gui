@@ -1,4 +1,3 @@
-import './sider-bar.component.scss';
 import { Button, Flex, Image, Layout, Menu } from "antd";
 import {
     MenuFoldOutlined,
@@ -7,7 +6,12 @@ import {
     PlusCircleOutlined,
     InfoCircleOutlined,
     ExceptionOutlined,
-    ApartmentOutlined
+    ApartmentOutlined,
+    ToolOutlined,
+    BarChartOutlined,
+    BulbOutlined,
+    FireOutlined,
+    UserAddOutlined
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState} from "react";
@@ -68,6 +72,44 @@ const userGuideMenuItems: MenuItem[] = [
     }
 ];
 
+const communityWSMenuItems: MenuItem[] = [
+    {
+        key: 'summary',
+        icon: <BarChartOutlined className="menu-icon"/>,
+        label: 'Обзор',
+    },
+    {
+        key: 'my-settings',
+        icon: <ToolOutlined className="menu-icon"/>,
+        label: 'Мои настройки',
+    },
+    {
+        key: 'my-delegates',
+        icon: <TeamOutlined className="menu-icon"/>,
+        label: 'Мои делегаты',
+    },
+    {
+        key: 'rules',
+        icon: <ExceptionOutlined className="menu-icon"/>,
+        label: 'Правила',
+    },
+    {
+        key: 'initiatives',
+        icon: <BulbOutlined className="menu-icon"/>,
+        label: 'Инициативы',
+    },
+    {
+        key: 'disputes',
+        icon: <FireOutlined className="menu-icon"/>,
+        label: 'Вызовы',
+    },
+    {
+        key: 'add-member',
+        icon: <UserAddOutlined className="menu-icon"/>,
+        label: 'Заявки на вступление',
+    }
+];
+
 export function SiderBar(props: SiderBarInterface) {
 
     const location = useLocation();
@@ -98,26 +140,32 @@ export function SiderBar(props: SiderBarInterface) {
         setCommunityWSMenuKeys
     ] = useState<string[]>([]);
 
-    const onClickImage = () => {
+    const cleanKeys = () => {
         setCommunitiesMenuKeys([]);
         setUserGuideMenuKeys([]);
         setCommunityWSMenuKeys([]);
+    }
+
+    const onClickImage = () => {
+        cleanKeys();
         navigate('/', { preventScrollReset: true });
     }
 
     useEffect(() => {
         if (location.pathname === '/') {
-            setCommunitiesMenuKeys([]);
-            setUserGuideMenuKeys([]);
-            setCommunityWSMenuKeys([]);
+            cleanKeys();
         } else {
             const pathname = location.pathname.split('/');
             if (props.isCommunityWS) {
-                if (pathname.length >= 3) {
+                if (pathname.length > 3) {
                     setCommunityWSMenuKeys([pathname[3]]);
+                } else {
+                    setCommunityWSMenuKeys(['summary']);
+                    navigate('summary', {preventScrollReset: true});
                 }
             } else {
                 if (pathname.length >= 1) {
+                    cleanKeys();
                     const currentKey = pathname[1];
                     if (props.isNotAuthorized) {
                         setUserGuideMenuKeys([currentKey]);
@@ -212,6 +260,27 @@ export function SiderBar(props: SiderBarInterface) {
                             navigate(item.key, {preventScrollReset: true});
                         }}
                         selectedKeys={userGuideMenuKeys}
+                    />
+                </>
+            }
+            {props.isCommunityWS &&
+                <>
+                    {!collapsed &&
+                        <div className="menu-header">
+                            Сообщество
+                        </div>
+                    }
+                    {collapsed &&
+                        <ExceptionOutlined className="menu-header-icon" />
+                    }
+                    <Menu
+                        mode="inline"
+                        items={communityWSMenuItems}
+                        onClick={(item) => {
+                            setCommunityWSMenuKeys([item.key]);
+                            navigate(item.key, {preventScrollReset: true});
+                        }}
+                        selectedKeys={communityWSMenuKeys}
                     />
                 </>
             }

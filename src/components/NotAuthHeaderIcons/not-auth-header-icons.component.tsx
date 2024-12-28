@@ -23,6 +23,7 @@ export function NotAuthHeaderIcons() {
             <div
                 className="icon-text"
                 onClick={loginOnClick}
+                style={{ marginLeft: -4 }}
             >
                 <span>Войти</span>
             </div>

@@ -8,7 +8,7 @@
   justify-content: end;
   align-items: center;
   padding: 15px 20px;
-  margin-left: 8px;
+  margin-left: 24px;
 
   .logo {
     width: auto;
@@ -18,16 +18,27 @@
   }
 
   .avatar {
-    border-color: $border-color;
+    border-color: $text-color;
     border-width: 2px;
     background-color: $secondary-color;
     cursor: pointer;
   }
 
   .icon-text {
-    margin-right: 20px;
+    margin-left: -16px;
+    margin-right: 8px;
     font-weight: 500;
     cursor: pointer;
+  }
+
+  .community-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: $text-color;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
 }
@@ -37,9 +48,13 @@
 //  .header {}
 //}
 //
-//@media (max-width: 1024px) {
-//  .header {}
-//}
+@media (max-width: 1024px) {
+  .header {
+    .icon-text {
+      display: none;
+    }
+  }
+}
 //
 //@media (max-width: 768px) {
 //  .header {}

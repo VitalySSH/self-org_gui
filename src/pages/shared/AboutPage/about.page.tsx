@@ -1,4 +1,3 @@
-import './about.page.css';
 import { Flex, Image, Typography } from "antd";
 
 const { Title, Paragraph } = Typography;

@@ -2,7 +2,6 @@ import {
     Button,
     Input,
     InputRef,
-    Layout,
     Space,
     Table,
     TableColumnsType,
@@ -240,15 +239,11 @@ export function AddMemberRequestsForMe(props: any) {
     }, [loadData, loading]);
 
     return (
-        <Layout
-            style={{height: '100%', overflowY: "auto", marginTop: 20}}
-        >
-            <Table
-                columns={columns}
-                loading={loading}
-                dataSource={dataSource}
-                locale={{emptyText: "Заявки не найдены"}}
-            />
-        </Layout>
+        <Table
+            columns={columns}
+            loading={loading}
+            dataSource={dataSource}
+            locale={{emptyText: "Заявки не найдены"}}
+        />
     );
 }

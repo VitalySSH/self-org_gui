@@ -1,4 +1,4 @@
-import { Layout, List, Typography } from "antd";
+import { List } from "antd";
 import { CrudDataSourceService } from "src/services";
 import { CommunityModel } from "src/models";
 import { useEffect, useState } from "react";
@@ -69,29 +69,26 @@ export function AllCommunities() {
     }, [loadData]);
 
     return (
-        <Layout className="communities-list">
-            <Typography.Title
-                level={3}
-                style={{ textAlign: "center" }}
-            >
+        <div className="communities-list">
+            <div className="page-header">
                 Сообщества
-            </Typography.Title>
+            </div>
             <List
                 itemLayout="vertical"
                 dataSource={dataSource}
                 loading={loading}
                 locale={{emptyText: "Нет сообществ"}}
-                pagination={ dataSource.length >= 20 ? {
+                pagination={dataSource.length >= 20 ? {
                     position: 'bottom',
                     align: 'end'
-                } : false }
+                } : false}
                 size="large"
                 renderItem={(item: CommunityCard) => (
                     <List.Item>
-                        <AllCommunityCard key={item.id} item={item} />
+                        <AllCommunityCard key={item.id} item={item}/>
                     </List.Item>
                 )}
             />
-        </Layout>
+        </div>
     );
 }

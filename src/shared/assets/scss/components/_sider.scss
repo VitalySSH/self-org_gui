@@ -56,4 +56,31 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   }
 
+  .menu-header {
+    background-color: $background-color;
+    font-size: 18px;
+    font-weight: bold;
+    color: $text-color;
+    text-align: left;
+    word-wrap: break-word;
+    white-space: normal;
+    line-height: 1.4;
+    margin-top: 18px;
+    padding: 6px 10px 6px 20px;
+    border-top: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
+  }
+
+  .menu-header-icon {
+    background-color: $background-color;
+    font-size: 24px !important;
+    padding-inline: calc(50% - 8px - 4px);
+    margin-bottom: 8px;
+    margin-top: 18px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    border-top: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
+  }
+
 }
