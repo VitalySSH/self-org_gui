@@ -11,7 +11,6 @@ import {
 import {
     AboutPage,
     AllCommunities,
-    JoinCommunity,
     MyAddMemberRequests,
     MyCommunities,
     NewCommunity,
@@ -43,7 +42,7 @@ export function MainApp() {
         <Layout>
             <SiderBar
                 isCommunityWS={false}
-                isNotAuthorized={!Boolean(authData.user)}
+                isNotAuthorized={!authData.user}
             />
             <Layout>
                 <Header className="header">
@@ -71,11 +70,6 @@ export function MainApp() {
                         <Route path='/my-add-requests' element={
                             <ProtectedRoute>
                                 <MyAddMemberRequests />
-                            </ProtectedRoute>
-                        } />
-                        <Route path='/my-add-requests/community/:id' element={
-                            <ProtectedRoute>
-                                <JoinCommunity />
                             </ProtectedRoute>
                         } />
                         {/*<Route path="*" element={<NoMatchPage />} />*/}

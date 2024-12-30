@@ -1,12 +1,10 @@
 import {
     Button,
-    Card,
     Checkbox,
     Form,
     Image,
     Input,
     message,
-    Space
 } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 
@@ -70,24 +68,18 @@ export function SignIn() {
     }
 
     return (
-        <Space
-            className="auth-space"
-        >
-            <Card style={{ maxWidth: 500 }}>
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    marginBottom: 30
-                }}>
-                    <Image
-                        height={60}
-                        preview={false}
-                        src="/utu_logo.png"
-                        onClick={onClickImage}
-                        style={{cursor: "pointer"}}
-                    >
-                    </Image>
-                </div>
+        <div className="auth-space">
+            <div style={{ marginBottom: 24 }}>
+                <Image
+                    height={50}
+                    preview={false}
+                    src="/utu_logo.png"
+                    onClick={onClickImage}
+                    style={{ cursor: "pointer" }}
+                >
+                </Image>
+            </div>
+            <div style={{ maxWidth: 500 }}>
                 <Form
                     name='login'
                     className='login-form'
@@ -135,7 +127,6 @@ export function SignIn() {
                                 message: 'Используйте латинские буквы в разном регистре и цифры',
                             }
                         ]}
-                        hasFeedback
                     >
                         <Input.Password
                             prefix={<LockOutlined className='site-form-item-icon'/>}
@@ -144,15 +135,15 @@ export function SignIn() {
                         />
                     </Form.Item>
                     <span>
-                        <a
-                            style={{float: 'right'}}
-                            className='login-form-forgot'
-                            href=""
-                            onClick={ handleForgotPassword }
-                        >
-                            Не помню пароль
-                        </a>
-                    </span>
+                    <a
+                        style={{float: 'right'}}
+                        className='login-form-forgot'
+                        href=""
+                        onClick={ handleForgotPassword }
+                    >
+                        Не помню пароль
+                    </a>
+                </span>
                     <Form.Item>
                         <Form.Item name='remember' valuePropName='checked' noStyle>
                             <Checkbox>Запомнить меня</Checkbox>
@@ -175,7 +166,7 @@ export function SignIn() {
                         </div>
                     </Form.Item>
                 </Form>
-            </Card>
-        </Space>
+            </div>
+        </div>
     );
 }

@@ -7,12 +7,6 @@
 @use 'src/shared/assets/scss/ui/content' as *;
 @use 'src/shared/assets/scss/components/sider' as *;
 
-.auth-space {
-  @include flex-center;
-  background-color: $secondary-color;
-  height: 100vh;
-}
-
 body {
   font-family: $font-family;
   background-color: $secondary-color;
@@ -40,7 +34,9 @@ button {
   @include button-style($primary-color, $background-color);
 }
 
-.menu-icon {
-  font-size: 24px;
-  margin-top: 4px;
+.auth-space {
+  @include flex-center;
+  flex-direction: column;
+  background-color: $secondary-color;
+  height: 100vh;
 }

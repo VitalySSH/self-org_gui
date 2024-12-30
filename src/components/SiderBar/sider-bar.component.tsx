@@ -1,4 +1,4 @@
-import { Button, Flex, Image, Layout, Menu } from "antd";
+import {Button, Flex, Image, Layout, Menu, Tooltip} from "antd";
 import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -11,7 +11,9 @@ import {
     BarChartOutlined,
     BulbOutlined,
     FireOutlined,
-    UserAddOutlined
+    UserAddOutlined,
+    ThunderboltOutlined,
+    ReadOutlined
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState} from "react";
@@ -24,17 +26,17 @@ const { Sider} = Layout;
 const communitiesMenuItems: MenuItem[] = [
     {
         key: 'communities',
-        icon: <TeamOutlined className="menu-icon"/>,
+        icon: <TeamOutlined />,
         label: 'Все',
     },
     {
         key: 'my-communities',
-        icon: <TeamOutlined className="menu-icon"/>,
+        icon: <TeamOutlined />,
         label: 'Мои',
     },
     {
         key: 'new-community',
-        icon: <PlusCircleOutlined className="menu-icon"/>,
+        icon: <PlusCircleOutlined />,
         label: 'Новое',
     }
 ];
@@ -42,32 +44,32 @@ const communitiesMenuItems: MenuItem[] = [
 const userGuideMenuItems: MenuItem[] = [
     {
         key: 'test1',
-        icon: <InfoCircleOutlined className="menu-icon"/>,
+        icon: <InfoCircleOutlined />,
         label: 'Сообщества',
     },
     {
         key: 'test2',
-        icon: <InfoCircleOutlined className="menu-icon"/>,
+        icon: <InfoCircleOutlined />,
         label: 'Делегаты',
     },
     {
         key: 'test3',
-        icon: <InfoCircleOutlined className="menu-icon"/>,
+        icon: <InfoCircleOutlined />,
         label: 'Правила',
     },
     {
         key: 'test4',
-        icon: <InfoCircleOutlined className="menu-icon"/>,
+        icon: <InfoCircleOutlined />,
         label: 'Инициатвы',
     },
     {
         key: 'test5',
-        icon: <InfoCircleOutlined className="menu-icon"/>,
+        icon: <InfoCircleOutlined />,
         label: 'Споры',
     },
     {
         key: 'test6',
-        icon: <InfoCircleOutlined className="menu-icon"/>,
+        icon: <InfoCircleOutlined />,
         label: 'Вызовы',
     }
 ];
@@ -75,37 +77,47 @@ const userGuideMenuItems: MenuItem[] = [
 const communityWSMenuItems: MenuItem[] = [
     {
         key: 'summary',
-        icon: <BarChartOutlined className="menu-icon"/>,
+        icon: <BarChartOutlined />,
         label: 'Обзор',
     },
     {
+        key: 'sub-communities',
+        icon: <ApartmentOutlined />,
+        label: 'Внутренние сообщества',
+    },
+    {
         key: 'my-settings',
-        icon: <ToolOutlined className="menu-icon"/>,
+        icon: <ToolOutlined />,
         label: 'Мои настройки',
     },
     {
         key: 'my-delegates',
-        icon: <TeamOutlined className="menu-icon"/>,
+        icon: <TeamOutlined />,
         label: 'Мои делегаты',
     },
     {
         key: 'rules',
-        icon: <ExceptionOutlined className="menu-icon"/>,
+        icon: <ReadOutlined />,
         label: 'Правила',
     },
     {
         key: 'initiatives',
-        icon: <BulbOutlined className="menu-icon"/>,
+        icon: <BulbOutlined />,
         label: 'Инициативы',
     },
     {
-        key: 'disputes',
-        icon: <FireOutlined className="menu-icon"/>,
+        key: 'challenges',
+        icon: <FireOutlined />,
         label: 'Вызовы',
     },
     {
+        key: 'disputes',
+        icon: <ThunderboltOutlined />,
+        label: 'Споры',
+    },
+    {
         key: 'add-member',
-        icon: <UserAddOutlined className="menu-icon"/>,
+        icon: <UserAddOutlined />,
         label: 'Заявки на вступление',
     }
 ];
@@ -231,7 +243,12 @@ export function SiderBar(props: SiderBarInterface) {
                                 </div>
                             }
                             {collapsed &&
-                                <ApartmentOutlined className="menu-header-icon" />
+                                <Tooltip
+                                    title="Сообщества"
+                                    placement="right"
+                                >
+                                    <ApartmentOutlined className="menu-header-icon" />
+                                </Tooltip>
                             }
                             <Menu
                                 mode="inline"
@@ -250,7 +267,12 @@ export function SiderBar(props: SiderBarInterface) {
                         </div>
                     }
                     {collapsed &&
-                        <ExceptionOutlined className="menu-header-icon" />
+                        <Tooltip
+                            title="Руководство пользователя"
+                            placement="right"
+                        >
+                            <ExceptionOutlined className="menu-header-icon" />
+                        </Tooltip>
                     }
                     <Menu
                         mode="inline"
@@ -271,7 +293,12 @@ export function SiderBar(props: SiderBarInterface) {
                         </div>
                     }
                     {collapsed &&
-                        <ExceptionOutlined className="menu-header-icon" />
+                        <Tooltip
+                            title="Сообщество"
+                            placement="right"
+                        >
+                            <ApartmentOutlined className="menu-header-icon" />
+                        </Tooltip>
                     }
                     <Menu
                         mode="inline"
@@ -315,7 +342,6 @@ export function SiderBar(props: SiderBarInterface) {
                     </div>
                 </Flex>
             }
-
 
         </Sider>
     )

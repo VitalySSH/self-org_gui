@@ -211,8 +211,8 @@ export function AddMemberRequestsForMe(props: any) {
                         const isMyRequest =
                             requestMember.member?.id === currentUserId;
                         const memberName =
-                            `${requestMember.member?.firstname} 
-                            ${requestMember.member?.surname}`;
+                            `${requestMember.member?.firstname} ` +
+                            `${requestMember.member?.surname}`;
                         const item = {
                             key: requestMember.id || '',
                             member: memberName,

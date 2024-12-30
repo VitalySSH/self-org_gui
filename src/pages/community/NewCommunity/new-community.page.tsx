@@ -320,7 +320,7 @@ export function NewCommunity() {
                     </Row>
                     <Form.List name="categories">
                         {(fields, {add, remove}) => (
-                            <>
+                            <div className="form-list-input">
                                 {fields.map(({key, name, ...restField}) => (
                                     <Space
                                         key={key}
@@ -361,7 +361,7 @@ export function NewCommunity() {
                                         />
                                     </Tooltip>
                                 </Form.Item>
-                            </>
+                            </div>
                         )}
                     </Form.List>
                 </Form>

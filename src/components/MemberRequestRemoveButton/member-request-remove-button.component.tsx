@@ -49,10 +49,10 @@ export function MemberRequestRemoveButton(props: any) {
             <Popconfirm
                 placement="topLeft"
                 title="Удаление заявки на членство"
-                description="Вы точно хотите удалить эту заявку?"
+                description="Вы точно хотите удалить эту заявку и покинуть сообщество?"
                 okText="Удалить"
                 cancelText="Отменить"
-                icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                icon={<QuestionCircleOutlined style={{ fontSize: 18 }} />}
                 onConfirm={removeMemberRequest}
             >
                 <Button

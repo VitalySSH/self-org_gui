@@ -1,6 +1,6 @@
 import { Flex, Image } from "antd";
 
-export function Challenges(props: any) {
+export function MyDelegates(props: any) {
 
     return (
         <div className="content-container">

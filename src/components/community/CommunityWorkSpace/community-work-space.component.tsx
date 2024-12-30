@@ -9,6 +9,7 @@ import {
     Disputes,
     Challenges,
     NewRule,
+    MyDelegates, SubCommunities,
 } from "src/pages";
 import { AuthHeaderIcons, SiderBar } from "src/components";
 import { CrudDataSourceService } from "src/services";
@@ -66,8 +67,14 @@ export function CommunityWorkSpace() {
                         <Route path='summary' element={
                             <CommunitySummary communityId={id} />
                         } />
+                        <Route path='sub-communities' element={
+                            <SubCommunities communityId={id} />
+                        } />
                         <Route path='my-settings' element={
                             <MyCommunitySettings communityId={id} />
+                        } />
+                        <Route path='my-delegates' element={
+                            <MyDelegates communityId={id} />
                         } />
                         <Route path='rules' element={
                             <Rules communityId={id} />

@@ -503,8 +503,10 @@
   }
 }
 
-:where(.css-dev-only-do-not-override-kea0yc).ant-input {
-  min-width: 400px;
+.form-list-input {
+  :where(.css-dev-only-do-not-override-kea0yc).ant-input {
+    min-width: 400px;
+  }
 }
 
 :where(.css-dev-only-do-not-override-kea0yc).ant-form-item .ant-form-item-label > label {
@@ -512,6 +514,7 @@
 }
 
 @media (max-width: $breakpoint-lg) {
+
   .ant-layout-header {
     padding: 10px 15px;
   }
@@ -522,12 +525,20 @@
 }
 
 @media (max-width: $breakpoint-md) {
+
+  .form-list-input {
+    :where(.css-dev-only-do-not-override-kea0yc).ant-input {
+      min-width: 300px;
+    }
+  }
+
   .ant-layout-header {
     padding: 4px 6px;
   }
 }
 
 @media (max-width: $breakpoint-sm) {
+
   .ant-tabs {
     .ant-tabs-nav {
       flex-wrap: wrap;

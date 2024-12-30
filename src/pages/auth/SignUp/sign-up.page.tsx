@@ -1,4 +1,4 @@
-import { Button, Card, Checkbox, Form, Image, Input, Space } from 'antd';
+import { Button, Checkbox, Form, Image, Input } from 'antd';
 import { LockOutlined, UserAddOutlined } from '@ant-design/icons';
 
 import { useNavigate } from "react-router-dom";
@@ -37,24 +37,18 @@ export function SignUp(){
     }
 
     return (
-        <Space
-            className="auth-space"
-        >
-            <Card style={{ maxWidth: 500 }}>
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    marginBottom: 30
-                }}>
-                    <Image
-                        height={60}
-                        preview={false}
-                        src="/utu_logo.png"
-                        onClick={onClickImage}
-                        style={{cursor: "pointer"}}
-                    >
-                    </Image>
-                </div>
+        <div className="auth-space">
+            <div style={{marginBottom: 24}}>
+                <Image
+                    height={50}
+                    preview={false}
+                    src="/utu_logo.png"
+                    onClick={onClickImage}
+                    style={{cursor: "pointer"}}
+                >
+                </Image>
+            </div>
+            <div style={{maxWidth: 500}}>
                 <Form
                     name='registration'
                     className='registration-form'
@@ -63,7 +57,7 @@ export function SignUp(){
                     <Form.Item
                         name='firstname'
                         label='Имя'
-                        labelCol={{ span: 24 }}
+                        labelCol={{span: 24}}
                         rules={[
                             {
                                 required: true,
@@ -73,13 +67,14 @@ export function SignUp(){
                         hasFeedback
                     >
                         <Input
-                            prefix={<UserAddOutlined className='site-form-item-icon'/>}
+                            prefix={<UserAddOutlined
+                                className='site-form-item-icon'/>}
                         />
                     </Form.Item>
                     <Form.Item
                         name='surname'
                         label='Фамилия'
-                        labelCol={{ span: 24 }}
+                        labelCol={{span: 24}}
                         rules={[
                             {
                                 required: true,
@@ -89,20 +84,21 @@ export function SignUp(){
                         hasFeedback
                     >
                         <Input
-                            prefix={<UserAddOutlined className='site-form-item-icon'/>}
+                            prefix={<UserAddOutlined
+                                className='site-form-item-icon'/>}
                         />
                     </Form.Item>
                     <Form.Item
                         name='about_me'
                         label='Обо мне'
-                        labelCol={{ span: 24 }}
+                        labelCol={{span: 24}}
                     >
-                        <TextArea />
+                        <TextArea/>
                     </Form.Item>
                     <Form.Item
                         name='email'
                         label='Электронная почта'
-                        labelCol={{ span: 24 }}
+                        labelCol={{span: 24}}
                         rules={[
                             {
                                 required: true,
@@ -116,13 +112,14 @@ export function SignUp(){
                         hasFeedback
                     >
                         <Input
-                            prefix={<UserAddOutlined className='site-form-item-icon'/>}
+                            prefix={<UserAddOutlined
+                                className='site-form-item-icon'/>}
                         />
                     </Form.Item>
                     <Form.Item
                         name='password'
                         label='Пароль'
-                        labelCol={{ span: 24 }}
+                        labelCol={{span: 24}}
                         rules={[
                             {
                                 required: true,
@@ -139,7 +136,8 @@ export function SignUp(){
                         hasFeedback
                     >
                         <Input.Password
-                            prefix={<LockOutlined className='site-form-item-icon'/>}
+                            prefix={<LockOutlined
+                                className='site-form-item-icon'/>}
                             type='password'
                             minLength={8}
                         />
@@ -147,7 +145,7 @@ export function SignUp(){
                     <Form.Item
                         name='confirm_password'
                         label='Подтверждение пароля'
-                        labelCol={{ span: 24 }}
+                        labelCol={{span: 24}}
                         dependencies={['password']}
                         rules={[
                             {
@@ -169,7 +167,8 @@ export function SignUp(){
                         hasFeedback
                     >
                         <Input.Password
-                            prefix={<LockOutlined className='site-form-item-icon'/>}
+                            prefix={<LockOutlined
+                                className='site-form-item-icon'/>}
                             type='password'
                             minLength={8}
                         />
@@ -187,7 +186,8 @@ export function SignUp(){
                             noStyle>
                             <Checkbox>
                                 {" "}
-                                Согласен с <a href='#'>условиями использования</a>
+                                Согласен с <a href='#'>условиями
+                                использования</a>
                             </Checkbox>
                         </Form.Item>
                     </Form.Item>
@@ -202,7 +202,7 @@ export function SignUp(){
                         </Button>
                     </Form.Item>
                 </Form>
-            </Card>
-        </Space>
+            </div>
+        </div>
     );
 }

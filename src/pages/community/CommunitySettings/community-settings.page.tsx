@@ -94,8 +94,8 @@ export function CommunitySettings(props: any) {
                     name='community-settings'
                     form={form}
                 >
-                    <Row gutter={16}>
-                        <Col xs={24} sm={12}>
+                    <Row gutter={[16, 16]}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
                             <Form.Item
                                 name='name'
                                 label='Наименование'
@@ -104,25 +104,18 @@ export function CommunitySettings(props: any) {
                                 <Input readOnly />
                             </Form.Item>
                         </Col>
-                        <Col xs={24} sm={12}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
                             <Form.Item
-                                name='creator'
-                                label='Инициатор сообщества'
+                                name='description'
+                                label='Описание'
                                 labelCol={{ span: 24 }}
                             >
-                                <Input readOnly />
+                                <TextArea readOnly rows={2} />
                             </Form.Item>
                         </Col>
                     </Row>
-                    <Form.Item
-                        name='description'
-                        label='Описание'
-                        labelCol={{ span: 24 }}
-                    >
-                        <TextArea readOnly rows={2} />
-                    </Form.Item>
-                    <Row gutter={16}>
-                        <Col xs={24} sm={12}>
+                    <Row gutter={[16, 16]}>
+                        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                             <Form.Item
                                 name='quorum'
                                 label={ QuorumLabel }
@@ -135,7 +128,7 @@ export function CommunitySettings(props: any) {
                                 />
                             </Form.Item>
                         </Col>
-                        <Col xs={24} sm={12}>
+                        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                             <Form.Item
                                 name='vote'
                                 label={ VoteLabel }
@@ -148,7 +141,7 @@ export function CommunitySettings(props: any) {
                                 />
                             </Form.Item>
                         </Col>
-                        <Col xs={24} sm={12}>
+                        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                             <Form.Item
                                 name='significant_minority'
                                 label={ SignificantMinorityLabel }
@@ -161,7 +154,7 @@ export function CommunitySettings(props: any) {
                                 />
                             </Form.Item>
                         </Col>
-                        <Col xs={24} sm={12}>
+                        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                             <Form.Item
                                 name='is_secret_ballot'
                                 label={ IsSecretBallotLabel }
@@ -175,7 +168,7 @@ export function CommunitySettings(props: any) {
                                 />
                             </Form.Item>
                         </Col>
-                        <Col xs={24} sm={12}>
+                        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                             <Form.Item
                                 name='is_can_offer'
                                 label='Оказываем услуги другим сообществам?'
@@ -189,7 +182,7 @@ export function CommunitySettings(props: any) {
                                 />
                             </Form.Item>
                         </Col>
-                        <Col xs={24} sm={12}>
+                        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                             <Form.Item
                                 name='is_minority_not_participate'
                                 label={ IsMinorityNotParticipateLabel }
@@ -204,19 +197,32 @@ export function CommunitySettings(props: any) {
                             </Form.Item>
                         </Col>
                     </Row>
-                    <Form.Item
-                        name='categories'
-                        label='Категории'
-                        labelCol={{ span: 24 }}
-                    >
-                        <Select
-                            mode="multiple"
-                            suffixIcon={null}
-                            open={false}
-                            removeIcon={null}
-                        >
-                        </Select>
-                    </Form.Item>
+                    <Row gutter={[16, 16]}>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
+                            <Form.Item
+                                name='categories'
+                                label='Категории'
+                                labelCol={{ span: 24 }}
+                            >
+                                <Select
+                                    mode="multiple"
+                                    suffixIcon={null}
+                                    open={false}
+                                    removeIcon={null}
+                                >
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
+                            <Form.Item
+                                name='creator'
+                                label='Инициатор сообщества'
+                                labelCol={{ span: 24 }}
+                            >
+                                <Input readOnly />
+                            </Form.Item>
+                        </Col>
+                    </Row>
                 </Form>
             </Spin>
     );

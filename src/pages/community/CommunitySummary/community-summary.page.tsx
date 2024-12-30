@@ -2,7 +2,8 @@ import { Layout, Tabs } from "antd";
 import {
     CommunitySettings,
     CommonAddMemberRequests,
-    ParameterStatistics
+    ParameterStatistics,
+    CommonSubCommunities
 } from "src/pages";
 
 export function CommunitySummary(props: any) {
@@ -18,7 +19,7 @@ export function CommunitySummary(props: any) {
         {
             label: 'Внутренние сообщества',
             key: '2',
-            children: <ParameterStatistics communityId={communityId} />,
+            children: <CommonSubCommunities communityId={communityId} />,
         },
         {
             label: 'Статистика параметров',

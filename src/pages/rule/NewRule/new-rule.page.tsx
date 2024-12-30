@@ -2,25 +2,24 @@ import {
     Button,
     Form,
     Input,
-    Layout,
     message,
-    Row,
     Space,
     Switch,
-    Typography
+    Tooltip,
 } from "antd";
 import {
     MinusCircleOutlined,
     PlusOutlined,
     CheckOutlined,
     CloseOutlined,
+    QuestionCircleOutlined,
 } from "@ant-design/icons";
 import TextArea from "antd/lib/input/TextArea";
 import {
     CreatingRuleInterface,
     RuleFormInterface,
 } from "src/interfaces";
-import {CrudDataSourceService, RuleAoService} from "src/services";
+import { CrudDataSourceService, RuleAoService } from "src/services";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -101,7 +100,15 @@ export function NewRule(props: any) {
         <>
             <Form.Item
                 name='is_multi_select'
-                label={ IsMultiSelectLabel }
+                label={
+                    <span>
+                      {IsMultiSelectLabel}&nbsp;
+                        <Tooltip
+                            title="Включите эту опцию, если при голосовании возможен выбор нескольких вариантов ответов.">
+                            <QuestionCircleOutlined/>
+                        </Tooltip>
+                    </span>
+                }
                 labelCol={{ span: 24 }}
                 valuePropName="checked"
             >
@@ -112,16 +119,20 @@ export function NewRule(props: any) {
             </Form.Item>
             <Form.List name="extra_options">
                 {(fields, { add, remove }) => (
-                    <>
-                        {fields.map(({ key, name, ...restField }) => (
+                    <div className="form-list-input">
+                        {fields.map(({key, name, ...restField}) => (
                             <Space
                                 key={key}
-                                style={{ display: 'flex', marginBottom: 8, width: '100%' }}
+                                style={{
+                                    display: 'flex',
+                                    marginBottom: 8,
+                                    width: '100%'
+                                }}
                                 align="baseline"
                             >
                                 <Form.Item
                                     {...restField}
-                                    labelCol={{ span: 24 }}
+                                    labelCol={{span: 24}}
                                     name={[name, 'name']}
                                     rules={
                                         [
@@ -133,29 +144,34 @@ export function NewRule(props: any) {
                                     }
                                     hasFeedback
                                 >
-                                    <Input placeholder="Параметр" />
+                                    <Input placeholder="Параметр"/>
                                 </Form.Item>
                                 <MinusCircleOutlined
-                                    onClick={() => remove(name)} />
+                                    onClick={() => remove(name)}/>
                             </Space>
                         ))}
                         <Form.Item>
                             <Button
                                 type="dashed"
                                 onClick={() => add()}
-                                icon={<PlusOutlined />}
+                                icon={<PlusOutlined/>}
                             >
                                 Добавить параметр
                             </Button>
                         </Form.Item>
-                    </>
+                    </div>
                 )}
             </Form.List>
         </>
     );
 
-    const onFinish = (formData: RuleFormInterface) => {
+    const onCancel = () => {
+        navigate(-1);
+    }
+
+    const onFinish = () => {
         setButtonLoading(true);
+        const formData: RuleFormInterface = form.getFieldsValue();
         if (formData.question[formData.question.length - 1] !== '?') {
             formData.question += '?';
         }
@@ -181,128 +197,170 @@ export function NewRule(props: any) {
     }
 
     return (
-        <Layout
-            style={{ height: "100%", overflowY: "auto" }}
-        >
-            {contextHolder}
-            <Space
-                direction="vertical"
-            >
-                <Typography.Title
-                    level={3}
-                    style={{ textAlign: "center" }}
-                >
+        <>
+            <div className="form-container">
+                {contextHolder}
+                <div className="form-header">
                     Новое правило
-                </Typography.Title>
-                <Row justify="center" align="middle">
-                    <Form
-                        form={form}
-                        name='new-rule'
-                        onFinish={onFinish}
-                        style={{ width: '40%', justifyContent: "center"}}
-                        onFieldsChange={handleFormChange}
-                        initialValues={{
-                            is_extra_options: false,
-                            is_multi_select: false,
-                        }}
+                </div>
+                <Form
+                    form={form}
+                    name='new-rule'
+                    onFieldsChange={handleFormChange}
+                    initialValues={{
+                        is_extra_options: false,
+                        is_multi_select: false,
+                    }}
+                >
+                    <Form.Item
+                        name='title'
+                        label={
+                            <span>
+                              Заголовок&nbsp;
+                                <Tooltip
+                                    title="Введите текст, который будет передавать суть вашего правила. Максимум 140 символов.">
+                                <QuestionCircleOutlined/>
+                               </Tooltip>
+                            </span>
+                        }
+                        labelCol={{span: 24}}
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Пожалуйста, укажите заголовок для правила',
+                            },
+                            {
+                                max: 140,
+                                message: 'Текст заголовка не должен привышать 140 символов',
+                            },
+                        ]}
+                        hasFeedback
                     >
-                        <Form.Item
-                            name='title'
-                            label='Заголовок'
-                            labelCol={{ span: 24 }}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Пожалуйста, укажите заголовок для правила',
-                                },
-                                {
-                                    max: 140,
-                                    message: 'Текст заголовка не должен привышать 140 символов',
-                                },
-                            ]}
-                            hasFeedback
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name='question'
-                            label='Вопрос для голосования'
-                            labelCol={{ span: 24 }}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Пожалуйста, укажите вопрос, на которой должны ответить при голосовании',
-                                },
-                                {
-                                    max: 140,
-                                    message: 'Текст вопроса не должен привышать 140 символов',
-                                },
-                            ]}
-                            hasFeedback
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name='content'
-                            label='Описание правила'
-                            labelCol={{ span: 24 }}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Пожалуйста, подробно опишите цель и содержание правила',
-                                },
-                            ]}
-                            hasFeedback
-                        >
-                            <TextArea rows={10} />
-                        </Form.Item>
-                        <Form.Item
-                            name='category'
-                            label={CategoryLabel}
-                            labelCol={{ span: 24 }}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Пожалуйста, выберите категорию',
-                                },
-                            ]}
-                            hasFeedback
-                        >
-                            <CustomSelect
-                                fieldService={categoryService}
-                                requestOptions={getCategories}
-                                onChange={onCustomSelectChange}
-                                formField="category"
-                                bindLabel="name"
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name='is_extra_options'
-                            label={ IsExtraOptionsLabel }
-                            labelCol={{ span: 24 }}
-                            valuePropName="checked"
-                        >
-                            <Switch
-                                checkedChildren={<CheckOutlined />}
-                                unCheckedChildren={<CloseOutlined />}
-                            />
-                        </Form.Item>
-                        {isExtraOptions && extraOptions}
-                        <Form.Item>
-                            <Button
-                                type='primary'
-                                htmlType='submit'
-                                loading={buttonLoading}
-                                disabled={disabled}
-                                block
-                            >
-                                Создать правило
-                            </Button>
-                        </Form.Item>
-                    </Form>
-                </Row>
-            </Space>
-        </Layout>
+                        <Input/>
+                    </Form.Item>
+                    <Form.Item
+                        name='question'
+                        label={
+                            <span>
+                              Вопрос для голосования&nbsp;
+                                <Tooltip
+                                    title="Сформулируйте вопрос, на который другие члены сообщества будут отвечать на голосовании. Максимум 140 символов.">
+                                <QuestionCircleOutlined/>
+                               </Tooltip>
+                            </span>
+                        }
+                        labelCol={{span: 24}}
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Пожалуйста, укажите вопрос, на которой должны ответить при голосовании',
+                            },
+                            {
+                                max: 140,
+                                message: 'Текст вопроса не должен привышать 140 символов',
+                            },
+                        ]}
+                        hasFeedback
+                    >
+                        <Input/>
+                    </Form.Item>
+                    <Form.Item
+                        name='content'
+                        label={
+                            <span>
+                              Описание правила&nbsp;
+                                <Tooltip
+                                    title="Расскажите подробно суть вашего правила, с какой целью оно вводится и какие последствия вы предлагаете, в случае нарушения правила. Максимум 1 000 символов.">
+                                <QuestionCircleOutlined/>
+                               </Tooltip>
+                            </span>
+                        }
+                        labelCol={{span: 24}}
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Пожалуйста, подробно опишите цель и содержание правила',
+                            },
+                            {
+                                max: 140,
+                                message: 'Текст описания правиа не должен привышать 1000 символов',
+                            },
+                        ]}
+                        hasFeedback
+                    >
+                        <TextArea rows={5}/>
+                    </Form.Item>
+                    <Form.Item
+                        name='category'
+                        label={
+                            <span>
+                              {CategoryLabel}&nbsp;
+                                <Tooltip
+                                    title="Укажите категорию для вашего правила, чтобы обеспечить структурирование и облегчить поиск правил.">
+                                <QuestionCircleOutlined/>
+                               </Tooltip>
+                            </span>
+                        }
+                        labelCol={{span: 24}}
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Пожалуйста, выберите категорию',
+                            },
+                        ]}
+                        hasFeedback
+                    >
+                        <CustomSelect
+                            fieldService={categoryService}
+                            requestOptions={getCategories}
+                            onChange={onCustomSelectChange}
+                            formField="category"
+                            bindLabel="name"
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        name='is_extra_options'
+                        label={
+                            <span>
+                              {IsExtraOptionsLabel}&nbsp;
+                                <Tooltip
+                                    title="Включите эту опцию, если ответ на ваш вопрос предполагает более широкие варианты, выходящие за рамки стандартных Да или Нет.">
+                                <QuestionCircleOutlined/>
+                               </Tooltip>
+                            </span>
+                        }
+                        labelCol={{span: 24}}
+                        valuePropName="checked"
+                    >
+                        <Switch
+                            checkedChildren={<CheckOutlined/>}
+                            unCheckedChildren={<CloseOutlined/>}
+                        />
+                    </Form.Item>
+                    {isExtraOptions && extraOptions}
+                </Form>
+            </div>
+            <div className="toolbar">
+                <Button
+                    type='primary'
+                    htmlType='submit'
+                    loading={buttonLoading}
+                    onClick={onFinish}
+                    disabled={disabled}
+                    className="toolbar-button"
+                >
+                    Создать правило
+                </Button>
+                <Button
+                    type='primary'
+                    htmlType='button'
+                    onClick={onCancel}
+                    className="toolbar-button"
+                >
+                    Отменить
+                </Button>
+            </div>
+        </>
     );
 }
 

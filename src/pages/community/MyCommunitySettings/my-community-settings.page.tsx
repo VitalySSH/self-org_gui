@@ -57,6 +57,8 @@ export function MyCommunitySettings(props: any) {
         useState({} as UserCommunitySettingsModel);
     const [buttonLoading, setButtonLoading] =
         useState(false);
+    const [disabled, setDisabled] =
+        useState(false);
 
     const communityId = props?.communityId;
     const settingsService =
@@ -184,6 +186,17 @@ export function MyCommunitySettings(props: any) {
         form.setFieldValue(fieldName, value);
     }
 
+    const handleFormChange = () => {
+        const formData = form.getFieldsValue();
+        const isValid =
+            Boolean(formData.name) &&
+            Boolean(formData.description) &&
+            Boolean(formData.quorum) &&
+            Boolean(formData.significant_minority) &&
+            Boolean(formData.vote);
+        setDisabled(!isValid);
+    }
+
     const onFinish = () => {
         setButtonLoading(true);
         const formData: CommunitySettingsInterface = form.getFieldsValue();
@@ -218,10 +231,11 @@ export function MyCommunitySettings(props: any) {
                     <Form
                         name='my-community-settings'
                         form={form}
+                        onFieldsChange={handleFormChange}
                         preserve={true}
                     >
-                        <Row gutter={16}>
-                            <Col xs={24} sm={12}>
+                        <Row gutter={[16, 16]}>
+                            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
                                 <Form.Item
                                     name='name'
                                     label={
@@ -253,41 +267,42 @@ export function MyCommunitySettings(props: any) {
                                     />
                                 </Form.Item>
                             </Col>
-                            <Col xs={24} sm={12}/>
-                        </Row>
-                        <Form.Item
-                            name='description'
-                            label={
-                                <span>
+                            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
+                                <Form.Item
+                                    name='description'
+                                    label={
+                                        <span>
                                     {CommunityDescriptionLabel}&nbsp;
-                                    <Tooltip
-                                        title="Выберите из доступных вариантов наилучшее описание сообщества или предложите своё.">
+                                            <Tooltip
+                                                title="Выберите из доступных вариантов наилучшее описание сообщества или предложите своё.">
                                         <QuestionCircleOutlined/>
                                     </Tooltip>
                                 </span>
-                            }
-                            labelCol={{span: 24}}
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Пожалуйста, выберите описание сообщества',
-                                },
-                            ]}
-                        >
-                            <CustomSelect
-                                fieldService={descriptionService}
-                                requestOptions={getCommunityDescriptions}
-                                onChange={onCustomSelectChange}
-                                value={settings?.description}
-                                formField="description"
-                                bindLabel="value"
-                                addOwnValue={true}
-                                ownFieldTextarea={true}
-                                ownValuePlaceholder="Введите своё описание"
-                            />
-                        </Form.Item>
-                        <Row gutter={16}>
-                            <Col xs={24} sm={12}>
+                                    }
+                                    labelCol={{span: 24}}
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Пожалуйста, выберите описание сообщества',
+                                        },
+                                    ]}
+                                >
+                                    <CustomSelect
+                                        fieldService={descriptionService}
+                                        requestOptions={getCommunityDescriptions}
+                                        onChange={onCustomSelectChange}
+                                        value={settings?.description}
+                                        formField="description"
+                                        bindLabel="value"
+                                        addOwnValue={true}
+                                        ownFieldTextarea={true}
+                                        ownValuePlaceholder="Введите своё описание"
+                                    />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row gutter={[16, 16]}>
+                            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                                 <Form.Item
                                     name='quorum'
                                     label={
@@ -319,7 +334,7 @@ export function MyCommunitySettings(props: any) {
                                     />
                                 </Form.Item>
                             </Col>
-                            <Col xs={24} sm={12}>
+                            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                                 <Form.Item
                                     name='vote'
                                     label={
@@ -351,7 +366,7 @@ export function MyCommunitySettings(props: any) {
                                     />
                                 </Form.Item>
                             </Col>
-                            <Col xs={24} sm={12}>
+                            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                                 <Form.Item
                                     name='significant_minority'
                                     label={
@@ -383,7 +398,7 @@ export function MyCommunitySettings(props: any) {
                                     />
                                 </Form.Item>
                             </Col>
-                            <Col xs={24} sm={12}>
+                            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                                 <Form.Item
                                     name='is_secret_ballot'
                                     label={IsSecretBallotLabel}
@@ -411,7 +426,7 @@ export function MyCommunitySettings(props: any) {
                                     />
                                 </Form.Item>
                             </Col>
-                            <Col xs={24} sm={12}>
+                            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                                 <Form.Item
                                     name='is_minority_not_participate'
                                     label={
@@ -432,7 +447,7 @@ export function MyCommunitySettings(props: any) {
                                     />
                                 </Form.Item>
                             </Col>
-                            <Col xs={24} sm={12}>
+                            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                                 <Form.Item
                                     name='is_default_add_member'
                                     label={IsDefaultAddMemberLabel}
@@ -445,7 +460,7 @@ export function MyCommunitySettings(props: any) {
                                     />
                                 </Form.Item>
                             </Col>
-                            <Col xs={24} sm={12}>
+                            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                                 <Form.Item
                                     name='is_not_delegate'
                                     label={IsNotDelegateLabel}
@@ -459,31 +474,35 @@ export function MyCommunitySettings(props: any) {
                                 </Form.Item>
                             </Col>
                         </Row>
-                        <Form.Item
-                            name='categories'
-                            label={
-                                <span>
-                                    {CategoriesLabel}&nbsp;
-                                    <Tooltip
-                                        title="Категории - это темы или направления для голосований. Они помогают структурировать вопросы и выбирать делегатов.">
-                                            <QuestionCircleOutlined/>
-                                    </Tooltip>
-                                </span>
-                            }
-                            labelCol={{span: 24}}
-                        >
-                            <CustomSelect
-                                fieldService={categoryService}
-                                requestOptions={getCategories}
-                                onChange={onCustomSelectChange}
-                                value={settings?.categories}
-                                formField="categories"
-                                bindLabel="name"
-                                multiple={true}
-                                addOwnValue={true}
-                                ownValuePlaceholder="Введите свою категорию"
-                            />
-                        </Form.Item>
+                        <Row gutter={[16, 16]}>
+                            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
+                                <Form.Item
+                                    name='categories'
+                                    label={
+                                        <span>
+                                            {CategoriesLabel}&nbsp;
+                                            <Tooltip
+                                                title="Категории - это темы или направления для голосований. Они помогают структурировать вопросы и выбирать делегатов.">
+                                                    <QuestionCircleOutlined/>
+                                            </Tooltip>
+                                        </span>
+                                    }
+                                    labelCol={{span: 24}}
+                                >
+                                    <CustomSelect
+                                        fieldService={categoryService}
+                                        requestOptions={getCategories}
+                                        onChange={onCustomSelectChange}
+                                        value={settings?.categories}
+                                        formField="categories"
+                                        bindLabel="name"
+                                        multiple={true}
+                                        addOwnValue={true}
+                                        ownValuePlaceholder="Введите свою категорию"
+                                    />
+                                </Form.Item>
+                            </Col>
+                        </Row>
                     </Form>
                 </Spin>
             </div>
@@ -493,6 +512,7 @@ export function MyCommunitySettings(props: any) {
                     htmlType='submit'
                     loading={buttonLoading}
                     onClick={onFinish}
+                    disabled={disabled}
                     className="toolbar-button"
                 >
                     Сохранить

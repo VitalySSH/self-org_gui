@@ -11,10 +11,18 @@ export class RequestMemberAoService
         super(RequestMemberModel, AOApiUrl);
     }
 
-    async votesInPercen(id: string) {
-        const url = `/${this.model.entityName}/votes_in_percen/${id}`;
+    async votesInPercen(requestId: string) {
+        const url =
+            `/${this.model.entityName}/votes_in_percen/${requestId}`;
 
         return this.http.get<SettingsStatisticsInterface[]>(url);
+    }
+
+    async addNewMember(requestId: string) {
+        const url =
+            `/${this.model.entityName}/add_new_member/${requestId}`;
+
+        return this.http.post<void>(url);
     }
 
 }
