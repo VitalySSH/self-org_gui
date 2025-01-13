@@ -31,7 +31,7 @@ import {
 } from "src/interfaces";
 import { useAuth } from "src/hooks";
 import { useNavigate } from "react-router-dom";
-import { CustomSelect } from "src/components";
+import { CommunitySelect, CustomSelect } from "src/components";
 import {
     CategoriesLabel,
     CommunityDescriptionLabel,
@@ -104,7 +104,9 @@ export function MyCommunitySettings(props: any) {
                     }
                 ],
                 undefined, undefined,
-                ['user', 'name', 'description', 'categories.status']
+                ['user', 'name', 'description', 'categories.status',
+                    'sub_communities_settings.name',
+                    'sub_communities_settings.description']
             ).then(communitySettings => {
                 if (communitySettings.length) {
                     const settingsInst =
@@ -186,6 +188,10 @@ export function MyCommunitySettings(props: any) {
         form.setFieldValue(fieldName, value);
     }
 
+    const onCommunitySelectChange = (value: any) => {
+        form.setFieldValue('sub_communities_settings', value);
+    }
+
     const handleFormChange = () => {
         const formData = form.getFieldsValue();
         const isValid =
@@ -202,7 +208,7 @@ export function MyCommunitySettings(props: any) {
         const formData: CommunitySettingsInterface = form.getFieldsValue();
         const userSettingsAoService =
             new UserSettingsAoService();
-        userSettingsAoService.saveSettings(
+        userSettingsAoService.saveSettingsOnForm(
             settings,
             formData,
             communityId,
@@ -499,6 +505,30 @@ export function MyCommunitySettings(props: any) {
                                         multiple={true}
                                         addOwnValue={true}
                                         ownValuePlaceholder="Введите свою категорию"
+                                    />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row gutter={[16, 16]}>
+                            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
+                                <Form.Item
+                                    name='sub_communities_settings'
+                                    label={
+                                        <span>
+                                            Внутренние сообщетсва&nbsp;
+                                            <Tooltip
+                                                title="Внутренние сообщества отображают границы структурных подразделений основного сообщества.">
+                                                    <QuestionCircleOutlined/>
+                                            </Tooltip>
+                                        </span>
+                                    }
+                                    labelCol={{span: 24}}
+                                >
+                                    <CommunitySelect
+                                        parentCommunityId={communityId}
+                                        onChange={onCommunitySelectChange}
+                                        values={settings?.sub_communities_settings}
+                                        readonly={false}
                                     />
                                 </Form.Item>
                             </Col>

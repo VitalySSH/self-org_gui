@@ -280,6 +280,8 @@
 }
 
 .ant-modal {
+  width: 600px !important;
+
   .ant-modal-title {
     background-color: $secondary-color;
   }
@@ -596,4 +598,15 @@
       }
     }
   }
+
+  .form-list-input {
+    :where(.css-dev-only-do-not-override-kea0yc).ant-input {
+      min-width: 200px;
+    }
+  }
+
+  .ant-modal {
+    width: 400px !important;
+  }
+
 }

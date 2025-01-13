@@ -31,7 +31,7 @@ export function MemberRequestVotesButton(props: any) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const getVotes = () => {
         if (votes === undefined && tableRow?.key) {
-            requestMemberAoService.votesInPercen(tableRow.key)
+            requestMemberAoService.votesInPercent(tableRow.key)
                 .then(r => {
                     setVotes(r.data)
                 }).catch((error) => errorInfo(error));

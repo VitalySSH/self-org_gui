@@ -24,5 +24,5 @@ export function SettingsStatistics(props: any) {
                 </List.Item>
             )}
         />
-    )
+    );
 }

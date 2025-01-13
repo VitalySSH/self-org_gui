@@ -17,6 +17,12 @@ export class CommunityModel extends ApiModel{
     @oneToMany('user')
     creator?: UserModel;
 
+    @oneToMany('community')
+    parent?: CommunityModel;
+
+    @attribute()
+    is_blocked?: boolean;
+
     @attribute()
     created?: Date;
 

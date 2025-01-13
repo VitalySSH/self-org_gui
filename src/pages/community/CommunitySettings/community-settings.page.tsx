@@ -216,7 +216,7 @@ export function CommunitySettings(props: any) {
                         <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
                             <Form.Item
                                 name='creator'
-                                label='Инициатор сообщества'
+                                label='Инициатор создания сообщества'
                                 labelCol={{ span: 24 }}
                             >
                                 <Input readOnly />

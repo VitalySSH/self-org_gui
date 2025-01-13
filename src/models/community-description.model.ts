@@ -6,7 +6,7 @@ import { modelConfig, attribute } from "src/annotations";
 })
 export class CommunityDescriptionModel extends ApiModel{
     @attribute()
-    value?: string;
+    value!: string;
 
     @attribute()
     creator_id?: string;

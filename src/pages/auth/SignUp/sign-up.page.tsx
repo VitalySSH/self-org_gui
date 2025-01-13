@@ -48,161 +48,160 @@ export function SignUp(){
                 >
                 </Image>
             </div>
-            <div style={{maxWidth: 500}}>
-                <Form
-                    name='registration'
-                    className='registration-form'
-                    onFinish={onFinish}
+            <Form
+                name='registration'
+                className='registration-form'
+                onFinish={onFinish}
+                style={{ width: 500 }}
+            >
+                <Form.Item
+                    name='firstname'
+                    label='Имя'
+                    labelCol={{span: 24}}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Пожалуйста, введите ваше имя',
+                        },
+                    ]}
+                    hasFeedback
                 >
-                    <Form.Item
-                        name='firstname'
-                        label='Имя'
-                        labelCol={{span: 24}}
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Пожалуйста, введите ваше имя',
-                            },
-                        ]}
-                        hasFeedback
-                    >
-                        <Input
-                            prefix={<UserAddOutlined
-                                className='site-form-item-icon'/>}
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        name='surname'
-                        label='Фамилия'
-                        labelCol={{span: 24}}
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Пожалуйста, введите вашу фамилию',
-                            },
-                        ]}
-                        hasFeedback
-                    >
-                        <Input
-                            prefix={<UserAddOutlined
-                                className='site-form-item-icon'/>}
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        name='about_me'
-                        label='Обо мне'
-                        labelCol={{span: 24}}
-                    >
-                        <TextArea/>
-                    </Form.Item>
-                    <Form.Item
-                        name='email'
-                        label='Электронная почта'
-                        labelCol={{span: 24}}
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Пожалуйста, введите электронную почту',
-                            },
-                            {
-                                type: 'email',
-                                message: 'Пожалуйста, введите корректный электронной почты',
-                            }
-                        ]}
-                        hasFeedback
-                    >
-                        <Input
-                            prefix={<UserAddOutlined
-                                className='site-form-item-icon'/>}
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        name='password'
-                        label='Пароль'
-                        labelCol={{span: 24}}
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Пожалуйста, введите пароль',
-                            },
-                            {
-                                whitespace: false,
-                            },
-                            {
-                                pattern: /(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}/g,
-                                message: 'Пароль должен содержать латинские буквы (разного регистра), цифры и спецсимволы и быть не короче 8 символов',
-                            },
-                        ]}
-                        hasFeedback
-                    >
-                        <Input.Password
-                            prefix={<LockOutlined
-                                className='site-form-item-icon'/>}
-                            type='password'
-                            minLength={8}
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        name='confirm_password'
-                        label='Подтверждение пароля'
-                        labelCol={{span: 24}}
-                        dependencies={['password']}
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Пожалуйста, повторите пароль',
-                            },
-                            {
-                                whitespace: false,
-                            },
-                            ({getFieldValue}) => ({
-                                validator(_, value) {
-                                    if (!value || getFieldValue('password') === value) {
-                                        return Promise.resolve();
-                                    }
-                                    return Promise.reject('Введённые пароли не совпадают');
+                    <Input
+                        prefix={<UserAddOutlined
+                            className='site-form-item-icon'/>}
+                    />
+                </Form.Item>
+                <Form.Item
+                    name='surname'
+                    label='Фамилия'
+                    labelCol={{span: 24}}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Пожалуйста, введите вашу фамилию',
+                        },
+                    ]}
+                    hasFeedback
+                >
+                    <Input
+                        prefix={<UserAddOutlined
+                            className='site-form-item-icon'/>}
+                    />
+                </Form.Item>
+                <Form.Item
+                    name='about_me'
+                    label='Обо мне'
+                    labelCol={{span: 24}}
+                >
+                    <TextArea/>
+                </Form.Item>
+                <Form.Item
+                    name='email'
+                    label='Электронная почта'
+                    labelCol={{span: 24}}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Пожалуйста, введите электронную почту',
+                        },
+                        {
+                            type: 'email',
+                            message: 'Пожалуйста, введите корректный электронной почты',
+                        }
+                    ]}
+                    hasFeedback
+                >
+                    <Input
+                        prefix={<UserAddOutlined
+                            className='site-form-item-icon'/>}
+                    />
+                </Form.Item>
+                <Form.Item
+                    name='password'
+                    label='Пароль'
+                    labelCol={{span: 24}}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Пожалуйста, введите пароль',
+                        },
+                        {
+                            whitespace: false,
+                        },
+                        {
+                            pattern: /(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}/g,
+                            message: 'Пароль должен содержать латинские буквы (разного регистра), цифры и спецсимволы и быть не короче 8 символов',
+                        },
+                    ]}
+                    hasFeedback
+                >
+                    <Input.Password
+                        prefix={<LockOutlined
+                            className='site-form-item-icon'/>}
+                        type='password'
+                        minLength={8}
+                    />
+                </Form.Item>
+                <Form.Item
+                    name='confirm_password'
+                    label='Подтверждение пароля'
+                    labelCol={{span: 24}}
+                    dependencies={['password']}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Пожалуйста, повторите пароль',
+                        },
+                        {
+                            whitespace: false,
+                        },
+                        ({getFieldValue}) => ({
+                            validator(_, value) {
+                                if (!value || getFieldValue('password') === value) {
+                                    return Promise.resolve();
                                 }
-                            }),
+                                return Promise.reject('Введённые пароли не совпадают');
+                            }
+                        }),
+                    ]}
+                    hasFeedback
+                >
+                    <Input.Password
+                        prefix={<LockOutlined
+                            className='site-form-item-icon'/>}
+                        type='password'
+                        minLength={8}
+                    />
+                </Form.Item>
+                <Form.Item>
+                    <Form.Item
+                        name='agreement'
+                        valuePropName='checked'
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Необходимо согласиться с условиями использования',
+                            },
                         ]}
-                        hasFeedback
+                        noStyle>
+                        <Checkbox>
+                            {" "}
+                            Согласен с <a href='#'>условиями
+                            использования</a>
+                        </Checkbox>
+                    </Form.Item>
+                </Form.Item>
+                <Form.Item>
+                    <Button
+                        type='primary'
+                        htmlType='submit'
+                        className='registration-form-button'
+                        block
                     >
-                        <Input.Password
-                            prefix={<LockOutlined
-                                className='site-form-item-icon'/>}
-                            type='password'
-                            minLength={8}
-                        />
-                    </Form.Item>
-                    <Form.Item>
-                        <Form.Item
-                            name='agreement'
-                            valuePropName='checked'
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Необходимо согласиться с условиями использования',
-                                },
-                            ]}
-                            noStyle>
-                            <Checkbox>
-                                {" "}
-                                Согласен с <a href='#'>условиями
-                                использования</a>
-                            </Checkbox>
-                        </Form.Item>
-                    </Form.Item>
-                    <Form.Item>
-                        <Button
-                            type='primary'
-                            htmlType='submit'
-                            className='registration-form-button'
-                            block
-                        >
-                            Зарегистрироваться
-                        </Button>
-                    </Form.Item>
-                </Form>
-            </div>
+                        Зарегистрироваться
+                    </Button>
+                </Form.Item>
+            </Form>
         </div>
     );
 }

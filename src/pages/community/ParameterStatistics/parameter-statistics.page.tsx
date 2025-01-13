@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { CommunityAOService } from "src/services";
-import { SettingsInPercenInterface } from "src/interfaces";
+import { SettingsInPercentInterface } from "src/interfaces";
 import { Collapse, CollapseProps } from "antd";
 import { SettingsStatistics } from "src/components";
-import {IsMinorityNotParticipateLabel} from "src/consts";
+import { IsMinorityNotParticipateLabel } from "src/consts";
 
 
 export function ParameterStatistics(props: any) {
@@ -11,7 +11,7 @@ export function ParameterStatistics(props: any) {
     const [loading, setLoading] =
         useState(true);
     const [parameters, setParameters] =
-        useState({} as SettingsInPercenInterface);
+        useState({} as SettingsInPercentInterface);
 
     const communityId = props?.communityId;
     const communityService = new CommunityAOService();
@@ -19,12 +19,12 @@ export function ParameterStatistics(props: any) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const loadData = () => {
         if (loading) {
-            communityService.settingsInPercen(communityId)
+            communityService.settingsInPercent(communityId)
                 .then(resp => {
-                    setParameters(resp.data);
+                    setParameters(resp);
                 }).finally(() => {
-                setLoading(false);
-            });
+                    setLoading(false);
+                });
         }
     }
 
@@ -45,22 +45,27 @@ export function ParameterStatistics(props: any) {
         },
         {
             key: '3',
+            label: 'Внутренние сообщества',
+            children: <SettingsStatistics data={parameters.sub_communities} />,
+        },
+        {
+            key: '4',
             label: 'Категории',
             children: <SettingsStatistics data={parameters.categories} />,
         },
         {
-            key: '4',
+            key: '5',
             label: 'Тайное голосование?',
             children: <SettingsStatistics data={parameters.secret_ballot} />,
         },
         {
-            key: '5',
+            key: '6',
             label: IsMinorityNotParticipateLabel,
             children: <SettingsStatistics data={
                 parameters.minority_not_participate} />,
         },
         {
-            key: '6',
+            key: '7',
             label: 'Оказываем услуги другим сообществам?',
             children: <SettingsStatistics data={parameters.can_offer} />,
         },

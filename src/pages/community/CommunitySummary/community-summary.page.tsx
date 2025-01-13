@@ -3,7 +3,6 @@ import {
     CommunitySettings,
     CommonAddMemberRequests,
     ParameterStatistics,
-    CommonSubCommunities
 } from "src/pages";
 
 export function CommunitySummary(props: any) {
@@ -17,18 +16,13 @@ export function CommunitySummary(props: any) {
             children: <CommunitySettings communityId={communityId} />,
         },
         {
-            label: 'Внутренние сообщества',
-            key: '2',
-            children: <CommonSubCommunities communityId={communityId} />,
-        },
-        {
             label: 'Статистика параметров',
-            key: '3',
+            key: '2',
             children: <ParameterStatistics communityId={communityId} />,
         },
         {
             label: 'Заявки на вступление',
-            key: '4',
+            key: '3',
             children: <CommonAddMemberRequests communityId={communityId} />,
         }
     ];

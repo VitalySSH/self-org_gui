@@ -15,46 +15,52 @@ export class UserCommunitySettingsModel extends ApiModel{
     user?: UserModel;
 
     @attribute()
-    community_id?: string;
+    community_id!: string;
+
+    @attribute()
+    parent_community_id?: string;
 
     @oneToMany('community_name')
-    name?: CommunityNameModel;
+    name!: CommunityNameModel;
 
     @oneToMany('community_description')
-    description?: CommunityDescriptionModel;
+    description!: CommunityDescriptionModel;
 
     @attribute()
-    quorum?: number;
+    quorum!: number;
 
     @attribute()
-    vote?: number;
+    vote!: number;
 
     @attribute()
-    significant_minority?: number;
+    significant_minority!: number;
 
     @attribute()
-    is_secret_ballot?: boolean;
+    is_secret_ballot!: boolean;
 
     @attribute()
-    is_can_offer?: boolean;
+    is_can_offer!: boolean;
 
     @attribute()
-    is_minority_not_participate?: boolean;
+    is_minority_not_participate!: boolean;
 
     @manyToMany('category')
     categories?: CategoryModel[];
+
+    @manyToMany('user_community_settings')
+    sub_communities_settings?: UserCommunitySettingsModel[];
 
     @manyToMany('delegate_settings')
     delegate_settings?: DelegateSettingsModel[];
 
     @attribute()
-    is_not_delegate?: boolean;
+    is_not_delegate!: boolean;
 
     @attribute()
-    is_default_add_member?: boolean;
+    is_default_add_member!: boolean;
 
     @attribute()
-    is_blocked?: boolean;
+    is_blocked!: boolean;
 
     @manyToMany('request_member')
     adding_members?: RequestMemberModel[];

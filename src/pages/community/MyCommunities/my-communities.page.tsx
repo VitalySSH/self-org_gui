@@ -1,54 +1,22 @@
-import { Card, List } from "antd";
+import { List } from "antd";
 import { useEffect, useState } from "react";
-import { StopOutlined } from "@ant-design/icons";
 import {
     CommunityAOService,
 } from "src/services";
-import Meta from "antd/es/card/Meta";
-import { useNavigate } from "react-router-dom";
-import { AuthContextProvider, CommunityCard } from "src/interfaces";
+import { AuthContextProvider, CommunityCardInterface } from "src/interfaces";
+import { CommunityCard } from "src/components";
 import { useAuth } from "src/hooks";
 
 export function MyCommunities() {
 
-    const navigate = useNavigate();
     const authData: AuthContextProvider = useAuth();
 
     const [loading, setLoading] =
         useState(true);
     const [dataSource, setDataSource] =
-        useState([] as CommunityCard[]);
+        useState([] as CommunityCardInterface[]);
 
     const communityService = new CommunityAOService();
-
-    // FIXME: переделать на функционал оспаривания решения
-    const getActions = (item: CommunityCard) => {
-        if (item.isBlocked) {
-            return [
-                <div
-                    style={{
-                        display: "flex",
-                        color: "black",
-                        alignContent: "center",
-                        justifyContent: "center",
-                        cursor: "auto",
-                    }}
-                >
-                    <StopOutlined
-                        style={{ fontSize: 24 }}
-                        disabled
-                    />
-                    <span
-                        style={{
-                            marginLeft: 10
-                        }}
-                    >Вы заблокированы большинством голосов</span>
-                </div>
-            ];
-        } else {
-            return [];
-        }
-    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const loadData = () => {
@@ -61,7 +29,7 @@ export function MyCommunities() {
                         'main_settings.description',
                     ])
                 .then(data => {
-                    const communities: CommunityCard[] = [];
+                    const communities: CommunityCardInterface[] = [];
                     data.forEach(community => {
                         const settings =
                             (community.user_settings || [])
@@ -70,13 +38,14 @@ export function MyCommunities() {
                         const isBlocked =
                             settings.length ? settings[0].is_blocked : false;
                         const communityItem = {
-                            id: community.id || '',
+                            id: community.id,
                             title: community
                                 .main_settings?.name?.name || '',
                             description: community
                                 .main_settings?.description?.value || '',
                             members: (community.user_settings || []).length,
                             isBlocked: isBlocked,
+                            isMyCommunity: true,
                         };
                         communities.push(communityItem);
                     });
@@ -93,24 +62,21 @@ export function MyCommunities() {
         loadData();
     }, [loadData]);
 
-    const getOnClick = (item: CommunityCard) => {
-        const onClick = () => {
-            navigate(`/my-communities/${item.id}`);
-        }
-
-        return !item.isBlocked ? onClick : undefined;
-    }
-
-    const getCardStyle = (item: CommunityCard) => {
-        return !item.isBlocked ? { cursor: "pointer" } : {};
-    }
-
     return (
         <div className="communities-list">
             <div className="page-header">
                 Мои сообщества
             </div>
             <List
+                grid={{
+                    gutter: 16,
+                    xs: 1,
+                    sm: 1,
+                    md: 1,
+                    lg: 2,
+                    xl: 2,
+                    xxl: 3
+                }}
                 itemLayout="vertical"
                 dataSource={dataSource}
                 loading={loading}
@@ -120,21 +86,13 @@ export function MyCommunities() {
                     align: 'end'
                 } : false}
                 size="large"
-                renderItem={(item: CommunityCard) => (
+                renderItem={(item: CommunityCardInterface) => (
                     <List.Item>
-                        <Card
-                            onClick={getOnClick(item)}
-                            style={getCardStyle(item)}
-                            actions={getActions(item)}
-                        >
-                            <Meta
-                                title={item.title}
-                                description={item.description}
-                            />
-                            <div className="community-members">
-                                Участников: {item.members}
-                            </div>
-                        </Card>
+                        <CommunityCard
+                            key={item.id}
+                            item={item}
+                            actions={[]}
+                        />
                     </List.Item>
                 )}
             />

@@ -6,7 +6,6 @@ export * from './community/MyCommunitySettings/my-community-settings.page';
 export * from './community/CommunitySummary/community-summary.page';
 export * from './community/ParameterStatistics/parameter-statistics.page';
 export * from './community/SubCommunities/sub-communities.page';
-export * from './community/CommonSubCommunities/common-sub-communities.page';
 export * from './shared/NoMatchPage/no-match.page';
 export * from './shared/AboutPage/about.page';
 export * from './profile/MyProfile/my-profile.page';

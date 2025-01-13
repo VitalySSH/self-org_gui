@@ -2,9 +2,9 @@ import { List } from "antd";
 import { CrudDataSourceService } from "src/services";
 import { CommunityModel } from "src/models";
 import { useEffect, useState } from "react";
-import { AuthContextProvider, CommunityCard } from "src/interfaces";
+import { AuthContextProvider, CommunityCardInterface } from "src/interfaces";
 import { useAuth } from "src/hooks";
-import { AllCommunityCard } from "src/components";
+import { CommunityCard } from "src/components";
 
 
 export function AllCommunities() {
@@ -13,7 +13,7 @@ export function AllCommunities() {
     const [loading, setLoading] =
         useState(true);
     const [dataSource, setDataSource] =
-        useState([] as CommunityCard[]);
+        useState([] as CommunityCardInterface[]);
 
     const communityService =
         new CrudDataSourceService(CommunityModel);
@@ -22,7 +22,14 @@ export function AllCommunities() {
     const loadData = () => {
         if (loading) {
             communityService
-                .list(undefined, undefined, undefined,
+                .list([
+                    {
+                        field: 'parent_id',
+                        op: 'null',
+                        val: false,
+                    },
+                ],
+                undefined, undefined,
                 [
                     'user_settings.user',
                     'main_settings.name',
@@ -30,7 +37,7 @@ export function AllCommunities() {
                     'main_settings.adding_members.creator',
                 ])
                 .then(data => {
-                    const items: CommunityCard[] = [];
+                    const items: CommunityCardInterface[] = [];
                     data.forEach(community => {
                         const isMyCommunity =
                             (community.user_settings || [])
@@ -74,6 +81,15 @@ export function AllCommunities() {
                 Сообщества
             </div>
             <List
+                grid={{
+                    gutter: 16,
+                    xs: 1,
+                    sm: 1,
+                    md: 1,
+                    lg: 1,
+                    xl: 2,
+                    xxl: 2
+                }}
                 itemLayout="vertical"
                 dataSource={dataSource}
                 loading={loading}
@@ -83,9 +99,13 @@ export function AllCommunities() {
                     align: 'end'
                 } : false}
                 size="large"
-                renderItem={(item: CommunityCard) => (
+                renderItem={(item: CommunityCardInterface) => (
                     <List.Item>
-                        <AllCommunityCard key={item.id} item={item}/>
+                        <CommunityCard
+                            key={item.id}
+                            item={item}
+                            actions={[]}
+                        />
                     </List.Item>
                 )}
             />

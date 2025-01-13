@@ -1,5 +1,5 @@
-import { Layout } from "antd";
-import { Route, Routes, useParams } from "react-router-dom";
+import { Dropdown, Layout } from "antd";
+import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 import {
     AddMemberRequest,
     CommunitySummary,
@@ -9,12 +9,14 @@ import {
     Disputes,
     Challenges,
     NewRule,
-    MyDelegates, SubCommunities,
+    MyDelegates,
+    SubCommunities,
 } from "src/pages";
+import { DownOutlined } from '@ant-design/icons';
 import { AuthHeaderIcons, SiderBar } from "src/components";
-import { CrudDataSourceService } from "src/services";
-import { CommunityModel } from "src/models";
+import { CommunityAOService } from "src/services";
 import { useEffect, useState } from "react";
+import { CommunityWorkSpaceData } from "src/interfaces";
 
 
 const {
@@ -25,31 +27,43 @@ const {
 export function CommunityWorkSpace() {
 
     const { id } = useParams();
-    const [loading, setLoading] =
-        useState(true);
-    const [communityName, setCommunityName] =
-        useState('');
+    const navigate = useNavigate();
 
-    const communityService =
-        new CrudDataSourceService(CommunityModel);
+    const [
+        communityData,
+        setCommunityData
+    ] = useState(null as CommunityWorkSpaceData | null);
+
+    const communityService = new CommunityAOService();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const getCommunity = () => {
-        if (loading && id) {
-            communityService.get(id, ['main_settings.name'])
-                .then(communityInst => {
-                    const name =
-                        communityInst.main_settings?.name?.name || '';
-                    setCommunityName(name);
-                }).finally(() => {
-                setLoading(false);
-            });
+        if (id && communityData?.id !== id) {
+            communityService.getNameData(id)
+                .then(resp => {
+                    if (resp.is_blocked) navigate('/no-much-page');
+                    setCommunityData({
+                        id: id,
+                        name: resp.name,
+                        menuItems: resp.parent_data.map(
+                            (it) => {
+                                return {
+                                    key: `/my-communities/${it.id}`,
+                                    label: it.name
+                                }
+                        }),
+                    });
+                });
         }
     }
 
     useEffect(() => {
         getCommunity();
     }, [getCommunity]);
+
+    const handleMenuClick = (key: string) => {
+        navigate(key);
+    };
 
     return (
         <Layout className="community">
@@ -59,7 +73,26 @@ export function CommunityWorkSpace() {
                     className="header"
                     style={{ justifyContent: "space-between" }}
                 >
-                    <div className="community-name">{communityName}</div>
+                    <div style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                        }}
+                    >
+                        { !!communityData?.menuItems?.length &&
+                            <Dropdown menu={{
+                                items: communityData.menuItems,
+                                onClick: (e: { key: string }) => handleMenuClick(e.key),
+                            }}>
+                                <DownOutlined style={{ marginRight: 8 }} />
+                            </Dropdown>
+                        }
+                        <div
+                            className="community-name"
+                        >
+                            {communityData?.name}
+                        </div>
+                    </div>
                     <AuthHeaderIcons />
                 </Header>
                 <Content className="content">

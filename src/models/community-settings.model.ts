@@ -4,6 +4,9 @@ import { CommunityDescriptionModel } from "./community-description.model.ts";
 import { CommunityNameModel } from "./community-name.model.ts";
 import { RequestMemberModel } from "./request-member.model.ts";
 import { CategoryModel } from "./category.model.ts";
+import {
+    UserCommunitySettingsModel
+} from "./user-community-settings.model.ts";
 
 @modelConfig({
     entityName: 'community_settings',
@@ -35,6 +38,9 @@ export class CommunitySettingsModel extends ApiModel{
 
     @manyToMany('category')
     categories?: CategoryModel[];
+
+    @manyToMany('user_community_settings')
+    sub_communities_settings?: UserCommunitySettingsModel[];
 
     @manyToMany('request_member')
     adding_members?: RequestMemberModel[];

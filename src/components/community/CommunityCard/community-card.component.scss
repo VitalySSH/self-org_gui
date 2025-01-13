@@ -1,0 +1,56 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+.community-card {
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: $border-radius;
+  border: 1px solid $border-color;
+  background-color: $background-color;
+  transition: box-shadow $transition-speed;
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .ant-card-body {
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+  }
+
+  .ant-card-meta-title {
+    font-size: 18px;
+    color: $heading-color;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .ant-card-meta-description {
+    font-size: 14px;
+    color: $text-color;
+    font-family: 'Noto Sans', sans-serif;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+  }
+}
+
+.community-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.members-count {
+  font-size: 14px;
+  color: $text-color;
+}

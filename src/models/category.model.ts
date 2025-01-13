@@ -7,13 +7,13 @@ import { StatusModel } from "./status.model.ts";
 })
 export class CategoryModel extends ApiModel{
     @attribute()
-    name?: string;
+    name!: string;
 
     @attribute()
     community_id?: string;
 
     @attribute()
-    creator_id?: string;
+    creator_id!: string;
 
     @oneToMany('status')
     status?: StatusModel;

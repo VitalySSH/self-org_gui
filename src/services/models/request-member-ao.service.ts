@@ -11,9 +11,9 @@ export class RequestMemberAoService
         super(RequestMemberModel, AOApiUrl);
     }
 
-    async votesInPercen(requestId: string) {
+    async votesInPercent(requestId: string) {
         const url =
-            `/${this.model.entityName}/votes_in_percen/${requestId}`;
+            `/${this.model.entityName}/votes_in_percent/${requestId}`;
 
         return this.http.get<SettingsStatisticsInterface[]>(url);
     }
