@@ -42,11 +42,15 @@ export function MyAddMemberRequests() {
     const currentUserId = authData.user?.id;
     const [loading, setLoading] =
         useState(true);
-    const [dataSource, setDataSource] =
-        useState([] as TableMyMemberRequest[]);
+    const [
+        dataSource,
+        setDataSource
+    ] = useState([] as TableMyMemberRequest[]);
+    const [
+        searchedColumn,
+        setSearchedColumn
+    ] = useState('');
     const [searchText, setSearchText] =
-        useState('');
-    const [searchedColumn, setSearchedColumn] =
         useState('');
 
     const requestMemberService =
@@ -123,7 +127,9 @@ export function MyAddMemberRequests() {
             </div>
         ),
         filterIcon: (filtered: boolean) => (
-            <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+            <SearchOutlined
+                style={{ color: filtered ? '#1677ff' : undefined }}
+            />
         ),
         onFilter: (value, record) =>
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment

@@ -139,10 +139,10 @@ export function CommunityCard(props: CommunityCardProps) {
                             }}
                         />
                         <span
-                            style={{
-                                marginLeft: 10
-                            }}
-                        >Отправить заявку на вступление</span>
+                            style={{ marginLeft: 10}}
+                        >
+                            Отправить заявку на вступление
+                        </span>
                     </div>
                 ];
             } else {
@@ -156,7 +156,7 @@ export function CommunityCard(props: CommunityCardProps) {
             navigate(`/my-communities/${item.id}`);
         }
 
-        return !item.isBlocked ? onClick : undefined;
+        return item.isMyCommunity ? onClick : undefined;
     }
 
     const getCardStyle = (item: CommunityCardInterface) => {
@@ -177,7 +177,7 @@ export function CommunityCard(props: CommunityCardProps) {
                 footer={[]}
             >
                 <Form
-                    name='add-member-request'
+                    name='join-community'
                     onFinish={onFinish}
                 >
                     <Form.Item
