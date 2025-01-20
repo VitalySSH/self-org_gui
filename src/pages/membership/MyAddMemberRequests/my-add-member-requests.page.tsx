@@ -295,9 +295,9 @@ export function MyAddMemberRequests() {
                     'community.main_settings.name',
                     'community.main_settings.description',
                 ]
-            ).then(memberRequests => {
+            ).then(resp => {
                 const items: TableMyMemberRequest[] = [];
-                memberRequests.forEach(requestMember => {
+                resp.data.forEach(requestMember => {
                     const communityName =
                         requestMember.community?.main_settings?.name?.name;
                     const communityDescription =

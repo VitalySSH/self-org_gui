@@ -28,9 +28,9 @@ export function MyCommunities() {
                         'main_settings.name',
                         'main_settings.description',
                     ])
-                .then(data => {
+                .then(resp => {
                     const communities: CommunityCardInterface[] = [];
-                    data.forEach(community => {
+                    resp.data.forEach(community => {
                         const settings =
                             (community.user_settings || [])
                                 .filter((settings) =>

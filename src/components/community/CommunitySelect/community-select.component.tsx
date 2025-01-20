@@ -103,7 +103,7 @@ export function CommunitySelect(props: CommunitySelectProps) {
                 ], undefined, undefined, [
                     'name', 'description'
                 ]).then(r => {
-                    setOptions(r);
+                    setOptions(r.data);
                 });
             }
         }

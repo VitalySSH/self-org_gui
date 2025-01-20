@@ -38,7 +38,7 @@ export function Rules(props: any) {
                     ["creator", "status", "category"])
                 .then(resp => {
                     const rules: RuleCardInterface[] = [];
-                    resp.forEach(rule => {
+                    resp.data.forEach(rule => {
                         const ruleItem = {
                             id: rule.id,
                             title: rule.title,

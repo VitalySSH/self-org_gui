@@ -68,9 +68,9 @@ export function CommunityCard(props: CommunityCardProps) {
                 }
             ]
         ).then(
-            (statuses) => {
-                if (statuses.length) {
-                    const status = statuses[0];
+            (resp) => {
+                if (resp.data.length) {
+                    const status = resp.data[0];
                     requestMember.member = authData.getUserRelation();
                     const communityRelation =
                         communityService.createRecord();

@@ -201,9 +201,9 @@ export function AddMemberRequestsForMe(props: any) {
                     'adding_members.status',
                     'adding_members.member',
                 ]
-            ).then(settingsList => {
+            ).then(resp => {
                 const settings =
-                    settingsList.length ? settingsList[0] : undefined;
+                    resp.total ? resp.data[0] : undefined;
                 const items: TableMemberRequest[] = [];
                 if (!settings) navigate('/no-much-page');
                 (settings?.adding_members || [])

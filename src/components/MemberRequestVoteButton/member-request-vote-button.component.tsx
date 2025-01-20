@@ -78,9 +78,9 @@ export function MemberRequestVoteButton(props: any) {
                     val: 'voted',
                 }
             ]
-        ).then((statuses) => {
+        ).then((resp) => {
             const status =
-                statuses.length ? statuses[0] : undefined;
+                resp.data.length ? resp.data[0] : undefined;
             const requestMember = new RequestMemberModel();
             requestMember.id = tableRow?.key;
             if (status) {

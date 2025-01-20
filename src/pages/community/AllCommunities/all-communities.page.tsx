@@ -36,9 +36,9 @@ export function AllCommunities() {
                     'main_settings.description',
                     'main_settings.adding_members.creator',
                 ])
-                .then(data => {
+                .then(resp => {
                     const items: CommunityCardInterface[] = [];
-                    data.forEach(community => {
+                    resp.data.forEach(community => {
                         const isMyCommunity =
                             (community.user_settings || [])
                                 .filter(

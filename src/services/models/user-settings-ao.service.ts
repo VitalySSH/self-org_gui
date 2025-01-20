@@ -226,7 +226,7 @@ export class UserSettingsAoService
     private async _getStatusByCode(code: string) {
         const statusService =
             new CrudDataSourceService(StatusModel);
-        const statuses = await statusService.list([
+        const resp = await statusService.list([
             {
                 field: 'code',
                 op: 'equals',
@@ -234,7 +234,7 @@ export class UserSettingsAoService
             }
         ]);
 
-        return statuses.length ? statuses[0] : undefined;
+        return resp.total ? resp.data[0] : undefined;
     }
 
 }

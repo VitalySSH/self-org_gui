@@ -4,7 +4,8 @@ import { Filters, Orders } from "src/shared/types";
 import {
     CommunityCardInterface,
     CommunityNameDataInterface,
-    CrudApiDataInterface,
+    CrudApiListResponse,
+    ListResponse,
     Pagination,
     SettingsInPercentInterface,
 } from "src/interfaces";
@@ -23,7 +24,7 @@ export class CommunityAOService
         orders?: Orders,
         pagination?: Pagination,
         include?: string[]
-    ) {
+    ): Promise<ListResponse<CommunityModel>> {
         const url = `/${this.model.entityName}/my_list`;
         const data = {
             filters,
@@ -33,14 +34,14 @@ export class CommunityAOService
         }
 
         const r =
-            await this.http.post<CrudApiDataInterface[]>(url, data);
+            await this.http.post<CrudApiListResponse>(url, data);
         const records: CommunityModel[] = [];
-        r.data.forEach((item) => {
+        r.data.items.forEach((item) => {
             const record = this.jsonApiToModel(item);
             records.push(record);
         });
 
-        return records;
+        return { data: records, total: r.data.total };
     }
 
     async getNameData(communityId: string) {

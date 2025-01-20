@@ -10,6 +10,8 @@ export * from './crud/model-config.interface';
 export * from './crud/filter-item.interface';
 export * from './crud/order-item.interface';
 export * from './crud/pagination.interface';
+export * from './crud/crud-api-list-response.interface';
+export * from './crud/list-response.interface';
 export * from './community/community-card.interface';
 export * from './community/community-settings.interface';
 export * from './community/community-select.interface';

@@ -107,10 +107,9 @@ export function MyCommunitySettings(props: any) {
                 ['user', 'name', 'description', 'categories.status',
                     'sub_communities_settings.name',
                     'sub_communities_settings.description']
-            ).then(communitySettings => {
-                if (communitySettings.length) {
-                    const settingsInst =
-                        communitySettings[0];
+            ).then(resp => {
+                if (resp.total) {
+                    const settingsInst = resp.data[0];
                     setSettings(settingsInst);
                     form.setFieldValue(
                         'categories', settingsInst?.categories);
@@ -149,7 +148,7 @@ export function MyCommunitySettings(props: any) {
                     val: communityId,
                 }
             ]
-        )
+        ).then(r => r.data);
     }
 
     const getCommunityDescriptions = async () => {
@@ -161,11 +160,11 @@ export function MyCommunitySettings(props: any) {
                     val: communityId,
                 }
             ]
-        );
+        ).then(r => r.data);
     }
 
     const getCategories = async () => {
-        const categories = await categoryService.list(
+        const resp = await categoryService.list(
             [
                 {
                     field: 'community_id',
@@ -174,7 +173,7 @@ export function MyCommunitySettings(props: any) {
                 }
             ], undefined, undefined, ['status']
         );
-        return categories.filter((cat) =>
+        return resp.data.filter((cat) =>
             cat.status?.code !== SystemCategoryCode);
     }
 

@@ -1,5 +1,10 @@
 import { v4 } from 'uuid';
-import { CrudApiDataInterface, Pagination } from "src/interfaces";
+import {
+    CrudApiDataInterface,
+    CrudApiListResponse,
+    ListResponse,
+    Pagination
+} from "src/interfaces";
 import {
     ApiModel,
     CommunityDescriptionModel,
@@ -166,7 +171,7 @@ export class CrudDataSourceService<T extends ApiModel>
         orders?: Orders,
         pagination?: Pagination,
         include?: string[]
-    ) {
+    ): Promise<ListResponse<T>> {
         const url = `/${this.model.entityName}/list`;
         const data = {
             filters,
@@ -176,14 +181,14 @@ export class CrudDataSourceService<T extends ApiModel>
         }
 
         const r =
-            await this.http.post<CrudApiDataInterface[]>(url, data);
+            await this.http.post<CrudApiListResponse>(url, data);
         const records: T[] = [];
-        r.data.forEach((item) => {
+        r.data.items.forEach((item) => {
             const record = this.jsonApiToModel(item);
             records.push(record);
         });
 
-        return records;
+        return { data: records, total: r.data.total };
     }
 
     async save(model: T, create: boolean = false) {
