@@ -1,6 +1,9 @@
 import './auth-card.component.scss'
+import { useNavigate } from "react-router-dom";
 
 export function AuthCard() {
+
+    const navigate = useNavigate();
 
     return (
         <div className="auth-card">
@@ -9,8 +12,24 @@ export function AuthCard() {
                 Присоединяйтесь и сделайте свой голос услышанным уже сегодня!
             </div>
             <div className="auth-buttons">
-                <button className="register">Зарегистрироваться</button>
-                <button className="login">Войти</button>
+                <button
+                    className="register"
+                    onClick={() => {
+                        navigate('/sign-up',
+                            { preventScrollReset: true });
+                    }}
+                >
+                    Зарегистрироваться
+                </button>
+                <button
+                    className="login"
+                    onClick={() => {
+                        navigate('/sign-in',
+                            { preventScrollReset: true });
+                    }}
+                >
+                    Войти
+                </button>
             </div>
         </div>
     );

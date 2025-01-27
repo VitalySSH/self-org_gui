@@ -166,7 +166,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
                         />
                 }
                 <Button
-                    type="text"
+                    type="primary"
                     icon={<PlusOutlined />}
                     onClick={addOwnValue}
                     disabled={newTextValue.length === 0}

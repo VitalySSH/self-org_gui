@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Select from "react-select/creatable";
+import Select from 'react-select';
 import {
     Modal,
     Form,
@@ -14,6 +14,7 @@ import {
 import { CrudDataSourceService } from "src/services";
 import { CommunitySelectProps } from "src/interfaces";
 import { NewCommunityForm } from "src/components";
+import { components } from "react-select";
 
 
 export function CommunitySelect(props: CommunitySelectProps) {
@@ -38,9 +39,13 @@ export function CommunitySelect(props: CommunitySelectProps) {
 
     const formatOptionLabel = (option: UserCommunitySettingsModel) => (
         <div>
-            <strong>{option.name?.name}</strong>
             <div
-                style={{ fontSize: "12px", color: "#888" }}
+                style={{ fontSize: 14 }}
+            >
+                {option.name?.name}
+            </div>
+            <div
+                style={{ fontSize: 12, color: "#888" }}
             >
                 {option.description?.value}
             </div>
@@ -88,7 +93,6 @@ export function CommunitySelect(props: CommunitySelectProps) {
         setIsModalVisible(true);
     };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const getOptions = () => {
         if (options === undefined) {
             if (props.readonly) {
@@ -109,7 +113,6 @@ export function CommunitySelect(props: CommunitySelectProps) {
         }
     }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const getCurrentValues = () => {
         if (values === null && props.values !== undefined) {
             setValues(props.values);
@@ -119,34 +122,52 @@ export function CommunitySelect(props: CommunitySelectProps) {
     useEffect(() => {
         getOptions();
         getCurrentValues();
-    }, [
-        options, props, userSettingsService,
-        userSettingsService, getOptions, getCurrentValues
-    ]);
+    }, [props.values, props.parentCommunityId, props.readonly]);
+
+    const MenuList = (props: any) => {
+        return (
+            <components.MenuList {...props}>
+                {props.children}
+                <Button
+                    type="primary"
+                    onClick={handleClick}
+                    style={{ margin: 8 }}
+                >
+                    Добавить сообщество
+                </Button>
+            </components.MenuList>
+        );
+    };
 
     return (
         <div>
             <Select
+                // TODO: настроить собственные стили и отключить дефолтные
+                // unstyled
+                // className="react-select"
+                // classNamePrefix="react-select"
                 isMulti
+                isSearchable
                 options={options}
                 value={values}
                 onChange={
-                    (selected) => props.onChange(
-                        selected as UserCommunitySettingsModel[])
+                    (selected) => {
+                        const _values =
+                            selected as UserCommunitySettingsModel[];
+                        props.onChange(_values);
+                        setValues(_values);
+                    }
                 }
-                getOptionLabel={(e) => `${e.name} - ${e.description}`}
-                getOptionValue={(e) => e.id}
+                getOptionLabel={
+                    (e) =>
+                        `${e.name} - ${e.description}`}
+                    getOptionValue={(e) => e.id
+                }
                 formatOptionLabel={formatOptionLabel}
                 placeholder="Выбирите или добавте свои сообщества"
                 noOptionsMessage={() => "Сообщества не найдены"}
+                components={{ MenuList }}
             />
-            <Button
-                type="primary"
-                onClick={handleClick}
-                style={{ marginTop: 12 }}
-            >
-                Добавить сообщество
-            </Button>
 
             <Modal
                 title="Новое внутреннее сообщество"

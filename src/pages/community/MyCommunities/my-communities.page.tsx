@@ -75,7 +75,7 @@ export function MyCommunities() {
                     md: 1,
                     lg: 2,
                     xl: 2,
-                    xxl: 3
+                    xxl: 2
                 }}
                 itemLayout="vertical"
                 dataSource={dataSource}

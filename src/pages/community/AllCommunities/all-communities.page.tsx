@@ -26,7 +26,7 @@ export function AllCommunities() {
                     {
                         field: 'parent_id',
                         op: 'null',
-                        val: false,
+                        val: true,
                     },
                 ],
                 undefined, undefined,
