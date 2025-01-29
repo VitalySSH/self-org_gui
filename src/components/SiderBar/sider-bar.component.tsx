@@ -68,7 +68,7 @@ const userGuideMenuItems: MenuItem[] = [
         label: 'Споры',
     },
     {
-        key: 'test6',
+        key: 'user-guide/challenges',
         icon: <InfoCircleOutlined />,
         label: 'Вызовы',
     }

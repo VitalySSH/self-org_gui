@@ -14,6 +14,7 @@ import {
     MyAddMemberRequests,
     MyCommunities,
     NewCommunity,
+    UserGuideChallenges,
     // NoMatchPage
 } from "src/pages";
 import { Route, Routes, useLocation } from "react-router-dom";
@@ -71,6 +72,10 @@ export function MainApp() {
                             <ProtectedRoute>
                                 <MyAddMemberRequests />
                             </ProtectedRoute>
+                        } />
+                        {/*user guide*/}
+                        <Route path='/user-guide/challenges' element={
+                            <UserGuideChallenges />
                         } />
                         {/*<Route path="*" element={<NoMatchPage />} />*/}
                     </Routes>
