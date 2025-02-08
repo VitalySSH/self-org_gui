@@ -15,7 +15,8 @@ import TextArea, { TextAreaRef } from "antd/lib/input/TextArea";
 import { ApiModel } from "src/models";
 
 
-export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
+export function CustomSelect<
+    T extends ApiModel>(props: SelectInterface<T>) {
 
     const inputRef = useRef<InputRef>(null);
     const textAreaRef =
@@ -153,6 +154,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
                             value={newTextValue}
                             onKeyDown={(e) =>
                                 e.stopPropagation()}
+                            maxLength={props.ownValueMaxLength}
                             style={{ width: 400 }}
                         /> :
                         <Input
@@ -162,6 +164,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
                             value={newTextValue}
                             onKeyDown={(e) =>
                                 e.stopPropagation()}
+                            maxLength={props.ownValueMaxLength}
                             style={{ width: 400 }}
                         />
                 }

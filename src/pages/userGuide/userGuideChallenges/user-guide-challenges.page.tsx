@@ -20,7 +20,7 @@ export function UserGuideChallenges() {
                 Вызовы через коллективный интеллект
             </Title>
 
-            <Collapse accordion ghost expandIconPosition="right">
+            <Collapse accordion ghost expandIconPosition="end">
                 <Panel
                     header={
                         <Title level={4}>

@@ -14,4 +14,5 @@ export interface SelectInterface<T extends ApiModel> {
     saveOwnValue?: boolean;
     ownValuePlaceholder?: string;
     ownFieldTextarea?: boolean;
+    ownValueMaxLength?: number;
 }

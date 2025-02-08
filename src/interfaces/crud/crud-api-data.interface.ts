@@ -1,5 +1,5 @@
 export interface CrudApiDataInterface {
-    id: string;
-    attributes: object;
-    relations: object;
+  id: string;
+  attributes: object;
+  relations: object;
 }

@@ -1,0 +1,22 @@
+.custom-modal {
+  @media (max-width: 768px) {
+    width: 80% !important;
+  }
+  @media (max-width: 480px) {
+    width: 95% !important;
+  }
+
+  top: 1px !important;
+  display: flex;
+  flex-direction: column;
+
+  .ant-modal-content {
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+  }
+
+  .ant-modal-body {
+    flex: 1;
+  }
+}

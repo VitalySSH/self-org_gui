@@ -23,3 +23,4 @@ export * from './dispute/Disputes/disputes.page';
 export * from './challenge/Challenges/challenges.page';
 export * from './delegate/MyDelegates/my-delegates.page';
 export * from './userGuide/userGuideChallenges/user-guide-challenges.page';
+export * from './userGuide/userGuideDisputes/user-guide-disputes.page';

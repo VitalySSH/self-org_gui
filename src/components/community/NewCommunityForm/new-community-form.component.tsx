@@ -298,7 +298,9 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
                                     }
                                 >
                                     <Input
-                                        placeholder="Наименование категории"/>
+                                        placeholder="Наименование категории"
+                                        maxLength={60}
+                                    />
                                 </Form.Item>
                                 <MinusCircleOutlined
                                     onClick={() => remove(name)}/>
@@ -313,7 +315,7 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
                                 Добавить категорию
                             </Button>
                             <Tooltip
-                                title="Категории - это темы или направления для голосований. Они помогают структурировать вопросы и выбирать делегатов.">
+                                title="Категории - это темы или направления для голосований. Они помогают структурировать вопросы и выбирать делегатов. Максимум 60 символов.">
                                 <QuestionCircleOutlined
                                     style={{ marginLeft: 6 }}
                                 />

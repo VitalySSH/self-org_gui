@@ -1,8 +1,9 @@
-import { UserCommunitySettingsModel } from "src/models";
+import { UserCommunitySettingsModel } from 'src/models';
 
 export interface CommunitySelectProps {
-    parentCommunityId: string;
-    readonly: boolean;
-    values: UserCommunitySettingsModel[] | undefined;
-    onChange: (value: any) => void;
+  parentCommunityId: string;
+  parentSettings: UserCommunitySettingsModel;
+  readonly: boolean;
+  values: UserCommunitySettingsModel[] | undefined;
+  onChange: (value: any) => void;
 }
