@@ -150,12 +150,14 @@ export function CommunitySelect(props: CommunitySelectProps) {
 
   const MenuList = (props: any) => {
     return (
-      <components.MenuList {...props}>
-        {props.children}
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+          <components.MenuList {...props}>{props.children}</components.MenuList>
+        </div>
         <Button type="primary" onClick={handleClick} style={{ margin: 8 }}>
           Добавить сообщество
         </Button>
-      </components.MenuList>
+      </div>
     );
   };
 
@@ -168,6 +170,8 @@ export function CommunitySelect(props: CommunitySelectProps) {
         // classNamePrefix="react-select"
         isMulti
         isSearchable
+        menuPlacement="auto"
+        menuPosition="fixed"
         options={options}
         value={values}
         onChange={(selected) => {
