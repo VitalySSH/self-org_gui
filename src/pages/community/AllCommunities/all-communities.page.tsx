@@ -1,15 +1,20 @@
-import { List } from 'antd';
+import { ConfigProvider, List, Pagination } from 'antd';
 import { CrudDataSourceService } from 'src/services';
 import { CommunityModel } from 'src/models';
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { AuthContextProvider, CommunityCardInterface } from 'src/interfaces';
 import { useAuth } from 'src/hooks';
 import { CommunityCard } from 'src/components';
+import ruRU from 'antd/lib/locale/ru_RU';
 
 export function AllCommunities() {
+  const maxPageSize = 20;
   const authData: AuthContextProvider = useAuth();
   const [loading, setLoading] = useState(true);
   const [dataSource, setDataSource] = useState([] as CommunityCardInterface[]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(maxPageSize);
+  const [total, setTotal] = useState(0);
 
   const communityService = new CrudDataSourceService(CommunityModel);
 
@@ -26,7 +31,7 @@ export function AllCommunities() {
             },
           ],
           undefined,
-          undefined,
+          { skip: currentPage, limit: pageSize },
           [
             'user_settings.user',
             'main_settings.name',
@@ -35,6 +40,7 @@ export function AllCommunities() {
           ]
         )
         .then((resp) => {
+          setTotal(resp.total);
           const items: CommunityCardInterface[] = [];
           resp.data.forEach((community) => {
             const isMyCommunity =
@@ -67,7 +73,16 @@ export function AllCommunities() {
 
   useEffect(() => {
     loadData();
-  }, [loadData]);
+  }, [loadData, currentPage, pageSize]);
+
+  const handlePageChange = (
+    page: SetStateAction<number>,
+    size: SetStateAction<number>
+  ) => {
+    setCurrentPage(page);
+    setPageSize(size);
+    setLoading(true);
+  };
 
   return (
     <div className="communities-list">
@@ -86,14 +101,6 @@ export function AllCommunities() {
         dataSource={dataSource}
         loading={loading}
         locale={{ emptyText: 'Нет сообществ' }}
-        pagination={
-          dataSource.length >= 20
-            ? {
-                position: 'bottom',
-                align: 'end',
-              }
-            : false
-        }
         size="large"
         renderItem={(item: CommunityCardInterface) => (
           <List.Item>
@@ -101,6 +108,21 @@ export function AllCommunities() {
           </List.Item>
         )}
       />
+      {total > maxPageSize && (
+        <ConfigProvider locale={ruRU}>
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={total}
+            onChange={handlePageChange}
+            showSizeChanger
+            pageSizeOptions={['10', '20', '50', '100']}
+            defaultPageSize={maxPageSize}
+            showTotal={(total, range) => `${range[0]}-${range[1]} из ${total}`}
+            style={{ marginTop: 16, textAlign: 'center' }}
+          />
+        </ConfigProvider>
+      )}
     </div>
   );
 }

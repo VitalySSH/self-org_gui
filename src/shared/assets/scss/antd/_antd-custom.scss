@@ -525,6 +525,11 @@
   .ant-form {
     padding: 15px;
   }
+
+  .ant-modal {
+    top: 16px;
+  }
+
 }
 
 @media (max-width: $breakpoint-md) {
@@ -538,6 +543,7 @@
   .ant-layout-header {
     padding: 4px 6px;
   }
+
 }
 
 @media (max-width: $breakpoint-sm) {
