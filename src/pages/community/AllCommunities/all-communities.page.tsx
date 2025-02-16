@@ -86,14 +86,14 @@ export function AllCommunities() {
 
   return (
     <div className="communities-list">
-      <div className="page-header">Сообщества</div>
+      <div className="page-header">Все сообщества</div>
       <List
         grid={{
           gutter: 16,
           xs: 1,
           sm: 1,
           md: 1,
-          lg: 1,
+          lg: 2,
           xl: 2,
           xxl: 2,
         }}
