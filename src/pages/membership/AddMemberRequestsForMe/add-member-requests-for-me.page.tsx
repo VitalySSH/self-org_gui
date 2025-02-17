@@ -1,5 +1,6 @@
 import {
   Button,
+  ConfigProvider,
   Input,
   InputRef,
   Space,
@@ -18,6 +19,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { useAuth } from 'src/hooks';
 import { MemberRequestVoteButton } from 'src/components';
 import { useNavigate } from 'react-router-dom';
+import ruRU from 'antd/lib/locale/ru_RU';
 
 type DataIndex = keyof TableMemberRequest;
 
@@ -149,28 +151,24 @@ export function AddMemberRequestsForMe(props: any) {
       title: 'Участник сообщества',
       dataIndex: 'member',
       key: 'member',
-      width: '30%',
       ...getColumnSearchProps('member'),
     },
     {
       title: 'Сопроводительное письмо',
       dataIndex: 'reason',
       key: 'reason',
-      width: '20%',
     },
     {
       title: 'Статус',
       dataIndex: 'status',
       key: 'status',
       ...getColumnSearchProps('status'),
-      width: '20%',
     },
     {
       title: 'Дата создания',
       dataIndex: 'created',
       key: 'created',
       ...getColumnSearchProps('created'),
-      width: '20%',
     },
     {
       title: 'Действие',
@@ -217,9 +215,7 @@ export function AddMemberRequestsForMe(props: any) {
               member: memberName,
               reason: requestMember.reason || '',
               status: requestMember.status?.name || '',
-              created: moment(requestMember.created).format(
-                'DD.MM.yyyy HH:mm:ss'
-              ),
+              created: moment(requestMember.created).format('DD.MM.yyyy HH:mm'),
               isMyRequest: isMyRequest,
               vote: requestMember.vote,
             };
@@ -241,11 +237,13 @@ export function AddMemberRequestsForMe(props: any) {
   }, [loadData, loading]);
 
   return (
-    <Table
-      columns={columns}
-      loading={loading}
-      dataSource={dataSource}
-      locale={{ emptyText: 'Заявки не найдены' }}
-    />
+    <ConfigProvider locale={ruRU}>
+      <Table
+        columns={columns}
+        loading={loading}
+        dataSource={dataSource}
+        locale={{ emptyText: 'Заявки не найдены' }}
+      />
+    </ConfigProvider>
   );
 }

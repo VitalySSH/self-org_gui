@@ -17,6 +17,7 @@ import { AuthHeaderIcons, SiderBar } from 'src/components';
 import { CommunityAOService } from 'src/services';
 import { useEffect, useState } from 'react';
 import { CommunityWorkSpaceData } from 'src/interfaces';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 
 const { Header, Content } = Layout;
 
@@ -69,17 +70,27 @@ export function CommunityWorkSpace() {
               alignItems: 'center',
             }}
           >
+            <ArrowLeftOutlined
+              onClick={() => {
+                navigate(-1);
+              }}
+              style={{
+                fontSize: 24,
+                marginRight: 16,
+              }}
+            />
+            <div className="community-name">{communityData?.name}</div>
             {!!communityData?.menuItems?.length && (
               <Dropdown
                 menu={{
                   items: communityData.menuItems,
                   onClick: (e: { key: string }) => handleMenuClick(e.key),
                 }}
+                placement="bottomCenter"
               >
-                <DownOutlined style={{ marginRight: 8 }} />
+                <DownOutlined style={{ marginLeft: 8 }} />
               </Dropdown>
             )}
-            <div className="community-name">{communityData?.name}</div>
           </div>
           <AuthHeaderIcons />
         </Header>
@@ -103,6 +114,7 @@ export function CommunityWorkSpace() {
             />
             <Route path="rules" element={<Rules communityId={id} />} />
             <Route path="rules/new" element={<NewRule communityId={id} />} />
+            <Route path="rules/:id/*" element={<NewRule communityId={id} />} />
             <Route
               path="initiatives"
               element={<Initiatives communityId={id} />}

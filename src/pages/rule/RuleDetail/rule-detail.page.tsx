@@ -19,7 +19,7 @@ import {
 import { CustomSelect } from 'src/components';
 import { CategoryModel, CommunityModel } from 'src/models';
 
-export function NewRule(props: any) {
+export function RuleDetail(props: any) {
   const communityId = props.communityId;
 
   const navigate = useNavigate();
@@ -317,26 +317,6 @@ export function NewRule(props: any) {
           </Form.Item>
           {isExtraOptions && extraOptions}
         </Form>
-      </div>
-      <div className="toolbar">
-        <Button
-          type="primary"
-          htmlType="submit"
-          loading={buttonLoading}
-          onClick={onFinish}
-          disabled={disabled}
-          className="toolbar-button"
-        >
-          Создать правило
-        </Button>
-        <Button
-          type="primary"
-          htmlType="button"
-          onClick={onCancel}
-          className="toolbar-button"
-        >
-          Отменить
-        </Button>
       </div>
     </>
   );

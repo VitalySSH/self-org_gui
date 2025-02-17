@@ -144,7 +144,7 @@ export function SiderBar(props: SiderBarInterface) {
 
   const onClickImage = () => {
     cleanKeys();
-    navigate('/', { preventScrollReset: true });
+    navigate('/');
   };
 
   useEffect(() => {
@@ -157,7 +157,7 @@ export function SiderBar(props: SiderBarInterface) {
           setCommunityWSMenuKeys([pathname[3]]);
         } else {
           setCommunityWSMenuKeys(['summary']);
-          navigate('summary', { preventScrollReset: true });
+          navigate('summary');
         }
       } else {
         if (pathname.length >= 1) {
@@ -226,7 +226,7 @@ export function SiderBar(props: SiderBarInterface) {
                 items={communitiesMenuItems}
                 onClick={(item) => {
                   setCommunitiesMenuKeys([item.key]);
-                  navigate(item.key, { preventScrollReset: true });
+                  navigate(item.key);
                 }}
                 selectedKeys={communitiesMenuKeys}
               />
@@ -245,7 +245,7 @@ export function SiderBar(props: SiderBarInterface) {
             items={userGuideMenuItems}
             onClick={(item) => {
               setUserGuideMenuKeys([item.key]);
-              navigate(item.key, { preventScrollReset: true });
+              navigate(item.key);
             }}
             selectedKeys={userGuideMenuKeys}
           />
@@ -264,7 +264,7 @@ export function SiderBar(props: SiderBarInterface) {
             items={communityWSMenuItems}
             onClick={(item) => {
               setCommunityWSMenuKeys([item.key]);
-              navigate(item.key, { preventScrollReset: true });
+              navigate(item.key);
             }}
             selectedKeys={communityWSMenuKeys}
           />

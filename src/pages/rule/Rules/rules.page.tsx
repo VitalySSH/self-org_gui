@@ -1,17 +1,32 @@
-import { Button, Card, Flex, Layout, List, Space, Typography } from 'antd';
+import {
+  Button,
+  Card,
+  ConfigProvider,
+  Flex,
+  Layout,
+  List,
+  Pagination,
+  Space,
+  Typography,
+} from 'antd';
 import { RuleCardInterface } from 'src/interfaces';
 import Meta from 'antd/es/card/Meta';
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { CrudDataSourceService } from 'src/services';
 import { RuleModel } from 'src/models';
 import { FilterOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import ruRU from 'antd/lib/locale/ru_RU';
 
 export function Rules(props: any) {
+  const maxPageSize = 20;
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
   const [dataSource, setDataSource] = useState([] as RuleCardInterface[]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(maxPageSize);
+  const [total, setTotal] = useState(0);
 
   const ruleService = new CrudDataSourceService(RuleModel);
 
@@ -32,10 +47,11 @@ export function Rules(props: any) {
             },
           ],
           undefined,
-          undefined,
+          { skip: currentPage, limit: pageSize },
           ['creator', 'status', 'category']
         )
         .then((resp) => {
+          setTotal(resp.total);
           const rules: RuleCardInterface[] = [];
           resp.data.forEach((rule) => {
             const ruleItem = {
@@ -62,6 +78,15 @@ export function Rules(props: any) {
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  const handlePageChange = (
+    page: SetStateAction<number>,
+    size: SetStateAction<number>
+  ) => {
+    setCurrentPage(page);
+    setPageSize(size);
+    setLoading(true);
+  };
 
   return (
     <Layout style={{ height: '100%', overflowY: 'auto' }}>
@@ -119,7 +144,11 @@ export function Rules(props: any) {
               cursor: 'pointer',
             }}
           >
-            <Card>
+            <Card
+              onClick={() => {
+                navigate(item.id, {});
+              }}
+            >
               <Meta title={item.title} description={item.description} />
               <div style={{ marginTop: 20 }}>Автор: {item.creator}</div>
               <div style={{ marginTop: 10 }}>Категория: {item.category}</div>
@@ -128,6 +157,21 @@ export function Rules(props: any) {
           </List.Item>
         )}
       />
+      {total > maxPageSize && (
+        <ConfigProvider locale={ruRU}>
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={total}
+            onChange={handlePageChange}
+            showSizeChanger
+            pageSizeOptions={['10', '20', '50', '100']}
+            defaultPageSize={maxPageSize}
+            showTotal={(total, range) => `${range[0]}-${range[1]} из ${total}`}
+            style={{ marginTop: 16, textAlign: 'center' }}
+          />
+        </ConfigProvider>
+      )}
     </Layout>
   );
 }
