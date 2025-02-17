@@ -12,7 +12,7 @@ import { TableMyMemberRequest } from 'src/interfaces';
 import { RequestMemberAoService } from 'src/services';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import {
   MemberRequestDisputeButton,
   MemberRequestJoinButton,
@@ -202,42 +202,36 @@ export function MyAddMemberRequests() {
       title: 'Наименование сообщества',
       dataIndex: 'communityName',
       key: 'communityName',
-      width: '20%',
       ...getColumnSearchProps('communityName'),
     },
-    {
-      title: 'Описание сообщества',
-      dataIndex: 'communityDescription',
-      key: 'communityDescription',
-      width: '20%',
-      ...getColumnSearchProps('communityDescription'),
-    },
+    // {
+    //   title: 'Описание сообщества',
+    //   dataIndex: 'communityDescription',
+    //   key: 'communityDescription',
+    //   ...getColumnSearchProps('communityDescription'),
+    // },
     {
       title: 'Сопроводительное письмо',
       dataIndex: 'reason',
       key: 'reason',
-      width: '20%',
     },
     {
       title: 'Статус',
       dataIndex: 'status',
       key: 'status',
       ...getColumnSearchProps('status'),
-      width: '20%',
     },
-    {
-      title: 'Решение',
-      dataIndex: 'solution',
-      key: 'solution',
-      ...getColumnSearchProps('solution'),
-      width: '20%',
-    },
+    // {
+    //   title: 'Решение',
+    //   dataIndex: 'solution',
+    //   key: 'solution',
+    //   ...getColumnSearchProps('solution'),
+    // },
     {
       title: 'Дата создания',
       dataIndex: 'created',
       key: 'created',
       ...getColumnSearchProps('created'),
-      width: '20%',
     },
     {
       title: 'Действие',
@@ -270,18 +264,6 @@ export function MyAddMemberRequests() {
     loadData();
   }, [loadData, loading]);
 
-  const renderNestedData = (data: TableMyMemberRequest[]) => (
-    <>
-      {data.map((item) => (
-        <div key={item.key}>
-          {item.children &&
-            item.children.length > 0 &&
-            renderNestedData(item.children)}
-        </div>
-      ))}
-    </>
-  );
-
   return (
     <div className="table-container">
       <div className="table-header">Мои заявки на вступление в сообщества</div>
@@ -293,8 +275,20 @@ export function MyAddMemberRequests() {
         expandable={{
           rowExpandable: (record) =>
             record.children && record.children.length > 0,
-          expandedRowRender: (record) =>
-            renderNestedData(record.children || []),
+          expandIcon: ({ expanded, onExpand, record }) => {
+            if (!record.children || record.children.length === 0) {
+              return null;
+            }
+            return (
+              <span onClick={(e) => onExpand(record, e)}>
+                {expanded ? (
+                  <MinusOutlined style={{ marginRight: 6 }} />
+                ) : (
+                  <PlusOutlined style={{ marginRight: 6 }} />
+                )}
+              </span>
+            );
+          },
         }}
         locale={{ emptyText: 'Заявки не найдены' }}
         style={{
