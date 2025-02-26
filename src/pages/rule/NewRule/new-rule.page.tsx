@@ -82,6 +82,32 @@ export function NewRule(props: any) {
   const extraOptions = (
     <>
       <Form.Item
+        name="extra_question"
+        label={
+          <span>
+            Вопрос для дополнитеных параметров&nbsp;
+            <Tooltip title="Сформулируйте вопрос для определения дополнитеных параметров голосования. Максимум 140 символов.">
+              <QuestionCircleOutlined />
+            </Tooltip>
+          </span>
+        }
+        labelCol={{ span: 24 }}
+        rules={[
+          {
+            required: true,
+            message:
+              'Пожалуйста, укажите вопрос, на которой должны ответить при голосовании',
+          },
+          {
+            max: 140,
+            message: 'Текст вопроса не должен привышать 140 символов',
+          },
+        ]}
+        hasFeedback
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
         name="is_multi_select"
         label={
           <span>
@@ -155,9 +181,13 @@ export function NewRule(props: any) {
     if (formData.question[formData.question.length - 1] !== '?') {
       formData.question += '?';
     }
+    if (formData.extra_question[formData.extra_question.length - 1] !== '?') {
+      formData.extra_question += '?';
+    }
     const ruleData: CreatingRuleInterface = {
       title: formData.title,
       question: formData.question,
+      extra_question: formData.extra_question,
       content: formData.content,
       is_extra_options: formData.is_extra_options,
       is_multi_select: formData.is_multi_select || false,
@@ -222,7 +252,7 @@ export function NewRule(props: any) {
             label={
               <span>
                 Вопрос для голосования&nbsp;
-                <Tooltip title="Сформулируйте вопрос, на который другие члены сообщества будут отвечать на голосовании. Максимум 140 символов.">
+                <Tooltip title="Сформулируйте закрытый вопрос для голосования, на который можно ответить только «да» или «нет». Максимум 140 символов.">
                   <QuestionCircleOutlined />
                 </Tooltip>
               </span>

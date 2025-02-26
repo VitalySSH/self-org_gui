@@ -19,11 +19,6 @@ export function AuthHeaderIcons() {
   const [modalOpen, setModalOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  let userName = '';
-  if (authData.user) {
-    userName = `${authData.user.firstname} ${authData.user.surname}`;
-  }
-
   const avatarOnClick = () => {
     setModalOpen(true);
   };
@@ -71,7 +66,7 @@ export function AuthHeaderIcons() {
           className="avatar"
         />
         <div className="icon-text" onClick={avatarOnClick}>
-          <span>{userName}</span>
+          <span>{authData.user?.fullname}</span>
         </div>
         <MenuOutlined
           style={{

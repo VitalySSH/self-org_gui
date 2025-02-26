@@ -27,9 +27,9 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const [newTextValue, setNewTextValue] = useState('');
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getCurrentValue = () => {
+  const getInitValue = () => {
     if (fieldValue === null && !uploadedFieldValue) {
-      let _currentFieldValue: string | string[] | null = null;
+      let _initFieldValue: string | string[] | null = null;
       if (props.value === undefined) {
         setValue(null);
       } else {
@@ -37,19 +37,19 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
       }
       if (props.multiple) {
         if (Array.isArray(props.value)) {
-          _currentFieldValue = props.value.map((it) => it[props.bindLabel]);
+          _initFieldValue = props.value.map((it) => it[props.bindLabel]);
         }
       } else {
         if (Array.isArray(props.value)) {
           if (props.value.length > 0) {
-            _currentFieldValue = props.value[0][props.bindLabel];
+            _initFieldValue = props.value[0][props.bindLabel];
           }
         } else if (props.value !== undefined) {
-          _currentFieldValue = props.value[props.bindLabel];
+          _initFieldValue = props.value[props.bindLabel];
         }
       }
-      if (_currentFieldValue !== null) setUploadedFieldValue(true);
-      setFieldValue(_currentFieldValue);
+      if (_initFieldValue !== null) setUploadedFieldValue(true);
+      setFieldValue(_initFieldValue);
     }
   };
 
@@ -65,8 +65,8 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
           console.log(`Ошибка получения options в селекторе: ${error}`);
         });
     }
-    getCurrentValue();
-  }, [options, props, props.requestOptions, getCurrentValue]);
+    getInitValue();
+  }, [options, props, props.requestOptions, getInitValue]);
 
   const onValueChange = (_: string, option: any) => {
     if (!uploadedFieldValue) {
@@ -75,8 +75,17 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     let currentValue: T | T[] | null = null;
     let currentFieldValue: string | string[] | null = null;
     if (Array.isArray(option)) {
-      currentValue = option.map((it) => it.obj);
-      currentFieldValue = currentValue.map((it) => it[props.bindLabel]);
+      option.forEach((it) => {
+        if (it.obj) {
+          if (Array.isArray(currentValue)) {
+            currentValue.push(it.obj);
+          } else {
+            currentValue = [];
+            currentValue.push(it.obj);
+          }
+        }
+      });
+      currentFieldValue = (currentValue || []).map((it) => it[props.bindLabel]);
     } else {
       if (option?.obj) {
         currentValue = option.obj;
@@ -125,7 +134,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
           .catch((error) => {
             setOptions([]);
             console.log(
-              `Ошибка создания нового згачения в селекторе: ${error}`
+              `Ошибка создания нового значения в селекторе: ${error}`
             );
           });
       } else {
@@ -203,6 +212,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
           obj: item,
         }))}
         allowClear={true}
+        aria-label={props.label}
       />
     </ConfigProvider>
   );

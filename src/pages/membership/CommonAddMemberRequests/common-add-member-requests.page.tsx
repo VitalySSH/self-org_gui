@@ -192,12 +192,9 @@ export function CommonAddMemberRequests(props: any) {
             (requestMember) => {
               const isMyRequest =
                 requestMember.member?.id === authData.user?.id;
-              const memberName =
-                `${requestMember.member?.firstname}` +
-                ` ${requestMember.member?.surname}`;
               const item = {
                 key: requestMember.id || '',
-                member: memberName,
+                member: requestMember.member?.fullname || '',
                 reason: requestMember.reason || '',
                 status: requestMember.status?.name || '',
                 created: moment(requestMember.created).format(

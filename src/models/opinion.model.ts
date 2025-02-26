@@ -1,15 +1,20 @@
-import { ApiModel } from "./api-model.model.ts";
-import { attribute, modelConfig } from "src/annotations";
+import { ApiModel } from './api-model.model.ts';
+import { attribute, modelConfig, oneToMany } from 'src/annotations';
+import { UserModel } from 'src/models/user.model.ts';
 
 @modelConfig({
-    entityName: 'opinion',
+  entityName: 'opinion',
 })
-export class OpinionModel extends ApiModel{
+export class OpinionModel extends ApiModel {
+  @attribute()
+  text?: string;
 
-    @attribute()
-    text?: string;
+  @oneToMany('user')
+  creator?: UserModel;
 
-    @attribute()
-    creator_id?: string;
+  @attribute()
+  initiative_id?: string;
 
+  @attribute()
+  rule_id?: string;
 }

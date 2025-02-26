@@ -1,4 +1,4 @@
 export interface SimpleVoting {
-    yes?: boolean;
-    no?: boolean;
+  yes?: boolean;
+  no?: boolean;
 }

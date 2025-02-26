@@ -16,7 +16,7 @@ import {
   RequestMemberModel,
   StatusModel,
   UserCommunitySettingsModel,
-  UserModel,
+  UserModel, VotingResultModel,
 } from 'src/models';
 import { Filters, ModelType, Orders } from 'src/shared/types';
 import { dataSourceConfig } from 'src/annotations';
@@ -35,6 +35,7 @@ import { baseApiUrl } from 'src/config/configuration';
     community_settings: CommunitySettingsModel,
     delegate_settings: DelegateSettingsModel,
     user_community_settings: UserCommunitySettingsModel,
+    voting_result: VotingResultModel,
   },
 })
 export class CrudDataSourceService<

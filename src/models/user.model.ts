@@ -1,29 +1,31 @@
-import { ApiModel } from "./api-model.model.ts";
-import { modelConfig, attribute } from "src/annotations";
+import { ApiModel } from './api-model.model.ts';
+import { modelConfig, attribute } from 'src/annotations';
 
 @modelConfig({
-    entityName: 'user',
+  entityName: 'user',
 })
-export class UserModel extends ApiModel{
-    @attribute()
-    firstname?: string;
+export class UserModel extends ApiModel {
+  @attribute()
+  firstname?: string;
 
-    @attribute()
-    surname?: string;
+  @attribute()
+  surname?: string;
 
-    @attribute()
-    about_me?: string;
+  @attribute()
+  fullname?: string;
 
-    @attribute()
-    foto_id?: string | null;
+  @attribute()
+  about_me?: string;
 
-    @attribute()
-    email?: string;
+  @attribute()
+  foto_id?: string | null;
 
-    @attribute()
-    is_active?: boolean;
+  @attribute()
+  email?: string;
 
-    @attribute()
-    created?: Date;
+  @attribute()
+  is_active?: boolean;
 
+  @attribute()
+  created?: Date;
 }

@@ -58,16 +58,13 @@ export function Rules(props: any) {
               id: rule.id,
               title: rule.title,
               description: rule.content,
-              creator: `${rule.creator?.firstname} ${rule.creator?.surname}`,
+              creator: rule.creator?.fullname,
               status: rule.status?.name,
               category: rule.category?.name,
             };
             rules.push(ruleItem);
           });
           setDataSource(rules);
-        })
-        .catch((error) => {
-          console.log(error);
         })
         .finally(() => {
           setLoading(false);
@@ -148,16 +145,23 @@ export function Rules(props: any) {
               onClick={() => {
                 navigate(item.id, {});
               }}
+              style={{ height: 280 }}
             >
               <Meta title={item.title} description={item.description} />
-              <div style={{ marginTop: 20 }}>Автор: {item.creator}</div>
-              <div style={{ marginTop: 10 }}>Категория: {item.category}</div>
-              <div style={{ marginTop: 10 }}>Статус: {item.status}</div>
+              <div style={{ marginTop: 20 }}>
+                <strong>Автор:</strong> {item.creator}
+              </div>
+              <div style={{ marginTop: 10 }}>
+                <strong>Категория:</strong> {item.category}
+              </div>
+              <div style={{ marginTop: 10 }}>
+                <strong>Статус:</strong> {item.status}
+              </div>
             </Card>
           </List.Item>
         )}
       />
-      {total > maxPageSize && (
+      {total > pageSize && (
         <ConfigProvider locale={ruRU}>
           <Pagination
             current={currentPage}

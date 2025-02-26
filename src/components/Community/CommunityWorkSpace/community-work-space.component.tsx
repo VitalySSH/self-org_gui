@@ -10,7 +10,7 @@ import {
   Challenges,
   NewRule,
   MyDelegates,
-  SubCommunities,
+  SubCommunities, RuleDetail,
 } from 'src/pages';
 import { DownOutlined } from '@ant-design/icons';
 import { AuthHeaderIcons, SiderBar } from 'src/components';
@@ -86,7 +86,7 @@ export function CommunityWorkSpace() {
                   items: communityData.menuItems,
                   onClick: (e: { key: string }) => handleMenuClick(e.key),
                 }}
-                placement="bottomCenter"
+                placement="bottom"
               >
                 <DownOutlined style={{ marginLeft: 8 }} />
               </Dropdown>
@@ -114,7 +114,7 @@ export function CommunityWorkSpace() {
             />
             <Route path="rules" element={<Rules communityId={id} />} />
             <Route path="rules/new" element={<NewRule communityId={id} />} />
-            <Route path="rules/:id/*" element={<NewRule communityId={id} />} />
+            <Route path="rules/:id/*" element={<RuleDetail />} />
             <Route
               path="initiatives"
               element={<Initiatives communityId={id} />}

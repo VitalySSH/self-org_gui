@@ -1,39 +1,34 @@
-import { Button, Form, Input, message, Space, Switch, Tooltip } from 'antd';
-import {
-  MinusCircleOutlined,
-  PlusOutlined,
-  CheckOutlined,
-  CloseOutlined,
-  QuestionCircleOutlined,
-} from '@ant-design/icons';
-import TextArea from 'antd/lib/input/TextArea';
-import { CreatingRuleInterface, RuleFormInterface } from 'src/interfaces';
-import { CrudDataSourceService, RuleAoService } from 'src/services';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import {
-  CategoryLabel,
-  IsExtraOptionsLabel,
-  IsMultiSelectLabel,
-} from 'src/consts';
-import { CustomSelect } from 'src/components';
-import { CategoryModel, CommunityModel } from 'src/models';
+import { Button, Card, message, Spin } from 'antd';
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { CrudDataSourceService, VotingResultAoService } from 'src/services';
+import { RuleModel, VotingOptionModel, VotingResultModel } from 'src/models';
+import { Opinions, UserVoting, VotingResults } from 'src/components';
+import { VoteInPercent } from 'src/interfaces';
 
-export function RuleDetail(props: any) {
-  const communityId = props.communityId;
+export function RuleDetail() {
+  const { id } = useParams();
 
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
+  const [rule, setRule] = useState<RuleModel | null>(null);
+  const [votingResult, setVotingResult] =
+    useState<VotingResultModel | undefined>({} as VotingResultModel);
+  const [voteInPercent, setVoteInPercent] = useState({} as VoteInPercent);
+  const [userVote, setUserVote] = useState<boolean | undefined>(undefined);
+  const [userOption, setUserOption] =
+    useState<VotingOptionModel | VotingOptionModel[] | undefined>(undefined);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const [buttonLoading, setButtonLoading] = useState(false);
-  const [disabled, setDisabled] = useState(true);
-  const [isExtraOptions, setIsExtraOptions] = useState(false);
 
-  const communityService = new CrudDataSourceService(CommunityModel);
-  const categoryService = new CrudDataSourceService(CategoryModel);
-  const ruleAoService = new RuleAoService();
-
-  const [form] = Form.useForm();
+  const ruleService =
+    new CrudDataSourceService(RuleModel);
+  const votingResultService =
+    new CrudDataSourceService(VotingResultModel);
+  const votingOptionService =
+    new CrudDataSourceService(VotingOptionModel);
+  const votingResultAoService = new VotingResultAoService();
 
   const successInfo = (content: string) => {
     messageApi
@@ -53,270 +48,157 @@ export function RuleDetail(props: any) {
       .then();
   };
 
-  const onCustomSelectChange = (fieldName: string, value: any) => {
-    form.setFieldValue(fieldName, value);
-  };
+  const fetchRule = useCallback(() => {
+    if (!rule && id) {
+      ruleService
+        .get(id, ['status', 'creator', 'voting_result', 'category'])
+        .then((ruleInst) => {
+          setRule(ruleInst);
+          setVotingResult(ruleInst.voting_result);
+        })
+        .catch((error) => {
+          errorInfo(`Не удалось загрузить данные правила: ${error}`);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [rule, id, ruleService]);
 
-  const handleFormChange = () => {
-    const formData = form.getFieldsValue();
-    setIsExtraOptions(Boolean(formData.is_extra_options));
-    const isValidOptions = formData.is_extra_options
-      ? (formData.extra_options || []).length > 0
-      : true;
-    const isValid =
-      Boolean(formData.title) &&
-      Boolean(formData.question) &&
-      Boolean(formData.content) &&
-      Boolean(formData.category) &&
-      isValidOptions;
-    setDisabled(!isValid);
-  };
+  const fetchVoteInPercent = useCallback(() => {
+    if (!Object.keys(voteInPercent).length && votingResult?.id) {
+      votingResultAoService.getVoteInPercent(votingResult.id)
+        .then((resp) => {
+          setVoteInPercent(resp);
+        })
+        .catch((error) => {
+          errorInfo(`Не удалось получить результаты голосования: ${error}`);
+        });
+    }
+  }, [votingResult, voteInPercent, votingResultAoService]);
 
-  const getCategories = async () => {
-    const _community = await communityService.get(communityId, [
-      'main_settings.categories',
-    ]);
-    return _community.main_settings?.categories || [];
-  };
+  useEffect(() => {
+    fetchRule();
+    fetchVoteInPercent();
+  }, [fetchRule, fetchVoteInPercent]);
 
-  const extraOptions = (
-    <>
-      <Form.Item
-        name="is_multi_select"
-        label={
-          <span>
-            {IsMultiSelectLabel}&nbsp;
-            <Tooltip title="Включите эту опцию, если при голосовании возможен выбор нескольких вариантов ответов.">
-              <QuestionCircleOutlined />
-            </Tooltip>
-          </span>
-        }
-        labelCol={{ span: 24 }}
-        valuePropName="checked"
-      >
-        <Switch
-          checkedChildren={<CheckOutlined />}
-          unCheckedChildren={<CloseOutlined />}
-        />
-      </Form.Item>
-      <Form.List name="extra_options">
-        {(fields, { add, remove }) => (
-          <div className="form-list-input">
-            {fields.map(({ key, name, ...restField }) => (
-              <Space
-                key={key}
-                style={{
-                  display: 'flex',
-                  marginBottom: 8,
-                  width: '100%',
-                }}
-                align="baseline"
-              >
-                <Form.Item
-                  {...restField}
-                  labelCol={{ span: 24 }}
-                  name={[name, 'name']}
-                  rules={[
-                    {
-                      required: true,
-                      message:
-                        'Пожалуйста, укажите дополнительный параметр для голосования',
-                    },
-                  ]}
-                  hasFeedback
-                >
-                  <Input placeholder="Параметр" />
-                </Form.Item>
-                <MinusCircleOutlined onClick={() => remove(name)} />
-              </Space>
-            ))}
-            <Form.Item>
-              <Button
-                type="dashed"
-                onClick={() => add()}
-                icon={<PlusOutlined />}
-              >
-                Добавить параметр
-              </Button>
-            </Form.Item>
-          </div>
-        )}
-      </Form.List>
-    </>
-  );
+  const handleSelectChange = (_fieldName: string, value: any) => {
+    setUserOption(value);
+  };
 
   const onCancel = () => {
     navigate(-1);
   };
 
-  const onFinish = () => {
-    setButtonLoading(true);
-    const formData: RuleFormInterface = form.getFieldsValue();
-    if (formData.question[formData.question.length - 1] !== '?') {
-      formData.question += '?';
-    }
-    const ruleData: CreatingRuleInterface = {
-      title: formData.title,
-      question: formData.question,
-      content: formData.content,
-      is_extra_options: formData.is_extra_options,
-      is_multi_select: formData.is_multi_select || false,
-      community_id: communityId,
-      category_id: formData.category.id,
-      extra_options: (formData.extra_options || []).map((it) => it.name),
-    };
+  const handleVote = (vote: boolean) => {
+    setUserVote(vote);
+  }
 
-    ruleAoService
-      .create_rule(ruleData)
-      .then(() => {
-        successInfo('Правило создано');
-        navigate(-1);
-      })
-      .catch((error) => {
-        errorInfo(`Ошибка создания правила: ${error}`);
-      })
-      .finally(() => setButtonLoading(false));
-  };
+  const onFinish = async () => {
+    setButtonLoading(true);
+    if (votingResult) {
+      votingResult.vote = userVote;
+      const options: VotingOptionModel[] = [];
+      for (const option of Array.isArray(userOption) ? userOption : [userOption]) {
+        if (option) {
+          if (!option?.id) {
+            option.rule_id = rule?.id;
+            option.is_multi_select = rule?.is_multi_select;
+            option.creator_id = rule?.creator?.id;
+            const newOption =
+              await votingOptionService.save(option, true);
+            options.push(newOption);
+          } else {
+            options.push(option);
+          }
+        }
+      }
+      if (options.length) {
+        votingResult.selected_options = options;
+      }
+      votingResultService.save(votingResult, false).then(() => {
+        successInfo('Голос отдан');
+      }).catch((error) => {
+        errorInfo(`Ошибка при сохранении результатов голосования: ${error}`);
+      }).finally(() => {
+        setButtonLoading(false);
+      });
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="loading-spinner" aria-live="polite" aria-busy="true">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (!rule) {
+    return null;
+  }
 
   return (
     <>
+      {contextHolder}
       <div className="form-container">
-        {contextHolder}
-        <div className="form-header">Новое правило</div>
-        <Form
-          form={form}
-          name="new-rule"
-          onFieldsChange={handleFormChange}
-          initialValues={{
-            is_extra_options: false,
-            is_multi_select: false,
-          }}
+        <div className="form-header">{rule.title}</div>
+        <Card className="rule-card" aria-labelledby="rule-title">
+          <h2 id="rule-title" className="rule-title">
+            {rule.title}
+          </h2>
+          <div className="rule-author">
+            <strong>Автор:</strong> {rule.creator?.fullname}
+          </div>
+          <div className="rule-status">
+            <strong>Статус:</strong> {rule.status?.name}
+          </div>
+          <div className="rule-category">
+            <strong>Категория:</strong> {rule.category?.name}
+          </div>
+          <p className="rule-description">{rule.content}</p>
+          <i className="rule-question">{rule.question}</i>
+
+          <VotingResults
+            yesPercent={voteInPercent.yes}
+            noPercent={voteInPercent.no}
+            abstainPercent={voteInPercent.abstain}
+          />
+          <UserVoting
+            resource="rule"
+            ruleId={id}
+            extraQuestion={rule.extra_question || ''}
+            vote={rule.voting_result?.vote}
+            options={rule.options}
+            isMultiSelect={rule.is_multi_select || false}
+            onVote={handleVote}
+            onSelectChange={handleSelectChange}
+          />
+          <Opinions
+            maxPageSize={20}
+            resource="rule"
+            ruleId={id}
+          />
+        </Card>
+      </div>
+      <div className="toolbar">
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={buttonLoading}
+          onClick={onFinish}
+          className="toolbar-button"
         >
-          <Form.Item
-            name="title"
-            label={
-              <span>
-                Заголовок&nbsp;
-                <Tooltip title="Введите текст, который будет передавать суть вашего правила. Максимум 140 символов.">
-                  <QuestionCircleOutlined />
-                </Tooltip>
-              </span>
-            }
-            labelCol={{ span: 24 }}
-            rules={[
-              {
-                required: true,
-                message: 'Пожалуйста, укажите заголовок для правила',
-              },
-              {
-                max: 140,
-                message: 'Текст заголовка не должен привышать 140 символов',
-              },
-            ]}
-            hasFeedback
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="question"
-            label={
-              <span>
-                Вопрос для голосования&nbsp;
-                <Tooltip title="Сформулируйте вопрос, на который другие члены сообщества будут отвечать на голосовании. Максимум 140 символов.">
-                  <QuestionCircleOutlined />
-                </Tooltip>
-              </span>
-            }
-            labelCol={{ span: 24 }}
-            rules={[
-              {
-                required: true,
-                message:
-                  'Пожалуйста, укажите вопрос, на которой должны ответить при голосовании',
-              },
-              {
-                max: 140,
-                message: 'Текст вопроса не должен привышать 140 символов',
-              },
-            ]}
-            hasFeedback
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="content"
-            label={
-              <span>
-                Описание правила&nbsp;
-                <Tooltip title="Расскажите подробно суть вашего правила, с какой целью оно предлагается и как оно поможет сделать наше сообщество лучше. Максимум 1 000 символов.">
-                  <QuestionCircleOutlined />
-                </Tooltip>
-              </span>
-            }
-            labelCol={{ span: 24 }}
-            rules={[
-              {
-                required: true,
-                message:
-                  'Пожалуйста, подробно опишите цель и содержание правила',
-              },
-              {
-                max: 1000,
-                message:
-                  'Текст описания правиа не должен привышать 1000 символов',
-              },
-            ]}
-            hasFeedback
-          >
-            <TextArea rows={5} />
-          </Form.Item>
-          <Form.Item
-            name="category"
-            label={
-              <span>
-                {CategoryLabel}&nbsp;
-                <Tooltip title="Укажите категорию для вашего правила, чтобы обеспечить структурирование и облегчить поиск правил.">
-                  <QuestionCircleOutlined />
-                </Tooltip>
-              </span>
-            }
-            labelCol={{ span: 24 }}
-            rules={[
-              {
-                required: true,
-                message: 'Пожалуйста, выберите категорию',
-              },
-            ]}
-            hasFeedback
-          >
-            <CustomSelect
-              fieldService={categoryService}
-              requestOptions={getCategories}
-              onChange={onCustomSelectChange}
-              formField="category"
-              bindLabel="name"
-            />
-          </Form.Item>
-          <Form.Item
-            name="is_extra_options"
-            label={
-              <span>
-                {IsExtraOptionsLabel}&nbsp;
-                <Tooltip title="Включите эту опцию, если ответ на ваш вопрос предполагает более широкие варианты, выходящие за рамки стандартных Да или Нет.">
-                  <QuestionCircleOutlined />
-                </Tooltip>
-              </span>
-            }
-            labelCol={{ span: 24 }}
-            valuePropName="checked"
-          >
-            <Switch
-              checkedChildren={<CheckOutlined />}
-              unCheckedChildren={<CloseOutlined />}
-            />
-          </Form.Item>
-          {isExtraOptions && extraOptions}
-        </Form>
+          Проголосовать
+        </Button>
+        <Button
+          type="primary"
+          htmlType="button"
+          onClick={onCancel}
+          className="toolbar-button"
+        >
+          Назад
+        </Button>
       </div>
     </>
   );

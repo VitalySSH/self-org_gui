@@ -207,12 +207,9 @@ export function AddMemberRequestsForMe(props: any) {
           if (!settings) navigate('/no-much-page');
           (settings?.adding_members || []).forEach((requestMember) => {
             const isMyRequest = requestMember.member?.id === currentUserId;
-            const memberName =
-              `${requestMember.member?.firstname} ` +
-              `${requestMember.member?.surname}`;
             const item = {
               key: requestMember.id || '',
-              member: memberName,
+              member: requestMember.member?.fullname,
               reason: requestMember.reason || '',
               status: requestMember.status?.name || '',
               created: moment(requestMember.created).format('DD.MM.yyyy HH:mm'),

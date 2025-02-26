@@ -42,6 +42,9 @@ export class RuleModel extends ApiModel {
   @oneToMany('voting_result')
   voting_result?: VotingResultModel;
 
+  @attribute()
+  extra_question?: string;
+
   @manyToMany('voting_option')
   extra_options?: VotingOptionModel[];
 

@@ -151,10 +151,13 @@ export function CommunitySelect(props: CommunitySelectProps) {
   const MenuList = (props: any) => {
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+        <div style={{ maxHeight: 200, overflowY: 'auto' }}>
           <components.MenuList {...props}>{props.children}</components.MenuList>
         </div>
-        <Button type="primary" onClick={handleClick} style={{ margin: 8 }}>
+        <Button
+          type="primary"
+          onClick={handleClick}
+          style={{ margin: 8, maxWidth: 200, left: 0 }}>
           Добавить сообщество
         </Button>
       </div>

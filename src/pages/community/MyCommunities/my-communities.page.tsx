@@ -92,7 +92,7 @@ export function MyCommunities() {
           </List.Item>
         )}
       />
-      {total > maxPageSize && (
+      {total > pageSize && (
         <ConfigProvider locale={ruRU}>
           <Pagination
             current={currentPage}
