@@ -43,23 +43,30 @@ export function UserVoting(props: UserVotingProps) {
     return resp.data;
   };
 
+  if (userVote === undefined) {
+    return null;
+  }
+
   return (
     <div className="user-voting">
       <h3>Ваш голос:</h3>
-      <Checkbox
-        checked={userVote === true}
-        onChange={() => handleVote(true)}
-        aria-label="Да"
-      >
-        Да
-      </Checkbox>
-      <Checkbox
-        checked={userVote === false}
-        onChange={() => handleVote(false)}
-        aria-label="Нет"
-      >
-        Нет
-      </Checkbox>
+      <i className="rule-question">{props.question}</i>
+      <div style={{ marginTop: 4 }}>
+        <Checkbox
+          checked={userVote}
+          onChange={() => handleVote(true)}
+          aria-label="Да"
+        >
+          Да
+        </Checkbox>
+        <Checkbox
+          checked={!userVote}
+          onChange={() => handleVote(false)}
+          aria-label="Нет"
+        >
+          Нет
+        </Checkbox>
+      </div>
 
       {userVote && props.isOptions && (
         <div className="additional-question">

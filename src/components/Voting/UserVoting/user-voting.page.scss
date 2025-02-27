@@ -1,13 +1,21 @@
 .user-voting {
-  margin-bottom: 20px;
-}
+  margin-top: 24px;
+  margin-bottom: 24px;
 
-.user-voting .ant-checkbox-wrapper {
-  margin-right: 16px;
+  .rule-question {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 16px;
+  }
+
+  .ant-checkbox-wrapper {
+    margin-right: 16px;
+  }
 }
 
 .additional-question {
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 .additional-question .ant-select {

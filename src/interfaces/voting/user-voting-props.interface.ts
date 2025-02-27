@@ -5,6 +5,7 @@ export interface UserVotingProps {
   resource: Resource;
   ruleId?: string;
   initiativeId?: string;
+  question: string;
   extraQuestion: string;
   vote: boolean | undefined;
   isOptions: boolean;

@@ -1,5 +1,5 @@
 import './rule-detail.page.scss';
-import { Button, Card, message, Spin } from 'antd';
+import { Button, Card, Form, message, Select, Spin } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CrudDataSourceService, VotingResultAoService } from 'src/services';
@@ -9,7 +9,11 @@ import {
   VotingOptionModel,
   VotingResultModel,
 } from 'src/models';
-import { Opinions, UserVoting, VotingResults } from 'src/components';
+import {
+  Opinions,
+  UserVoting,
+  VotingResults,
+} from 'src/components';
 import { AuthContextProvider, VoteInPercent } from 'src/interfaces';
 import { useAuth } from 'src/hooks';
 
@@ -20,23 +24,22 @@ export function RuleDetail() {
   const [messageApi, contextHolder] = message.useMessage();
 
   const [rule, setRule] = useState<RuleModel | null>(null);
-  const [votingResultId, setVotingResultId] = useState<
-    string | undefined
-  >(undefined);
-  const [userVotingResult, setUserVotingResult] = useState<
-    UserVotingResultModel
-  >({} as VotingResultModel);
+  const [votingResultId, setVotingResultId] = useState<string | undefined>(
+    undefined
+  );
+  const [userVotingResult, setUserVotingResult] =
+    useState<UserVotingResultModel>({} as VotingResultModel);
   const [voteInPercent, setVoteInPercent] = useState({} as VoteInPercent);
   const [userVote, setUserVote] = useState<boolean | undefined>(undefined);
-  const [userOption, setUserOption] = useState<
-    VotingOptionModel[]
-  >([]);
+  const [userOption, setUserOption] = useState<VotingOptionModel[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [disabled, setDisabled] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
 
   const ruleService = new CrudDataSourceService(RuleModel);
-  const userVotingResultService = new CrudDataSourceService(UserVotingResultModel);
+  const userVotingResultService = new CrudDataSourceService(
+    UserVotingResultModel
+  );
   const votingOptionService = new CrudDataSourceService(VotingOptionModel);
   const votingResultAoService = new VotingResultAoService();
 
@@ -61,7 +64,8 @@ export function RuleDetail() {
   const fetchRule = useCallback(() => {
     if (!rule && id) {
       ruleService
-        .get(id, ['status', 'creator', 'voting_result', 'category'])
+        .get(id, ['status', 'creator',
+          'voting_result.selected_options', 'category'])
         .then((ruleInst) => {
           setRule(ruleInst);
           setVotingResultId(ruleInst.voting_result?.id);
@@ -83,7 +87,9 @@ export function RuleDetail() {
           setVoteInPercent(resp);
         })
         .catch((error) => {
-          errorInfo(`Не удалось получить общие результаты голосования: ${error}`);
+          errorInfo(
+            `Не удалось получить общие результаты голосования: ${error}`
+          );
         });
     }
   };
@@ -97,19 +103,24 @@ export function RuleDetail() {
   const fetchUserVotingResult = useCallback(() => {
     if (!Object.keys(userVotingResult).length && id) {
       userVotingResultService
-        .list([
-          {
-            field: 'rule_id',
-            op: 'equals',
-            val: id,
-          },
-          {
-            field: 'member_id',
-            op: 'equals',
-            val: authData.user?.id,
-          },
-        ],undefined, undefined, ['extra_options']
-        ).then((resp) => {
+        .list(
+          [
+            {
+              field: 'rule_id',
+              op: 'equals',
+              val: id,
+            },
+            {
+              field: 'member_id',
+              op: 'equals',
+              val: authData.user?.id,
+            },
+          ],
+          undefined,
+          undefined,
+          ['extra_options']
+        )
+        .then((resp) => {
           if (resp.total) {
             const result = resp.data[0];
             setUserVotingResult(result);
@@ -117,7 +128,9 @@ export function RuleDetail() {
           }
         })
         .catch((error) => {
-          errorInfo(`Не удалось получить пользовательские результаты голосования: ${error}`);
+          errorInfo(
+            `Не удалось получить пользовательские результаты голосования: ${error}`
+          );
         });
     }
   }, [id, userVotingResult, userVotingResultService]);
@@ -191,7 +204,7 @@ export function RuleDetail() {
           setButtonLoading(false);
         });
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -212,9 +225,7 @@ export function RuleDetail() {
       {contextHolder}
       <div className="form-container">
         <Card className="rule-card">
-          <h2>
-            {rule.title}
-          </h2>
+          <h2>{rule.title}</h2>
           <div>
             <strong>Автор:</strong> {rule.creator?.fullname}
           </div>
@@ -224,7 +235,10 @@ export function RuleDetail() {
           <div>
             <strong>Категория:</strong> {rule.category?.name}
           </div>
-          <p className="rule-description">{rule.content}</p>
+          <p className="rule-description">
+            <strong>Описание: </strong>
+            {rule.content}
+          </p>
           <i className="rule-question">{rule.question}</i>
 
           <VotingResults
@@ -232,9 +246,37 @@ export function RuleDetail() {
             noPercent={voteInPercent.no}
             abstainPercent={voteInPercent.abstain}
           />
+          {rule.is_extra_options && (
+            <div>
+              <i className="rule-question">{rule.extra_question}</i>
+              <Form.Item>
+                <Select
+                  mode="multiple"
+                  value={(rule.voting_result?.selected_options || []).map(
+                    (it) => it.content
+                  )}
+                  suffixIcon={null}
+                  open={false}
+                  removeIcon={null}
+                ></Select>
+              </Form.Item>
+            </div>
+          )}
+          {/*<CustomSelect*/}
+          {/*  fieldService={votingOptionService}*/}
+          {/*  requestOptions={async () => { return []}}*/}
+          {/*  multiple={rule.is_multi_select || false}*/}
+          {/*  label="Выберите дополнительные параметры"*/}
+          {/*  onChange={() => {}}*/}
+          {/*  value={rule.voting_result?.selected_options || []}*/}
+          {/*  formField="voting_options"*/}
+          {/*  bindLabel="content"*/}
+          {/*/>*/}
+
           <UserVoting
             resource="rule"
             ruleId={id}
+            question={rule.question || ''}
             extraQuestion={rule.extra_question || ''}
             vote={userVotingResult.vote}
             isOptions={rule.is_extra_options || false}
