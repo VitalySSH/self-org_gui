@@ -61,7 +61,7 @@ export function UserVoting(props: UserVotingProps) {
         Нет
       </Checkbox>
 
-      {userVote && (
+      {userVote && props.isOptions && (
         <div className="additional-question">
           <i>{props.extraQuestion}</i>
           <CustomSelect

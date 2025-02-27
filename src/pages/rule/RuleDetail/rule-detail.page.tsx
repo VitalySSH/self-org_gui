@@ -75,8 +75,8 @@ export function RuleDetail() {
     }
   }, [rule, id, ruleService]);
 
-  const fetchVoteInPercent = useCallback(() => {
-    if (!Object.keys(voteInPercent).length && votingResultId) {
+  const _fetchVoteInPercent = () => {
+    if (votingResultId) {
       votingResultAoService
         .getVoteInPercent(votingResultId)
         .then((resp) => {
@@ -86,7 +86,13 @@ export function RuleDetail() {
           errorInfo(`Не удалось получить общие результаты голосования: ${error}`);
         });
     }
-  }, [votingResultId, voteInPercent, votingResultAoService]);
+  };
+
+  const fetchVoteInPercent = useCallback(() => {
+    if (!Object.keys(voteInPercent).length) {
+      _fetchVoteInPercent();
+    }
+  }, [_fetchVoteInPercent, voteInPercent]);
 
   const fetchUserVotingResult = useCallback(() => {
     if (!Object.keys(userVotingResult).length && id) {
@@ -151,29 +157,32 @@ export function RuleDetail() {
         userVotingResult.vote = userVote;
       }
       const options: VotingOptionModel[] = [];
-      for (const option of Array.isArray(userOption)
-        ? userOption
-        : [userOption]) {
-        if (option) {
-          if (!option?.id) {
-            option.rule_id = rule?.id;
-            option.is_multi_select = rule?.is_multi_select;
-            option.creator_id = rule?.creator?.id;
-            const newOption = await votingOptionService.save(option, true);
-            options.push(newOption);
-          } else {
-            options.push(option);
+      if (userVote) {
+        for (const option of Array.isArray(userOption)
+          ? userOption
+          : [userOption]) {
+          if (option) {
+            if (!option?.id) {
+              option.rule_id = rule?.id;
+              option.is_multi_select = rule?.is_multi_select;
+              option.creator_id = rule?.creator?.id;
+              const newOption = await votingOptionService.save(option, true);
+              options.push(newOption);
+            } else {
+              options.push(option);
+            }
           }
         }
       }
-      if (options.length) {
-        userVotingResult.extra_options = options;
+      userVotingResult.extra_options = options;
+      if (!userVotingResult.is_voted_myself) {
+        userVotingResult.is_voted_myself = true;
       }
-      userVotingResult.is_voted_myself = true;
       userVotingResultService
         .save(userVotingResult, false)
         .then(() => {
           successInfo('Голос отдан');
+          _fetchVoteInPercent();
         })
         .catch((error) => {
           errorInfo(`Ошибка при сохранении результатов голосования: ${error}`);
@@ -228,6 +237,7 @@ export function RuleDetail() {
             ruleId={id}
             extraQuestion={rule.extra_question || ''}
             vote={userVotingResult.vote}
+            isOptions={rule.is_extra_options || false}
             options={userOption}
             isMultiSelect={rule.is_multi_select || false}
             onVote={handleVote}

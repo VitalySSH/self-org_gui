@@ -7,6 +7,7 @@ export interface UserVotingProps {
   initiativeId?: string;
   extraQuestion: string;
   vote: boolean | undefined;
+  isOptions: boolean;
   isMultiSelect: boolean;
   options: VotingOptionModel[];
   onVote: (vote: boolean) => void;
