@@ -29,10 +29,10 @@ export function RuleDetail() {
   const [voteInPercent, setVoteInPercent] = useState({} as VoteInPercent);
   const [userVote, setUserVote] = useState<boolean | undefined>(undefined);
   const [userOption, setUserOption] = useState<
-    VotingOptionModel | VotingOptionModel[] | undefined
-  >(undefined);
+    VotingOptionModel[]
+  >([]);
   const [loading, setLoading] = useState<boolean>(true);
-
+  const [disabled, setDisabled] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
 
   const ruleService = new CrudDataSourceService(RuleModel);
@@ -105,7 +105,9 @@ export function RuleDetail() {
         ],undefined, undefined, ['extra_options']
         ).then((resp) => {
           if (resp.total) {
-            setUserVotingResult(resp.data[0]);
+            const result = resp.data[0];
+            setUserVotingResult(result);
+            if (result.vote) setUserOption(result.extra_options || []);
           }
         })
         .catch((error) => {
@@ -121,7 +123,11 @@ export function RuleDetail() {
   }, [fetchRule, fetchVoteInPercent, fetchUserVotingResult]);
 
   const handleSelectChange = (_fieldName: string, value: any) => {
-    setUserOption(value);
+    const currentValue = Array.isArray(value) ? value : [value];
+    setUserOption(currentValue);
+    if (disabled && currentValue.length) {
+      setDisabled(false);
+    }
   };
 
   const onCancel = () => {
@@ -130,6 +136,12 @@ export function RuleDetail() {
 
   const handleVote = (vote: boolean) => {
     setUserVote(vote);
+    if (vote && !userOption) {
+      setDisabled(true);
+    }
+    if (userVote && !vote) {
+      setUserOption([]);
+    }
   };
 
   const onFinish = async () => {
@@ -216,7 +228,7 @@ export function RuleDetail() {
             ruleId={id}
             extraQuestion={rule.extra_question || ''}
             vote={userVotingResult.vote}
-            options={userVotingResult.extra_options || []}
+            options={userOption}
             isMultiSelect={rule.is_multi_select || false}
             onVote={handleVote}
             onSelectChange={handleSelectChange}
@@ -230,6 +242,7 @@ export function RuleDetail() {
           htmlType="submit"
           loading={buttonLoading}
           onClick={onFinish}
+          disabled={disabled}
           className="toolbar-button"
         >
           Проголосовать
