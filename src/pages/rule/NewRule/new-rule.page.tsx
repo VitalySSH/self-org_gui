@@ -181,7 +181,8 @@ export function NewRule(props: any) {
     if (formData.question[formData.question.length - 1] !== '?') {
       formData.question += '?';
     }
-    if (formData.extra_question[formData.extra_question.length - 1] !== '?') {
+    if (formData.extra_question &&
+      formData.extra_question[formData.extra_question.length - 1] !== '?') {
       formData.extra_question += '?';
     }
     const ruleData: CreatingRuleInterface = {
@@ -251,7 +252,7 @@ export function NewRule(props: any) {
             name="question"
             label={
               <span>
-                Вопрос для голосования&nbsp;
+                Закрытый вопрос для голосования&nbsp;
                 <Tooltip title="Сформулируйте закрытый вопрос для голосования, на который можно ответить только «да» или «нет». Максимум 140 символов.">
                   <QuestionCircleOutlined />
                 </Tooltip>

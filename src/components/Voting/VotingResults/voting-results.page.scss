@@ -1,7 +1,12 @@
 .voting-results {
+  margin-top: 12px;
   margin-bottom: 20px;
 }
 
 .voting-results .ant-progress {
   margin-bottom: 10px;
+
+  .ant-progress-inner {
+    max-width: 560px;
+  }
 }

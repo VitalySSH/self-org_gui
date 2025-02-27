@@ -4,7 +4,8 @@ import { Button, ConfigProvider, Input, List, message, Pagination } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { SetStateAction, useEffect, useState } from 'react';
 import { CrudDataSourceService } from 'src/services';
-import { OpinionModel, VotingOptionModel } from 'src/models';
+import { OpinionModel } from 'src/models';
+import { EditOutlined } from "@ant-design/icons";
 import ruRU from 'antd/lib/locale/ru_RU';
 
 export function Opinions(props: OpinionsProps) {
@@ -17,6 +18,8 @@ export function Opinions(props: OpinionsProps) {
   const [pageSize, setPageSize] = useState(props.maxPageSize);
   const [total, setTotal] = useState(0);
   const [isMyOpinion, setIsMyOpinion] = useState<boolean | null>(null);
+  const [editingOpinionId, setEditingOpinionId] = useState<string | null>(null);
+  const [editedText, setEditedText] = useState<string>('');
 
   const opinionService = new CrudDataSourceService(OpinionModel);
 
@@ -127,6 +130,7 @@ export function Opinions(props: OpinionsProps) {
           setNewOpinion('');
         });
       setNewOpinion('');
+      setTotal(total + 1);
     }
   };
 
@@ -139,11 +143,27 @@ export function Opinions(props: OpinionsProps) {
     setLoading(true);
   };
 
-  const updateOpinion = (opinion: VotingOptionModel, content: string) => {
-    opinion.content = content;
-    opinionService.save(opinion).then(() => {
-      successInfo('Мнение отредактировано');
-    });
+  const handleEditOpinion = (opinion: OpinionModel) => {
+    setEditingOpinionId(opinion.id);
+    setEditedText(opinion.text || '');
+  };
+
+  const handleSaveOpinion = (opinion: OpinionModel) => {
+    opinion.text = editedText;
+    opinionService
+      .save(opinion)
+      .then(() => {
+        successInfo('Мнение сохранено');
+        setEditingOpinionId(null);
+      })
+      .catch((error) => {
+        errorInfo(`При сохранении мнения возникла ошибка: ${error}`);
+      });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingOpinionId(null);
+    setEditedText('');
   };
 
   return (
@@ -192,10 +212,34 @@ export function Opinions(props: OpinionsProps) {
               title={opinion.creator?.fullname}
               description={
                 opinion.creator?.id === authData.user?.id ? (
-                  <Input.TextArea
-                    defaultValue={opinion.text}
-                    onBlur={(e) => updateOpinion(opinion, e.target.value)}
-                  />
+                  <>
+                    {editingOpinionId === opinion.id ? (
+                      <>
+                        <Input.TextArea
+                          value={editedText}
+                          onChange={(e) => setEditedText(e.target.value)}
+                        />
+                        <div style={{ marginTop: 10 }}>
+                          <Button
+                            type="primary"
+                            onClick={() => handleSaveOpinion(opinion)}
+                            style={{ marginRight: 10 }}
+                          >
+                            Сохранить
+                          </Button>
+                          <Button onClick={handleCancelEdit}>Отменить</Button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        {opinion.text}
+                        <EditOutlined
+                          onClick={() => handleEditOpinion(opinion)}
+                          style={{ marginLeft: 10, fontSize: 20 }}
+                        />
+                      </>
+                    )}
+                  </>
                 ) : (
                   opinion.text
                 )

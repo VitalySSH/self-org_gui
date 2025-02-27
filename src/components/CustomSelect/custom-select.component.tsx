@@ -211,8 +211,8 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
           value: item[props.bindLabel],
           obj: item,
         }))}
+        placeholder={props.label}
         allowClear={true}
-        aria-label={props.label}
       />
     </ConfigProvider>
   );

@@ -9,28 +9,8 @@
   background-color: $background-color;
 }
 
-.rule-title {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 16px;
-  color: #1890ff;
-}
-
-.rule-author {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 8px;
-  text-align: center;
-}
-
-.rule-status {
-  font-size: 16px;
-  margin-bottom: 12px;
-  color: #666;
-}
-
 .rule-description {
-  font-size: 14px;
+  font-size: 16px;
   color: #333;
   line-height: 1.6;
   margin-bottom: 16px;
@@ -47,7 +27,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px;
+  height: 100%;
+  width: 100%;
 }
 
 .error-message {
@@ -57,27 +38,10 @@
   margin-top: 20px;
 }
 
-/* Адаптивность */
 @media (max-width: 768px) {
   .rule-card {
     margin: 10px;
     padding: 15px;
-  }
-
-  .rule-title {
-    font-size: 20px;
-  }
-
-  .rule-author {
-    font-size: 13px;
-  }
-
-  .rule-status {
-    font-size: 14px;
-  }
-
-  .rule-category {
-    font-size: 14px;
   }
 
   .rule-description {

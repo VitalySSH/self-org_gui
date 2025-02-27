@@ -63,12 +63,12 @@ export function UserVoting(props: UserVotingProps) {
 
       {userVote && (
         <div className="additional-question">
-          <p>{props.extraQuestion}</p>
+          <i>{props.extraQuestion}</i>
           <CustomSelect
             fieldService={votingOptionService}
             requestOptions={getVotingOptions}
             multiple={props.isMultiSelect}
-            label="Выберите дополнительные парраметры"
+            label="Выберите дополнительные параметры"
             onChange={props.onSelectChange}
             value={props.options}
             formField="voting_options"
