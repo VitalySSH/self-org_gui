@@ -133,7 +133,7 @@ export function RuleDetail() {
           );
         });
     }
-  }, [id, userVotingResult, userVotingResultService]);
+  }, [authData, id, userVotingResult, userVotingResultService, errorInfo]);
 
   useEffect(() => {
     fetchRule();
@@ -262,16 +262,6 @@ export function RuleDetail() {
               </Form.Item>
             </div>
           )}
-          {/*<CustomSelect*/}
-          {/*  fieldService={votingOptionService}*/}
-          {/*  requestOptions={async () => { return []}}*/}
-          {/*  multiple={rule.is_multi_select || false}*/}
-          {/*  label="Выберите дополнительные параметры"*/}
-          {/*  onChange={() => {}}*/}
-          {/*  value={rule.voting_result?.selected_options || []}*/}
-          {/*  formField="voting_options"*/}
-          {/*  bindLabel="content"*/}
-          {/*/>*/}
 
           <UserVoting
             resource="rule"

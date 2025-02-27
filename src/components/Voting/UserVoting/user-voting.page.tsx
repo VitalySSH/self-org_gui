@@ -8,9 +8,11 @@ import { VotingOptionModel } from 'src/models';
 import { Filters } from 'src/shared/types.ts';
 
 export function UserVoting(props: UserVotingProps) {
-  const [userVote, setUserVote] = useState<boolean | undefined>(props.vote);
+  const [userVote, setUserVote] =
+    useState<boolean | undefined | null>(props.vote);
 
-  const votingOptionService = new CrudDataSourceService(VotingOptionModel);
+  const votingOptionService =
+    new CrudDataSourceService(VotingOptionModel);
 
   const getFilters = (): Filters => {
     switch (props.resource) {
@@ -39,7 +41,8 @@ export function UserVoting(props: UserVotingProps) {
   };
 
   const getVotingOptions = async () => {
-    const resp = await votingOptionService.list(getFilters());
+    const resp =
+      await votingOptionService.list(getFilters());
     return resp.data;
   };
 
@@ -53,14 +56,14 @@ export function UserVoting(props: UserVotingProps) {
       <i className="rule-question">{props.question}</i>
       <div style={{ marginTop: 4 }}>
         <Checkbox
-          checked={userVote}
+          checked={userVote === true}
           onChange={() => handleVote(true)}
           aria-label="Да"
         >
           Да
         </Checkbox>
         <Checkbox
-          checked={!userVote}
+          checked={userVote === false}
           onChange={() => handleVote(false)}
           aria-label="Нет"
         >
