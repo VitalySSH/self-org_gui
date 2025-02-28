@@ -10,12 +10,13 @@ import {
   Challenges,
   NewRule,
   MyDelegates,
-  SubCommunities, RuleDetail,
+  SubCommunities,
+  RuleDetail,
 } from 'src/pages';
 import { DownOutlined } from '@ant-design/icons';
 import { AuthHeaderIcons, SiderBar } from 'src/components';
 import { CommunityAOService } from 'src/services';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { CommunityWorkSpaceData } from 'src/interfaces';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 
@@ -29,11 +30,9 @@ export function CommunityWorkSpace() {
     null as CommunityWorkSpaceData | null
   );
 
-  const communityService = new CommunityAOService();
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getCommunity = () => {
+  const getCommunity = useCallback(() => {
     if (id && communityData?.id !== id) {
+      const communityService = new CommunityAOService();
       communityService.getNameData(id).then((resp) => {
         if (resp.is_blocked) navigate('/no-much-page');
         setCommunityData({
@@ -48,7 +47,7 @@ export function CommunityWorkSpace() {
         });
       });
     }
-  };
+  }, [communityData?.id, id, navigate]);
 
   useEffect(() => {
     getCommunity();

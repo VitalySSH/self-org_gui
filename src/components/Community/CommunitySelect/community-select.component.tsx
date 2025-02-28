@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Select from 'react-select';
 import { Modal, Form, Button } from 'antd';
 import {
@@ -23,11 +23,6 @@ export function CommunitySelect(props: CommunitySelectProps) {
   const [disabled, setDisabled] = useState(true);
 
   const [form] = Form.useForm();
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const userSettingsService = new CrudDataSourceService(
-    UserCommunitySettingsModel
-  );
 
   const formatOptionLabel = (option: UserCommunitySettingsModel) => (
     <div>
@@ -104,12 +99,14 @@ export function CommunitySelect(props: CommunitySelectProps) {
     setIsModalVisible(true);
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getOptions = () => {
+  const getOptions = useCallback(() => {
     if (options === undefined) {
       if (props.readonly) {
         setOptions([]);
       } else {
+        const userSettingsService = new CrudDataSourceService(
+          UserCommunitySettingsModel
+        );
         userSettingsService
           .list(
             [
@@ -128,25 +125,18 @@ export function CommunitySelect(props: CommunitySelectProps) {
           });
       }
     }
-  };
+  }, [options, props.parentCommunityId, props.readonly]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getCurrentValues = () => {
+  const getCurrentValues = useCallback(() => {
     if (values === null && props.values !== undefined) {
       setValues(props.values);
     }
-  };
+  }, [props.values, values]);
 
   useEffect(() => {
     getOptions();
     getCurrentValues();
-  }, [
-    props.values,
-    props.parentCommunityId,
-    props.readonly,
-    getOptions,
-    getCurrentValues,
-  ]);
+  }, [getCurrentValues, getOptions]);
 
   const MenuList = (props: any) => {
     return (
@@ -157,7 +147,8 @@ export function CommunitySelect(props: CommunitySelectProps) {
         <Button
           type="primary"
           onClick={handleClick}
-          style={{ margin: 8, maxWidth: 200, left: 0 }}>
+          style={{ margin: 8, maxWidth: 200, left: 0 }}
+        >
           Добавить сообщество
         </Button>
       </div>

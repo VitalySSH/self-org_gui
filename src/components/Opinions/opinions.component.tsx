@@ -2,10 +2,16 @@ import { useAuth } from 'src/hooks';
 import { AuthContextProvider, FilterItem, OpinionsProps } from 'src/interfaces';
 import { Button, ConfigProvider, Input, List, message, Pagination } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-import { SetStateAction, useEffect, useState } from 'react';
+import {
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { CrudDataSourceService } from 'src/services';
 import { OpinionModel } from 'src/models';
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined } from '@ant-design/icons';
 import ruRU from 'antd/lib/locale/ru_RU';
 
 export function Opinions(props: OpinionsProps) {
@@ -21,7 +27,10 @@ export function Opinions(props: OpinionsProps) {
   const [editingOpinionId, setEditingOpinionId] = useState<string | null>(null);
   const [editedText, setEditedText] = useState<string>('');
 
-  const opinionService = new CrudDataSourceService(OpinionModel);
+  const opinionService = useMemo(
+    () => new CrudDataSourceService(OpinionModel),
+    []
+  );
 
   const successInfo = (content: string) => {
     messageApi
@@ -32,16 +41,19 @@ export function Opinions(props: OpinionsProps) {
       .then();
   };
 
-  const errorInfo = (content: string) => {
-    messageApi
-      .open({
-        type: 'error',
-        content: content,
-      })
-      .then();
-  };
+  const errorInfo = useCallback(
+    (content: string) => {
+      messageApi
+        .open({
+          type: 'error',
+          content: content,
+        })
+        .then();
+    },
+    [messageApi]
+  );
 
-  const getFilter = (): FilterItem => {
+  const getFilter = useCallback((): FilterItem => {
     switch (props.resource) {
       case 'initiative':
         return {
@@ -56,9 +68,9 @@ export function Opinions(props: OpinionsProps) {
           val: props.ruleId,
         };
     }
-  };
+  }, [props.initiativeId, props.resource, props.ruleId]);
 
-  const fetchOpinions = () => {
+  const fetchOpinions = useCallback(() => {
     if (loading && props) {
       opinionService
         .list(
@@ -78,9 +90,17 @@ export function Opinions(props: OpinionsProps) {
           setLoading(false);
         });
     }
-  };
+  }, [
+    currentPage,
+    errorInfo,
+    getFilter,
+    loading,
+    opinionService,
+    pageSize,
+    props,
+  ]);
 
-  const fetchMyOpinion = () => {
+  const fetchMyOpinion = useCallback(() => {
     const userId = authData.user?.id;
     if (userId && isMyOpinion === null) {
       opinionService
@@ -96,7 +116,7 @@ export function Opinions(props: OpinionsProps) {
           setIsMyOpinion(resp.total > 0);
         });
     }
-  };
+  }, [authData.user?.id, getFilter, isMyOpinion, opinionService]);
 
   useEffect(() => {
     fetchOpinions();

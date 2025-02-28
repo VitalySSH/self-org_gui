@@ -1,5 +1,5 @@
 import { Button, Card, List, message, Modal } from 'antd';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { SettingsStatisticsInterface } from 'src/interfaces';
 import { RequestMemberAoService } from 'src/services';
 import Meta from 'antd/es/card/Meta';
@@ -13,20 +13,21 @@ export function MemberRequestVotesButton(props: any) {
     undefined as SettingsStatisticsInterface[] | undefined
   );
 
-  const requestMemberAoService = new RequestMemberAoService();
+  const errorInfo = useCallback(
+    (content: string) => {
+      messageApi
+        .open({
+          type: 'error',
+          content: content,
+        })
+        .then();
+    },
+    [messageApi]
+  );
 
-  const errorInfo = (content: string) => {
-    messageApi
-      .open({
-        type: 'error',
-        content: content,
-      })
-      .then();
-  };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getVotes = () => {
+  const getVotes = useCallback(() => {
     if (votes === undefined && tableRow?.key) {
+      const requestMemberAoService = new RequestMemberAoService();
       requestMemberAoService
         .votesInPercent(tableRow.key)
         .then((r) => {
@@ -34,11 +35,11 @@ export function MemberRequestVotesButton(props: any) {
         })
         .catch((error) => errorInfo(error));
     }
-  };
+  }, [errorInfo, tableRow.key, votes]);
 
   useEffect(() => {
     getVotes();
-  }, [getVotes, setVotes, votes]);
+  }, [getVotes]);
 
   const handleCancel = () => {
     setModalOpen(false);

@@ -1,6 +1,6 @@
 import './rule-detail.page.scss';
 import { Button, Card, Form, message, Select, Spin } from 'antd';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CrudDataSourceService, VotingResultAoService } from 'src/services';
 import {
@@ -9,11 +9,7 @@ import {
   VotingOptionModel,
   VotingResultModel,
 } from 'src/models';
-import {
-  Opinions,
-  UserVoting,
-  VotingResults,
-} from 'src/components';
+import { Opinions, UserVoting, VotingResults } from 'src/components';
 import { AuthContextProvider, VoteInPercent } from 'src/interfaces';
 import { useAuth } from 'src/hooks';
 
@@ -36,12 +32,11 @@ export function RuleDetail() {
   const [disabled, setDisabled] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
 
-  const ruleService = new CrudDataSourceService(RuleModel);
-  const userVotingResultService = new CrudDataSourceService(
-    UserVotingResultModel
+  const userVotingResultService = useMemo(
+    () => new CrudDataSourceService(UserVotingResultModel),
+    []
   );
   const votingOptionService = new CrudDataSourceService(VotingOptionModel);
-  const votingResultAoService = new VotingResultAoService();
 
   const successInfo = (content: string) => {
     messageApi
@@ -52,20 +47,28 @@ export function RuleDetail() {
       .then();
   };
 
-  const errorInfo = (content: string) => {
-    messageApi
-      .open({
-        type: 'error',
-        content: content,
-      })
-      .then();
-  };
+  const errorInfo = useCallback(
+    (content: string) => {
+      messageApi
+        .open({
+          type: 'error',
+          content: content,
+        })
+        .then();
+    },
+    [messageApi]
+  );
 
   const fetchRule = useCallback(() => {
     if (!rule && id) {
+      const ruleService = new CrudDataSourceService(RuleModel);
       ruleService
-        .get(id, ['status', 'creator',
-          'voting_result.selected_options', 'category'])
+        .get(id, [
+          'status',
+          'creator',
+          'voting_result.selected_options',
+          'category',
+        ])
         .then((ruleInst) => {
           setRule(ruleInst);
           setVotingResultId(ruleInst.voting_result?.id);
@@ -77,10 +80,11 @@ export function RuleDetail() {
           setLoading(false);
         });
     }
-  }, [rule, id, ruleService]);
+  }, [rule, id, errorInfo]);
 
-  const _fetchVoteInPercent = () => {
+  const _fetchVoteInPercent = useCallback(() => {
     if (votingResultId) {
+      const votingResultAoService = new VotingResultAoService();
       votingResultAoService
         .getVoteInPercent(votingResultId)
         .then((resp) => {
@@ -92,7 +96,7 @@ export function RuleDetail() {
           );
         });
     }
-  };
+  }, [errorInfo, votingResultId]);
 
   const fetchVoteInPercent = useCallback(() => {
     if (!Object.keys(voteInPercent).length) {

@@ -10,7 +10,7 @@ import {
   TableColumnType,
 } from 'antd';
 import moment from 'moment';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AuthContextProvider, TableMemberRequest } from 'src/interfaces';
 import { CrudDataSourceService } from 'src/services';
 import { CommunityModel } from 'src/models';
@@ -33,7 +33,6 @@ export function CommonAddMemberRequests(props: any) {
   const [searchedColumn, setSearchedColumn] = useState('');
 
   const communityId = props?.communityId;
-  const communityService = new CrudDataSourceService(CommunityModel);
 
   const searchInput = useRef<InputRef>(null);
 
@@ -178,9 +177,9 @@ export function CommonAddMemberRequests(props: any) {
     },
   ];
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const loadData = () => {
+  const loadData = useCallback(() => {
     if (loading && communityId) {
+      const communityService = new CrudDataSourceService(CommunityModel);
       communityService
         .get(communityId, [
           'main_settings.adding_members.member',
@@ -214,11 +213,11 @@ export function CommonAddMemberRequests(props: any) {
           setLoading(false);
         });
     }
-  };
+  }, [authData.user?.id, communityId, loading, navigate]);
 
   useEffect(() => {
     loadData();
-  }, [loadData, loading]);
+  }, [loadData]);
 
   return (
     <Layout style={{ height: '100%', overflowY: 'auto' }}>

@@ -19,8 +19,6 @@ export const AuthProvider = (component: ProviderComponent) => {
   const [user, setUser] = useLocalStorage('user', null);
   const [avatarUrl, setAvatarUrl] = useLocalStorage('avatar', null);
 
-  const fileStorageService = new FileStorageService();
-
   const login = (user: UserInterface, toMainPage: boolean = false) => {
     setUser(user);
     changeAvatarUrl(user.foto_id);
@@ -43,6 +41,7 @@ export const AuthProvider = (component: ProviderComponent) => {
     if (base64 === undefined) {
       if (fotoId) {
         try {
+          const fileStorageService = new FileStorageService();
           fileStorageService.getFile(fotoId).then((r) => {
             const reader = new FileReader();
             reader.readAsDataURL(r.data);

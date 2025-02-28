@@ -14,7 +14,7 @@ import {
   CloseOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { CrudDataSourceService, UserSettingsAoService } from 'src/services';
 import {
   CategoryModel,
@@ -53,7 +53,6 @@ export function MyCommunitySettings(props: any) {
   const [disabled, setDisabled] = useState(false);
 
   const communityId = props?.communityId;
-  const settingsService = new CrudDataSourceService(UserCommunitySettingsModel);
   const nameService = new CrudDataSourceService(CommunityNameModel);
   const descriptionService = new CrudDataSourceService(
     CommunityDescriptionModel
@@ -71,18 +70,23 @@ export function MyCommunitySettings(props: any) {
       .then();
   };
 
-  const errorInfo = (content: string) => {
-    messageApi
-      .open({
-        type: 'error',
-        content: content,
-      })
-      .then();
-  };
+  const errorInfo = useCallback(
+    (content: string) => {
+      messageApi
+        .open({
+          type: 'error',
+          content: content,
+        })
+        .then();
+    },
+    [messageApi]
+  );
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getUserCommunitySettings = () => {
+  const getUserCommunitySettings = useCallback(() => {
     if (authData.user && communityId && !settings.id) {
+      const settingsService = new CrudDataSourceService(
+        UserCommunitySettingsModel
+      );
       settingsService
         .list(
           [
@@ -149,7 +153,7 @@ export function MyCommunitySettings(props: any) {
           errorInfo(`Ошибка получения настроек: ${error}`);
         });
     }
-  };
+  }, [authData.user, communityId, errorInfo, form, navigate, settings.id]);
 
   const getCommunityNames = async () => {
     return await nameService

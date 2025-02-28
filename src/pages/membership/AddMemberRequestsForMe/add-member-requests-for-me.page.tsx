@@ -9,7 +9,7 @@ import {
   TableColumnType,
 } from 'antd';
 import moment from 'moment';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AuthContextProvider, TableMemberRequest } from 'src/interfaces';
 import { CrudDataSourceService } from 'src/services';
 import { UserCommunitySettingsModel } from 'src/models';
@@ -33,9 +33,6 @@ export function AddMemberRequestsForMe(props: any) {
   const [searchedColumn, setSearchedColumn] = useState('');
 
   const communityId = props?.communityId;
-  const userCommunitySettingsService = new CrudDataSourceService(
-    UserCommunitySettingsModel
-  );
 
   const searchInput = useRef<InputRef>(null);
 
@@ -180,9 +177,11 @@ export function AddMemberRequestsForMe(props: any) {
     },
   ];
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const loadData = () => {
+  const loadData = useCallback(() => {
     if (loading && communityId) {
+      const userCommunitySettingsService = new CrudDataSourceService(
+        UserCommunitySettingsModel
+      );
       userCommunitySettingsService
         .list(
           [
@@ -209,7 +208,7 @@ export function AddMemberRequestsForMe(props: any) {
             const isMyRequest = requestMember.member?.id === currentUserId;
             const item = {
               key: requestMember.id || '',
-              member: requestMember.member?.fullname,
+              member: requestMember.member?.fullname || '',
               reason: requestMember.reason || '',
               status: requestMember.status?.name || '',
               created: moment(requestMember.created).format('DD.MM.yyyy HH:mm'),
@@ -227,11 +226,11 @@ export function AddMemberRequestsForMe(props: any) {
           setLoading(false);
         });
     }
-  };
+  }, [communityId, currentUserId, loading, navigate]);
 
   useEffect(() => {
     loadData();
-  }, [loadData, loading]);
+  }, [loadData]);
 
   return (
     <ConfigProvider locale={ruRU}>

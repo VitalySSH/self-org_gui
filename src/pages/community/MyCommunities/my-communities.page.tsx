@@ -1,5 +1,5 @@
 import { ConfigProvider, List, Pagination } from 'antd';
-import { SetStateAction, useEffect, useState } from 'react';
+import { SetStateAction, useCallback, useEffect, useState } from 'react';
 import { CommunityAOService } from 'src/services';
 import { AuthContextProvider, CommunityCardInterface } from 'src/interfaces';
 import { CommunityCard } from 'src/components';
@@ -15,11 +15,9 @@ export function MyCommunities() {
   const [pageSize, setPageSize] = useState(maxPageSize);
   const [total, setTotal] = useState(0);
 
-  const communityService = new CommunityAOService();
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const loadData = () => {
+  const loadData = useCallback(() => {
     if (loading) {
+      const communityService = new CommunityAOService();
       communityService
         .myList(undefined, undefined, { skip: currentPage, limit: pageSize }, [
           'user_settings.user',
@@ -53,11 +51,11 @@ export function MyCommunities() {
           setLoading(false);
         });
     }
-  };
+  }, [authData.user?.id, currentPage, loading, pageSize]);
 
   useEffect(() => {
     loadData();
-  }, [loadData, currentPage, pageSize]);
+  }, [loadData]);
 
   const handlePageChange = (
     page: SetStateAction<number>,

@@ -10,7 +10,13 @@ import {
 } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { SelectInterface } from 'src/interfaces';
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import TextArea, { TextAreaRef } from 'antd/lib/input/TextArea';
 import { ApiModel } from 'src/models';
 
@@ -26,8 +32,20 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const [options, setOptions] = useState(undefined as T[] | undefined);
   const [newTextValue, setNewTextValue] = useState('');
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getInitValue = () => {
+  const fetchOptions = useCallback(() => {
+    if (options === undefined) {
+      props
+        .requestOptions()
+        .then((resp) => {
+          setOptions(resp);
+        })
+        .catch(() => {
+          setOptions([]);
+        });
+    }
+  }, [options, props]);
+
+  const getInitValue = useCallback(() => {
     if (fieldValue === null && !uploadedFieldValue) {
       let _initFieldValue: string | string[] | null = null;
       if (props.value === undefined) {
@@ -51,22 +69,18 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
       if (_initFieldValue !== null) setUploadedFieldValue(true);
       setFieldValue(_initFieldValue);
     }
-  };
+  }, [
+    fieldValue,
+    props.bindLabel,
+    props.multiple,
+    props.value,
+    uploadedFieldValue,
+  ]);
 
   useEffect(() => {
-    if (options === undefined) {
-      props
-        .requestOptions()
-        .then((resp) => {
-          setOptions(resp);
-        })
-        .catch((error) => {
-          setOptions([]);
-          console.log(`Ошибка получения options в селекторе: ${error}`);
-        });
-    }
+    fetchOptions();
     getInitValue();
-  }, [options, props, props.requestOptions, getInitValue]);
+  }, [getInitValue, fetchOptions]);
 
   const onValueChange = (_: string, option: any) => {
     if (!uploadedFieldValue) {

@@ -11,7 +11,7 @@ import {
 } from 'antd';
 import { RuleCardInterface } from 'src/interfaces';
 import Meta from 'antd/es/card/Meta';
-import { SetStateAction, useEffect, useState } from 'react';
+import { SetStateAction, useCallback, useEffect, useState } from 'react';
 import { CrudDataSourceService } from 'src/services';
 import { RuleModel } from 'src/models';
 import { FilterOutlined, PlusCircleOutlined } from '@ant-design/icons';
@@ -28,15 +28,13 @@ export function Rules(props: any) {
   const [pageSize, setPageSize] = useState(maxPageSize);
   const [total, setTotal] = useState(0);
 
-  const ruleService = new CrudDataSourceService(RuleModel);
-
   const addNewRule = () => {
     navigate('new', { preventScrollReset: true });
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const loadData = () => {
+  const loadData = useCallback(() => {
     if (loading) {
+      const ruleService = new CrudDataSourceService(RuleModel);
       ruleService
         .list(
           [
@@ -70,7 +68,7 @@ export function Rules(props: any) {
           setLoading(false);
         });
     }
-  };
+  }, [currentPage, loading, pageSize, props.communityId]);
 
   useEffect(() => {
     loadData();

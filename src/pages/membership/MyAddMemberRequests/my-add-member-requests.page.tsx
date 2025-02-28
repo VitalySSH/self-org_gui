@@ -7,7 +7,7 @@ import {
   TableColumnsType,
   TableColumnType,
 } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { TableMyMemberRequest } from 'src/interfaces';
 import { RequestMemberAoService } from 'src/services';
 import { FilterDropdownProps } from 'antd/es/table/interface';
@@ -33,8 +33,6 @@ export function MyAddMemberRequests() {
   const [dataSource, setDataSource] = useState([] as TableMyMemberRequest[]);
   const [searchedColumn, setSearchedColumn] = useState('');
   const [searchText, setSearchText] = useState('');
-
-  const requestMemberAoService = new RequestMemberAoService();
 
   const searchInput = useRef<InputRef>(null);
 
@@ -243,9 +241,9 @@ export function MyAddMemberRequests() {
     },
   ];
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const loadData = () => {
+  const loadData = useCallback(() => {
     if (loading) {
+      const requestMemberAoService = new RequestMemberAoService();
       requestMemberAoService
         .myList()
         .then((resp) => {
@@ -258,11 +256,11 @@ export function MyAddMemberRequests() {
           setLoading(false);
         });
     }
-  };
+  }, [loading]);
 
   useEffect(() => {
     loadData();
-  }, [loadData, loading]);
+  }, [loadData]);
 
   return (
     <div className="table-container">

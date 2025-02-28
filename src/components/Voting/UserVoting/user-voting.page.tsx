@@ -8,11 +8,11 @@ import { VotingOptionModel } from 'src/models';
 import { Filters } from 'src/shared/types.ts';
 
 export function UserVoting(props: UserVotingProps) {
-  const [userVote, setUserVote] =
-    useState<boolean | undefined | null>(props.vote);
+  const [userVote, setUserVote] = useState<boolean | undefined | null>(
+    props.vote
+  );
 
-  const votingOptionService =
-    new CrudDataSourceService(VotingOptionModel);
+  const votingOptionService = new CrudDataSourceService(VotingOptionModel);
 
   const getFilters = (): Filters => {
     switch (props.resource) {
@@ -41,8 +41,7 @@ export function UserVoting(props: UserVotingProps) {
   };
 
   const getVotingOptions = async () => {
-    const resp =
-      await votingOptionService.list(getFilters());
+    const resp = await votingOptionService.list(getFilters());
     return resp.data;
   };
 

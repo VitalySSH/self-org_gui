@@ -182,7 +182,7 @@ export function SiderBar(props: SiderBarInterface) {
         }
       }
     }
-  }, [location, navigate, props.isCommunityWS, props.isNotAuthorized]);
+  }, [location.pathname, navigate, props.isCommunityWS, props.isNotAuthorized]);
 
   return (
     <Sider

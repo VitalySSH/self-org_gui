@@ -1,5 +1,5 @@
 import { Button, Checkbox, Form, message, Modal } from 'antd';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { SimpleVoting } from 'src/interfaces';
 import { CrudDataSourceService } from 'src/services';
 import { RequestMemberModel, StatusModel } from 'src/models';
@@ -32,8 +32,7 @@ export function MemberRequestVoteButton(props: any) {
       .then();
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const updateForm = () => {
+  const updateForm = useCallback(() => {
     if (modalOpen && !loadFormData) {
       if (vote === undefined) {
         voteForm.setFieldValue('yes', false);
@@ -47,11 +46,11 @@ export function MemberRequestVoteButton(props: any) {
       }
       setLoadFormData(true);
     }
-  };
+  }, [loadFormData, modalOpen, vote, voteForm]);
 
   useEffect(() => {
     updateForm();
-  }, [updateForm, setLoadFormData, loadFormData, vote, voteForm]);
+  }, [updateForm]);
 
   const handleCancel = () => {
     setModalOpen(false);
