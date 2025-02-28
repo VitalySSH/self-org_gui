@@ -25,6 +25,7 @@ import {
 import {
   AuthContextProvider,
   CommunitySettingsInterface,
+  Pagination,
 } from 'src/interfaces';
 import { useAuth } from 'src/hooks';
 import { useNavigate } from 'react-router-dom';
@@ -155,7 +156,7 @@ export function MyCommunitySettings(props: any) {
     }
   }, [authData.user, communityId, errorInfo, form, navigate, settings.id]);
 
-  const getCommunityNames = async () => {
+  const getCommunityNames = async (pagination?: Pagination) => {
     return await nameService
       .list([
         {
@@ -163,11 +164,11 @@ export function MyCommunitySettings(props: any) {
           op: 'equals',
           val: communityId,
         },
-      ])
-      .then((r) => r.data);
+      ], undefined, pagination
+      );
   };
 
-  const getCommunityDescriptions = async () => {
+  const getCommunityDescriptions = async (pagination?: Pagination) => {
     return await descriptionService
       .list([
         {
@@ -175,24 +176,25 @@ export function MyCommunitySettings(props: any) {
           op: 'equals',
           val: communityId,
         },
-      ])
-      .then((r) => r.data);
+      ],undefined, pagination);
   };
 
-  const getCategories = async () => {
-    const resp = await categoryService.list(
+  const getCategories = async (pagination?: Pagination) => {
+    return categoryService.list(
       [
         {
           field: 'community_id',
           op: 'equals',
           val: communityId,
         },
+        {
+          field: 'status.code',
+          op: 'ne',
+          val: SystemCategoryCode,
+        },
       ],
-      undefined,
-      undefined,
-      ['status']
+      undefined, pagination
     );
-    return resp.data.filter((cat) => cat.status?.code !== SystemCategoryCode);
   };
 
   useEffect(() => {

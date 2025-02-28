@@ -1,5 +1,5 @@
 import './user-voting.page.scss';
-import { UserVotingProps } from 'src/interfaces';
+import { Pagination, UserVotingProps } from 'src/interfaces';
 import { useState } from 'react';
 import { Checkbox } from 'antd';
 import { CustomSelect } from 'src/components';
@@ -40,9 +40,12 @@ export function UserVoting(props: UserVotingProps) {
     props.onVote(vote);
   };
 
-  const getVotingOptions = async () => {
-    const resp = await votingOptionService.list(getFilters());
-    return resp.data;
+  const getVotingOptions = async (pagination?: Pagination) => {
+    return votingOptionService.list(
+      getFilters(),
+      undefined,
+      pagination,
+    );
   };
 
   if (userVote === undefined) {

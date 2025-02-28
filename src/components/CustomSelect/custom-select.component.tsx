@@ -24,26 +24,33 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const inputRef = useRef<InputRef>(null);
   const textAreaRef = useRef<TextAreaRef>(null);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalOptions, setTotalOptions] = useState(0);
   const [uploadedFieldValue, setUploadedFieldValue] = useState(false);
   const [value, setValue] = useState(null as T | T[] | null);
   const [fieldValue, setFieldValue] = useState(
     null as string | string[] | null
   );
-  const [options, setOptions] = useState(undefined as T[] | undefined);
+  const [options, setOptions] = useState(null as T[] | null);
   const [newTextValue, setNewTextValue] = useState('');
 
-  const fetchOptions = useCallback(() => {
-    if (options === undefined) {
+  const fetchOptions = (page: number = 1, append: boolean = false) => {
+      if ((options || []).length >= totalOptions && append) return;
+
+      setIsLoading(true);
       props
-        .requestOptions()
-        .then((resp) => {
-          setOptions(resp);
+        .requestOptions({ skip: page, limit: 20 })
+        .then(({ data, total }) => {
+          setTotalOptions(total);
+          setOptions((prev) => (append ? [...(prev || []), ...data] : data));
+          setCurrentPage(page);
         })
-        .catch(() => {
-          setOptions([]);
+        .catch(() => setOptions([]))
+        .finally(() => {
+          setIsLoading(false);
         });
-    }
-  }, [options, props]);
+    };
 
   const getInitValue = useCallback(() => {
     if (fieldValue === null && !uploadedFieldValue) {
@@ -78,9 +85,8 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   ]);
 
   useEffect(() => {
-    fetchOptions();
     getInitValue();
-  }, [getInitValue, fetchOptions]);
+  }, [getInitValue]);
 
   const onValueChange = (_: string, option: any) => {
     if (!uploadedFieldValue) {
@@ -197,6 +203,21 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     </>
   );
 
+  const renderLoadMoreButton = () => {
+    if ((options || []).length >= totalOptions) return null;
+
+    return (
+      <Button
+        type="link"
+        onClick={() => fetchOptions(currentPage + 1, true)}
+        loading={isLoading}
+        style={{ width: '100%' }}
+      >
+        {isLoading ? 'Загрузка...' : 'Больше значений'}
+      </Button>
+    );
+  };
+
   return (
     <ConfigProvider
       renderEmpty={() => {
@@ -210,17 +231,28 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     >
       <Select
         onChange={onValueChange}
-        showSearch={true}
+        // TODO: добавить фильтрацию для использования в CRUD сервисе
+        // showSearch={true}
         /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
         // @ts-expect-error
         value={fieldValue}
         mode={props.multiple ? 'multiple' : undefined}
         dropdownRender={(menu) => (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ maxHeight: '200px', overflowY: 'auto' }}>{menu}</div>
+            <div
+              style={{ maxHeight: 200, overflowY: 'auto' }}
+            >
+              {menu}
+              {renderLoadMoreButton()}
+            </div>
             {props.addOwnValue && addingOwnValue}
           </div>
         )}
+        onDropdownVisibleChange={(open) => {
+          if (open && !options) {
+            fetchOptions(1);
+          }
+        }}
         options={(options || []).map((item: any) => ({
           value: item[props.bindLabel],
           obj: item,

@@ -7,7 +7,11 @@ import {
   QuestionCircleOutlined,
 } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
-import { CreatingRuleInterface, RuleFormInterface } from 'src/interfaces';
+import {
+  CreatingRuleInterface,
+  Pagination,
+  RuleFormInterface,
+} from 'src/interfaces';
 import { CrudDataSourceService, RuleAoService } from 'src/services';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -72,11 +76,13 @@ export function NewRule(props: any) {
     setDisabled(!isValid);
   };
 
-  const getCategories = async () => {
+  const getCategories = async (_pagination?: Pagination) => {
     const _community = await communityService.get(communityId, [
       'main_settings.categories',
     ]);
-    return _community.main_settings?.categories || [];
+    const data = _community.main_settings?.categories || []
+
+    return { data, total: data.length };
   };
 
   const extraOptions = (
@@ -366,7 +372,7 @@ export function NewRule(props: any) {
           onClick={onCancel}
           className="toolbar-button"
         >
-          Отменить
+          Назад
         </Button>
       </div>
     </>
