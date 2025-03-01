@@ -105,7 +105,8 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
           }
         }
       });
-      currentFieldValue = (currentValue || []).map((it) => it[props.bindLabel]);
+      currentFieldValue = (currentValue || [])
+        .map((it) => it[props.bindLabel]);
     } else {
       if (option?.obj) {
         currentValue = option.obj;
@@ -140,7 +141,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
       currentValues.push(value[props.bindLabel]);
     }
 
-    if (!currentValues.includes(newTextValue)) {
+    if (props.fieldService && !currentValues.includes(newTextValue)) {
       const newObj = props.fieldService.createRecord();
       newObj[props.bindLabel] = newTextValue;
       const currentOptions = options || [];
@@ -254,6 +255,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
           }
         }}
         options={(options || []).map((item: any) => ({
+          key: item.id,
           value: item[props.bindLabel],
           obj: item,
         }))}

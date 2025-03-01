@@ -9,7 +9,7 @@ import {
   Space,
   Typography,
 } from 'antd';
-import { RuleCardInterface } from 'src/interfaces';
+import { FilterValues, RuleCardInterface } from 'src/interfaces';
 import Meta from 'antd/es/card/Meta';
 import { SetStateAction, useCallback, useEffect, useState } from 'react';
 import { CrudDataSourceService } from 'src/services';
@@ -17,16 +17,32 @@ import { RuleModel } from 'src/models';
 import { FilterOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import ruRU from 'antd/lib/locale/ru_RU';
+import { Filters } from 'src/shared/types.ts';
+import {
+  FilterModal
+} from 'src/components/FilterModal/filter-modal.component.tsx';
 
 export function Rules(props: any) {
   const maxPageSize = 20;
   const navigate = useNavigate();
+
+  const getBaseFilters = (): Filters => {
+    return [
+      {
+        field: 'community_id',
+        op: 'equals',
+        val: props.communityId,
+      },
+    ];
+  };
 
   const [loading, setLoading] = useState(true);
   const [dataSource, setDataSource] = useState([] as RuleCardInterface[]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(maxPageSize);
   const [total, setTotal] = useState(0);
+  const [filters, setFilters] = useState<Filters>(getBaseFilters());
+  const [showFilters, setShowFilters] = useState(false);
 
   const addNewRule = () => {
     navigate('new', { preventScrollReset: true });
@@ -37,13 +53,7 @@ export function Rules(props: any) {
       const ruleService = new CrudDataSourceService(RuleModel);
       ruleService
         .list(
-          [
-            {
-              field: 'community_id',
-              op: 'equals',
-              val: props.communityId,
-            },
-          ],
+          filters,
           undefined,
           { skip: currentPage, limit: pageSize },
           ['creator', 'status', 'category']
@@ -68,7 +78,7 @@ export function Rules(props: any) {
           setLoading(false);
         });
     }
-  }, [currentPage, loading, pageSize, props.communityId]);
+  }, [filters, currentPage, loading, pageSize, props.communityId]);
 
   useEffect(() => {
     loadData();
@@ -81,6 +91,45 @@ export function Rules(props: any) {
     setCurrentPage(page);
     setPageSize(size);
     setLoading(true);
+  };
+
+  const handleApplyFilters = (values: FilterValues) => {
+    const newFilters: Filters = getBaseFilters();
+    if (values.title) {
+      newFilters.push({
+        field: 'title',
+        op: 'ilike',
+        val: values.title,
+      });
+    }
+    if (values.content) {
+      newFilters.push({
+        field: 'content',
+        op: 'ilike',
+        val: values.title,
+      });
+    }
+    if (values.status) {
+      newFilters.push({
+        field: 'status.id',
+        op: 'equals',
+        val: values.status.id,
+      });
+    }
+    if (values.creator) {
+      newFilters.push({
+        field: 'creator.id',
+        op: 'equals',
+        val: values.creator.id,
+      });
+    }
+
+    if (newFilters.length > 1) {
+      setFilters(newFilters);
+      setCurrentPage(1);
+      setLoading(true);
+      setShowFilters(false);
+    }
   };
 
   return (
@@ -107,18 +156,35 @@ export function Rules(props: any) {
             <PlusCircleOutlined style={{ fontSize: 20 }} />
             Новое правило
           </Button>
-          <Button type="text" style={{ marginLeft: 10 }}>
+          <Button
+            type="text"
+            onClick={() => setShowFilters(true)}
+            style={{ marginLeft: 10 }}
+          >
             <FilterOutlined style={{ fontSize: 20 }} />
             Фильтры
           </Button>
         </Flex>
       </Space>
 
+      <FilterModal
+        resource="rule"
+        visible={showFilters}
+        onCancel={() => setShowFilters(false)}
+        onApply={handleApplyFilters}
+        onReset={() => {
+          setFilters(getBaseFilters());
+          setCurrentPage(1);
+          setLoading(true);
+          setShowFilters(false);
+        }}
+      />
+
       <List
         itemLayout="vertical"
         dataSource={dataSource}
         loading={loading}
-        locale={{ emptyText: 'Ещё нет ни одного правила' }}
+        locale={{ emptyText: 'Не найдено ни одного правила' }}
         pagination={
           dataSource.length >= 20
             ? {

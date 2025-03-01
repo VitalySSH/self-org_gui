@@ -157,26 +157,31 @@ export function MyCommunitySettings(props: any) {
   }, [authData.user, communityId, errorInfo, form, navigate, settings.id]);
 
   const getCommunityNames = async (pagination?: Pagination) => {
-    return await nameService
-      .list([
+    return await nameService.list(
+      [
         {
           field: 'community_id',
           op: 'equals',
           val: communityId,
         },
-      ], undefined, pagination
-      );
+      ],
+      undefined,
+      pagination
+    );
   };
 
   const getCommunityDescriptions = async (pagination?: Pagination) => {
-    return await descriptionService
-      .list([
+    return await descriptionService.list(
+      [
         {
           field: 'community_id',
           op: 'equals',
           val: communityId,
         },
-      ],undefined, pagination);
+      ],
+      undefined,
+      pagination
+    );
   };
 
   const getCategories = async (pagination?: Pagination) => {
@@ -193,7 +198,8 @@ export function MyCommunitySettings(props: any) {
           val: SystemCategoryCode,
         },
       ],
-      undefined, pagination
+      undefined,
+      pagination
     );
   };
 

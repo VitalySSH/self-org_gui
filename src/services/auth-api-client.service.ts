@@ -1,11 +1,16 @@
 import axios, { AxiosInstance } from 'axios';
 import {
+  CrudApiListResponse,
+  ListResponse,
+  Pagination,
   UserCreateInterface,
   UserCreateResponse,
   UserInterface,
   UserUpdateInterface,
 } from 'src/interfaces';
 import { baseApiUrl } from 'src/config/configuration';
+import { Filters, Orders } from 'src/shared/types.ts';
+import { UserModel } from 'src/models';
 
 export class AuthApiClientService {
   http: AxiosInstance;
@@ -44,6 +49,32 @@ export class AuthApiClientService {
     return this.http.get<UserInterface>('/auth/user/me').then((r) => {
       return r.data;
     });
+  }
+
+  async listUsers(
+    filters?: Filters,
+    orders?: Orders,
+    pagination?: Pagination,
+    include?: string[]
+  ): Promise<ListResponse<UserModel>> {
+    const data = {
+      filters,
+      orders,
+      pagination,
+      include,
+    };
+
+    return this.http
+      .post<CrudApiListResponse>('/auth/user/list', data, {
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((r) => {
+        const data = r.data.items as unknown as UserModel[];
+        return { data, total: r.data.total }
+      });
   }
 
   async createUser(data: UserCreateInterface) {
