@@ -4,5 +4,6 @@ export interface RuleCardInterface {
   description?: string;
   creator?: string;
   status?: string;
+  statusCode?: string;
   category?: string;
 }

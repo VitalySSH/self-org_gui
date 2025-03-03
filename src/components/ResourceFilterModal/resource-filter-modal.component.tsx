@@ -13,14 +13,14 @@ import {
   RuleRevokedCode,
 } from 'src/consts';
 
-export function FilterModal(
-  {
-    visible,
-    onCancel,
-    onApply,
-    onReset,
-    resource,
-  }: FilterModalProps) {
+export function ResourceFilterModal({
+  communityId,
+  visible,
+  onCancel,
+  onApply,
+  onReset,
+  resource,
+}: FilterModalProps) {
   const [form] = Form.useForm();
 
   const statusService = new CrudDataSourceService(StatusModel);
@@ -55,15 +55,17 @@ export function FilterModal(
         break;
     }
 
-
     return statusService.list(filters, undefined, pagination);
   };
 
   const loadUsers = async (pagination?: Pagination) => {
-    const filters: Filters = [
-
-    ];
-    return authApiClientService.listUsers(filters, undefined, pagination);
+    const filters: Filters = [];
+    return authApiClientService.communityListUsers(
+      communityId,
+      filters,
+      undefined,
+      pagination
+    );
   };
 
   const onCustomSelectChange = (fieldName: string, value: any) => {

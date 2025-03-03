@@ -1,0 +1,29 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+.statusTag {
+  padding: 4px 12px;
+  border-radius: 16px;
+  font: 500 12px/1.33 var(--base-font);
+  display: inline-flex;
+  align-items: center;
+
+  &-onReview {
+    background: $status-pending-bg;
+    color: $status-pending-text;
+  }
+
+  &-approved {
+    background: $status-approved-bg;
+    color: $status-approved-text;
+  }
+
+  &-active {
+    background: $status-active-bg;
+    color: $status-active-text;
+  }
+
+  &-inactive {
+    background: $status-inactive-bg;
+    color: $status-inactive-text;
+  }
+}

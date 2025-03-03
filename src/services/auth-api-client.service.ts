@@ -73,7 +73,39 @@ export class AuthApiClientService {
       })
       .then((r) => {
         const data = r.data.items as unknown as UserModel[];
-        return { data, total: r.data.total }
+
+        return { data, total: r.data.total };
+      });
+  }
+
+  async communityListUsers(
+    community_id: string,
+    filters?: Filters,
+    orders?: Orders,
+    pagination?: Pagination,
+    include?: string[],
+    is_delegates: boolean = false
+  ): Promise<ListResponse<UserModel>> {
+    const data = {
+      filters,
+      orders,
+      pagination,
+      include,
+      is_delegates,
+    };
+    const url = `/auth/user/list/${community_id}`;
+
+    return this.http
+      .post<CrudApiListResponse>(url, data, {
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((r) => {
+        const data = r.data.items as unknown as UserModel[];
+
+        return { data, total: r.data.total };
       });
   }
 

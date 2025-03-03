@@ -36,21 +36,21 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const [newTextValue, setNewTextValue] = useState('');
 
   const fetchOptions = (page: number = 1, append: boolean = false) => {
-      if ((options || []).length >= totalOptions && append) return;
+    if ((options || []).length >= totalOptions && append) return;
 
-      setIsLoading(true);
-      props
-        .requestOptions({ skip: page, limit: 20 })
-        .then(({ data, total }) => {
-          setTotalOptions(total);
-          setOptions((prev) => (append ? [...(prev || []), ...data] : data));
-          setCurrentPage(page);
-        })
-        .catch(() => setOptions([]))
-        .finally(() => {
-          setIsLoading(false);
-        });
-    };
+    setIsLoading(true);
+    props
+      .requestOptions({ skip: page, limit: 20 })
+      .then(({ data, total }) => {
+        setTotalOptions(total);
+        setOptions((prev) => (append ? [...(prev || []), ...data] : data));
+        setCurrentPage(page);
+      })
+      .catch(() => setOptions([]))
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
   const getInitValue = useCallback(() => {
     if (fieldValue === null && !uploadedFieldValue) {
@@ -105,8 +105,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
           }
         }
       });
-      currentFieldValue = (currentValue || [])
-        .map((it) => it[props.bindLabel]);
+      currentFieldValue = (currentValue || []).map((it) => it[props.bindLabel]);
     } else {
       if (option?.obj) {
         currentValue = option.obj;
@@ -240,9 +239,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         mode={props.multiple ? 'multiple' : undefined}
         dropdownRender={(menu) => (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div
-              style={{ maxHeight: 200, overflowY: 'auto' }}
-            >
+            <div style={{ maxHeight: 200, overflowY: 'auto' }}>
               {menu}
               {renderLoadMoreButton()}
             </div>

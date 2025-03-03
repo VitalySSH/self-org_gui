@@ -18,9 +18,8 @@ import { FilterOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import ruRU from 'antd/lib/locale/ru_RU';
 import { Filters } from 'src/shared/types.ts';
-import {
-  FilterModal
-} from 'src/components/FilterModal/filter-modal.component.tsx';
+import { ResourceFilterModal } from 'src/components/ResourceFilterModal/resource-filter-modal.component.tsx';
+import { StatusTag } from 'src/components/StatusTag/status-tag.component';
 
 export function Rules(props: any) {
   const maxPageSize = 20;
@@ -52,12 +51,11 @@ export function Rules(props: any) {
     if (loading) {
       const ruleService = new CrudDataSourceService(RuleModel);
       ruleService
-        .list(
-          filters,
-          undefined,
-          { skip: currentPage, limit: pageSize },
-          ['creator', 'status', 'category']
-        )
+        .list(filters, undefined, { skip: currentPage, limit: pageSize }, [
+          'creator',
+          'status',
+          'category',
+        ])
         .then((resp) => {
           setTotal(resp.total);
           const rules: RuleCardInterface[] = [];
@@ -68,6 +66,7 @@ export function Rules(props: any) {
               description: rule.content,
               creator: rule.creator?.fullname,
               status: rule.status?.name,
+              statusCode: rule.status?.code,
               category: rule.category?.name,
             };
             rules.push(ruleItem);
@@ -78,7 +77,7 @@ export function Rules(props: any) {
           setLoading(false);
         });
     }
-  }, [filters, currentPage, loading, pageSize, props.communityId]);
+  }, [filters, currentPage, loading, pageSize]);
 
   useEffect(() => {
     loadData();
@@ -167,7 +166,8 @@ export function Rules(props: any) {
         </Flex>
       </Space>
 
-      <FilterModal
+      <ResourceFilterModal
+        communityId={props.communityId}
         resource="rule"
         visible={showFilters}
         onCancel={() => setShowFilters(false)}
@@ -219,7 +219,13 @@ export function Rules(props: any) {
                 <strong>Категория:</strong> {item.category}
               </div>
               <div style={{ marginTop: 10 }}>
-                <strong>Статус:</strong> {item.status}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <strong>Статус:</strong>
+                  <StatusTag
+                    status={item.status || ''}
+                    statusCode={item.statusCode || ''}
+                  />
+                </div>
               </div>
             </Card>
           </List.Item>
