@@ -9,14 +9,6 @@
     color: $text-color
   }
 
-  .page-header {
-    font-size: 20px;
-    font-weight: bold;
-    color: $heading-color;
-    text-align: center;
-    margin-bottom: 16px;
-  }
-
   .content-container {
     max-width: 800px;
     margin: 0 auto;
@@ -50,11 +42,6 @@
       margin-bottom: 24px;
     }
 
-  }
-
-  .communities-list {
-    max-width: 1246px;
-    margin: 20px auto;
   }
 
   .community-work-space {

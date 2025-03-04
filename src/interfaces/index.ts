@@ -34,6 +34,7 @@ export * from './components/select.interface';
 export * from './components/sider-bar.interface';
 export * from './components/filter-values.interface';
 export * from './components/filter-modal-props.interface';
+export * from './components/community-filter-modal-props.interface';
 export * from './ao/settings-statistics.interface';
 export * from './ao/settings-in-percen.interface';
 export * from './ao/community-name-data.interface';

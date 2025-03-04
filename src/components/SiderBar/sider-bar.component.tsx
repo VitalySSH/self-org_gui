@@ -3,7 +3,6 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   TeamOutlined,
-  PlusCircleOutlined,
   InfoCircleOutlined,
   ExceptionOutlined,
   ApartmentOutlined,
@@ -33,12 +32,7 @@ const communitiesMenuItems: MenuItem[] = [
     key: 'my-communities',
     icon: <TeamOutlined />,
     label: 'Мои',
-  },
-  {
-    key: 'new-community',
-    icon: <PlusCircleOutlined />,
-    label: 'Новое',
-  },
+  }
 ];
 
 const userGuideMenuItems: MenuItem[] = [

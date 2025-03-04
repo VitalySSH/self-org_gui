@@ -1,33 +1,55 @@
-import { ConfigProvider, List, Pagination } from 'antd';
+import {
+  Badge,
+  Button,
+  ConfigProvider,
+  Layout,
+  List,
+  Pagination,
+  Typography,
+} from 'antd';
 import { CrudDataSourceService } from 'src/services';
 import { CommunityModel } from 'src/models';
 import { SetStateAction, useCallback, useEffect, useState } from 'react';
-import { AuthContextProvider, CommunityCardInterface } from 'src/interfaces';
+import {
+  AuthContextProvider,
+  CommunityCardInterface,
+  FilterValues,
+} from 'src/interfaces';
 import { useAuth } from 'src/hooks';
-import { CommunityCard } from 'src/components';
+import { CommunityCard, CommunityFilterModal } from 'src/components';
 import ruRU from 'antd/lib/locale/ru_RU';
+import styles from 'src/shared/assets/scss/module/list.module.scss';
+import { Filters } from 'src/shared/types.ts';
+import { FilterOutlined } from '@ant-design/icons';
 
 export function AllCommunities() {
   const maxPageSize = 20;
   const authData: AuthContextProvider = useAuth();
+
+  const getBaseFilters = (): Filters => {
+    return [
+      {
+        field: 'parent_id',
+        op: 'null',
+        val: true,
+      },
+    ];
+  };
+
   const [loading, setLoading] = useState(true);
   const [dataSource, setDataSource] = useState([] as CommunityCardInterface[]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(maxPageSize);
   const [total, setTotal] = useState(0);
+  const [filters, setFilters] = useState<Filters>(getBaseFilters());
+  const [showFilters, setShowFilters] = useState(false);
 
   const loadData = useCallback(() => {
     if (loading) {
       const communityService = new CrudDataSourceService(CommunityModel);
       communityService
         .list(
-          [
-            {
-              field: 'parent_id',
-              op: 'null',
-              val: true,
-            },
-          ],
+          filters,
           undefined,
           { skip: currentPage, limit: pageSize },
           [
@@ -60,14 +82,11 @@ export function AllCommunities() {
           });
           setDataSource(items);
         })
-        .catch((error) => {
-          console.log(error);
-        })
         .finally(() => {
           setLoading(false);
         });
     }
-  }, [authData.user?.id, currentPage, loading, pageSize]);
+  }, [authData.user?.id, currentPage, loading, pageSize, filters]);
 
   useEffect(() => {
     loadData();
@@ -82,27 +101,74 @@ export function AllCommunities() {
     setLoading(true);
   };
 
+  const handleApplyFilters = (values: FilterValues) => {
+    const newFilters: Filters = getBaseFilters();
+    if (values.title) {
+      newFilters.push({
+        field: 'main_settings.name.name',
+        op: 'ilike',
+        val: values.title,
+      });
+    }
+    if (values.content) {
+      newFilters.push({
+        field: 'main_settings.description.value',
+        op: 'ilike',
+        val: values.content,
+      });
+    }
+
+    if (newFilters.length > 1) {
+      setFilters(newFilters);
+      setCurrentPage(1);
+      setLoading(true);
+      setShowFilters(false);
+    }
+  };
+
   return (
-    <div className="communities-list">
-      <div className="page-header">Все сообщества</div>
-      <List
-        grid={{
-          gutter: 16,
-          xs: 1,
-          sm: 1,
-          md: 1,
-          lg: 2,
-          xl: 2,
-          xxl: 2,
+    <Layout className={styles.container}>
+
+      <div className={styles.header}>
+        <Typography.Title level={3} className={styles.title}>
+          Все сообщества
+        </Typography.Title>
+
+        <div className={styles.buttons}>
+          <Button type="text" onClick={() => setShowFilters(true)}>
+            <Badge count={filters.length - 1}>
+              <FilterOutlined style={{ fontSize: 20 }} />
+            </Badge>
+            Фильтры
+          </Button>
+        </div>
+      </div>
+
+      <CommunityFilterModal
+        visible={showFilters}
+        onCancel={() => setShowFilters(false)}
+        onApply={handleApplyFilters}
+        onReset={() => {
+          setFilters(getBaseFilters());
+          setCurrentPage(1);
+          setLoading(true);
+          setShowFilters(false);
         }}
+      />
+
+      <List
         itemLayout="vertical"
         dataSource={dataSource}
         loading={loading}
         locale={{ emptyText: 'Нет сообществ' }}
-        size="large"
+        pagination={false}
+        className={styles.list}
         renderItem={(item: CommunityCardInterface) => (
-          <List.Item>
-            <CommunityCard key={item.id} item={item} actions={[]} />
+          <List.Item className={styles.listItem}>
+            <CommunityCard
+              key={item.id}
+              item={item} actions={[]}
+            />
           </List.Item>
         )}
       />
@@ -117,10 +183,10 @@ export function AllCommunities() {
             pageSizeOptions={['10', '20', '50', '100']}
             defaultPageSize={maxPageSize}
             showTotal={(total, range) => `${range[0]}-${range[1]} из ${total}`}
-            style={{ marginTop: 16, textAlign: 'center' }}
+            className="pagination"
           />
         </ConfigProvider>
       )}
-    </div>
+    </Layout>
   );
 }

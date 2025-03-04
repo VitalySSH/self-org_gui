@@ -32,6 +32,7 @@
   }
 
   .community-name {
+    width: 860px;
     font-size: 18px;
     font-weight: bold;
     color: $text-color;
@@ -43,23 +44,51 @@
 
 }
 
-// Адаптивные стили
-//@media (max-width: 1246px) {
-//  .header {}
-//}
-//
-@media (max-width: 1024px) {
+ //Адаптивные стили
+@media (max-width: $breakpoint-xl) {
+  .header {
+    .community-name {
+      font-size: 15px;
+      width: 600px;
+    }
+  }
+}
+
+@media (max-width: 1300px) {
+  .header {
+    .community-name {
+      font-size: 15px;
+      width: 500px;
+    }
+  }
+}
+
+@media (max-width: $breakpoint-lg) {
+  .header {
+    .community-name {
+      font-size: 14px;
+      width: 450px;
+    }
+  }
+}
+
+@media (max-width: 1150px) {
   .header {
     .icon-text {
       display: none;
     }
+
+    .community-name {
+      font-size: 13px;
+    }
   }
 }
-//
-//@media (max-width: 768px) {
-//  .header {}
-//}
-//
-//@media (max-width: 480px) {
-//  .header {}
-//}
+
+@media (max-width: $breakpoint-md) {
+  .header {
+
+    .community-name {
+      max-width: 300px;
+    }
+  }
+}

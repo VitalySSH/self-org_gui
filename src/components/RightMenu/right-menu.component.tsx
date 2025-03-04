@@ -27,7 +27,7 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem(
-    'Создать сообщество',
+    'Новое сообщество',
     'new-community',
     'menu-item',
     <PlusCircleOutlined className="menu-icon" />

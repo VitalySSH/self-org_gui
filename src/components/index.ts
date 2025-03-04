@@ -7,6 +7,7 @@ export * from './Community/SettingsStatistics/settings-statistics.component';
 export * from './Community/CommunitySelect/community-select.component';
 export * from './Community/NewCommunityForm/new-community-form.component';
 export * from './Community/CommunityCard/community-card.component';
+export * from './Community/CommunityFilterModal/community-filter-modal.component';
 export * from './AuthHeaderIcons/auth-header-icons.component';
 export * from './NotAuthHeaderIcons/not-auth-header-icons.component';
 export * from './RightMenu/right-menu.component';

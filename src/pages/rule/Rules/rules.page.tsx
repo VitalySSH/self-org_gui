@@ -1,4 +1,5 @@
 import {
+  Badge,
   Button,
   Card,
   ConfigProvider,
@@ -6,7 +7,6 @@ import {
   Layout,
   List,
   Pagination,
-  Space,
   Typography,
 } from 'antd';
 import { FilterValues, RuleCardInterface } from 'src/interfaces';
@@ -20,6 +20,7 @@ import ruRU from 'antd/lib/locale/ru_RU';
 import { Filters } from 'src/shared/types.ts';
 import { ResourceFilterModal } from 'src/components/ResourceFilterModal/resource-filter-modal.component.tsx';
 import { StatusTag } from 'src/components/StatusTag/status-tag.component';
+import styles from 'src/shared/assets/scss/module/list.module.scss';
 
 export function Rules(props: any) {
   const maxPageSize = 20;
@@ -105,7 +106,7 @@ export function Rules(props: any) {
       newFilters.push({
         field: 'content',
         op: 'ilike',
-        val: values.title,
+        val: values.content,
       });
     }
     if (values.status) {
@@ -131,40 +132,27 @@ export function Rules(props: any) {
     }
   };
 
+  // @ts-ignore
   return (
-    <Layout style={{ height: '100%', overflowY: 'auto' }}>
-      <Space
-        style={{
-          justifyContent: 'space-between',
-          alignContent: 'center',
-          marginLeft: '30%',
-          marginRight: '30%',
-        }}
-      >
-        <Typography.Title
-          level={3}
-          style={{
-            minWidth: 120,
-            alignContent: 'center',
-          }}
-        >
+    <Layout className={styles.container}>
+      <div className={styles.header}>
+        <Typography.Title level={3} className={styles.title}>
           Правила сообщества
         </Typography.Title>
-        <Flex>
+
+        <div className={styles.buttons}>
           <Button type="text" onClick={addNewRule}>
             <PlusCircleOutlined style={{ fontSize: 20 }} />
             Новое правило
           </Button>
-          <Button
-            type="text"
-            onClick={() => setShowFilters(true)}
-            style={{ marginLeft: 10 }}
-          >
-            <FilterOutlined style={{ fontSize: 20 }} />
+          <Button type="text" onClick={() => setShowFilters(true)}>
+            <Badge count={filters.length - 1}>
+              <FilterOutlined style={{ fontSize: 20 }} />
+            </Badge>
             Фильтры
           </Button>
-        </Flex>
-      </Space>
+        </div>
+      </div>
 
       <ResourceFilterModal
         communityId={props.communityId}
@@ -185,33 +173,18 @@ export function Rules(props: any) {
         dataSource={dataSource}
         loading={loading}
         locale={{ emptyText: 'Не найдено ни одного правила' }}
-        pagination={
-          dataSource.length >= 20
-            ? {
-                position: 'bottom',
-                align: 'end',
-              }
-            : false
-        }
-        size="large"
-        style={{
-          display: 'inline-flex',
-          justifyContent: 'center',
-        }}
+        pagination={false}
+        className={styles.list}
         renderItem={(item: RuleCardInterface) => (
-          <List.Item
-            style={{
-              width: '40vw',
-              cursor: 'pointer',
-            }}
-          >
+          <List.Item className={styles.listItem}>
             <Card
-              onClick={() => {
-                navigate(item.id, {});
-              }}
-              style={{ height: 280 }}
+              onClick={() => navigate(item.id)}
+              className={styles.card}
             >
-              <Meta title={item.title} description={item.description} />
+              <Meta
+                title={item.title}
+                description={item.description}
+              />
               <div style={{ marginTop: 20 }}>
                 <strong>Автор:</strong> {item.creator}
               </div>
@@ -219,13 +192,13 @@ export function Rules(props: any) {
                 <strong>Категория:</strong> {item.category}
               </div>
               <div style={{ marginTop: 10 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Flex align="center" gap={8}>
                   <strong>Статус:</strong>
                   <StatusTag
                     status={item.status || ''}
                     statusCode={item.statusCode || ''}
                   />
-                </div>
+                </Flex>
               </div>
             </Card>
           </List.Item>
@@ -242,7 +215,7 @@ export function Rules(props: any) {
             pageSizeOptions={['10', '20', '50', '100']}
             defaultPageSize={maxPageSize}
             showTotal={(total, range) => `${range[0]}-${range[1]} из ${total}`}
-            style={{ marginTop: 16, textAlign: 'center' }}
+            className={styles.pagination}
           />
         </ConfigProvider>
       )}

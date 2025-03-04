@@ -1,5 +1,5 @@
 import './rule-detail.page.scss';
-import { Button, Card, Form, message, Select, Spin } from 'antd';
+import { Button, Card, Flex, Form, message, Select, Spin } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CrudDataSourceService, VotingResultAoService } from 'src/services';
@@ -12,6 +12,7 @@ import {
 import { Opinions, UserVoting, VotingResults } from 'src/components';
 import { AuthContextProvider, VoteInPercent } from 'src/interfaces';
 import { useAuth } from 'src/hooks';
+import { StatusTag } from 'src/components/StatusTag/status-tag.component.tsx';
 
 export function RuleDetail() {
   const { id } = useParams();
@@ -234,7 +235,13 @@ export function RuleDetail() {
             <strong>Автор:</strong> {rule.creator?.fullname}
           </div>
           <div>
-            <strong>Статус:</strong> {rule.status?.name}
+            <Flex align="center" gap={8}>
+              <strong>Статус:</strong>
+              <StatusTag
+                status={rule.status?.name || ''}
+                statusCode={rule.status?.code || ''}
+              />
+            </Flex>
           </div>
           <div>
             <strong>Категория:</strong> {rule.category?.name}

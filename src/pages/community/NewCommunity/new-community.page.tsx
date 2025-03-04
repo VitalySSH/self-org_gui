@@ -38,6 +38,10 @@ export function NewCommunity() {
       });
   };
 
+  const onCancel = () => {
+    navigate(-1);
+  };
+
   return (
     <>
       <div className="form-container">
@@ -54,7 +58,15 @@ export function NewCommunity() {
           disabled={disabled}
           className="toolbar-button"
         >
-          Создать сообщество
+          Новое сообщество
+        </Button>
+        <Button
+          type="primary"
+          htmlType="button"
+          onClick={onCancel}
+          className="toolbar-button"
+        >
+          Назад
         </Button>
       </div>
     </>

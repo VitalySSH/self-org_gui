@@ -1,14 +1,18 @@
-import { List } from 'antd';
-import { CommunityCardInterface } from 'src/interfaces';
-import { CommunityCard } from 'src/components';
+import { Badge, Button, List } from 'antd';
+import { CommunityCardInterface, FilterValues } from 'src/interfaces';
+import { CommunityCard, CommunityFilterModal } from 'src/components';
 import { useCallback, useEffect, useState } from 'react';
 import { CommunityAOService } from 'src/services';
+import styles from 'src/shared/assets/scss/module/list.module.scss';
+import { FilterOutlined } from '@ant-design/icons';
 
 export function SubCommunities(props: any) {
   const communityId = props?.communityId;
 
   const [loading, setLoading] = useState(true);
   const [dataSource, setDataSource] = useState([] as CommunityCardInterface[]);
+  const [filter, setFilter] = useState<{ title?: string, content?: string}>({});
+  const [showFilters, setShowFilters] = useState(false);
 
   const loadData = useCallback(() => {
     if (loading) {
@@ -16,7 +20,13 @@ export function SubCommunities(props: any) {
       communityService
         .getSubCommunities(communityId)
         .then((items) => {
-          setDataSource(items);
+          const data = items.filter((it) => {
+            const isTitle = !filter.title || it.title.toLowerCase().includes(filter.title);
+            const isContent = !filter.content || it.title.toLowerCase().includes(filter.content);
+
+            return isTitle && isContent;
+          });
+          setDataSource(data);
         })
         .finally(() => {
           setLoading(false);
@@ -28,19 +38,46 @@ export function SubCommunities(props: any) {
     loadData();
   }, [loadData]);
 
+  const handleApplyFilters = (values: FilterValues) => {
+    const newFilter: { title?: string, content?: string} = {};
+    if (values.title) newFilter['title'] = values.title.toLowerCase();
+    if (values.content) newFilter['content'] = values.content.toLowerCase();
+    if (Object.keys(newFilter).length) {
+      setFilter(newFilter);
+      setLoading(true);
+      setShowFilters(false);
+      loadData();
+    }
+  };
+
   return (
-    <div className="communities-list">
-      <div className="page-header">Внутренние сообщества</div>
-      <List
-        grid={{
-          gutter: 16,
-          xs: 1,
-          sm: 1,
-          md: 1,
-          lg: 1,
-          xl: 2,
-          xxl: 2,
+    <div className="community-work-space">
+      <div className={styles.header}>
+        <div className="section-header">Внутренние сообщества</div>
+
+        <div className={styles.buttons}>
+          <Button type="text" onClick={() => setShowFilters(true)}>
+            <Badge count={Object.keys(filter).length}>
+              <FilterOutlined style={{ fontSize: 20 }} />
+            </Badge>
+            Фильтры
+          </Button>
+        </div>
+      </div>
+
+      <CommunityFilterModal
+        visible={showFilters}
+        onCancel={() => setShowFilters(false)}
+        onApply={handleApplyFilters}
+        onReset={() => {
+          setFilter({});
+          setLoading(true);
+          setShowFilters(false);
+          loadData();
         }}
+      />
+
+      <List
         itemLayout="vertical"
         dataSource={dataSource}
         loading={loading}
@@ -53,9 +90,9 @@ export function SubCommunities(props: any) {
               }
             : false
         }
-        size="large"
+        className={styles.list}
         renderItem={(item: CommunityCardInterface) => (
-          <List.Item>
+          <List.Item className={styles.listItem}>
             <CommunityCard key={item.id} item={item} actions={[]} />
           </List.Item>
         )}
