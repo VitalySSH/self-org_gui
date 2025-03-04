@@ -3,6 +3,7 @@ import styles from './status-tag.module.scss';
 const STATUS_CLASSES: Record<string, string> = {
   on_consideration: styles.statusTagOnReview,
   principal_agreement: styles.statusTagApproved,
+  compromise: styles.statusTagCompromise,
   rule_approved: styles.statusTagActive,
   rule_revoked: styles.statusTagInactive,
 };

@@ -17,6 +17,11 @@
     color: $status-approved-text;
   }
 
+  &-compromise {
+    background: $status-compromise-bg;
+    color: $status-compromise-text;
+  }
+
   &-active {
     background: $status-active-bg;
     color: $status-active-text;

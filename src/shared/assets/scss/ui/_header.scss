@@ -32,7 +32,7 @@
   }
 
   .community-name {
-    width: 860px;
+    max-width: 860px;
     font-size: 18px;
     font-weight: bold;
     color: $text-color;
@@ -44,12 +44,11 @@
 
 }
 
- //Адаптивные стили
 @media (max-width: $breakpoint-xl) {
   .header {
     .community-name {
       font-size: 15px;
-      width: 600px;
+      max-width: 600px;
     }
   }
 }
@@ -58,7 +57,7 @@
   .header {
     .community-name {
       font-size: 15px;
-      width: 500px;
+      max-width: 500px;
     }
   }
 }
@@ -67,7 +66,7 @@
   .header {
     .community-name {
       font-size: 14px;
-      width: 450px;
+      max-width: 450px;
     }
   }
 }

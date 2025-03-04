@@ -132,7 +132,6 @@ export function Rules(props: any) {
     }
   };
 
-  // @ts-ignore
   return (
     <Layout className={styles.container}>
       <div className={styles.header}>
