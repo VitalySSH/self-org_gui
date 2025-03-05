@@ -7,7 +7,6 @@ import {
   RuleModel,
   UserVotingResultModel,
   VotingOptionModel,
-  VotingResultModel,
 } from 'src/models';
 import { Opinions, UserVoting, VotingResults } from 'src/components';
 import { AuthContextProvider, VoteInPercent } from 'src/interfaces';
@@ -21,16 +20,18 @@ export function RuleDetail() {
   const [messageApi, contextHolder] = message.useMessage();
 
   const [rule, setRule] = useState<RuleModel | null>(null);
+  const [ruleStatus, setRuleStatus] = useState('');
+  const [ruleStatusCode, setRuleStatusCode] = useState('');
   const [votingResultId, setVotingResultId] = useState<string | undefined>(
     undefined
   );
   const [userVotingResult, setUserVotingResult] =
-    useState<UserVotingResultModel>({} as VotingResultModel);
+    useState<UserVotingResultModel | null>(null);
   const [voteInPercent, setVoteInPercent] = useState({} as VoteInPercent);
   const [userVote, setUserVote] = useState<boolean | undefined>(undefined);
   const [userOption, setUserOption] = useState<VotingOptionModel[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [disabled, setDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(true);
   const [buttonLoading, setButtonLoading] = useState(false);
 
   const userVotingResultService = useMemo(
@@ -60,8 +61,8 @@ export function RuleDetail() {
     [messageApi]
   );
 
-  const fetchRule = useCallback(() => {
-    if (!rule && id) {
+  const fetchRule = useCallback((isStatusOnly: boolean = false) => {
+    if ((!rule || isStatusOnly) && id) {
       const ruleService = new CrudDataSourceService(RuleModel);
       ruleService
         .get(id, [
@@ -71,8 +72,12 @@ export function RuleDetail() {
           'category',
         ])
         .then((ruleInst) => {
-          setRule(ruleInst);
-          setVotingResultId(ruleInst.voting_result?.id);
+          if (!isStatusOnly) {
+            setRule(ruleInst);
+            setVotingResultId(ruleInst.voting_result?.id);
+          }
+          setRuleStatus(ruleInst.status?.name || '');
+          setRuleStatusCode(ruleInst.status?.code || '');
         })
         .catch((error) => {
           errorInfo(`Не удалось загрузить данные правила: ${error}`);
@@ -106,7 +111,7 @@ export function RuleDetail() {
   }, [_fetchVoteInPercent, voteInPercent]);
 
   const fetchUserVotingResult = useCallback(() => {
-    if (!Object.keys(userVotingResult).length && id) {
+    if (!userVotingResult && id) {
       userVotingResultService
         .list(
           [
@@ -129,6 +134,7 @@ export function RuleDetail() {
           if (resp.total) {
             const result = resp.data[0];
             setUserVotingResult(result);
+            setDisabled(true);
             if (result.vote) setUserOption(result.extra_options || []);
           }
         })
@@ -160,8 +166,10 @@ export function RuleDetail() {
 
   const handleVote = (vote: boolean) => {
     setUserVote(vote);
-    if (vote && !userOption) {
+    if (vote && (rule?.is_extra_options && !userOption.length)) {
       setDisabled(true);
+    } else {
+      setDisabled(false);
     }
     if (userVote && !vote) {
       setUserOption([]);
@@ -207,6 +215,12 @@ export function RuleDetail() {
         })
         .finally(() => {
           setButtonLoading(false);
+          setDisabled(true);
+          setRule(null);
+          // FIXME: Решение временное, потом переделать на вебсокеты
+          setTimeout(() => {
+            fetchRule(true);
+          }, 1000);
         });
     }
   };
@@ -238,8 +252,8 @@ export function RuleDetail() {
             <Flex align="center" gap={8}>
               <strong>Статус:</strong>
               <StatusTag
-                status={rule.status?.name || ''}
-                statusCode={rule.status?.code || ''}
+                status={ruleStatus}
+                statusCode={ruleStatusCode}
               />
             </Flex>
           </div>
@@ -274,18 +288,20 @@ export function RuleDetail() {
             </div>
           )}
 
-          <UserVoting
-            resource="rule"
-            ruleId={id}
-            question={rule.question || ''}
-            extraQuestion={rule.extra_question || ''}
-            vote={userVotingResult.vote}
-            isOptions={rule.is_extra_options || false}
-            options={userOption}
-            isMultiSelect={rule.is_multi_select || false}
-            onVote={handleVote}
-            onSelectChange={handleSelectChange}
-          />
+          {userVotingResult && (
+            <UserVoting
+              resource="rule"
+              ruleId={id}
+              question={rule.question || ''}
+              extraQuestion={rule.extra_question || ''}
+              vote={userVotingResult.vote}
+              isOptions={rule.is_extra_options || false}
+              options={userOption}
+              isMultiSelect={rule.is_multi_select || false}
+              onVote={handleVote}
+              onSelectChange={handleSelectChange}
+            />
+          )}
           <Opinions maxPageSize={20} resource="rule" ruleId={id} />
         </Card>
       </div>

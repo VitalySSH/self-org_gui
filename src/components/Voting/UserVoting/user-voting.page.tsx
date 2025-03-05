@@ -48,10 +48,6 @@ export function UserVoting(props: UserVotingProps) {
     );
   };
 
-  if (userVote === undefined) {
-    return null;
-  }
-
   return (
     <div className="user-voting">
       <h3>Ваш голос:</h3>

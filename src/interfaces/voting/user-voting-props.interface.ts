@@ -7,7 +7,7 @@ export interface UserVotingProps {
   initiativeId?: string;
   question: string;
   extraQuestion: string;
-  vote: boolean | undefined;
+  vote: boolean | undefined | null;
   isOptions: boolean;
   isMultiSelect: boolean;
   options: VotingOptionModel[];

@@ -43,7 +43,7 @@ export function MemberRequestJoinButton(props: any) {
         loading={buttonLoading}
         disabled={buttonLoading}
         onClick={join}
-        style={{ width: '90%' }}
+        style={{ width: '90%', maxWidth: 164 }}
       >
         Вступить
       </Button>

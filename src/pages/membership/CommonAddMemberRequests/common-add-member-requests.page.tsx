@@ -156,6 +156,12 @@ export function CommonAddMemberRequests(props: any) {
       key: 'reason',
     },
     {
+      title: 'Решение',
+      dataIndex: 'decision',
+      key: 'status',
+      ...getColumnSearchProps('decision'),
+    },
+    {
       title: 'Статус',
       dataIndex: 'status',
       key: 'status',
@@ -200,6 +206,8 @@ export function CommonAddMemberRequests(props: any) {
                   'DD.MM.yyyy HH:mm'
                 ),
                 isMyRequest: isMyRequest,
+                vote: requestMember.vote,
+                decision: requestMember.vote === true ? 'Одобрена' : requestMember.vote === false ? 'Отклонена' : 'Нет',
               };
               items.push(item);
             }

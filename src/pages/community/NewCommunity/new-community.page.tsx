@@ -58,7 +58,7 @@ export function NewCommunity() {
           disabled={disabled}
           className="toolbar-button"
         >
-          Новое сообщество
+          Создать сообщество
         </Button>
         <Button
           type="primary"

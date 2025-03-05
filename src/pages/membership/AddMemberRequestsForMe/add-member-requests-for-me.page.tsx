@@ -156,6 +156,12 @@ export function AddMemberRequestsForMe(props: any) {
       key: 'reason',
     },
     {
+      title: 'Решение',
+      dataIndex: 'decision',
+      key: 'status',
+      ...getColumnSearchProps('decision'),
+    },
+    {
       title: 'Статус',
       dataIndex: 'status',
       key: 'status',
@@ -214,6 +220,7 @@ export function AddMemberRequestsForMe(props: any) {
               created: moment(requestMember.created).format('DD.MM.yyyy HH:mm'),
               isMyRequest: isMyRequest,
               vote: requestMember.vote,
+              decision: requestMember.vote === true ? 'Одобрена' : requestMember.vote === false ? 'Отклонена' : 'Нет',
             };
             items.push(item);
           });

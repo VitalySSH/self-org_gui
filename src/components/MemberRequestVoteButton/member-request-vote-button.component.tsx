@@ -10,7 +10,7 @@ export function MemberRequestVoteButton(props: any) {
   const [messageApi, contextHolder] = message.useMessage();
   const [modalOpen, setModalOpen] = useState(false);
   const [loadFormData, setLoadFormData] = useState(false);
-  const [vote, setVote] = useState(tableRow?.vote as boolean | undefined);
+  const [vote, setVote] = useState(tableRow?.vote as boolean | null);
   const [disabled, setDisabled] = useState(true);
   const [voteForm] = Form.useForm();
 
@@ -34,7 +34,7 @@ export function MemberRequestVoteButton(props: any) {
 
   const updateForm = useCallback(() => {
     if (modalOpen && !loadFormData) {
-      if (vote === undefined) {
+      if (vote === null) {
         voteForm.setFieldValue('yes', false);
         voteForm.setFieldValue('no', false);
       } else if (vote) {
@@ -83,7 +83,7 @@ export function MemberRequestVoteButton(props: any) {
         requestMemberService
           .save(requestMember)
           .then((r) => {
-            setVote(r.vote);
+            setVote(r.vote as boolean);
             successInfo('Голос отдан');
             setModalOpen(false);
             setDisabled(true);

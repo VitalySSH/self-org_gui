@@ -32,7 +32,7 @@ export function SubCommunities(props: any) {
           setLoading(false);
         });
     }
-  }, [communityId, loading]);
+  }, [communityId, loading, filter]);
 
   useEffect(() => {
     loadData();
