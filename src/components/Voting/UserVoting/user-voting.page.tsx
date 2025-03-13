@@ -41,11 +41,7 @@ export function UserVoting(props: UserVotingProps) {
   };
 
   const getVotingOptions = async (pagination?: Pagination) => {
-    return votingOptionService.list(
-      getFilters(),
-      undefined,
-      pagination,
-    );
+    return votingOptionService.list(getFilters(), undefined, pagination);
   };
 
   return (

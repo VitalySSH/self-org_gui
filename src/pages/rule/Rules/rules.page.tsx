@@ -45,7 +45,7 @@ export function Rules(props: any) {
   const [showFilters, setShowFilters] = useState(false);
 
   const addNewRule = () => {
-    navigate('new', { preventScrollReset: true });
+    navigate('new');
   };
 
   const loadData = useCallback(() => {
@@ -176,14 +176,8 @@ export function Rules(props: any) {
         className={styles.list}
         renderItem={(item: RuleCardInterface) => (
           <List.Item className={styles.listItem}>
-            <Card
-              onClick={() => navigate(item.id)}
-              className={styles.card}
-            >
-              <Meta
-                title={item.title}
-                description={item.description}
-              />
+            <Card onClick={() => navigate(item.id)} className={styles.card}>
+              <Meta title={item.title} description={item.description} />
               <div style={{ marginTop: 20 }}>
                 <strong>Автор:</strong> {item.creator}
               </div>

@@ -12,7 +12,9 @@ import {
   MyDelegates,
   SubCommunities,
   RuleDetail,
-} from 'src/pages';
+  NewInitiative,
+  InitiativeDetail
+} from "src/pages";
 import { DownOutlined } from '@ant-design/icons';
 import { AuthHeaderIcons, SiderBar } from 'src/components';
 import { CommunityAOService } from 'src/services';
@@ -118,6 +120,10 @@ export function CommunityWorkSpace() {
               path="initiatives"
               element={<Initiatives communityId={id} />}
             />
+            <Route path="initiatives/new"
+                   element={<NewInitiative communityId={id} />}
+            />
+            <Route path="initiatives/:id/*" element={<InitiativeDetail />} />
             <Route
               path="challenges"
               element={<Challenges communityId={id} />}

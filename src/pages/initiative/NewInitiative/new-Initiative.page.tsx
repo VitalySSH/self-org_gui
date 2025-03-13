@@ -8,10 +8,13 @@ import {
 } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import {
-  CreatingRuleInterface,
-  RuleFormInterface,
-} from 'src/interfaces';
-import { CrudDataSourceService, RuleAoService } from 'src/services';
+  CreatingInitiativeInterface,
+  InitiativeFormInterface,
+} from "src/interfaces";
+import {
+  CrudDataSourceService,
+  InitiativeAoService,
+} from "src/services";
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import {
@@ -22,7 +25,7 @@ import {
 import { CustomSelect } from 'src/components';
 import { CategoryModel, CommunityModel } from 'src/models';
 
-export function NewRule(props: any) {
+export function NewInitiative(props: any) {
   const communityId = props.communityId;
 
   const navigate = useNavigate();
@@ -34,7 +37,7 @@ export function NewRule(props: any) {
 
   const communityService = new CrudDataSourceService(CommunityModel);
   const categoryService = new CrudDataSourceService(CategoryModel);
-  const ruleAoService = new RuleAoService();
+  const initiativeAoService = new InitiativeAoService();
 
   const [form] = Form.useForm();
 
@@ -182,7 +185,7 @@ export function NewRule(props: any) {
 
   const onFinish = () => {
     setButtonLoading(true);
-    const formData: RuleFormInterface = form.getFieldsValue();
+    const formData: InitiativeFormInterface = form.getFieldsValue();
     if (formData.question[formData.question.length - 1] !== '?') {
       formData.question += '?';
     }
@@ -192,7 +195,7 @@ export function NewRule(props: any) {
     ) {
       formData.extra_question += '?';
     }
-    const ruleData: CreatingRuleInterface = {
+    const initiativeData: CreatingInitiativeInterface = {
       title: formData.title,
       question: formData.question,
       extra_question: formData.extra_question,
@@ -204,14 +207,14 @@ export function NewRule(props: any) {
       extra_options: (formData.extra_options || []).map((it) => it.name),
     };
 
-    ruleAoService
-      .createRule(ruleData)
+    initiativeAoService
+      .createInitiative(initiativeData)
       .then(() => {
-        successInfo('Правило создано');
+        successInfo('Инициатива создана');
         navigate(-1);
       })
       .catch((error) => {
-        errorInfo(`Ошибка создания правила: ${error}`);
+        errorInfo(`Ошибка создания инициативы: ${error}`);
       })
       .finally(() => setButtonLoading(false));
   };
@@ -220,10 +223,10 @@ export function NewRule(props: any) {
     <>
       <div className="form-container">
         {contextHolder}
-        <div className="form-header">Новое правило</div>
+        <div className="form-header">Новая инициатива</div>
         <Form
           form={form}
-          name="new-rule"
+          name="new-initiative"
           onFieldsChange={handleFormChange}
           initialValues={{
             is_extra_options: false,
@@ -235,7 +238,7 @@ export function NewRule(props: any) {
             label={
               <span>
                 Заголовок&nbsp;
-                <Tooltip title="Введите текст, который будет передавать суть вашего правила. Максимум 140 символов.">
+                <Tooltip title="Введите текст, который будет передавать суть вашей инициативы. Максимум 140 символов.">
                   <QuestionCircleOutlined />
                 </Tooltip>
               </span>
@@ -244,7 +247,7 @@ export function NewRule(props: any) {
             rules={[
               {
                 required: true,
-                message: 'Пожалуйста, укажите заголовок для правила',
+                message: 'Пожалуйста, укажите заголовок для инициативы',
               },
               {
                 max: 140,
@@ -286,7 +289,7 @@ export function NewRule(props: any) {
             label={
               <span>
                 Описание правила&nbsp;
-                <Tooltip title="Расскажите подробно суть вашего правила, с какой целью оно предлагается и как оно поможет сделать наше сообщество лучше. Максимум 1 000 символов.">
+                <Tooltip title="Расскажите подробно суть вашей инициативы, с какой целью предлагается её реализация и как она поможет сделать наше сообщество лучше. Максимум 1 000 символов.">
                   <QuestionCircleOutlined />
                 </Tooltip>
               </span>
@@ -296,12 +299,12 @@ export function NewRule(props: any) {
               {
                 required: true,
                 message:
-                  'Пожалуйста, подробно опишите цель и содержание правила',
+                  'Пожалуйста, подробно опишите цель и содержание инициативы',
               },
               {
                 max: 1000,
                 message:
-                  'Текст описания правиа не должен привышать 1000 символов',
+                  'Текст описания инициативы не должен привышать 1000 символов',
               },
             ]}
             hasFeedback
@@ -313,7 +316,7 @@ export function NewRule(props: any) {
             label={
               <span>
                 {CategoryLabel}&nbsp;
-                <Tooltip title="Укажите категорию для вашего правила, чтобы обеспечить структурирование и облегчить поиск правил.">
+                <Tooltip title="Укажите категорию для вашей инициативы, чтобы обеспечить структурирование и облегчить поиск инициатив.">
                   <QuestionCircleOutlined />
                 </Tooltip>
               </span>
@@ -365,7 +368,7 @@ export function NewRule(props: any) {
           disabled={disabled}
           className="toolbar-button"
         >
-          Создать правило
+          Создать инициативу
         </Button>
         <Button
           type="primary"

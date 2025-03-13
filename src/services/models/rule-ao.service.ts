@@ -8,7 +8,7 @@ export class RuleAoService extends CrudDataSourceService<RuleModel> {
     super(RuleModel, AOApiUrl);
   }
 
-  async create_rule(data: CreatingRuleInterface) {
+  async createRule(data: CreatingRuleInterface) {
     const url = `/${this.model.entityName}/create_rule`;
     await this.http.post<void>(url, data);
   }

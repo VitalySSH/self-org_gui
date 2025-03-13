@@ -1,27 +1,27 @@
-import './rule-detail.page.scss';
+import './Initiative-detail.page.scss';
 import { Button, Card, Flex, Form, message, Select, Spin } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CrudDataSourceService, VotingResultAoService } from 'src/services';
 import {
-  RuleModel,
+  InitiativeModel,
   UserVotingResultModel,
-  VotingOptionModel,
-} from 'src/models';
+  VotingOptionModel
+} from "src/models";
 import { Opinions, UserVoting, VotingResults } from 'src/components';
 import { AuthContextProvider, VoteInPercent } from 'src/interfaces';
 import { useAuth } from 'src/hooks';
 import { StatusTag } from 'src/components/StatusTag/status-tag.component.tsx';
 
-export function RuleDetail() {
+export function InitiativeDetail() {
   const { id } = useParams();
   const authData: AuthContextProvider = useAuth();
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
 
-  const [rule, setRule] = useState<RuleModel | null>(null);
-  const [ruleStatus, setRuleStatus] = useState('');
-  const [ruleStatusCode, setRuleStatusCode] = useState('');
+  const [initiative, setInitiative] = useState<InitiativeModel | null>(null);
+  const [initiativeStatus, setInitiativeStatus] = useState('');
+  const [initiativeStatusCode, setInitiativeStatusCode] = useState('');
   const [votingResultId, setVotingResultId] = useState<string | undefined>(
     undefined
   );
@@ -61,34 +61,34 @@ export function RuleDetail() {
     [messageApi]
   );
 
-  const fetchRule = useCallback(
+  const fetchInitiative = useCallback(
     (isStatusOnly: boolean = false) => {
-      if ((!rule || isStatusOnly) && id) {
-        const ruleService = new CrudDataSourceService(RuleModel);
-        ruleService
+      if ((!initiative || isStatusOnly) && id) {
+        const initiativeService = new CrudDataSourceService(InitiativeModel);
+        initiativeService
           .get(id, [
             'status',
             'creator',
             'voting_result.selected_options',
             'category',
           ])
-          .then((ruleInst) => {
+          .then((initiativeInst) => {
             if (!isStatusOnly) {
-              setRule(ruleInst);
-              setVotingResultId(ruleInst.voting_result?.id);
+              setInitiative(initiativeInst);
+              setVotingResultId(initiativeInst.voting_result?.id);
             }
-            setRuleStatus(ruleInst.status?.name || '');
-            setRuleStatusCode(ruleInst.status?.code || '');
+            setInitiativeStatus(initiativeInst.status?.name || '');
+            setInitiativeStatusCode(initiativeInst.status?.code || '');
           })
           .catch((error) => {
-            errorInfo(`Не удалось загрузить данные правила: ${error}`);
+            errorInfo(`Не удалось загрузить данные инициативы: ${error}`);
           })
           .finally(() => {
             setLoading(false);
           });
       }
     },
-    [rule, id, errorInfo]
+    [initiative, id, errorInfo]
   );
 
   const _fetchVoteInPercent = useCallback(() => {
@@ -119,7 +119,7 @@ export function RuleDetail() {
         .list(
           [
             {
-              field: 'rule_id',
+              field: 'initiative_id',
               op: 'equals',
               val: id,
             },
@@ -150,10 +150,10 @@ export function RuleDetail() {
   }, [authData, id, userVotingResult, userVotingResultService, errorInfo]);
 
   useEffect(() => {
-    fetchRule();
+    fetchInitiative();
     fetchVoteInPercent();
     fetchUserVotingResult();
-  }, [fetchRule, fetchVoteInPercent, fetchUserVotingResult]);
+  }, [fetchInitiative, fetchVoteInPercent, fetchUserVotingResult]);
 
   const handleSelectChange = (_fieldName: string, value: any) => {
     const currentValue = Array.isArray(value) ? value : [value];
@@ -169,7 +169,7 @@ export function RuleDetail() {
 
   const handleVote = (vote: boolean) => {
     setUserVote(vote);
-    if (vote && rule?.is_extra_options && !userOption.length) {
+    if (vote && initiative?.is_extra_options && !userOption.length) {
       setDisabled(true);
     } else {
       setDisabled(false);
@@ -192,9 +192,9 @@ export function RuleDetail() {
           : [userOption]) {
           if (option) {
             if (!option?.id) {
-              option.rule_id = rule?.id;
-              option.is_multi_select = rule?.is_multi_select;
-              option.creator_id = rule?.creator?.id;
+              option.initiative_id = initiative?.id;
+              option.is_multi_select = initiative?.is_multi_select;
+              option.creator_id = initiative?.creator?.id;
               const newOption = await votingOptionService.save(option, true);
               options.push(newOption);
             } else {
@@ -219,10 +219,10 @@ export function RuleDetail() {
         .finally(() => {
           setButtonLoading(false);
           setDisabled(true);
-          setRule(null);
+          setInitiative(null);
           // FIXME: Решение временное, потом переделать на вебсокеты
           setTimeout(() => {
-            fetchRule(true);
+            fetchInitiative(true);
           }, 1000);
         });
     }
@@ -238,7 +238,7 @@ export function RuleDetail() {
     );
   }
 
-  if (!rule) {
+  if (!initiative) {
     return null;
   }
 
@@ -246,38 +246,38 @@ export function RuleDetail() {
     <>
       {contextHolder}
       <div className="form-container">
-        <Card className="rule-card">
-          <h2>{rule.title}</h2>
+        <Card className="initiative-card">
+          <h2>{initiative.title}</h2>
           <div>
-            <strong>Автор:</strong> {rule.creator?.fullname}
+            <strong>Автор:</strong> {initiative.creator?.fullname}
           </div>
           <div>
             <Flex align="center" gap={8}>
               <strong>Статус:</strong>
-              <StatusTag status={ruleStatus} statusCode={ruleStatusCode} />
+              <StatusTag status={initiativeStatus} statusCode={initiativeStatusCode} />
             </Flex>
           </div>
           <div>
-            <strong>Категория:</strong> {rule.category?.name}
+            <strong>Категория:</strong> {initiative.category?.name}
           </div>
-          <p className="rule-description">
+          <p className="initiative-description">
             <strong>Описание: </strong>
-            {rule.content}
+            {initiative.content}
           </p>
-          <i className="rule-question">{rule.question}</i>
+          <i className="initiative-question">{initiative.question}</i>
 
           <VotingResults
             yesPercent={voteInPercent.yes}
             noPercent={voteInPercent.no}
             abstainPercent={voteInPercent.abstain}
           />
-          {rule.is_extra_options && (
+          {initiative.is_extra_options && (
             <div>
-              <i className="rule-question">{rule.extra_question}</i>
+              <i className="initiative-question">{initiative.extra_question}</i>
               <Form.Item>
                 <Select
                   mode="multiple"
-                  value={(rule.voting_result?.selected_options || []).map(
+                  value={(initiative.voting_result?.selected_options || []).map(
                     (it) => it.content
                   )}
                   suffixIcon={null}
@@ -290,19 +290,19 @@ export function RuleDetail() {
 
           {userVotingResult && (
             <UserVoting
-              resource="rule"
-              ruleId={id}
-              question={rule.question || ''}
-              extraQuestion={rule.extra_question || ''}
+              resource="initiative"
+              initiativeId={id}
+              question={initiative.question || ''}
+              extraQuestion={initiative.extra_question || ''}
               vote={userVotingResult.vote}
-              isOptions={rule.is_extra_options || false}
+              isOptions={initiative.is_extra_options || false}
               options={userOption}
-              isMultiSelect={rule.is_multi_select || false}
+              isMultiSelect={initiative.is_multi_select || false}
               onVote={handleVote}
               onSelectChange={handleSelectChange}
             />
           )}
-          <Opinions maxPageSize={20} resource="rule" ruleId={id} />
+          <Opinions maxPageSize={20} resource="initiative" initiativeId={id} />
         </Card>
       </div>
       <div className="toolbar">

@@ -19,8 +19,8 @@ import {
   UserModel,
   VotingResultModel,
   UserVotingResultModel,
-  VotingOptionModel,
-} from 'src/models';
+  VotingOptionModel, InitiativeModel, RuleModel
+} from "src/models";
 import { Filters, ModelType, Orders } from 'src/shared/types';
 import { dataSourceConfig } from 'src/annotations';
 import { DataSourceService } from './data-source.service.ts';
@@ -41,6 +41,8 @@ import { baseApiUrl } from 'src/config/configuration';
     voting_result: VotingResultModel,
     voting_option: VotingOptionModel,
     user_voting_result: UserVotingResultModel,
+    initiative: InitiativeModel,
+    rule: RuleModel,
   },
 })
 export class CrudDataSourceService<

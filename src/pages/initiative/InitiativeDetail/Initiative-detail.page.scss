@@ -1,6 +1,6 @@
 @use 'src/shared/assets/scss/variables' as *;
 
-.rule-card {
+.initiative-card {
   width: 100%;
   margin: 20px auto;
   padding: 20px;
@@ -9,14 +9,14 @@
   background-color: $background-color;
 }
 
-.rule-description {
+.initiative-description {
   font-size: 16px;
   color: #333;
   line-height: 1.6;
   margin-bottom: 16px;
 }
 
-.rule-question {
+.initiative-question {
   font-size: 16px;
   font-weight: 500;
   color: #333;
@@ -32,16 +32,16 @@
 }
 
 @media (max-width: $breakpoint-sm) {
-  .rule-card {
+  .initiative-card {
     margin: 10px;
     padding: 15px;
   }
 
-  .rule-description {
+  .initiative-description {
     font-size: 13px;
   }
 
-  .rule-question {
+  .initiative-question {
     font-size: 14px;
   }
 }
