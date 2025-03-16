@@ -1,6 +1,6 @@
 import { ApiModel } from "./api-model.model.ts";
-import { attribute, manyToMany, modelConfig } from "src/annotations";
-import { VotingOptionModel } from "./voting-option.model.ts";
+import { attribute, modelConfig } from "src/annotations";
+import { VotingOptionData } from "src/interfaces";
 
 @modelConfig({
     entityName: 'voting_result',
@@ -13,7 +13,10 @@ export class VotingResultModel extends ApiModel{
     @attribute()
     is_significant_minority?: boolean;
 
-    @manyToMany('voting_option')
-    selected_options?: VotingOptionModel[];
+    @attribute()
+    options?: { [key: string]: VotingOptionData };
+
+    @attribute()
+    minority_options?: { [key: string]: VotingOptionData };
 
 }

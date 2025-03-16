@@ -1,6 +1,6 @@
 import { useAuth } from 'src/hooks';
 import { AuthContextProvider, FilterItem, OpinionsProps } from 'src/interfaces';
-import { Button, ConfigProvider, Input, List, message, Pagination } from 'antd';
+import { Button, Input, List, message, Pagination } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import {
   SetStateAction,
@@ -12,7 +12,6 @@ import {
 import { CrudDataSourceService } from 'src/services';
 import { OpinionModel } from 'src/models';
 import { EditOutlined } from '@ant-design/icons';
-import ruRU from 'antd/lib/locale/ru_RU';
 
 export function Opinions(props: OpinionsProps) {
   const authData: AuthContextProvider = useAuth();
@@ -269,19 +268,17 @@ export function Opinions(props: OpinionsProps) {
         )}
       />
       {total > pageSize && (
-        <ConfigProvider locale={ruRU}>
-          <Pagination
-            current={currentPage}
-            pageSize={pageSize}
-            total={total}
-            onChange={handlePageChange}
-            showSizeChanger
-            pageSizeOptions={['10', '20', '50', '100']}
-            defaultPageSize={props.maxPageSize}
-            showTotal={(total, range) => `${range[0]}-${range[1]} из ${total}`}
-            style={{ marginTop: 16, textAlign: 'center' }}
-          />
-        </ConfigProvider>
+        <Pagination
+          current={currentPage}
+          pageSize={pageSize}
+          total={total}
+          onChange={handlePageChange}
+          showSizeChanger
+          pageSizeOptions={['10', '20', '50', '100']}
+          defaultPageSize={props.maxPageSize}
+          showTotal={(total, range) => `${range[0]}-${range[1]} из ${total}`}
+          style={{ marginTop: 16, textAlign: 'center' }}
+        />
       )}
     </div>
   );

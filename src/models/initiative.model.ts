@@ -1,11 +1,9 @@
 import { ApiModel } from './api-model.model.ts';
-import { attribute, manyToMany, modelConfig, oneToMany } from 'src/annotations';
+import { attribute, modelConfig, oneToMany } from 'src/annotations';
 import { UserModel } from './user.model.ts';
 import { StatusModel } from './status.model.ts';
 import { CategoryModel } from './category.model.ts';
 import { VotingResultModel } from './voting-result.model.ts';
-import { UserVotingResultModel } from './user-voting-result.model.ts';
-import { OpinionModel } from './opinion.model.ts';
 
 @modelConfig({
   entityName: 'initiative',
@@ -21,6 +19,12 @@ export class InitiativeModel extends ApiModel {
   content?: string;
 
   @attribute()
+  is_one_day_event?: boolean;
+
+  @attribute(Date)
+  event_date?: Date;
+
+  @attribute()
   is_extra_options?: boolean;
 
   @attribute()
@@ -29,8 +33,11 @@ export class InitiativeModel extends ApiModel {
   @attribute()
   community_id?: string;
 
-  @oneToMany('user')
+  @oneToMany('auth_user')
   creator?: UserModel;
+
+  @attribute(Date)
+  created?: Date;
 
   @oneToMany('status')
   status?: StatusModel;
@@ -38,15 +45,16 @@ export class InitiativeModel extends ApiModel {
   @oneToMany('category')
   category?: CategoryModel;
 
+  @attribute(Date)
+  deadline?: Date;
+
   @oneToMany('voting_result')
   voting_result?: VotingResultModel;
 
   @attribute()
   extra_question?: string;
 
-  @manyToMany('user_voting_result')
-  user_results?: UserVotingResultModel[];
+  @oneToMany('auth_user')
+  responsible?: UserModel;
 
-  @manyToMany('opinion')
-  opinions?: OpinionModel[];
 }

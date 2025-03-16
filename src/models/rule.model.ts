@@ -1,12 +1,9 @@
 import { ApiModel } from './api-model.model.ts';
-import { attribute, manyToMany, modelConfig, oneToMany } from 'src/annotations';
+import { attribute, modelConfig, oneToMany } from 'src/annotations';
 import { UserModel } from './user.model.ts';
 import { StatusModel } from './status.model.ts';
 import { CategoryModel } from './category.model.ts';
 import { VotingResultModel } from './voting-result.model.ts';
-import { VotingOptionModel } from './voting-option.model.ts';
-import { UserVotingResultModel } from './user-voting-result.model.ts';
-import { OpinionModel } from './opinion.model.ts';
 
 @modelConfig({
   entityName: 'rule',
@@ -30,8 +27,11 @@ export class RuleModel extends ApiModel {
   @attribute()
   community_id?: string;
 
-  @oneToMany('user')
+  @oneToMany('auth_user')
   creator?: UserModel;
+
+  @attribute(Date)
+  created?: Date;
 
   @oneToMany('status')
   status?: StatusModel;
@@ -44,13 +44,4 @@ export class RuleModel extends ApiModel {
 
   @attribute()
   extra_question?: string;
-
-  @manyToMany('voting_option')
-  extra_options?: VotingOptionModel[];
-
-  @manyToMany('user_voting_result')
-  user_results?: UserVotingResultModel[];
-
-  @manyToMany('opinion')
-  opinions?: OpinionModel[];
 }

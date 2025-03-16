@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal } from 'antd';
+import { Button, DatePicker, Form, Input, Modal, Switch } from "antd";
 import { FilterModalProps, Pagination } from 'src/interfaces';
 import { AuthApiClientService, CrudDataSourceService } from 'src/services';
 import { StatusModel } from 'src/models';
@@ -12,6 +12,8 @@ import {
   RuleApprovedCode,
   RuleRevokedCode,
 } from 'src/consts';
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
+import { useState } from "react";
 
 export function ResourceFilterModal({
   communityId,
@@ -25,6 +27,7 @@ export function ResourceFilterModal({
 
   const statusService = new CrudDataSourceService(StatusModel);
   const authApiClientService = new AuthApiClientService();
+  const [isOneDayEvent, setIsOneDayEvent] = useState(false);
 
   const loadStatuses = async (pagination?: Pagination) => {
     const filters: Filters = [];
@@ -77,11 +80,17 @@ export function ResourceFilterModal({
     onReset();
   };
 
+  const onClearForm = () => {
+    form.resetFields();
+    setIsOneDayEvent(false);
+    onCancel();
+  }
+
   return (
     <Modal
       title="Фильтры"
       open={visible}
-      onCancel={onCancel}
+      onCancel={onClearForm}
       footer={[
         <Button key="reset" onClick={handleReset}>
           Сбросить
@@ -104,6 +113,24 @@ export function ResourceFilterModal({
         <Form.Item label="Описание" name="content">
           <Input.TextArea placeholder="Поиск по описанию" />
         </Form.Item>
+
+        {resource === 'initiative' && (
+          <>
+            <Form.Item label="Однодневное событие" name="isOneDayEvent">
+              <Switch
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+                value={isOneDayEvent}
+                onChange={(value) => setIsOneDayEvent(value)}
+              />
+            </Form.Item>
+            {isOneDayEvent && (
+              <Form.Item label="Дата события" name="eventDate">
+                <DatePicker format="YYYY-MM-DD" />
+              </Form.Item>
+            )}
+          </>
+        )}
 
         <Form.Item label="Статус" name="status">
           <CustomSelect

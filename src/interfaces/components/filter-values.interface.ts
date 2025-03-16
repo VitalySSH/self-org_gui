@@ -5,4 +5,6 @@ export interface FilterValues {
     content?: string;
     status?: StatusModel;
     creator?: UserModel;
+    isOneDayEvent?: boolean;
+    eventDate?: string;
 }

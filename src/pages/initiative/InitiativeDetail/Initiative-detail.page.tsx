@@ -1,5 +1,5 @@
 import './Initiative-detail.page.scss';
-import { Button, Card, Flex, Form, message, Select, Spin } from 'antd';
+import { Button, Card, Flex, message, Spin } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CrudDataSourceService, VotingResultAoService } from 'src/services';
@@ -12,6 +12,9 @@ import { Opinions, UserVoting, VotingResults } from 'src/components';
 import { AuthContextProvider, VoteInPercent } from 'src/interfaces';
 import { useAuth } from 'src/hooks';
 import { StatusTag } from 'src/components/StatusTag/status-tag.component.tsx';
+import { convertVotingOptions } from 'src/utils/voting.utils.ts';
+import { OneDayEventLabel } from 'src/consts';
+import dayjs from 'dayjs';
 
 export function InitiativeDetail() {
   const { id } = useParams();
@@ -30,9 +33,12 @@ export function InitiativeDetail() {
   const [voteInPercent, setVoteInPercent] = useState({} as VoteInPercent);
   const [userVote, setUserVote] = useState<boolean | undefined>(undefined);
   const [userOption, setUserOption] = useState<VotingOptionModel[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [minorityOptions, setMinorityOptions] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [disabled, setDisabled] = useState(true);
   const [buttonLoading, setButtonLoading] = useState(false);
+  const [eventDate, setEventDate] = useState<string | null>(null);
 
   const userVotingResultService = useMemo(
     () => new CrudDataSourceService(UserVotingResultModel),
@@ -62,23 +68,35 @@ export function InitiativeDetail() {
   );
 
   const fetchInitiative = useCallback(
-    (isStatusOnly: boolean = false) => {
-      if ((!initiative || isStatusOnly) && id) {
+    (forced: boolean = false) => {
+      if ((!initiative || forced) && id) {
         const initiativeService = new CrudDataSourceService(InitiativeModel);
         initiativeService
           .get(id, [
             'status',
             'creator',
-            'voting_result.selected_options',
+            'voting_result',
             'category',
           ])
           .then((initiativeInst) => {
-            if (!isStatusOnly) {
-              setInitiative(initiativeInst);
+            setInitiative(initiativeInst);
+            if (!votingResultId) {
               setVotingResultId(initiativeInst.voting_result?.id);
             }
+            const options: string[] = convertVotingOptions(
+              initiativeInst.voting_result?.options || {}
+            );
+            setSelectedOptions(options);
+            const _minorityOptions = convertVotingOptions(
+              initiativeInst.voting_result?.minority_options || {}
+            );
+            setMinorityOptions(_minorityOptions);
             setInitiativeStatus(initiativeInst.status?.name || '');
             setInitiativeStatusCode(initiativeInst.status?.code || '');
+            if (!eventDate && initiativeInst.event_date) {
+              const day = dayjs(initiativeInst.event_date);
+              setEventDate(day.format('DD.MM.YYYY'));
+            }
           })
           .catch((error) => {
             errorInfo(`Не удалось загрузить данные инициативы: ${error}`);
@@ -219,7 +237,6 @@ export function InitiativeDetail() {
         .finally(() => {
           setButtonLoading(false);
           setDisabled(true);
-          setInitiative(null);
           // FIXME: Решение временное, потом переделать на вебсокеты
           setTimeout(() => {
             fetchInitiative(true);
@@ -254,12 +271,25 @@ export function InitiativeDetail() {
           <div>
             <Flex align="center" gap={8}>
               <strong>Статус:</strong>
-              <StatusTag status={initiativeStatus} statusCode={initiativeStatusCode} />
+              <StatusTag
+                status={initiativeStatus}
+                statusCode={initiativeStatusCode}
+              />
             </Flex>
           </div>
           <div>
             <strong>Категория:</strong> {initiative.category?.name}
           </div>
+          {initiative.is_one_day_event && (
+            <>
+              <div>
+                <strong>Тип:</strong> {OneDayEventLabel}
+              </div>
+              <div>
+                <strong>Дата события:</strong> {eventDate}
+              </div>
+            </>
+          )}
           <p className="initiative-description">
             <strong>Описание: </strong>
             {initiative.content}
@@ -270,23 +300,10 @@ export function InitiativeDetail() {
             yesPercent={voteInPercent.yes}
             noPercent={voteInPercent.no}
             abstainPercent={voteInPercent.abstain}
+            extraQuestion={initiative.extra_question}
+            selectedOptions={selectedOptions}
+            minorityOptions={minorityOptions}
           />
-          {initiative.is_extra_options && (
-            <div>
-              <i className="initiative-question">{initiative.extra_question}</i>
-              <Form.Item>
-                <Select
-                  mode="multiple"
-                  value={(initiative.voting_result?.selected_options || []).map(
-                    (it) => it.content
-                  )}
-                  suffixIcon={null}
-                  open={false}
-                  removeIcon={null}
-                ></Select>
-              </Form.Item>
-            </div>
-          )}
 
           {userVotingResult && (
             <UserVoting

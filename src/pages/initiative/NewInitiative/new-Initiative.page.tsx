@@ -1,4 +1,13 @@
-import { Button, Form, Input, message, Space, Switch, Tooltip } from 'antd';
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  message,
+  Space,
+  Switch,
+  Tooltip
+} from "antd";
 import {
   MinusCircleOutlined,
   PlusOutlined,
@@ -20,8 +29,8 @@ import { useState } from 'react';
 import {
   CategoryLabel,
   IsExtraOptionsLabel,
-  IsMultiSelectLabel,
-} from 'src/consts';
+  IsMultiSelectLabel, OneDayEventLabel
+} from "src/consts";
 import { CustomSelect } from 'src/components';
 import { CategoryModel, CommunityModel } from 'src/models';
 
@@ -33,6 +42,7 @@ export function NewInitiative(props: any) {
 
   const [buttonLoading, setButtonLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
+  const [isOneDayEvent, setIsOneDayEvent] = useState(false);
   const [isExtraOptions, setIsExtraOptions] = useState(false);
 
   const communityService = new CrudDataSourceService(CommunityModel);
@@ -65,6 +75,7 @@ export function NewInitiative(props: any) {
 
   const handleFormChange = () => {
     const formData = form.getFieldsValue();
+    setIsOneDayEvent(Boolean(formData.is_one_day_event));
     setIsExtraOptions(Boolean(formData.is_extra_options));
     const isValidOptions = formData.is_extra_options
       ? (formData.extra_options || []).length > 0
@@ -200,6 +211,9 @@ export function NewInitiative(props: any) {
       question: formData.question,
       extra_question: formData.extra_question,
       content: formData.content,
+      is_one_day_event: formData.is_one_day_event,
+      event_date: formData.event_date ?
+        formData.event_date.toISOString() : null,
       is_extra_options: formData.is_extra_options,
       is_multi_select: formData.is_multi_select || false,
       community_id: communityId,
@@ -229,6 +243,7 @@ export function NewInitiative(props: any) {
           name="new-initiative"
           onFieldsChange={handleFormChange}
           initialValues={{
+            is_one_day_event: false,
             is_extra_options: false,
             is_multi_select: false,
           }}
@@ -288,7 +303,7 @@ export function NewInitiative(props: any) {
             name="content"
             label={
               <span>
-                Описание правила&nbsp;
+                Описание инициативы&nbsp;
                 <Tooltip title="Расскажите подробно суть вашей инициативы, с какой целью предлагается её реализация и как она поможет сделать наше сообщество лучше. Максимум 1 000 символов.">
                   <QuestionCircleOutlined />
                 </Tooltip>
@@ -338,6 +353,41 @@ export function NewInitiative(props: any) {
               bindLabel="name"
             />
           </Form.Item>
+          <Form.Item
+            name="is_one_day_event"
+            label={
+              <span>
+                {OneDayEventLabel}&nbsp;
+                <Tooltip title="Включите этот признак, если реализация вашей инициативы привязана к какой-то одной конкретной дате и её результат не будет иметь долгосрочных последствий затрагивающих сообщество.">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </span>
+            }
+            labelCol={{ span: 24 }}
+            valuePropName="checked"
+          >
+            <Switch
+              checkedChildren={<CheckOutlined />}
+              unCheckedChildren={<CloseOutlined />}
+            />
+          </Form.Item>
+          {isOneDayEvent && (
+            <Form.Item
+              name="event_date"
+              label={
+                <span>
+                {OneDayEventLabel}&nbsp;
+                  <Tooltip title="Выбирите дату события. В этот день голосование по инициативе будет навсегда завершено.">
+                    <QuestionCircleOutlined />
+                  </Tooltip>
+                </span>
+                }
+              labelCol={{ span: 24 }}
+              rules={[{ required: true, message: "Пожалуйста, выберите дату." }]}
+            >
+              <DatePicker format="DD.MM.YYYY" />
+            </Form.Item>
+          )}
           <Form.Item
             name="is_extra_options"
             label={

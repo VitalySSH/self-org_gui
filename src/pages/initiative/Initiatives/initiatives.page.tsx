@@ -2,7 +2,6 @@ import {
   Badge,
   Button,
   Card,
-  ConfigProvider,
   Flex,
   Layout,
   List,
@@ -16,11 +15,12 @@ import { CrudDataSourceService } from 'src/services';
 import { InitiativeModel } from 'src/models';
 import { FilterOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import ruRU from 'antd/lib/locale/ru_RU';
 import { Filters } from 'src/shared/types.ts';
 import { ResourceFilterModal } from 'src/components/ResourceFilterModal/resource-filter-modal.component.tsx';
 import { StatusTag } from 'src/components/StatusTag/status-tag.component';
 import styles from 'src/shared/assets/scss/module/list.module.scss';
+import { OneDayEventLabel } from "src/consts";
+import dayjs from "dayjs";
 
 export function Initiatives(props: any) {
   const maxPageSize = 20;
@@ -61,6 +61,8 @@ export function Initiatives(props: any) {
           setTotal(resp.total);
           const initiatives: InitiativeCardInterface[] = [];
           resp.data.forEach((initiative) => {
+            const eventDate = initiative.event_date ?
+              dayjs(initiative.event_date) : null;
             const initiativeItem = {
               id: initiative.id,
               title: initiative.title,
@@ -69,6 +71,8 @@ export function Initiatives(props: any) {
               status: initiative.status?.name,
               statusCode: initiative.status?.code,
               category: initiative.category?.name,
+              isOneDayEvent: Boolean(initiative.is_one_day_event),
+              eventDate: eventDate ? eventDate.format('DD.MM.YYYY') : '',
             };
             initiatives.push(initiativeItem);
           });
@@ -107,6 +111,20 @@ export function Initiatives(props: any) {
         field: 'content',
         op: 'ilike',
         val: values.content,
+      });
+    }
+    if (values.isOneDayEvent) {
+      newFilters.push({
+        field: 'is_one_day_event',
+        op: 'equals',
+        val: values.isOneDayEvent,
+      });
+    }
+    if (values.eventDate) {
+      newFilters.push({
+        field: 'event_date',
+        op: 'equals',
+        val: values.eventDate,
       });
     }
     if (values.status) {
@@ -193,24 +211,32 @@ export function Initiatives(props: any) {
                   />
                 </Flex>
               </div>
+              {item.isOneDayEvent && (
+                <>
+                  <div style={{ marginTop: 10 }}>
+                    <strong>Тип:</strong> {OneDayEventLabel}
+                  </div>
+                  <div style={{ marginTop: 10 }}>
+                    <strong>Дата события:</strong> {item.eventDate}
+                  </div>
+                </>
+              )}
             </Card>
           </List.Item>
         )}
       />
       {total > pageSize && (
-        <ConfigProvider locale={ruRU}>
-          <Pagination
-            current={currentPage}
-            pageSize={pageSize}
-            total={total}
-            onChange={handlePageChange}
-            showSizeChanger
-            pageSizeOptions={['10', '20', '50', '100']}
-            defaultPageSize={maxPageSize}
-            showTotal={(total, range) => `${range[0]}-${range[1]} из ${total}`}
-            className={styles.pagination}
-          />
-        </ConfigProvider>
+        <Pagination
+          current={currentPage}
+          pageSize={pageSize}
+          total={total}
+          onChange={handlePageChange}
+          showSizeChanger
+          pageSizeOptions={['10', '20', '50', '100']}
+          defaultPageSize={maxPageSize}
+          showTotal={(total, range) => `${range[0]}-${range[1]} из ${total}`}
+          className={styles.pagination}
+        />
       )}
     </Layout>
   );

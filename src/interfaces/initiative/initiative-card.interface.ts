@@ -6,4 +6,6 @@ export interface InitiativeCardInterface {
   status?: string;
   statusCode?: string;
   category?: string;
+  isOneDayEvent: boolean;
+  eventDate?: string;
 }

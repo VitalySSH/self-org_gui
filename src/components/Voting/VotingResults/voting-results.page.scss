@@ -1,3 +1,5 @@
+@use 'src/shared/assets/scss/variables' as *;
+
 .voting-results {
   margin-top: 12px;
   margin-bottom: 20px;
@@ -7,4 +9,15 @@
   .ant-progress-inner {
     max-width: 560px;
   }
+}
+
+.minority-header {
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  margin-bottom: 8px;
+  margin-left: 12px;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.5;
+  color: $text-color;
 }

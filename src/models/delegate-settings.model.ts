@@ -13,7 +13,7 @@ export class DelegateSettingsModel extends ApiModel{
     @attribute()
     user_id?: string;
 
-    @manyToMany('user')
+    @manyToMany('auth_user')
     delegates?: UserModel[];
 
 }

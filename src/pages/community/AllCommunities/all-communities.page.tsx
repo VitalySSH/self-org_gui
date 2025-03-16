@@ -1,7 +1,6 @@
 import {
   Badge,
   Button,
-  ConfigProvider,
   Layout,
   List,
   Pagination,
@@ -17,7 +16,6 @@ import {
 } from 'src/interfaces';
 import { useAuth } from 'src/hooks';
 import { CommunityCard, CommunityFilterModal } from 'src/components';
-import ruRU from 'antd/lib/locale/ru_RU';
 import styles from 'src/shared/assets/scss/module/list.module.scss';
 import { Filters } from 'src/shared/types.ts';
 import { FilterOutlined } from '@ant-design/icons';
@@ -173,19 +171,17 @@ export function AllCommunities() {
         )}
       />
       {total > pageSize && (
-        <ConfigProvider locale={ruRU}>
-          <Pagination
-            current={currentPage}
-            pageSize={pageSize}
-            total={total}
-            onChange={handlePageChange}
-            showSizeChanger
-            pageSizeOptions={['10', '20', '50', '100']}
-            defaultPageSize={maxPageSize}
-            showTotal={(total, range) => `${range[0]}-${range[1]} из ${total}`}
-            className="pagination"
-          />
-        </ConfigProvider>
+        <Pagination
+          current={currentPage}
+          pageSize={pageSize}
+          total={total}
+          onChange={handlePageChange}
+          showSizeChanger
+          pageSizeOptions={['10', '20', '50', '100']}
+          defaultPageSize={maxPageSize}
+          showTotal={(total, range) => `${range[0]}-${range[1]} из ${total}`}
+          className="pagination"
+        />
       )}
     </Layout>
   );

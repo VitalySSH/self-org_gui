@@ -2,10 +2,10 @@ import { ApiModel } from './api-model.model.ts';
 import { modelConfig, attribute } from 'src/annotations';
 
 @modelConfig({
-  entityName: 'user',
+  entityName: 'auth_user',
 })
 export class UserModel extends ApiModel {
-  @attribute()
+  @attribute(Date)
   firstname?: string;
 
   @attribute()
@@ -26,6 +26,6 @@ export class UserModel extends ApiModel {
   @attribute()
   is_active?: boolean;
 
-  @attribute()
+  @attribute(Date)
   created?: Date;
 }

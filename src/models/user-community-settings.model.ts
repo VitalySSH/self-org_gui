@@ -11,7 +11,7 @@ import { DelegateSettingsModel } from './delegate-settings.model.ts';
   entityName: 'user_community_settings',
 })
 export class UserCommunitySettingsModel extends ApiModel {
-  @oneToMany('user')
+  @oneToMany('auth_user')
   user?: UserModel;
 
   @attribute()

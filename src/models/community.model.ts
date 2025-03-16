@@ -14,7 +14,7 @@ export class CommunityModel extends ApiModel {
   @manyToMany('user_community_settings')
   user_settings?: UserCommunitySettingsModel[];
 
-  @oneToMany('user')
+  @oneToMany('auth_user')
   creator?: UserModel;
 
   @oneToMany('community')
@@ -23,6 +23,6 @@ export class CommunityModel extends ApiModel {
   @attribute()
   is_blocked?: boolean;
 
-  @attribute()
+  @attribute(Date)
   created?: Date;
 }

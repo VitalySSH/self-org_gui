@@ -2,7 +2,6 @@ import {
   Badge,
   Button,
   Card,
-  ConfigProvider,
   Flex,
   Layout,
   List,
@@ -16,7 +15,6 @@ import { CrudDataSourceService } from 'src/services';
 import { RuleModel } from 'src/models';
 import { FilterOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import ruRU from 'antd/lib/locale/ru_RU';
 import { Filters } from 'src/shared/types.ts';
 import { ResourceFilterModal } from 'src/components/ResourceFilterModal/resource-filter-modal.component.tsx';
 import { StatusTag } from 'src/components/StatusTag/status-tag.component';
@@ -198,19 +196,17 @@ export function Rules(props: any) {
         )}
       />
       {total > pageSize && (
-        <ConfigProvider locale={ruRU}>
-          <Pagination
-            current={currentPage}
-            pageSize={pageSize}
-            total={total}
-            onChange={handlePageChange}
-            showSizeChanger
-            pageSizeOptions={['10', '20', '50', '100']}
-            defaultPageSize={maxPageSize}
-            showTotal={(total, range) => `${range[0]}-${range[1]} из ${total}`}
-            className={styles.pagination}
-          />
-        </ConfigProvider>
+        <Pagination
+          current={currentPage}
+          pageSize={pageSize}
+          total={total}
+          onChange={handlePageChange}
+          showSizeChanger
+          pageSizeOptions={['10', '20', '50', '100']}
+          defaultPageSize={maxPageSize}
+          showTotal={(total, range) => `${range[0]}-${range[1]} из ${total}`}
+          className={styles.pagination}
+        />
       )}
     </Layout>
   );

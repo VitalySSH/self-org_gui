@@ -2,9 +2,10 @@ import { v4 } from 'uuid';
 import {
   CrudApiDataInterface,
   CrudApiListResponse,
+  FieldModelMetaData,
   ListResponse,
-  Pagination,
-} from 'src/interfaces';
+  Pagination
+} from "src/interfaces";
 import {
   ApiModel,
   CommunityDescriptionModel,
@@ -21,14 +22,14 @@ import {
   UserVotingResultModel,
   VotingOptionModel, InitiativeModel, RuleModel
 } from "src/models";
-import { Filters, ModelType, Orders } from 'src/shared/types';
+import * as types from 'src/shared/types';
 import { dataSourceConfig } from 'src/annotations';
 import { DataSourceService } from './data-source.service.ts';
 import { baseApiUrl } from 'src/config/configuration';
 
 @dataSourceConfig({
   models: {
-    user: UserModel,
+    auth_user: UserModel,
     category: CategoryModel,
     status: StatusModel,
     community: CommunityModel,
@@ -48,10 +49,10 @@ import { baseApiUrl } from 'src/config/configuration';
 export class CrudDataSourceService<
   T extends ApiModel,
 > extends DataSourceService {
-  modelType: ModelType<T>;
+  modelType: types.ModelType<T>;
   model: T;
 
-  constructor(modelType: ModelType<T>, baseURL = `${baseApiUrl}/crud`) {
+  constructor(modelType: types.ModelType<T>, baseURL = `${baseApiUrl}/crud`) {
     super(baseURL);
     this.modelType = modelType;
     this.model = new this.modelType();
@@ -62,7 +63,7 @@ export class CrudDataSourceService<
     }
   }
 
-  private getModel(entityName: string): ModelType<any> {
+  private getModel(entityName: string): types.ModelType<any> {
     const config = Reflect.getMetadata('DataSourceConfig', this.constructor);
     return config.models[entityName];
   }
@@ -80,8 +81,13 @@ export class CrudDataSourceService<
 
     const attributesData = apiData.attributes || {};
     for (const [key, value] of Object.entries(attributesData)) {
-      if (attributes[key]) {
-        model[key] = value;
+      const metadata: FieldModelMetaData = attributes[key];
+      if (metadata) {
+        if (metadata.type?.name === 'Date' && value) {
+          model[key] = new Date(value);
+        } else {
+          model[key] = value;
+        }
       }
     }
     const relationsData = apiData.relations || {};
@@ -168,8 +174,8 @@ export class CrudDataSourceService<
   }
 
   async list(
-    filters?: Filters,
-    orders?: Orders,
+    filters?: types.Filters,
+    orders?: types.Orders,
     pagination?: Pagination,
     include?: string[]
   ): Promise<ListResponse<T>> {

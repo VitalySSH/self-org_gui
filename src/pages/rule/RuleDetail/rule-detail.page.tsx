@@ -1,5 +1,5 @@
 import './rule-detail.page.scss';
-import { Button, Card, Flex, Form, message, Select, Spin } from 'antd';
+import { Button, Card, Flex, message, Spin } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CrudDataSourceService, VotingResultAoService } from 'src/services';
@@ -9,9 +9,13 @@ import {
   VotingOptionModel,
 } from 'src/models';
 import { Opinions, UserVoting, VotingResults } from 'src/components';
-import { AuthContextProvider, VoteInPercent } from 'src/interfaces';
+import {
+  AuthContextProvider,
+  VoteInPercent,
+} from "src/interfaces";
 import { useAuth } from 'src/hooks';
 import { StatusTag } from 'src/components/StatusTag/status-tag.component.tsx';
+import { convertVotingOptions } from "src/utils/voting.utils.ts";
 
 export function RuleDetail() {
   const { id } = useParams();
@@ -30,6 +34,8 @@ export function RuleDetail() {
   const [voteInPercent, setVoteInPercent] = useState({} as VoteInPercent);
   const [userVote, setUserVote] = useState<boolean | undefined>(undefined);
   const [userOption, setUserOption] = useState<VotingOptionModel[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [minorityOptions, setMinorityOptions] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [disabled, setDisabled] = useState(true);
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -62,21 +68,29 @@ export function RuleDetail() {
   );
 
   const fetchRule = useCallback(
-    (isStatusOnly: boolean = false) => {
-      if ((!rule || isStatusOnly) && id) {
+    (forced: boolean = false) => {
+      if ((!rule || forced) && id) {
         const ruleService = new CrudDataSourceService(RuleModel);
         ruleService
           .get(id, [
             'status',
             'creator',
-            'voting_result.selected_options',
+            'voting_result',
             'category',
           ])
           .then((ruleInst) => {
-            if (!isStatusOnly) {
-              setRule(ruleInst);
+            setRule(ruleInst);
+            if (!votingResultId) {
               setVotingResultId(ruleInst.voting_result?.id);
             }
+            const options: string[] = convertVotingOptions(
+              ruleInst.voting_result?.options || {}
+            );
+            setSelectedOptions(options);
+            const _minorityOptions = convertVotingOptions(
+              ruleInst.voting_result?.minority_options || {}
+            );
+            setMinorityOptions(_minorityOptions);
             setRuleStatus(ruleInst.status?.name || '');
             setRuleStatusCode(ruleInst.status?.code || '');
           })
@@ -219,7 +233,6 @@ export function RuleDetail() {
         .finally(() => {
           setButtonLoading(false);
           setDisabled(true);
-          setRule(null);
           // FIXME: Решение временное, потом переделать на вебсокеты
           setTimeout(() => {
             fetchRule(true);
@@ -270,23 +283,10 @@ export function RuleDetail() {
             yesPercent={voteInPercent.yes}
             noPercent={voteInPercent.no}
             abstainPercent={voteInPercent.abstain}
+            extraQuestion={rule.extra_question}
+            selectedOptions={selectedOptions}
+            minorityOptions={minorityOptions}
           />
-          {rule.is_extra_options && (
-            <div>
-              <i className="rule-question">{rule.extra_question}</i>
-              <Form.Item>
-                <Select
-                  mode="multiple"
-                  value={(rule.voting_result?.selected_options || []).map(
-                    (it) => it.content
-                  )}
-                  suffixIcon={null}
-                  open={false}
-                  removeIcon={null}
-                ></Select>
-              </Form.Item>
-            </div>
-          )}
 
           {userVotingResult && (
             <UserVoting

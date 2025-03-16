@@ -1,6 +1,5 @@
 import {
   Button,
-  ConfigProvider,
   Input,
   InputRef,
   Layout,
@@ -20,7 +19,6 @@ import { SearchOutlined } from '@ant-design/icons';
 import { useAuth } from 'src/hooks';
 import { useNavigate } from 'react-router-dom';
 import { MemberRequestVotesButton } from 'src/components';
-import ruRU from 'antd/lib/locale/ru_RU';
 
 type DataIndex = keyof TableMemberRequest;
 
@@ -229,14 +227,12 @@ export function CommonAddMemberRequests(props: any) {
 
   return (
     <Layout style={{ height: '100%', overflowY: 'auto' }}>
-      <ConfigProvider locale={ruRU}>
-        <Table
-          columns={columns}
-          loading={loading}
-          dataSource={dataSource}
-          locale={{ emptyText: 'Заявки не найдены' }}
-        />
-      </ConfigProvider>
+      <Table
+        columns={columns}
+        loading={loading}
+        dataSource={dataSource}
+        locale={{ emptyText: 'Заявки не найдены' }}
+      />
     </Layout>
   );
 }

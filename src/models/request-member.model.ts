@@ -8,7 +8,7 @@ import { CommunityModel } from "./community.model.ts";
     entityName: 'request_member',
 })
 export class RequestMemberModel extends ApiModel{
-    @oneToMany('user')
+    @oneToMany('auth_user')
     member?: UserModel;
 
     @oneToMany('community')
@@ -26,10 +26,10 @@ export class RequestMemberModel extends ApiModel{
     @attribute()
     parent_id?: string;
 
-    @attribute()
+    @attribute(Date)
     created?: Date;
 
-    @attribute()
+    @attribute(Date)
     updated?: Date;
 
 }

@@ -9,7 +9,7 @@ export class OpinionModel extends ApiModel {
   @attribute()
   text?: string;
 
-  @oneToMany('user')
+  @oneToMany('auth_user')
   creator?: UserModel;
 
   @attribute()

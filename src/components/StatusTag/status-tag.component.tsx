@@ -6,6 +6,8 @@ const STATUS_CLASSES: Record<string, string> = {
   compromise: styles.statusTagCompromise,
   rule_approved: styles.statusTagActive,
   rule_revoked: styles.statusTagInactive,
+  initiative_approved: styles.statusTagActive,
+  initiative_revoked: styles.statusTagInactive,
 };
 
 export const StatusTag = ({

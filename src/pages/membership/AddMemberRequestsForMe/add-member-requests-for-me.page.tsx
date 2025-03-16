@@ -1,6 +1,5 @@
 import {
   Button,
-  ConfigProvider,
   Input,
   InputRef,
   Space,
@@ -19,7 +18,6 @@ import { SearchOutlined } from '@ant-design/icons';
 import { useAuth } from 'src/hooks';
 import { MemberRequestVoteButton } from 'src/components';
 import { useNavigate } from 'react-router-dom';
-import ruRU from 'antd/lib/locale/ru_RU';
 
 type DataIndex = keyof TableMemberRequest;
 
@@ -240,13 +238,11 @@ export function AddMemberRequestsForMe(props: any) {
   }, [loadData]);
 
   return (
-    <ConfigProvider locale={ruRU}>
-      <Table
-        columns={columns}
-        loading={loading}
-        dataSource={dataSource}
-        locale={{ emptyText: 'Заявки не найдены' }}
-      />
-    </ConfigProvider>
+    <Table
+      columns={columns}
+      loading={loading}
+      dataSource={dataSource}
+      locale={{ emptyText: 'Заявки не найдены' }}
+    />
   );
 }
