@@ -1,4 +1,5 @@
 import { StatusModel, UserModel } from 'src/models';
+import { Dayjs } from "dayjs";
 
 export interface FilterValues {
     title?: string;
@@ -6,5 +7,5 @@ export interface FilterValues {
     status?: StatusModel;
     creator?: UserModel;
     isOneDayEvent?: boolean;
-    eventDate?: string;
+    eventDate?: Dayjs;
 }

@@ -124,7 +124,7 @@ export function Initiatives(props: any) {
       newFilters.push({
         field: 'event_date',
         op: 'equals',
-        val: values.eventDate,
+        val: values.eventDate.format('YYYY-MM-DD'),
       });
     }
     if (values.status) {

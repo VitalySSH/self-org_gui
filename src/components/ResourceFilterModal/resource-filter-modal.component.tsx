@@ -126,7 +126,7 @@ export function ResourceFilterModal({
             </Form.Item>
             {isOneDayEvent && (
               <Form.Item label="Дата события" name="eventDate">
-                <DatePicker format="YYYY-MM-DD" />
+                <DatePicker format="DD.MM.YYYY" />
               </Form.Item>
             )}
           </>
