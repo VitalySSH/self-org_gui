@@ -13,4 +13,5 @@ export const IsMultiSelectLabel = 'Допускается множественн
 export const IsDefaultAddMemberLabel = 'Согласие на автоматическое добавление новых участников';
 export const IsNotDelegateLabel = 'Не хочу выступать в качестве делегата';
 export const OneDayEventLabel = 'Однодневное событие';
+export const DelegateLabel = 'Делегат';
 

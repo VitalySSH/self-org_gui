@@ -9,18 +9,21 @@ import {
 import TextArea from 'antd/lib/input/TextArea';
 import {
   CreatingRuleInterface,
-  RuleFormInterface,
-} from 'src/interfaces';
+  Pagination,
+  RuleFormInterface
+} from "src/interfaces";
 import { CrudDataSourceService, RuleAoService } from 'src/services';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import {
   CategoryLabel,
+  CategorySelectedCode,
   IsExtraOptionsLabel,
-  IsMultiSelectLabel,
-} from 'src/consts';
+  IsMultiSelectLabel
+} from "src/consts";
 import { CustomSelect } from 'src/components';
-import { CategoryModel, CommunityModel } from 'src/models';
+import { CategoryModel } from 'src/models';
+import { Filters } from "src/shared/types.ts";
 
 export function NewRule(props: any) {
   const communityId = props.communityId;
@@ -32,7 +35,6 @@ export function NewRule(props: any) {
   const [disabled, setDisabled] = useState(true);
   const [isExtraOptions, setIsExtraOptions] = useState(false);
 
-  const communityService = new CrudDataSourceService(CommunityModel);
   const categoryService = new CrudDataSourceService(CategoryModel);
   const ruleAoService = new RuleAoService();
 
@@ -75,13 +77,21 @@ export function NewRule(props: any) {
     setDisabled(!isValid);
   };
 
-  const getCategories = async () => {
-    const _community = await communityService.get(communityId, [
-      'main_settings.categories',
-    ]);
-    const data = _community.main_settings?.categories || [];
+  const fetchCategories = async (pagination?: Pagination) => {
+    const filters: Filters = [
+      {
+        field: 'community_id',
+        op: 'equals',
+        val: communityId,
+      },
+      {
+        field: 'status.code',
+        op: 'equals',
+        val: CategorySelectedCode,
+      },
+    ];
 
-    return { data, total: data.length };
+    return categoryService.list(filters, undefined, pagination);
   };
 
   const extraOptions = (
@@ -329,7 +339,7 @@ export function NewRule(props: any) {
           >
             <CustomSelect
               fieldService={categoryService}
-              requestOptions={getCategories}
+              requestOptions={fetchCategories}
               onChange={onCustomSelectChange}
               formField="category"
               bindLabel="name"

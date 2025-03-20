@@ -1,11 +1,10 @@
-import { FilterValues } from 'src/interfaces';
 import { Resource } from 'src/shared/types.ts';
 
 export interface FilterModalProps {
   communityId: string;
   visible: boolean;
   onCancel: () => void;
-  onApply: (values: FilterValues) => void;
+  onApply: (values: any) => void;
   onReset: () => void;
-  resource: Resource;
+  resource?: Resource;
 }

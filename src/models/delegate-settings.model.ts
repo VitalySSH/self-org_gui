@@ -1,5 +1,5 @@
 import { ApiModel } from "./api-model.model.ts";
-import { modelConfig, oneToMany, manyToMany, attribute } from "src/annotations";
+import { modelConfig, oneToMany, attribute } from "src/annotations";
 import { UserModel } from "./user.model.ts";
 import { CategoryModel } from "./category.model.ts";
 
@@ -13,7 +13,10 @@ export class DelegateSettingsModel extends ApiModel{
     @attribute()
     user_id?: string;
 
-    @manyToMany('auth_user')
-    delegates?: UserModel[];
+    @attribute()
+    community_id?: string;
+
+    @oneToMany('auth_user')
+    delegate?: UserModel;
 
 }

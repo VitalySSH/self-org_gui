@@ -1,0 +1,47 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+.initiative-card {
+  width: 100%;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: $background-color;
+}
+
+.initiative-description {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.initiative-question {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+@media (max-width: $breakpoint-sm) {
+  .initiative-card {
+    margin: 10px;
+    padding: 15px;
+  }
+
+  .initiative-description {
+    font-size: 13px;
+  }
+
+  .initiative-question {
+    font-size: 14px;
+  }
+}

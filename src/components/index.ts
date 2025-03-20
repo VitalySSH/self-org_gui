@@ -22,3 +22,4 @@ export * from './AuthCard/auth-card.component';
 export * from './Voting/UserVoting/user-voting.page';
 export * from './Voting/VotingResults/voting-results.page';
 export * from './Opinions/opinions.component';
+export * from './DelegateFilterModal/delegate-filter-modal.component';

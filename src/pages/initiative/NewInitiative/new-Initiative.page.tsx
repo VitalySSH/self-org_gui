@@ -18,7 +18,7 @@ import {
 import TextArea from 'antd/lib/input/TextArea';
 import {
   CreatingInitiativeInterface,
-  InitiativeFormInterface,
+  InitiativeFormInterface, Pagination
 } from "src/interfaces";
 import {
   CrudDataSourceService,
@@ -28,11 +28,14 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import {
   CategoryLabel,
+  CategorySelectedCode,
   IsExtraOptionsLabel,
-  IsMultiSelectLabel, OneDayEventLabel
+  IsMultiSelectLabel,
+  OneDayEventLabel
 } from "src/consts";
 import { CustomSelect } from 'src/components';
-import { CategoryModel, CommunityModel } from 'src/models';
+import { CategoryModel } from 'src/models';
+import { Filters } from "src/shared/types.ts";
 
 export function NewInitiative(props: any) {
   const communityId = props.communityId;
@@ -45,7 +48,6 @@ export function NewInitiative(props: any) {
   const [isOneDayEvent, setIsOneDayEvent] = useState(false);
   const [isExtraOptions, setIsExtraOptions] = useState(false);
 
-  const communityService = new CrudDataSourceService(CommunityModel);
   const categoryService = new CrudDataSourceService(CategoryModel);
   const initiativeAoService = new InitiativeAoService();
 
@@ -89,13 +91,21 @@ export function NewInitiative(props: any) {
     setDisabled(!isValid);
   };
 
-  const getCategories = async () => {
-    const _community = await communityService.get(communityId, [
-      'main_settings.categories',
-    ]);
-    const data = _community.main_settings?.categories || [];
+  const fetchCategories = async (pagination?: Pagination) => {
+    const filters: Filters = [
+      {
+        field: 'community_id',
+        op: 'equals',
+        val: communityId,
+      },
+      {
+        field: 'status.code',
+        op: 'equals',
+        val: CategorySelectedCode,
+      },
+    ];
 
-    return { data, total: data.length };
+    return categoryService.list(filters, undefined, pagination);
   };
 
   const extraOptions = (
@@ -347,7 +357,7 @@ export function NewInitiative(props: any) {
           >
             <CustomSelect
               fieldService={categoryService}
-              requestOptions={getCategories}
+              requestOptions={fetchCategories}
               onChange={onCustomSelectChange}
               formField="category"
               bindLabel="name"

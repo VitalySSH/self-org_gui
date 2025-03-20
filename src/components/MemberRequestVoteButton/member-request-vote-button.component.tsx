@@ -87,6 +87,7 @@ export function MemberRequestVoteButton(props: any) {
             successInfo('Голос отдан');
             setModalOpen(false);
             setDisabled(true);
+            props.setLoading();
           })
           .catch((error) => {
             errorInfo(`Ошибка сохранения запроса: ${error}`);
