@@ -1,15 +1,12 @@
 import {
   Badge,
   Button,
-  Card,
-  Flex,
   Layout,
   List,
   Pagination,
   Typography,
 } from 'antd';
 import { FilterValues, InitiativeCardInterface } from 'src/interfaces';
-import Meta from 'antd/es/card/Meta';
 import { SetStateAction, useCallback, useEffect, useState } from 'react';
 import { CrudDataSourceService } from 'src/services';
 import { InitiativeModel } from 'src/models';
@@ -17,10 +14,9 @@ import { FilterOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Filters } from 'src/shared/types.ts';
 import { ResourceFilterModal } from 'src/components/ResourceFilterModal/resource-filter-modal.component.tsx';
-import { StatusTag } from 'src/components/StatusTag/status-tag.component';
 import styles from 'src/shared/assets/scss/module/list.module.scss';
-import { OneDayEventLabel } from "src/consts";
 import dayjs from "dayjs";
+import { ResourceCard } from "src/components";
 
 export function Initiatives(props: any) {
   const maxPageSize = 20;
@@ -194,34 +190,7 @@ export function Initiatives(props: any) {
         className={styles.list}
         renderItem={(item: InitiativeCardInterface) => (
           <List.Item className={styles.listItem}>
-            <Card onClick={() => navigate(item.id)} className={styles.card}>
-              <Meta title={item.title} description={item.description} />
-              <div style={{ marginTop: 20 }}>
-                <strong>Автор:</strong> {item.creator}
-              </div>
-              <div style={{ marginTop: 10 }}>
-                <strong>Категория:</strong> {item.category}
-              </div>
-              <div style={{ marginTop: 10 }}>
-                <Flex align="center" gap={8}>
-                  <strong>Статус:</strong>
-                  <StatusTag
-                    status={item.status || ''}
-                    statusCode={item.statusCode || ''}
-                  />
-                </Flex>
-              </div>
-              {item.isOneDayEvent && (
-                <>
-                  <div style={{ marginTop: 10 }}>
-                    <strong>Тип:</strong> {OneDayEventLabel}
-                  </div>
-                  <div style={{ marginTop: 10 }}>
-                    <strong>Дата события:</strong> {item.eventDate}
-                  </div>
-                </>
-              )}
-            </Card>
+            <ResourceCard item={item} />
           </List.Item>
         )}
       />

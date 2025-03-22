@@ -1,15 +1,12 @@
 import {
   Badge,
   Button,
-  Card,
-  Flex,
   Layout,
   List,
   Pagination,
   Typography,
 } from 'antd';
 import { FilterValues, RuleCardInterface } from 'src/interfaces';
-import Meta from 'antd/es/card/Meta';
 import { SetStateAction, useCallback, useEffect, useState } from 'react';
 import { CrudDataSourceService } from 'src/services';
 import { RuleModel } from 'src/models';
@@ -17,8 +14,8 @@ import { FilterOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Filters } from 'src/shared/types.ts';
 import { ResourceFilterModal } from 'src/components/ResourceFilterModal/resource-filter-modal.component.tsx';
-import { StatusTag } from 'src/components/StatusTag/status-tag.component';
 import styles from 'src/shared/assets/scss/module/list.module.scss';
+import { ResourceCard } from "src/components";
 
 export function Rules(props: any) {
   const maxPageSize = 20;
@@ -174,24 +171,7 @@ export function Rules(props: any) {
         className={styles.list}
         renderItem={(item: RuleCardInterface) => (
           <List.Item className={styles.listItem}>
-            <Card onClick={() => navigate(item.id)} className={styles.card}>
-              <Meta title={item.title} description={item.description} />
-              <div style={{ marginTop: 20 }}>
-                <strong>Автор:</strong> {item.creator}
-              </div>
-              <div style={{ marginTop: 10 }}>
-                <strong>Категория:</strong> {item.category}
-              </div>
-              <div style={{ marginTop: 10 }}>
-                <Flex align="center" gap={8}>
-                  <strong>Статус:</strong>
-                  <StatusTag
-                    status={item.status || ''}
-                    statusCode={item.statusCode || ''}
-                  />
-                </Flex>
-              </div>
-            </Card>
+            <ResourceCard item={item} />
           </List.Item>
         )}
       />

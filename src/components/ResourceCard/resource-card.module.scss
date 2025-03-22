@@ -1,0 +1,39 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+.initiativeCard {
+    width: 100%;
+    min-height: 270px;
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .description {
+        margin-top: 12px;
+        font-size: 14px;
+        color: #666;
+        line-height: 1.5;
+        overflow: hidden;
+        position: relative;
+
+        &.collapsed {
+            max-height: 5em;
+        }
+
+        &.expanded {
+            max-height: none;
+        }
+    }
+
+    .expandButton {
+        margin-top: 8px;
+        color: #1890ff;
+        cursor: pointer;
+        font-size: 14px;
+        text-align: center;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

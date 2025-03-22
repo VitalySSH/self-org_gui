@@ -3,7 +3,7 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import { CrudDataSourceService } from 'src/services';
 import { CommunityModel } from 'src/models';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import {
   IsMinorityNotParticipateLabel,
@@ -21,8 +21,7 @@ export function CommunitySettings(props: any) {
   const communityId = props?.communityId;
   const [form] = Form.useForm();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getCommunitySettings = () => {
+  const getCommunitySettings = useCallback(() => {
     if (settingsLoading && communityId) {
       communityService
         .get(communityId, [
@@ -73,7 +72,7 @@ export function CommunitySettings(props: any) {
         setSettingsLoading(false);
       }
     }
-  };
+  }, []);
 
   useEffect(() => {
     getCommunitySettings();

@@ -1,35 +1,18 @@
-import {
-  Button,
-  Form,
-  message,
-  Tooltip
-} from "antd";
-import {
-  QuestionCircleOutlined,
-} from '@ant-design/icons';
+import { Button, Form, message, Tooltip } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import {
   AuthContextProvider,
   DelegateFormInterface,
-  Pagination
-} from "src/interfaces";
-import {
-  AuthApiClientService,
-  CrudDataSourceService,
-} from "src/services";
-import { useLocation, useNavigate } from "react-router-dom";
+  Pagination,
+} from 'src/interfaces';
+import { AuthApiClientService, CrudDataSourceService } from 'src/services';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import {
-  CategoryLabel,
-  CategorySelectedCode,
-  DelegateLabel,
-} from "src/consts";
+import { CategoryLabel, CategorySelectedCode, DelegateLabel } from 'src/consts';
 import { CustomSelect } from 'src/components';
-import {
-  CategoryModel,
-  DelegateSettingsModel
-} from "src/models";
-import { useAuth } from "src/hooks";
-import { Filters } from "src/shared/types.ts";
+import { CategoryModel, DelegateSettingsModel } from 'src/models';
+import { useAuth } from 'src/hooks';
+import { Filters } from 'src/shared/types.ts';
 
 export function NewDelegate(props: any) {
   const communityId = props.communityId;
@@ -38,7 +21,7 @@ export function NewDelegate(props: any) {
   const [messageApi, contextHolder] = message.useMessage();
   const location = useLocation();
 
-  const categoryIds = location.state?.categoryIds as string[] || [];
+  const categoryIds = (location.state?.categoryIds as string[]) || [];
   const [buttonLoading, setButtonLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
 
@@ -71,9 +54,7 @@ export function NewDelegate(props: any) {
 
   const handleFormChange = () => {
     const formData = form.getFieldsValue();
-    const isValid =
-      Boolean(formData.category) &&
-      Boolean(formData.delegate);
+    const isValid = Boolean(formData.category) && Boolean(formData.delegate);
     setDisabled(!isValid);
   };
 
@@ -92,13 +73,11 @@ export function NewDelegate(props: any) {
     ];
 
     if (categoryIds) {
-      filters.push(
-        {
-          field: 'id',
-          op: 'notin',
-          val: categoryIds,
-        }
-      );
+      filters.push({
+        field: 'id',
+        op: 'notin',
+        val: categoryIds,
+      });
     }
 
     return categoryService.list(filters, undefined, pagination);
@@ -121,8 +100,7 @@ export function NewDelegate(props: any) {
 
   const onFinish = () => {
     setButtonLoading(true);
-    const delegateService =
-      new CrudDataSourceService(DelegateSettingsModel);
+    const delegateService = new CrudDataSourceService(DelegateSettingsModel);
     const formData: DelegateFormInterface = form.getFieldsValue();
     const delegateSettings = delegateService.createRecord();
     delegateSettings.category = formData.category;

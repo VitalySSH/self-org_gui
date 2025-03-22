@@ -23,3 +23,4 @@ export * from './Voting/UserVoting/user-voting.page';
 export * from './Voting/VotingResults/voting-results.page';
 export * from './Opinions/opinions.component';
 export * from './DelegateFilterModal/delegate-filter-modal.component';
+export * from 'src/components/ResourceCard/resource-card.component';

@@ -22,13 +22,9 @@ import styles from 'src/shared/assets/scss/module/list.module.scss';
 import {
   FilterOutlined,
   PlusCircleOutlined,
-  FolderOutlined,
-  UserOutlined
 } from "@ant-design/icons";
 import { DelegateFilterModal } from "src/components";
 import { CategorySelectedCode } from "src/consts";
-
-const { Text } = Typography;
 
 export function MyDelegates(props: any) {
   const maxPageSize = 20;
@@ -166,11 +162,8 @@ export function MyDelegates(props: any) {
         </Typography.Title>
 
         <div className={styles.buttons}>
-          { (categoryIds || []).length < (categoryCount || 0) && (
-            <Button
-              type="text"
-              onClick={addNewDelegate}
-            >
+          {(categoryIds || []).length < (categoryCount || 0) && (
+            <Button type="text" onClick={addNewDelegate}>
               <PlusCircleOutlined style={{ fontSize: 20 }} />
               Добавить делегата
             </Button>
@@ -206,21 +199,15 @@ export function MyDelegates(props: any) {
         className={styles.list}
         renderItem={(item: DelegateCardInterface) => (
           <List.Item className={styles.listItem}>
-            <Card onClick={() => navigate(item.id)}
-                  className={styles.delegateCard}>
-              <div className={styles.categorySection}>
-                <FolderOutlined className={styles.categoryIcon} />
-                <Text className={styles.categoryLabel}>Категория:</Text>
-                <Text className={styles.categoryText}>
-                  {item.category}
-                </Text>
+            <Card
+              onClick={() => navigate(item.id)}
+              className={styles.delegateCard}
+            >
+              <div>
+                <strong>Категория:</strong> {item.category}
               </div>
-              <div className={styles.delegateSection}>
-                <UserOutlined className={styles.delegateIcon} />
-                <Text className={styles.delegateLabel}>Делегат:</Text>
-                <Text className={styles.delegateText}>
-                  {item.userFullName}
-                </Text>
+              <div style={{ marginTop: 10 }}>
+                <strong>Делегат:</strong> {item.userFullName}
               </div>
             </Card>
           </List.Item>
