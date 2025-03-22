@@ -88,7 +88,10 @@ export const AuthProvider = (component: ProviderComponent) => {
       timeoutRef.current = setTimeout(() => {
         setAvatarUrl(null);
         setUser(null);
-        navigate('/sign-in', { preventScrollReset: true });
+        navigate('/sign-in', {
+          preventScrollReset: true,
+          state: { isFollowingLink: true },
+        });
       }, 1800000);
     };
 

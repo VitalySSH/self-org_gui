@@ -22,7 +22,10 @@ export function AuthCard() {
         <button
           className="login"
           onClick={() => {
-            navigate('/sign-in', { preventScrollReset: true });
+            navigate('/sign-in', {
+              preventScrollReset: true,
+              state: { isFollowingLink: true },
+            });
           }}
         >
           Войти

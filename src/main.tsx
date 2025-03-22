@@ -1,6 +1,6 @@
 import 'typeface-noto-sans';
 import ReactDOM from 'react-dom/client';
-import { ConfigProvider, theme } from 'antd';
+import { ConfigProvider, theme, App as AntdApp } from 'antd';
 import App from './App.tsx';
 import './index.scss';
 import { BrowserRouter } from 'react-router-dom';
@@ -19,7 +19,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       }}
       locale={ruRU}
     >
-      <App />
+      <AntdApp>
+        <App />
+      </AntdApp>
     </ConfigProvider>
   </BrowserRouter>
 );

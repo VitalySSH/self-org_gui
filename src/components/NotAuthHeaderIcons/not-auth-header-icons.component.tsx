@@ -6,7 +6,7 @@ export function NotAuthHeaderIcons() {
   const navigate = useNavigate();
 
   const loginOnClick = () => {
-    navigate('/sign-in');
+    navigate('/sign-in', { state: { isFollowingLink: true } });
   };
 
   return (

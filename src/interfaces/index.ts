@@ -48,3 +48,4 @@ export * from './ao/settings-in-percen.interface';
 export * from './ao/community-name-data.interface';
 export * from './fileStorage/file-metadata.interface';
 export * from './opinions/opinions-props.interface';
+export * from './ai/ai-summary-props.interface';

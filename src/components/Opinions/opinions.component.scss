@@ -1,3 +1,5 @@
+@use 'src/shared/assets/scss/variables' as *;
+
 .comments-section {
   margin-top: 20px;
 }
@@ -8,11 +10,11 @@
 
 .comments-section .ant-list-item {
   padding: 10px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid $border-color;
 }
 
 .comments-section .user-comment {
-  background-color: #f0f8ff;
+  background-color: $background-color;
   border-radius: 4px;
 }
 

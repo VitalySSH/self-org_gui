@@ -26,7 +26,7 @@ export function VotingResults(props: VotingResultsProps) {
 
       {props.extraQuestion && (props.selectedOptions || []).length > 0 && (
         <div>
-          <i>{props.extraQuestion}</i>
+          <i className="extra-question">{props.extraQuestion}</i>
           <Form.Item>
             <Select
               mode="multiple"

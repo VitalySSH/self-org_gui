@@ -10,6 +10,7 @@ import { AuthApiClientService } from 'src/services';
 export function SignIn() {
   const location = useLocation();
   const isSignUp = location.state?.signUp || false;
+  const isFollowingLink = location.state?.isFollowingLink || false;
   const navigate = useNavigate();
   const authData: AuthContextProvider = useAuth();
   const authApiClientService = new AuthApiClientService();
@@ -30,7 +31,7 @@ export function SignIn() {
           currentUser.secret_password = secret_password;
           authData.login(currentUser, isSignUp);
         } else {
-          if (isSignUp) {
+          if (isSignUp || !isFollowingLink) {
             navigate('/', { preventScrollReset: true });
           } else navigate(-1);
         }

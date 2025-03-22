@@ -1,6 +1,6 @@
 import { useAuth } from 'src/hooks';
 import { AuthContextProvider, FilterItem, OpinionsProps } from 'src/interfaces';
-import { Button, Input, List, message, Pagination } from 'antd';
+import { Badge, Button, Input, List, message, Pagination } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import {
   SetStateAction,
@@ -12,19 +12,22 @@ import {
 import { CrudDataSourceService } from 'src/services';
 import { OpinionModel } from 'src/models';
 import { EditOutlined } from '@ant-design/icons';
+import { AISummaryModal } from 'src/components/AI/ai-summary-modal.component.tsx';
 
 export function Opinions(props: OpinionsProps) {
   const authData: AuthContextProvider = useAuth();
+  const maxPageSize = 20;
   const [messageApi, contextHolder] = message.useMessage();
   const [newOpinion, setNewOpinion] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [dataSource, setDataSource] = useState([] as OpinionModel[]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(props.maxPageSize);
+  const [pageSize, setPageSize] = useState(props.maxPageSize || maxPageSize);
   const [total, setTotal] = useState(0);
   const [isMyOpinion, setIsMyOpinion] = useState<boolean | null>(null);
   const [editingOpinionId, setEditingOpinionId] = useState<string | null>(null);
   const [editedText, setEditedText] = useState<string>('');
+  const [isSummaryModalVisible, setSummaryModalVisible] = useState(false);
 
   const opinionService = useMemo(
     () => new CrudDataSourceService(OpinionModel),
@@ -185,19 +188,41 @@ export function Opinions(props: OpinionsProps) {
     setEditedText('');
   };
 
+  const handleSummarizeOpinions = () => {
+    setSummaryModalVisible(true);
+  };
+
   return (
     <div className="comments-section">
       {contextHolder}
       <div
         style={{
-          display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
         }}
       >
-        <h3>Мнения</h3>
-        <div style={{ marginLeft: 6 }}>{total}</div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <h3>Мнения</h3>
+            <Badge count={total} style={{ marginLeft: 8 }} />
+          </div>
+          {total > 1 && (
+            <Button
+              type="primary"
+              onClick={handleSummarizeOpinions}
+            >
+              AI суммирование мнений
+            </Button>
+          )}
+        </div>
       </div>
+
       {!isMyOpinion && (
         <>
           <TextArea
@@ -275,11 +300,19 @@ export function Opinions(props: OpinionsProps) {
           onChange={handlePageChange}
           showSizeChanger
           pageSizeOptions={['10', '20', '50', '100']}
-          defaultPageSize={props.maxPageSize}
+          defaultPageSize={props.maxPageSize || maxPageSize}
           showTotal={(total, range) => `${range[0]}-${range[1]} из ${total}`}
           style={{ marginTop: 16, textAlign: 'center' }}
         />
       )}
+
+      <AISummaryModal
+        visible={isSummaryModalVisible}
+        onClose={() => setSummaryModalVisible(false)}
+        resource={props.resource}
+        ruleId={props.ruleId}
+        initiativeId={props.initiativeId}
+      />
     </div>
   );
 }

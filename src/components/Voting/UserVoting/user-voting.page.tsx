@@ -47,7 +47,7 @@ export function UserVoting(props: UserVotingProps) {
   return (
     <div className="user-voting">
       <h3>Ваш голос:</h3>
-      <i className="rule-question">{props.question}</i>
+      <i className="question">{props.question}</i>
       <div style={{ marginTop: 4 }}>
         <Checkbox
           checked={userVote === true}
