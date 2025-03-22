@@ -120,6 +120,15 @@ export class CrudDataSourceService<
     return model as T;
   }
 
+  static serializeUser(userApiData: CrudApiDataInterface): UserModel {
+    const user = new UserModel();
+    for (const [key, value] of Object.entries(userApiData)) {
+      user[key] = value;
+    }
+
+    return user;
+  }
+
   modelToJsonApi(model: T): CrudApiDataInterface {
     const jsonApi: { [key: string]: any } = {
       id: model.id || v4(),

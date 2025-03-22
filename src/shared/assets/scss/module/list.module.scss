@@ -62,6 +62,60 @@
   min-height: 280px;
 }
 
+.delegateCard {
+  width: 100%;
+  min-height: 100px;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .categorySection {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+
+    .categoryIcon {
+      font-size: 16px;
+      color: #666;
+      margin-right: 8px;
+    }
+
+    .categoryLabel {
+      font-size: 14px;
+      color: #666;
+      margin-right: 8px;
+    }
+
+    .categoryText {
+      font-size: 16px;
+      color: $text-color;
+    }
+  }
+
+  .delegateSection {
+    display: flex;
+    align-items: center;
+
+    .delegateIcon {
+      font-size: 18px;
+      color: #666;
+      margin-right: 8px;
+    }
+
+    .delegateLabel {
+      font-size: 14px;
+      color: #666;
+      margin-right: 8px;
+    }
+
+    .delegateText {
+      font-size: 16px;
+      color: $text-color;
+    }
+  }
+}
+
 .pagination {
   max-width: 800px;
   margin: 16px auto 0;

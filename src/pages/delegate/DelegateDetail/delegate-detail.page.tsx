@@ -1,4 +1,4 @@
-import './Initiative-detail.page.scss';
+import './delegate-detail.page.scss';
 import { Button, Card, Flex, message, Spin } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';

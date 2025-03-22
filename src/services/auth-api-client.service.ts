@@ -11,6 +11,9 @@ import {
 import { baseApiUrl } from 'src/config/configuration';
 import { Filters, Orders } from 'src/shared/types.ts';
 import { UserModel } from 'src/models';
+import {
+  CrudDataSourceService
+} from "src/services/crud-data-source.service.ts";
 
 export class AuthApiClientService {
   http: AxiosInstance;
@@ -84,7 +87,7 @@ export class AuthApiClientService {
     orders?: Orders,
     pagination?: Pagination,
     include?: string[],
-    is_delegates: boolean = false
+    is_delegates: boolean = false,
   ): Promise<ListResponse<UserModel>> {
     const data = {
       filters,
@@ -103,7 +106,11 @@ export class AuthApiClientService {
         },
       })
       .then((r) => {
-        const data = r.data.items as unknown as UserModel[];
+        const data: UserModel[] = [];
+        r.data.items.forEach((item) => {
+          const user = CrudDataSourceService.serializeUser(item);
+          data.push(user);
+        });
 
         return { data, total: r.data.total };
       });

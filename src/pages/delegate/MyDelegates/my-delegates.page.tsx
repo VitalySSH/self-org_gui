@@ -16,11 +16,19 @@ import {
 } from "src/interfaces";
 import { Filters } from "src/shared/types.ts";
 import { CrudDataSourceService } from "src/services";
-import { CommunityModel, DelegateSettingsModel } from "src/models";
+import { CategoryModel, DelegateSettingsModel } from "src/models";
 import { useAuth } from "src/hooks";
 import styles from 'src/shared/assets/scss/module/list.module.scss';
-import { FilterOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import {
+  FilterOutlined,
+  PlusCircleOutlined,
+  FolderOutlined,
+  UserOutlined
+} from "@ant-design/icons";
 import { DelegateFilterModal } from "src/components";
+import { CategorySelectedCode } from "src/consts";
+
+const { Text } = Typography;
 
 export function MyDelegates(props: any) {
   const maxPageSize = 20;
@@ -43,7 +51,8 @@ export function MyDelegates(props: any) {
   };
 
   const [loading, setLoading] = useState(true);
-  const [categoryIds, setCategoryIds] = useState<string[] | null>(null);
+  const [categoryCount, setCategoryCount] = useState<number | null>(null);
+  const [categoryIds, setCategoryIds] = useState<string[]>([]);
   const [dataSource, setDataSource] = useState([] as DelegateCardInterface[]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(maxPageSize);
@@ -67,6 +76,7 @@ export function MyDelegates(props: any) {
         .then((resp) => {
           setTotal(resp.total);
           const delegates: DelegateCardInterface[] = [];
+          const _categoryIds: string[] = [];
           resp.data.forEach((settings) => {
             const delegateSettings = {
               id: settings.id,
@@ -74,8 +84,10 @@ export function MyDelegates(props: any) {
               userFullName: settings.delegate?.fullname,
             };
             delegates.push(delegateSettings);
+            if (settings.category?.id) _categoryIds.push(settings.category.id);
           });
           setDataSource(delegates);
+          setCategoryIds(_categoryIds);
         })
         .finally(() => {
           setLoading(false);
@@ -84,15 +96,25 @@ export function MyDelegates(props: any) {
   }, [filters, currentPage, loading, pageSize]);
 
   const fetchCategoriesId = useCallback(() => {
-    if (categoryIds === null) {
-      const communityService =
-        new CrudDataSourceService(CommunityModel);
-      communityService
-        .get(props.communityId, ['main_settings.categories'])
-        .then((community) => {
-          const idsData = (community.main_settings?.categories || [])
-            .map((cat) => cat.id);
-          setCategoryIds(idsData);
+    if (categoryCount === null) {
+      const categoryService =
+        new CrudDataSourceService(CategoryModel);
+      const filters: Filters = [
+        {
+          field: 'community_id',
+          op: 'equals',
+          val: props.communityId,
+        },
+        {
+          field: 'status.code',
+          op: 'equals',
+          val: CategorySelectedCode,
+        },
+      ];
+      categoryService
+        .list(filters, undefined, { skip: 1, limit: 1 })
+        .then((resp) => {
+          setCategoryCount(resp.total);
         });
     }
   }, [props.communityId]);
@@ -100,7 +122,7 @@ export function MyDelegates(props: any) {
   useEffect(() => {
     fetchDelegateSettings();
     fetchCategoriesId();
-  }, [fetchDelegateSettings]);
+  }, [fetchDelegateSettings, fetchCategoriesId]);
 
   const handlePageChange = (
     page: SetStateAction<number>,
@@ -144,16 +166,17 @@ export function MyDelegates(props: any) {
         </Typography.Title>
 
         <div className={styles.buttons}>
-          <Button
-            type="text"
-            onClick={addNewDelegate}
-            disabled={(categoryIds || []).length === 0 || (categoryIds || []).length === total}
-          >
-            <PlusCircleOutlined style={{ fontSize: 20 }} />
-            Добавить делегата
-          </Button>
+          { (categoryIds || []).length < (categoryCount || 0) && (
+            <Button
+              type="text"
+              onClick={addNewDelegate}
+            >
+              <PlusCircleOutlined style={{ fontSize: 20 }} />
+              Добавить делегата
+            </Button>
+          )}
           <Button type="text" onClick={() => setShowFilters(true)}>
-            <Badge count={filters.length - 1}>
+            <Badge count={filters.length - 2}>
               <FilterOutlined style={{ fontSize: 20 }} />
             </Badge>
             Фильтры
@@ -183,12 +206,21 @@ export function MyDelegates(props: any) {
         className={styles.list}
         renderItem={(item: DelegateCardInterface) => (
           <List.Item className={styles.listItem}>
-            <Card onClick={() => navigate(item.id)} className={styles.card}>
-              <div>
-                <strong>Категория:</strong> {item.category}
+            <Card onClick={() => navigate(item.id)}
+                  className={styles.delegateCard}>
+              <div className={styles.categorySection}>
+                <FolderOutlined className={styles.categoryIcon} />
+                <Text className={styles.categoryLabel}>Категория:</Text>
+                <Text className={styles.categoryText}>
+                  {item.category}
+                </Text>
               </div>
-              <div style={{ marginTop: 10 }}>
-                <strong>Делегат:</strong> {item.userFullName}
+              <div className={styles.delegateSection}>
+                <UserOutlined className={styles.delegateIcon} />
+                <Text className={styles.delegateLabel}>Делегат:</Text>
+                <Text className={styles.delegateText}>
+                  {item.userFullName}
+                </Text>
               </div>
             </Card>
           </List.Item>

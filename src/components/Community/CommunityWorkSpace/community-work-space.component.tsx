@@ -13,7 +13,8 @@ import {
   SubCommunities,
   RuleDetail,
   NewInitiative,
-  InitiativeDetail
+  InitiativeDetail,
+  NewDelegate
 } from "src/pages";
 import { DownOutlined } from '@ant-design/icons';
 import { AuthHeaderIcons, SiderBar } from 'src/components';
@@ -112,6 +113,10 @@ export function CommunityWorkSpace() {
             <Route
               path="my-delegates"
               element={<MyDelegates communityId={id} />}
+            />
+            <Route
+              path="my-delegates/new"
+              element={<NewDelegate communityId={id} />}
             />
             <Route path="rules" element={<Rules communityId={id} />} />
             <Route path="rules/new" element={<NewRule communityId={id} />} />

@@ -38,7 +38,7 @@ export function NewDelegate(props: any) {
   const [messageApi, contextHolder] = message.useMessage();
   const location = useLocation();
 
-  const categoryIds = location.state.categoryIds as string[] || [];
+  const categoryIds = location.state?.categoryIds as string[] || [];
   const [buttonLoading, setButtonLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
 
@@ -89,12 +89,17 @@ export function NewDelegate(props: any) {
         op: 'equals',
         val: CategorySelectedCode,
       },
-      {
-        field: 'id',
-        op: 'notin',
-        val: categoryIds,
-      },
     ];
+
+    if (categoryIds) {
+      filters.push(
+        {
+          field: 'id',
+          op: 'notin',
+          val: categoryIds,
+        }
+      );
+    }
 
     return categoryService.list(filters, undefined, pagination);
   };
@@ -141,7 +146,7 @@ export function NewDelegate(props: any) {
     <>
       <div className="form-container">
         {contextHolder}
-        <div className="form-header">Новая инициатива</div>
+        <div className="form-header">Новый делегат</div>
         <Form
           form={form}
           name="new-delegate-settings"
@@ -174,7 +179,7 @@ export function NewDelegate(props: any) {
             />
           </Form.Item>
           <Form.Item
-            name="gelegate"
+            name="delegate"
             label={
               <span>
                 {DelegateLabel}&nbsp;
