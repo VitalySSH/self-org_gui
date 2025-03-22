@@ -10,8 +10,8 @@ import TextArea from 'antd/lib/input/TextArea';
 import {
   CreatingRuleInterface,
   Pagination,
-  RuleFormInterface
-} from "src/interfaces";
+  RuleFormInterface,
+} from 'src/interfaces';
 import { CrudDataSourceService, RuleAoService } from 'src/services';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -19,11 +19,11 @@ import {
   CategoryLabel,
   CategorySelectedCode,
   IsExtraOptionsLabel,
-  IsMultiSelectLabel
-} from "src/consts";
+  IsMultiSelectLabel,
+} from 'src/consts';
 import { CustomSelect } from 'src/components';
 import { CategoryModel } from 'src/models';
-import { Filters } from "src/shared/types.ts";
+import { Filters } from 'src/shared/types.ts';
 
 export function NewRule(props: any) {
   const communityId = props.communityId;

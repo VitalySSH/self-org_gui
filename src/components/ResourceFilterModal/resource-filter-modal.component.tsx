@@ -1,4 +1,4 @@
-import { Button, DatePicker, Form, Input, Modal, Switch } from "antd";
+import { Button, DatePicker, Form, Input, Modal, Switch } from 'antd';
 import { FilterModalProps, Pagination } from 'src/interfaces';
 import { AuthApiClientService, CrudDataSourceService } from 'src/services';
 import { StatusModel } from 'src/models';
@@ -12,8 +12,8 @@ import {
   RuleApprovedCode,
   RuleRevokedCode,
 } from 'src/consts';
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { useState } from 'react';
 
 export function ResourceFilterModal({
   communityId,
@@ -84,7 +84,7 @@ export function ResourceFilterModal({
     form.resetFields();
     setIsOneDayEvent(false);
     onCancel();
-  }
+  };
 
   return (
     <Modal

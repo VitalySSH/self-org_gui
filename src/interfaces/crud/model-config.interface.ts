@@ -1,3 +1,3 @@
 export interface ModelConfig {
-    entityName: string;
+  entityName: string;
 }

@@ -32,7 +32,7 @@ const communitiesMenuItems: MenuItem[] = [
     key: 'my-communities',
     icon: <TeamOutlined />,
     label: 'Мои',
-  }
+  },
 ];
 
 const userGuideMenuItems: MenuItem[] = [

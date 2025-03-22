@@ -176,11 +176,13 @@ export function AddMemberRequestsForMe(props: any) {
       dataIndex: '',
       key: 'action',
       render: (item: TableMemberRequest) => {
-        return <MemberRequestVoteButton
-          key={item.key}
-          tableRow={item}
-          onChangeStatus={setLoading}
-        />;
+        return (
+          <MemberRequestVoteButton
+            key={item.key}
+            tableRow={item}
+            onChangeStatus={setLoading}
+          />
+        );
       },
     },
   ];
@@ -222,7 +224,12 @@ export function AddMemberRequestsForMe(props: any) {
               created: moment(requestMember.created).format('DD.MM.yyyy HH:mm'),
               isMyRequest: isMyRequest,
               vote: requestMember.vote,
-              decision: requestMember.vote === true ? 'Одобрена' : requestMember.vote === false ? 'Отклонена' : 'Нет',
+              decision:
+                requestMember.vote === true
+                  ? 'Одобрена'
+                  : requestMember.vote === false
+                    ? 'Отклонена'
+                    : 'Нет',
             };
             items.push(item);
           });

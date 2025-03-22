@@ -1,5 +1,5 @@
 import './voting-results.page.scss';
-import { Form, Progress, Select } from "antd";
+import { Form, Progress, Select } from 'antd';
 import { VotingResultsProps } from 'src/interfaces';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
@@ -42,8 +42,12 @@ export function VotingResults(props: VotingResultsProps) {
       {(props.minorityOptions || []).length > 0 && (
         <div>
           <div className="custom-header with-icon">
-            <InfoCircleOutlined className="icon" />&nbsp;
-            <span>Мнения общественно-значимого меньшинства, которые необходимо учесть при поиске компромиссного решения:</span>
+            <InfoCircleOutlined className="icon" />
+            &nbsp;
+            <span>
+              Мнения общественно-значимого меньшинства, которые необходимо
+              учесть при поиске компромиссного решения:
+            </span>
           </div>
           <Form.Item>
             <Select

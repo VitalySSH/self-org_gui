@@ -1,12 +1,9 @@
 import { CrudDataSourceService } from 'src/services';
-import { InitiativeModel } from "src/models";
-import {
-  CreatingInitiativeInterface,
-} from "src/interfaces";
+import { InitiativeModel } from 'src/models';
+import { CreatingInitiativeInterface } from 'src/interfaces';
 import { AOApiUrl } from 'src/config/configuration';
 
-export class InitiativeAoService
-  extends CrudDataSourceService<InitiativeModel> {
+export class InitiativeAoService extends CrudDataSourceService<InitiativeModel> {
   constructor() {
     super(InitiativeModel, AOApiUrl);
   }

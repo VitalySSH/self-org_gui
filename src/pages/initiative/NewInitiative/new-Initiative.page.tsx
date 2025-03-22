@@ -6,8 +6,8 @@ import {
   message,
   Space,
   Switch,
-  Tooltip
-} from "antd";
+  Tooltip,
+} from 'antd';
 import {
   MinusCircleOutlined,
   PlusOutlined,
@@ -18,12 +18,10 @@ import {
 import TextArea from 'antd/lib/input/TextArea';
 import {
   CreatingInitiativeInterface,
-  InitiativeFormInterface, Pagination
-} from "src/interfaces";
-import {
-  CrudDataSourceService,
-  InitiativeAoService,
-} from "src/services";
+  InitiativeFormInterface,
+  Pagination,
+} from 'src/interfaces';
+import { CrudDataSourceService, InitiativeAoService } from 'src/services';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import {
@@ -31,11 +29,11 @@ import {
   CategorySelectedCode,
   IsExtraOptionsLabel,
   IsMultiSelectLabel,
-  OneDayEventLabel
-} from "src/consts";
+  OneDayEventLabel,
+} from 'src/consts';
 import { CustomSelect } from 'src/components';
 import { CategoryModel } from 'src/models';
-import { Filters } from "src/shared/types.ts";
+import { Filters } from 'src/shared/types.ts';
 
 export function NewInitiative(props: any) {
   const communityId = props.communityId;
@@ -222,8 +220,9 @@ export function NewInitiative(props: any) {
       extra_question: formData.extra_question,
       content: formData.content,
       is_one_day_event: formData.is_one_day_event,
-      event_date: formData.event_date ?
-        formData.event_date.toISOString() : null,
+      event_date: formData.event_date
+        ? formData.event_date.toISOString()
+        : null,
       is_extra_options: formData.is_extra_options,
       is_multi_select: formData.is_multi_select || false,
       community_id: communityId,
@@ -386,14 +385,16 @@ export function NewInitiative(props: any) {
               name="event_date"
               label={
                 <span>
-                {OneDayEventLabel}&nbsp;
+                  {OneDayEventLabel}&nbsp;
                   <Tooltip title="Выбирите дату события. В этот день голосование по инициативе будет навсегда завершено.">
                     <QuestionCircleOutlined />
                   </Tooltip>
                 </span>
-                }
+              }
               labelCol={{ span: 24 }}
-              rules={[{ required: true, message: "Пожалуйста, выберите дату." }]}
+              rules={[
+                { required: true, message: 'Пожалуйста, выберите дату.' },
+              ]}
             >
               <DatePicker format="DD.MM.YYYY" />
             </Form.Item>

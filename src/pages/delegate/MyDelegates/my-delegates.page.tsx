@@ -5,26 +5,23 @@ import {
   Layout,
   List,
   Pagination,
-  Typography
-} from "antd";
-import { useNavigate } from "react-router-dom";
-import { SetStateAction, useCallback, useEffect, useState } from "react";
+  Typography,
+} from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { SetStateAction, useCallback, useEffect, useState } from 'react';
 import {
   AuthContextProvider,
   DelegateCardInterface,
   DelegateFilterValues,
-} from "src/interfaces";
-import { Filters } from "src/shared/types.ts";
-import { CrudDataSourceService } from "src/services";
-import { CategoryModel, DelegateSettingsModel } from "src/models";
-import { useAuth } from "src/hooks";
+} from 'src/interfaces';
+import { Filters } from 'src/shared/types.ts';
+import { CrudDataSourceService } from 'src/services';
+import { CategoryModel, DelegateSettingsModel } from 'src/models';
+import { useAuth } from 'src/hooks';
 import styles from 'src/shared/assets/scss/module/list.module.scss';
-import {
-  FilterOutlined,
-  PlusCircleOutlined,
-} from "@ant-design/icons";
-import { DelegateFilterModal } from "src/components";
-import { CategorySelectedCode } from "src/consts";
+import { FilterOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { DelegateFilterModal } from 'src/components';
+import { CategorySelectedCode } from 'src/consts';
 
 export function MyDelegates(props: any) {
   const maxPageSize = 20;
@@ -57,13 +54,12 @@ export function MyDelegates(props: any) {
   const [showFilters, setShowFilters] = useState(false);
 
   const addNewDelegate = () => {
-    navigate('new', { state: { categoryIds} });
+    navigate('new', { state: { categoryIds } });
   };
 
   const fetchDelegateSettings = useCallback(() => {
     if (loading) {
-      const delegateService =
-        new CrudDataSourceService(DelegateSettingsModel);
+      const delegateService = new CrudDataSourceService(DelegateSettingsModel);
       delegateService
         .list(filters, undefined, { skip: currentPage, limit: pageSize }, [
           'delegate',
@@ -93,8 +89,7 @@ export function MyDelegates(props: any) {
 
   const fetchCategoriesId = useCallback(() => {
     if (categoryCount === null) {
-      const categoryService =
-        new CrudDataSourceService(CategoryModel);
+      const categoryService = new CrudDataSourceService(CategoryModel);
       const filters: Filters = [
         {
           field: 'community_id',
@@ -152,7 +147,7 @@ export function MyDelegates(props: any) {
       setLoading(true);
       setShowFilters(false);
     }
-  }
+  };
 
   return (
     <Layout className={styles.container}>
@@ -229,4 +224,3 @@ export function MyDelegates(props: any) {
     </Layout>
   );
 }
-

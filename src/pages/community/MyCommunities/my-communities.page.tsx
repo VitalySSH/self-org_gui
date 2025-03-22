@@ -1,11 +1,4 @@
-import {
-  Badge,
-  Button,
-  Layout,
-  List,
-  Pagination,
-  Typography,
-} from 'antd';
+import { Badge, Button, Layout, List, Pagination, Typography } from 'antd';
 import { SetStateAction, useCallback, useEffect, useState } from 'react';
 import { CommunityAOService } from 'src/services';
 import {
@@ -112,7 +105,6 @@ export function MyCommunities() {
 
   return (
     <Layout className={styles.container}>
-
       <div className={styles.header}>
         <Typography.Title level={3} className={styles.title}>
           Мои сообщества
@@ -153,10 +145,7 @@ export function MyCommunities() {
         className={styles.list}
         renderItem={(item: CommunityCardInterface) => (
           <List.Item className={styles.listItem}>
-            <CommunityCard
-              key={item.id}
-              item={item} actions={[]}
-            />
+            <CommunityCard key={item.id} item={item} actions={[]} />
           </List.Item>
         )}
       />

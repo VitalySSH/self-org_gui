@@ -1,11 +1,4 @@
-import {
-  Badge,
-  Button,
-  Layout,
-  List,
-  Pagination,
-  Typography,
-} from 'antd';
+import { Badge, Button, Layout, List, Pagination, Typography } from 'antd';
 import { FilterValues, InitiativeCardInterface } from 'src/interfaces';
 import { SetStateAction, useCallback, useEffect, useState } from 'react';
 import { CrudDataSourceService } from 'src/services';
@@ -15,8 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { Filters } from 'src/shared/types.ts';
 import { ResourceFilterModal } from 'src/components/ResourceFilterModal/resource-filter-modal.component.tsx';
 import styles from 'src/shared/assets/scss/module/list.module.scss';
-import dayjs from "dayjs";
-import { ResourceCard } from "src/components";
+import dayjs from 'dayjs';
+import { ResourceCard } from 'src/components';
 
 export function Initiatives(props: any) {
   const maxPageSize = 20;
@@ -57,8 +50,9 @@ export function Initiatives(props: any) {
           setTotal(resp.total);
           const initiatives: InitiativeCardInterface[] = [];
           resp.data.forEach((initiative) => {
-            const eventDate = initiative.event_date ?
-              dayjs(initiative.event_date) : null;
+            const eventDate = initiative.event_date
+              ? dayjs(initiative.event_date)
+              : null;
             const initiativeItem = {
               id: initiative.id,
               title: initiative.title,

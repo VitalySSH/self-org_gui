@@ -11,7 +11,9 @@ export function SubCommunities(props: any) {
 
   const [loading, setLoading] = useState(true);
   const [dataSource, setDataSource] = useState([] as CommunityCardInterface[]);
-  const [filter, setFilter] = useState<{ title?: string, content?: string}>({});
+  const [filter, setFilter] = useState<{ title?: string; content?: string }>(
+    {}
+  );
   const [showFilters, setShowFilters] = useState(false);
 
   const loadData = useCallback(() => {
@@ -21,8 +23,11 @@ export function SubCommunities(props: any) {
         .getSubCommunities(communityId)
         .then((items) => {
           const data = items.filter((it) => {
-            const isTitle = !filter.title || it.title.toLowerCase().includes(filter.title);
-            const isContent = !filter.content || it.title.toLowerCase().includes(filter.content);
+            const isTitle =
+              !filter.title || it.title.toLowerCase().includes(filter.title);
+            const isContent =
+              !filter.content ||
+              it.title.toLowerCase().includes(filter.content);
 
             return isTitle && isContent;
           });
@@ -39,7 +44,7 @@ export function SubCommunities(props: any) {
   }, [loadData]);
 
   const handleApplyFilters = (values: FilterValues) => {
-    const newFilter: { title?: string, content?: string} = {};
+    const newFilter: { title?: string; content?: string } = {};
     if (values.title) newFilter['title'] = values.title.toLowerCase();
     if (values.content) newFilter['content'] = values.content.toLowerCase();
     if (Object.keys(newFilter).length) {

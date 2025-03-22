@@ -71,7 +71,7 @@
     background-color: $primary-color;
 
     &:hover:not(.ant-switch-disabled) {
-      background-color: color.mix(black, $primary-color, 10%);;
+      background-color: color.mix(black, $primary-color, 10%);
     }
   }
 }
@@ -118,7 +118,8 @@
     text-overflow: ellipsis;
   }
 
-  .ant-input, .ant-select-selector {
+  .ant-input,
+  .ant-select-selector {
     border-radius: $border-radius;
     border: 1px solid $border-color;
 
@@ -172,7 +173,6 @@
   &.ant-typography-text {
     color: $text-color;
   }
-
 }
 
 .ant-checkbox-wrapper {
@@ -243,7 +243,9 @@
       color: $text-color;
       padding: 8px 16px;
       border-radius: $border-radius 0 0 $border-radius;
-      transition: background-color $transition-speed, color $transition-speed;
+      transition:
+        background-color $transition-speed,
+        color $transition-speed;
 
       &:hover {
         background-color: color.mix(black, $background-color, 10%);
@@ -315,7 +317,8 @@
     }
   }
 
-  &.anticon-left, &.anticon-right {
+  &.anticon-left,
+  &.anticon-right {
     font-size: 20px;
 
     &:hover {
@@ -332,7 +335,9 @@
   .ant-pagination-item {
     border-radius: $border-radius;
     border: 1px solid $border-color;
-    transition: background-color $transition-speed, color $transition-speed;
+    transition:
+      background-color $transition-speed,
+      color $transition-speed;
 
     &:hover {
       background-color: color.mix(white, $primary-color, 40%);
@@ -361,7 +366,8 @@
     }
   }
 
-  .ant-pagination-prev, .ant-pagination-next {
+  .ant-pagination-prev,
+  .ant-pagination-next {
     .ant-pagination-item-link {
       border-radius: $border-radius;
       color: $text-color;
@@ -422,7 +428,9 @@
     padding: 12px 16px;
     background-color: $secondary-color;
     border-radius: $border-radius;
-    transition: background-color $transition-speed, color $transition-speed;
+    transition:
+      background-color $transition-speed,
+      color $transition-speed;
 
     //&:hover {
     //  background-color: color.mix(white, $primary-color, 40%);
@@ -512,12 +520,13 @@
   }
 }
 
-:where(.css-dev-only-do-not-override-kea0yc).ant-form-item .ant-form-item-label > label {
+:where(.css-dev-only-do-not-override-kea0yc).ant-form-item
+  .ant-form-item-label
+  > label {
   height: 100%;
 }
 
 @media (max-width: $breakpoint-lg) {
-
   .ant-layout-header {
     padding: 10px 15px;
   }
@@ -529,11 +538,9 @@
   .ant-modal {
     top: 16px;
   }
-
 }
 
 @media (max-width: $breakpoint-md) {
-
   .form-list-input {
     :where(.css-dev-only-do-not-override-kea0yc).ant-input {
       min-width: 300px;
@@ -543,11 +550,9 @@
   .ant-layout-header {
     padding: 4px 6px;
   }
-
 }
 
 @media (max-width: $breakpoint-sm) {
-
   .ant-tabs {
     .ant-tabs-nav {
       flex-wrap: wrap;
@@ -615,5 +620,4 @@
   .ant-modal {
     width: 400px !important;
   }
-
 }

@@ -1,16 +1,18 @@
 import styles from './resource-card.module.scss';
 import { useNavigate } from 'react-router-dom';
-import { Card, Flex } from "antd";
-import { useCallback, useEffect, useState } from "react";
-import { StatusTag } from "src/components/StatusTag/status-tag.component.tsx";
-import { OneDayEventLabel } from "src/consts";
+import { Card, Flex } from 'antd';
+import { useCallback, useEffect, useState } from 'react';
+import { StatusTag } from 'src/components/StatusTag/status-tag.component.tsx';
+import { OneDayEventLabel } from 'src/consts';
 
 const { Meta } = Card;
 
 export function ResourceCard(props: any) {
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [showExpandButton, setShowExpandButton] = useState<boolean | null>(null);
+  const [showExpandButton, setShowExpandButton] = useState<boolean | null>(
+    null
+  );
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -19,8 +21,7 @@ export function ResourceCard(props: any) {
   const shouldShowExpandButton = useCallback(() => {
     if (showExpandButton === null) {
       if (props.item.description) {
-        const shouldShowExpandButton =
-          props.item.description.length > 300;
+        const shouldShowExpandButton = props.item.description.length > 300;
         setShowExpandButton(shouldShowExpandButton);
       }
     }
@@ -31,7 +32,10 @@ export function ResourceCard(props: any) {
   }, [shouldShowExpandButton]);
 
   return (
-    <Card onClick={() => navigate(props.item.id)} className={styles.initiativeCard}>
+    <Card
+      onClick={() => navigate(props.item.id)}
+      className={styles.initiativeCard}
+    >
       <Meta title={props.item.title} description={null} />
       <div
         className={`${styles.description} ${isExpanded ? styles.expanded : styles.collapsed}`}
@@ -50,7 +54,7 @@ export function ResourceCard(props: any) {
         </div>
       )}
       <div style={{ fontSize: 14 }}>
-        <div style={{ marginTop: 10}}>
+        <div style={{ marginTop: 10 }}>
           <strong>Автор:</strong> {props.item.creator}
         </div>
         <div style={{ marginTop: 10 }}>

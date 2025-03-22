@@ -9,13 +9,10 @@ import {
   VotingOptionModel,
 } from 'src/models';
 import { Opinions, UserVoting, VotingResults } from 'src/components';
-import {
-  AuthContextProvider,
-  VoteInPercent,
-} from "src/interfaces";
+import { AuthContextProvider, VoteInPercent } from 'src/interfaces';
 import { useAuth } from 'src/hooks';
 import { StatusTag } from 'src/components/StatusTag/status-tag.component.tsx';
-import { convertVotingOptions } from "src/utils/voting.utils.ts";
+import { convertVotingOptions } from 'src/utils/voting.utils.ts';
 
 export function RuleDetail() {
   const { id } = useParams();
@@ -72,12 +69,7 @@ export function RuleDetail() {
       if ((!rule || forced) && id) {
         const ruleService = new CrudDataSourceService(RuleModel);
         ruleService
-          .get(id, [
-            'status',
-            'creator',
-            'voting_result',
-            'category',
-          ])
+          .get(id, ['status', 'creator', 'voting_result', 'category'])
           .then((ruleInst) => {
             setRule(ruleInst);
             if (!votingResultId) {

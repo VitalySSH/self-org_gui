@@ -1,12 +1,10 @@
-import { Button, Form, Modal } from "antd";
+import { Button, Form, Modal } from 'antd';
 import { FilterModalProps, Pagination } from 'src/interfaces';
 import { AuthApiClientService, CrudDataSourceService } from 'src/services';
-import { CategoryModel } from "src/models";
+import { CategoryModel } from 'src/models';
 import { Filters } from 'src/shared/types.ts';
 import { CustomSelect } from 'src/components';
-import {
-  CategorySelectedCode,
-} from "src/consts";
+import { CategorySelectedCode } from 'src/consts';
 
 export function DelegateFilterModal({
   communityId,
@@ -60,7 +58,7 @@ export function DelegateFilterModal({
   const onClearForm = () => {
     form.resetFields();
     onCancel();
-  }
+  };
 
   return (
     <Modal
@@ -82,7 +80,6 @@ export function DelegateFilterModal({
         onFinish={onApply}
         layout="vertical"
       >
-
         <Form.Item label="Категория" name="category">
           <CustomSelect
             bindLabel="name"
@@ -102,7 +99,6 @@ export function DelegateFilterModal({
             label="Выберите делегата"
           />
         </Form.Item>
-
       </Form>
     </Modal>
   );

@@ -205,7 +205,12 @@ export function CommonAddMemberRequests(props: any) {
                 ),
                 isMyRequest: isMyRequest,
                 vote: requestMember.vote,
-                decision: requestMember.vote === true ? 'Одобрена' : requestMember.vote === false ? 'Отклонена' : 'Нет',
+                decision:
+                  requestMember.vote === true
+                    ? 'Одобрена'
+                    : requestMember.vote === false
+                      ? 'Отклонена'
+                      : 'Нет',
               };
               items.push(item);
             }

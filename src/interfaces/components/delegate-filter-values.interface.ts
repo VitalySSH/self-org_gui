@@ -1,6 +1,6 @@
-import { CategoryModel, UserModel } from "src/models";
+import { CategoryModel, UserModel } from 'src/models';
 
 export interface DelegateFilterValues {
-    category?: CategoryModel;
-    delegate?: UserModel;
+  category?: CategoryModel;
+  delegate?: UserModel;
 }

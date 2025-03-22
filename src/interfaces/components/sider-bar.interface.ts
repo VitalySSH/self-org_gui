@@ -1,4 +1,4 @@
 export interface SiderBarInterface {
-    isCommunityWS: boolean;
-    isNotAuthorized?: boolean;
+  isCommunityWS: boolean;
+  isNotAuthorized?: boolean;
 }

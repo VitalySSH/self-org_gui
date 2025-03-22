@@ -41,7 +41,6 @@ export function CommunityFilterModal({
         <Form.Item label="Описание" name="content">
           <Input.TextArea placeholder="Поиск по описанию" />
         </Form.Item>
-
       </Form>
     </Modal>
   );

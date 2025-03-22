@@ -1,19 +1,17 @@
-import { Button } from "antd";
-import { MemberExcludedCode } from "src/consts";
-
+import { Button } from 'antd';
+import { MemberExcludedCode } from 'src/consts';
 
 export function MemberRequestDisputeButton(props: any) {
+  const tableRow = props.tableRow;
 
-    const tableRow = props.tableRow;
-
-    return (
-        <>
-            <Button
-                disabled={tableRow.statusCode !== MemberExcludedCode}
-                style={{ width: '90%' }}
-            >
-                Оспорить
-            </Button>
-        </>
-    );
+  return (
+    <>
+      <Button
+        disabled={tableRow.statusCode !== MemberExcludedCode}
+        style={{ width: '90%' }}
+      >
+        Оспорить
+      </Button>
+    </>
+  );
 }

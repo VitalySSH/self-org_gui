@@ -41,7 +41,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-
 }
 
 @media (max-width: $breakpoint-xl) {
@@ -85,7 +84,6 @@
 
 @media (max-width: $breakpoint-md) {
   .header {
-
     .community-name {
       max-width: 300px;
     }

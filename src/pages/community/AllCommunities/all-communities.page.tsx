@@ -1,11 +1,4 @@
-import {
-  Badge,
-  Button,
-  Layout,
-  List,
-  Pagination,
-  Typography,
-} from 'antd';
+import { Badge, Button, Layout, List, Pagination, Typography } from 'antd';
 import { CrudDataSourceService } from 'src/services';
 import { CommunityModel } from 'src/models';
 import { SetStateAction, useCallback, useEffect, useState } from 'react';
@@ -46,17 +39,12 @@ export function AllCommunities() {
     if (loading) {
       const communityService = new CrudDataSourceService(CommunityModel);
       communityService
-        .list(
-          filters,
-          undefined,
-          { skip: currentPage, limit: pageSize },
-          [
-            'user_settings.user',
-            'main_settings.name',
-            'main_settings.description',
-            'main_settings.adding_members.creator',
-          ]
-        )
+        .list(filters, undefined, { skip: currentPage, limit: pageSize }, [
+          'user_settings.user',
+          'main_settings.name',
+          'main_settings.description',
+          'main_settings.adding_members.creator',
+        ])
         .then((resp) => {
           setTotal(resp.total);
           const items: CommunityCardInterface[] = [];
@@ -126,7 +114,6 @@ export function AllCommunities() {
 
   return (
     <Layout className={styles.container}>
-
       <div className={styles.header}>
         <Typography.Title level={3} className={styles.title}>
           Все сообщества
@@ -163,10 +150,7 @@ export function AllCommunities() {
         className={styles.list}
         renderItem={(item: CommunityCardInterface) => (
           <List.Item className={styles.listItem}>
-            <CommunityCard
-              key={item.id}
-              item={item} actions={[]}
-            />
+            <CommunityCard key={item.id} item={item} actions={[]} />
           </List.Item>
         )}
       />

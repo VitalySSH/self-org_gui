@@ -1,3 +1,1 @@
-export default function tailwindcss() {
-
-}
+export default function tailwindcss() {}

@@ -1,4 +1,4 @@
 export interface SettingsStatisticsInterface {
-    percent: number;
-    name: string;
+  percent: number;
+  name: string;
 }

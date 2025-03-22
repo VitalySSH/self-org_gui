@@ -1,5 +1,5 @@
 export interface SignInFormDataInterface {
-    email: string;
-    password: string;
-    remember: boolean;
+  email: string;
+  password: string;
+  remember: boolean;
 }

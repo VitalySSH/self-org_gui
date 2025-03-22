@@ -4,8 +4,8 @@ import {
   CrudApiListResponse,
   FieldModelMetaData,
   ListResponse,
-  Pagination
-} from "src/interfaces";
+  Pagination,
+} from 'src/interfaces';
 import {
   ApiModel,
   CommunityDescriptionModel,
@@ -20,8 +20,10 @@ import {
   UserModel,
   VotingResultModel,
   UserVotingResultModel,
-  VotingOptionModel, InitiativeModel, RuleModel
-} from "src/models";
+  VotingOptionModel,
+  InitiativeModel,
+  RuleModel,
+} from 'src/models';
 import * as types from 'src/shared/types';
 import { dataSourceConfig } from 'src/annotations';
 import { DataSourceService } from './data-source.service.ts';

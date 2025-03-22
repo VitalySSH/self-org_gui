@@ -6,8 +6,8 @@ import { CrudDataSourceService, VotingResultAoService } from 'src/services';
 import {
   InitiativeModel,
   UserVotingResultModel,
-  VotingOptionModel
-} from "src/models";
+  VotingOptionModel,
+} from 'src/models';
 import { Opinions, UserVoting, VotingResults } from 'src/components';
 import { AuthContextProvider, VoteInPercent } from 'src/interfaces';
 import { useAuth } from 'src/hooks';
@@ -72,12 +72,7 @@ export function InitiativeDetail() {
       if ((!initiative || forced) && id) {
         const initiativeService = new CrudDataSourceService(InitiativeModel);
         initiativeService
-          .get(id, [
-            'status',
-            'creator',
-            'voting_result',
-            'category',
-          ])
+          .get(id, ['status', 'creator', 'voting_result', 'category'])
           .then((initiativeInst) => {
             setInitiative(initiativeInst);
             if (!votingResultId) {

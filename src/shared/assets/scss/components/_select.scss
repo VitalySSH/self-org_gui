@@ -60,7 +60,10 @@
     background-color: $background-color;
     border: 1px solid $border-color;
     border-radius: $border-radius;
-    box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05); // Тень как в antd
+    box-shadow:
+      0 3px 6px -4px rgba(0, 0, 0, 0.12),
+      0 6px 16px 0 rgba(0, 0, 0, 0.08),
+      0 9px 28px 8px rgba(0, 0, 0, 0.05); // Тень как в antd
     margin-top: 4px;
   }
 
@@ -72,7 +75,11 @@
     font-size: 14px;
 
     &:hover {
-      background-color: color.mix(white, $primary-color, 90%); // Цвет ховера как в antd
+      background-color: color.mix(
+        white,
+        $primary-color,
+        90%
+      ); // Цвет ховера как в antd
     }
 
     &.react-select__option--is-focused {

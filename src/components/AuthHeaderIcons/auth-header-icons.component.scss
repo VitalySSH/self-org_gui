@@ -1,11 +1,11 @@
 @use 'src/shared/assets/scss/mixins' as *;
 
 .profile-avatar {
-    @include flex-center;
-    margin: 6px 10px;
-    padding: 5px;
+  @include flex-center;
+  margin: 6px 10px;
+  padding: 5px;
 }
 
 .profile-modal {
-    top: 12px;
+  top: 12px;
 }

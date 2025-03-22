@@ -3,7 +3,7 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import { CrudDataSourceService } from 'src/services';
 import { CommunityModel } from 'src/models';
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   IsMinorityNotParticipateLabel,

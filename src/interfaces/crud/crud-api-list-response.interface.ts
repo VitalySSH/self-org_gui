@@ -1,6 +1,6 @@
-import { CrudApiDataInterface } from "src/interfaces";
+import { CrudApiDataInterface } from 'src/interfaces';
 
 export interface CrudApiListResponse {
-    items: CrudApiDataInterface[];
-    total: number;
+  items: CrudApiDataInterface[];
+  total: number;
 }
