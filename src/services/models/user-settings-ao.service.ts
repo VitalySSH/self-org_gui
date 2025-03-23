@@ -179,26 +179,22 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
     communityId: string | undefined,
     userId: string
   ) {
-    if (categoriesInst.length) {
-      const categories: CategoryModel[] = [];
-      for (const category of categoriesInst) {
-        if (category) {
-          if (category.id) {
-            categories.push(category);
-          } else {
-            const newCategory = await this._createCategory(
-              category,
-              communityId,
-              userId
-            );
-            categories.push(newCategory);
-          }
+    const categories: CategoryModel[] = [];
+    for (const category of categoriesInst) {
+      if (category) {
+        if (category.id) {
+          categories.push(category);
+        } else {
+          const newCategory = await this._createCategory(
+            category,
+            communityId,
+            userId
+          );
+          categories.push(newCategory);
         }
       }
-      return categories;
-    } else {
-      return undefined;
     }
+    return categories;
   }
 
   private async _createCategory(
