@@ -144,9 +144,11 @@ export class CrudDataSourceService<
       }
     });
     Object.keys(model.oneToMany).forEach((attr) => {
-      if (model[attr]) {
+      if (model[attr] === null) {
+        relations[attr] = {}
+      } else if (model[attr]) {
         relations[attr] = this.modelToJsonApi(model[attr]);
-      } else relations[attr] = {};
+      }
     });
     Object.keys(model.manyToMany).forEach((attr) => {
       if (Array.isArray(model[attr])) {
