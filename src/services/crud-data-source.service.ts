@@ -103,8 +103,8 @@ export class CrudDataSourceService<
       } else {
         const manyToManyEntityName = manyToMany[key]?.entityName;
         if (manyToManyEntityName) {
-          const relations: T[] = [];
           if (value.length) {
+            const relations: T[] = [];
             value.forEach((relation: CrudApiDataInterface) => {
               const manyToManyModel = this.getModel(manyToManyEntityName);
               const relationModel = this.jsonApiToModel(
@@ -113,8 +113,8 @@ export class CrudDataSourceService<
               );
               relations.push(relationModel);
             });
+            model[key] = relations;
           }
-          model[key] = relations;
         }
       }
     }
