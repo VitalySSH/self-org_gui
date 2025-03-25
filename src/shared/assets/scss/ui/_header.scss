@@ -4,98 +4,89 @@
   height: $header-height;
   border-bottom: 1px solid $border-color;
   border-left: 1px solid $border-color;
+  padding: 0 16px;
+  background: $background-color;
+  position: relative;
+  z-index: 1;
   display: flex;
-  justify-content: end;
   align-items: center;
-  padding: 15px 20px;
-  margin-left: 24px;
 
-  .logo {
-    width: auto;
-    cursor: pointer;
-    position: absolute;
-    margin-left: 21px;
+  &-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
   }
 
-  .avatar {
-    border-color: $text-color;
-    border-width: 2px;
-    background-color: $secondary-color;
-    cursor: pointer;
+  .navigation-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0; // Для правильной работы text-overflow
+    flex: 1;
   }
 
-  .icon-text {
-    margin-left: -16px;
-    margin-right: 8px;
-    font-weight: 500;
+  .back-icon {
+    font-size: 18px;
+    color: $text-color;
     cursor: pointer;
+    flex-shrink: 0;
+    transition: color 0.2s;
+
+    &:hover {
+      color: $primary-color;
+    }
+  }
+
+  .community-info {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .community-name-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    max-width: 100%;
   }
 
   .community-name {
-    max-width: 860px;
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 600;
     color: $text-color;
-    text-align: center;
+    margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    min-width: 0;
+    line-height: 1.3;
   }
-}
 
-@media (max-width: $breakpoint-xxl) {
-  .header {
-    .community-name {
-      font-size: 15px;
-      max-width: 700px;
+  .dropdown-icon {
+    color: $text-color;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 14px;
+    transition: all 0.2s;
+
+    &:hover {
+      color: $primary-color;
+      transform: translateY(1px);
     }
   }
 }
 
-@media (max-width: 1400px) {
-  .header {
-    .community-name {
-      font-size: 15px;
-      max-width: 600px;
-    }
-  }
-}
-
-@media (max-width: 1300px) {
-  .header {
-    .community-name {
-      font-size: 15px;
-      max-width: 500px;
-    }
-  }
-}
-
-@media (max-width: $breakpoint-xl) {
-  .header {
-    .icon-text {
-      display: none;
-    }
-
-    .community-name {
-      font-size: 14px;
-      max-width: 500px;
-    }
-  }
-}
-
-@media (max-width: 1100px) {
-  .header {
-    .community-name {
-      font-size: 13px;
-      max-width: 400px;
-    }
-  }
-}
-
+// Адаптивные стили
 @media (max-width: $breakpoint-lg) {
   .header {
+    padding: 0 12px;
+
     .community-name {
-      max-width: 350px;
+      font-size: 16px;
     }
   }
 }
@@ -103,15 +94,27 @@
 @media (max-width: $breakpoint-md) {
   .header {
     .community-name {
+      font-size: 15px;
       max-width: 300px;
+    }
+
+    .back-icon {
+      font-size: 16px;
     }
   }
 }
 
 @media (max-width: $breakpoint-sm) {
   .header {
+    padding: 0 8px;
+
     .community-name {
-      font-size: 12px;
+      font-size: 14px;
+      max-width: 200px;
+    }
+
+    .navigation-section {
+      gap: 8px;
     }
   }
 }

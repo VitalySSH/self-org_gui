@@ -65,37 +65,34 @@ export function CommunityWorkSpace() {
     <Layout className="community">
       <SiderBar isCommunityWS={true} />
       <Layout>
-        <Header className="header" style={{ justifyContent: 'space-between' }}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}
-          >
-            <ArrowLeftOutlined
-              onClick={() => {
-                navigate(-1);
-              }}
-              style={{
-                fontSize: 24,
-                marginRight: 16,
-              }}
-            />
-            <div className="community-name">{communityData?.name}</div>
-            {!!communityData?.menuItems?.length && (
-              <Dropdown
-                menu={{
-                  items: communityData.menuItems,
-                  onClick: (e: { key: string }) => handleMenuClick(e.key),
-                }}
-                placement="bottom"
-              >
-                <DownOutlined style={{ marginLeft: 8 }} />
-              </Dropdown>
-            )}
+        <Header className="header">
+          <div className="header-content">
+            <div className="navigation-section">
+              <ArrowLeftOutlined
+                onClick={() => navigate(-1)}
+                className="back-icon"
+              />
+              <div className="community-info">
+                <div className="community-name-wrapper">
+                  <h1 className="community-name" title={communityData?.name}>
+                    {communityData?.name}
+                  </h1>
+                  {!!communityData?.menuItems?.length && (
+                    <Dropdown
+                      menu={{
+                        items: communityData.menuItems,
+                        onClick: (e: { key: string }) => handleMenuClick(e.key),
+                      }}
+                      placement="bottom"
+                    >
+                      <DownOutlined className="dropdown-icon" />
+                    </Dropdown>
+                  )}
+                </div>
+              </div>
+            </div>
+            <AuthHeaderIcons />
           </div>
-          <AuthHeaderIcons />
         </Header>
         <Content className="content">
           <Routes>
