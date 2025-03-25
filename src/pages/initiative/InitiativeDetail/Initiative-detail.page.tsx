@@ -150,6 +150,7 @@ export function InitiativeDetail() {
           if (resp.total) {
             const result = resp.data[0];
             setUserVotingResult(result);
+            setUserVote(result.vote);
             setDisabled(true);
             if (result.vote) setUserOption(result.extra_options || []);
           }
@@ -169,10 +170,13 @@ export function InitiativeDetail() {
   }, [fetchInitiative, fetchVoteInPercent, fetchUserVotingResult]);
 
   const handleSelectChange = (_fieldName: string, value: any) => {
-    const currentValue = Array.isArray(value) ? value : [value];
-    setUserOption(currentValue);
-    if (disabled && currentValue.length) {
-      setDisabled(false);
+    if (value === null) {
+      setUserOption([]);
+      if (!disabled) setDisabled(true);
+    } else {
+      const currentValue = Array.isArray(value) ? value : [value];
+      setUserOption(currentValue);
+      if (disabled && currentValue.length) setDisabled(false);
     }
   };
 
@@ -310,6 +314,7 @@ export function InitiativeDetail() {
               isOptions={initiative.is_extra_options || false}
               options={userOption}
               isMultiSelect={initiative.is_multi_select || false}
+              isDelegateVote={!userVotingResult.is_voted_myself}
               onVote={handleVote}
               onSelectChange={handleSelectChange}
             />

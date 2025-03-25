@@ -1,5 +1,5 @@
-import { UserOutlined, MenuOutlined } from '@ant-design/icons';
-import { Avatar, Button, Drawer, Flex, Form, Input, Modal, Space } from 'antd';
+import { UserOutlined, MenuOutlined, LogoutOutlined, SaveOutlined } from '@ant-design/icons';
+import { Avatar, Button, Drawer, Flex, Form, Input, Modal, Space, Divider, Typography } from 'antd';
 import { useAuth } from 'src/hooks';
 import './auth-header-icons.component.scss';
 import { useState } from 'react';
@@ -12,12 +12,15 @@ import {
 import { RightMenu, UploadAvatar } from 'src/components';
 import { AuthApiClientService } from 'src/services';
 
+const { Text } = Typography;
+
 export function AuthHeaderIcons() {
   const authData: AuthContextProvider = useAuth();
   const authApiClientService = new AuthApiClientService();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [form] = Form.useForm();
 
   const avatarOnClick = () => {
     setModalOpen(true);
@@ -66,96 +69,126 @@ export function AuthHeaderIcons() {
           className="avatar"
         />
         <div className="icon-text" onClick={avatarOnClick}>
-          <span>{authData.user?.fullname}</span>
+          <Text strong>{authData.user?.fullname}</Text>
         </div>
         <MenuOutlined
-          style={{
-            fontSize: 24,
-            cursor: 'pointer',
-          }}
+          className="menu-icon"
           onClick={drawerOnClick}
         />
       </Space>
       <Modal
         open={modalOpen}
-        title="Ваши данные"
+        title={<span className="modal-title">Профиль пользователя</span>}
         onCancel={handleCancel}
-        footer={[
-          <Button key="back" onClick={LogoutOnClick}>
-            Выйти
-          </Button>,
-        ]}
-        className="profile-modal"
-      >
-        <div className="profile-avatar">
-          <UploadAvatar />
-        </div>
-        <Form
-          name="profile"
-          onFinish={onFinish}
-          initialValues={{
-            firstname: authData.user?.firstname,
-            surname: authData.user?.surname,
-            about_me: authData.user?.about_me,
-            email: authData.user?.email,
-          }}
-          className="form-container"
-        >
-          <Form.Item
-            name="firstname"
-            label="Имя"
-            labelCol={{ span: 24 }}
-            rules={[
-              {
-                required: true,
-                message: 'Пожалуйста, введите ваше имя',
-              },
-            ]}
-            hasFeedback
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="surname"
-            label="Фамилия"
-            labelCol={{ span: 24 }}
-            rules={[
-              {
-                required: true,
-                message: 'Пожалуйста, введите вашу фамилию',
-              },
-            ]}
-            hasFeedback
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item name="about_me" label="Обо мне" labelCol={{ span: 24 }}>
-            <TextArea />
-          </Form.Item>
-          <Form.Item
-            name="email"
-            label="Электронная почта"
-            labelCol={{ span: 24 }}
-            rules={[
-              {
-                required: true,
-                message: 'Пожалуйста, введите электронную почту',
-              },
-              {
-                type: 'email',
-                message: 'Пожалуйста, введите корректный электронной почты',
-              },
-            ]}
-            hasFeedback
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block>
+        footer={
+          <Space className="modal-footer">
+            <Button
+              danger
+              icon={<LogoutOutlined />}
+              onClick={LogoutOnClick}
+            >
+              Выйти
+            </Button>
+            <Button
+              type="primary"
+              icon={<SaveOutlined style={{ color: '#fff' }} />}
+              onClick={() => form.submit()}
+              className="save-button"
+            >
               Сохранить
             </Button>
-          </Form.Item>
-        </Form>
+          </Space>
+        }
+        className="profile-modal"
+        styles={{
+          body: {
+            maxHeight: 'calc(100vh - 200px)',
+            overflowY: 'auto',
+            padding: '16px 24px'
+          },
+          content: {
+            maxHeight: 'calc(100vh - 40px)',
+            display: 'flex',
+            flexDirection: 'column'
+          }
+        }}
+        style={{ top: 20 }}
+        width={600}
+      >
+        <div className="profile-content">
+          <div className="profile-avatar">
+            <UploadAvatar />
+          </div>
+          <Divider className="divider" />
+          <Form
+            form={form}
+            name="profile"
+            onFinish={onFinish}
+            initialValues={{
+              firstname: authData.user?.firstname,
+              surname: authData.user?.surname,
+              about_me: authData.user?.about_me,
+              email: authData.user?.email,
+            }}
+            className="form-container"
+            layout="vertical"
+          >
+            <Form.Item
+              name="firstname"
+              label="Имя"
+              rules={[
+                {
+                  required: true,
+                  message: 'Пожалуйста, введите ваше имя',
+                },
+              ]}
+              hasFeedback
+            >
+              <Input placeholder="Введите ваше имя" />
+            </Form.Item>
+            <Form.Item
+              name="surname"
+              label="Фамилия"
+              rules={[
+                {
+                  required: true,
+                  message: 'Пожалуйста, введите вашу фамилию',
+                },
+              ]}
+              hasFeedback
+            >
+              <Input placeholder="Введите вашу фамилию" />
+            </Form.Item>
+            <Form.Item
+              name="about_me"
+              label="Обо мне"
+            >
+              <TextArea
+                placeholder="Расскажите о себе"
+                rows={4}
+                showCount
+                maxLength={500}
+              />
+            </Form.Item>
+            <Form.Item
+              name="email"
+              label="Электронная почта"
+              rules={[
+                {
+                  required: true,
+                  message: 'Пожалуйста, введите электронную почту',
+                },
+                {
+                  type: 'email',
+                  message: 'Пожалуйста, введите корректный адрес электронной почты',
+                },
+              ]}
+              hasFeedback
+            >
+              <Input placeholder="example@domain.com" />
+            </Form.Item>
+          </Form>
+        </div>
       </Modal>
       <Drawer
         closable

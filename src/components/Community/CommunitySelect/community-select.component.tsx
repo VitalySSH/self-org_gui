@@ -141,7 +141,7 @@ export function CommunitySelect(props: CommunitySelectProps) {
   const MenuList = (props: any) => {
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div style={{ maxHeight: 200, overflowY: 'auto' }}>
+        <div style={{ minHeight: 100, maxHeight: 200, overflowY: 'auto' }}>
           <components.MenuList {...props}>{props.children}</components.MenuList>
         </div>
         <Button

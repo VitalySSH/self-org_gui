@@ -43,7 +43,16 @@
   }
 }
 
-@media (max-width: $breakpoint-xl) {
+@media (max-width: $breakpoint-xxl) {
+  .header {
+    .community-name {
+      font-size: 15px;
+      max-width: 700px;
+    }
+  }
+}
+
+@media (max-width: 1400px) {
   .header {
     .community-name {
       font-size: 15px;
@@ -61,23 +70,32 @@
   }
 }
 
-@media (max-width: $breakpoint-lg) {
-  .header {
-    .community-name {
-      font-size: 14px;
-      max-width: 450px;
-    }
-  }
-}
-
-@media (max-width: 1150px) {
+@media (max-width: $breakpoint-xl) {
   .header {
     .icon-text {
       display: none;
     }
 
     .community-name {
+      font-size: 14px;
+      max-width: 500px;
+    }
+  }
+}
+
+@media (max-width: 1100px) {
+  .header {
+    .community-name {
       font-size: 13px;
+      max-width: 400px;
+    }
+  }
+}
+
+@media (max-width: $breakpoint-lg) {
+  .header {
+    .community-name {
+      max-width: 350px;
     }
   }
 }
@@ -86,6 +104,14 @@
   .header {
     .community-name {
       max-width: 300px;
+    }
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .header {
+    .community-name {
+      font-size: 12px;
     }
   }
 }

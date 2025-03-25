@@ -5,14 +5,14 @@ import {
   ZoomInOutlined,
   ZoomOutOutlined,
 } from '@ant-design/icons';
-import { AiSummaryProps } from 'src/interfaces';
-import './ai-summary-modal.component.scss';
+import { AiModalProps } from 'src/interfaces';
+import './ai-modal.component.scss';
 
 const { Text } = Typography;
 const { TextArea } = Input;
 
-export function AISummaryModal(props: AiSummaryProps) {
-  const [summary, setSummary] = useState<string>('');
+export function AIModal(props: AiModalProps) {
+  const [response, setResponse] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [fontSize, setFontSize] = useState<number>(14); // Размер шрифта
 
@@ -22,11 +22,11 @@ export function AISummaryModal(props: AiSummaryProps) {
       // Mock
       fetchAISummary()
         .then((result) => {
-          setSummary(result);
+          setResponse(result);
         })
         .catch((error) => {
           console.error('Ошибка при получении AI-суммирования:', error);
-          setSummary('Не удалось получить суммирование мнений.');
+          setResponse('Не удалось получить суммирование мнений.');
         })
         .finally(() => {
           setLoading(false);
@@ -44,14 +44,14 @@ export function AISummaryModal(props: AiSummaryProps) {
 
   // Копирование текста в буфер обмена
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(summary).then(() => {
+    navigator.clipboard.writeText(response).then(() => {
       message.success('Текст скопирован в буфер обмена').then();
     });
   };
 
   return (
     <Modal
-      title="Сумма мнений участников голования"
+      title="Сумма мнений участников голосования"
       open={props.visible}
       onCancel={props.onClose}
       footer={null}
@@ -76,7 +76,7 @@ export function AISummaryModal(props: AiSummaryProps) {
           </Space>
 
           <TextArea
-            value={summary}
+            value={response}
             readOnly
             autoSize={{ minRows: 10, maxRows: 20 }}
             style={{

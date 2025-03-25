@@ -1,7 +1,7 @@
 import './user-voting.page.scss';
 import { Pagination, UserVotingProps } from 'src/interfaces';
 import { useState } from 'react';
-import { Checkbox } from 'antd';
+import { Checkbox, Tag } from 'antd';
 import { CustomSelect } from 'src/components';
 import { CrudDataSourceService } from 'src/services';
 import { VotingOptionModel } from 'src/models';
@@ -46,7 +46,14 @@ export function UserVoting(props: UserVotingProps) {
 
   return (
     <div className="user-voting">
-      <h3>Ваш голос:</h3>
+      <div className="voting-header">
+        <h3>Ваш голос:</h3>
+        {props.isDelegateVote && (
+          <Tag className="delegate-tag" color="default">
+            Голос делегата
+          </Tag>
+        )}
+      </div>
       <i className="question">{props.question}</i>
       <div style={{ marginTop: 4 }}>
         <Checkbox

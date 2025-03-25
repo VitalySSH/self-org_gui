@@ -12,7 +12,9 @@ import {
 import { CrudDataSourceService } from 'src/services';
 import { OpinionModel } from 'src/models';
 import { EditOutlined } from '@ant-design/icons';
-import { AISummaryModal } from 'src/components/AI/ai-summary-modal.component.tsx';
+import {
+  AISummaryOpinions
+} from 'src/components/AI/AISummaryOpinions/ai-summary-opinions.component.tsx';
 
 export function Opinions(props: OpinionsProps) {
   const authData: AuthContextProvider = useAuth();
@@ -212,14 +214,12 @@ export function Opinions(props: OpinionsProps) {
             <h3>Мнения</h3>
             <Badge count={total} style={{ marginLeft: 8 }} />
           </div>
-          {total > 1 && (
-            <Button
-              type="primary"
-              onClick={handleSummarizeOpinions}
-            >
-              AI суммирование мнений
-            </Button>
-          )}
+          <Button
+            type="primary"
+            onClick={handleSummarizeOpinions}
+          >
+            AI суммирование мнений
+          </Button>
         </div>
       </div>
 
@@ -306,7 +306,7 @@ export function Opinions(props: OpinionsProps) {
         />
       )}
 
-      <AISummaryModal
+      <AISummaryOpinions
         visible={isSummaryModalVisible}
         onClose={() => setSummaryModalVisible(false)}
         resource={props.resource}

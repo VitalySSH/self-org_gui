@@ -21,7 +21,7 @@ import { useAuth } from 'src/hooks';
 import styles from 'src/shared/assets/scss/module/list.module.scss';
 import { FilterOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { DelegateFilterModal } from 'src/components';
-import { CategorySelectedCode } from 'src/consts';
+import { CategorySelectedCode, SystemCategoryCode } from 'src/consts';
 
 export function MyDelegates(props: any) {
   const maxPageSize = 20;
@@ -98,8 +98,8 @@ export function MyDelegates(props: any) {
         },
         {
           field: 'status.code',
-          op: 'equals',
-          val: CategorySelectedCode,
+          op: 'in',
+          val: [CategorySelectedCode, SystemCategoryCode],
         },
       ];
       categoryService

@@ -7,6 +7,20 @@
   border-radius: 4px;
   padding: 1px 12px 12px 12px;
 
+  .voting-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+
+    .delegate-tag {
+      margin-left: auto;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+  }
+
   .question {
     font-size: 16px;
     font-weight: 500;

@@ -20,6 +20,7 @@ import {
   CategorySelectedCode,
   IsExtraOptionsLabel,
   IsMultiSelectLabel,
+  SystemCategoryCode,
 } from 'src/consts';
 import { CustomSelect } from 'src/components';
 import { CategoryModel } from 'src/models';
@@ -86,8 +87,8 @@ export function NewRule(props: any) {
       },
       {
         field: 'status.code',
-        op: 'equals',
-        val: CategorySelectedCode,
+        op: 'in',
+        val: [CategorySelectedCode, SystemCategoryCode],
       },
     ];
 

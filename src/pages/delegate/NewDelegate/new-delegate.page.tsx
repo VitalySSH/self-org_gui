@@ -8,7 +8,12 @@ import {
 import { AuthApiClientService, CrudDataSourceService } from 'src/services';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { CategoryLabel, CategorySelectedCode, DelegateLabel } from 'src/consts';
+import {
+  CategoryLabel,
+  CategorySelectedCode,
+  DelegateLabel,
+  SystemCategoryCode,
+} from 'src/consts';
 import { CustomSelect } from 'src/components';
 import { CategoryModel, DelegateSettingsModel } from 'src/models';
 import { useAuth } from 'src/hooks';
@@ -67,8 +72,8 @@ export function NewDelegate(props: any) {
       },
       {
         field: 'status.code',
-        op: 'equals',
-        val: CategorySelectedCode,
+        op: 'in',
+        val: [CategorySelectedCode, SystemCategoryCode],
       },
     ];
 

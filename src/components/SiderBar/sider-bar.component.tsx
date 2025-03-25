@@ -185,7 +185,7 @@ export function SiderBar(props: SiderBarInterface) {
       trigger={null}
       width={300}
       className="sider"
-      breakpoint="md"
+      breakpoint="lg"
       onBreakpoint={(broken) => {
         setCollapsed(broken);
         if (!broken) {
