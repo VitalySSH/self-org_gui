@@ -1,0 +1,82 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+.avatar-container {
+  position: relative;
+  display: inline-block;
+
+  .avatar-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+    .placeholder-icon {
+      font-size: 64px;
+      color: rgba(0, 0, 0, 0.25);
+      margin-bottom: 8px;
+    }
+  }
+
+  .avatar-wrapper {
+    position: relative;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: scale(1.03);
+    }
+
+    .user-avatar {
+      display: block;
+      border: 2px solid $border-color;
+      transition: all 0.3s ease;
+    }
+
+    .upload-icon {
+      color: white;
+      font-size: 24px;
+    }
+  }
+
+  .delete-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    background: $error-color;
+    color: white !important;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1;
+
+    &:hover {
+      background: rgba($error-color, 0.7);
+      transform: scale(1.1);
+    }
+  }
+}
+
+@media (max-width: $breakpoint-md) {
+  .user-avatar {
+    border-width: 1px;
+  }
+
+  .delete-button {
+    width: 28px;
+    height: 28px;
+    top: 4px;
+    right: 4px;
+  }
+
+  .upload-icon {
+    font-size: 20px;
+  }
+}

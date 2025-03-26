@@ -1,54 +1,51 @@
 import {
-  LoadingOutlined,
-  PlusOutlined,
   UserOutlined,
-  DeleteOutlined,
+  CloseOutlined,
 } from '@ant-design/icons';
 import {
   Avatar,
-  Button,
-  Flex,
   GetProp,
-  message,
-  Space,
   Upload,
   UploadProps,
+  Tooltip,
+  App,
 } from 'antd';
 import { useState } from 'react';
 import { AuthContextProvider, UserUpdateInterface } from 'src/interfaces';
 import { useAuth } from 'src/hooks';
 import { AuthApiClientService, FileStorageService } from 'src/services';
+import './upload-avatar.component.scss';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
-const getBase64 = (img: FileType, callback: (url: string) => void) => {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result as string));
-  reader.readAsDataURL(img);
-};
-
-const beforeUpload = (file: FileType) => {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-  if (!isJpgOrPng) {
-    message
-      .error('Вы можете загрузить изображение только форматов JPG или PNG ')
-      .then();
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('Изображение должно быть меньше 2 MB!').then();
-  }
-  return isJpgOrPng && isLt2M;
-};
-
 export function UploadAvatar() {
   const authData: AuthContextProvider = useAuth();
+  const { modal, message } = App.useApp();
+
   const authApiClientService = new AuthApiClientService();
   const fileStorageService = new FileStorageService();
 
-  const [loading, setLoading] = useState(false);
-  fileStorageService.getFileUrl(authData.user?.foto_id);
   const [fileId, setFileId] = useState(authData.user?.foto_id);
+
+  const getBase64 = (img: FileType, callback: (url: string) => void) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result as string));
+    reader.readAsDataURL(img);
+  };
+
+  const beforeUpload = (file: FileType) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+      message.error('Вы можете загрузить изображение только форматов JPG или PNG').then();
+      return Upload.LIST_IGNORE;
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      message.error('Изображение должно быть меньше 2 MB!').then();
+      return Upload.LIST_IGNORE;
+    }
+    return isJpgOrPng && isLt2M;
+  };
 
   const saveUser = (fileId: string | null) => {
     if (authData.user?.id) {
@@ -94,70 +91,100 @@ export function UploadAvatar() {
 
   const handleChange: UploadProps['onChange'] = (info) => {
     if (info.file.status === 'uploading') {
-      setLoading(true);
       return;
-    } else if (info.file.status === 'done') {
+    }
+    if (info.file.status === 'done') {
       getBase64(info.file.originFileObj as FileType, (url) => {
-        setLoading(false);
         authData.changeAvatarUrl(fileId, url);
-        message.success(`Файл ${info.file.name} загружен`).then();
+        message.success(`Аватар обновлён`).then();
       });
     } else if (info.file.status === 'error') {
-      setLoading(false);
-      message.error('Ошибка загрузки файла').then();
+      message.error('Ошибка загрузки аватара').then();
     }
   };
 
-  const onDeleteFile = () => {
-    if (fileId) {
-      fileStorageService.deleteFile(fileId).then(() => {
-        message.success('Файл удалён').then();
-        saveUser(null);
-        authData.changeAvatarUrl(fileId, '');
-        // FIXME: сделать, чтобы после удаления Avatar появлялась icon
-      });
-    }
+  const handleDelete = () => {
+    modal.confirm({
+      title: 'Удалить фото?',
+      content: 'Вы уверены, что хотите удалить текущее фото профиля?',
+      okText: 'Удалить',
+      cancelText: 'Отмена',
+      okButtonProps: { danger: true },
+      centered: false,
+      maskClosable: true,
+      styles: {
+        content: {
+          width: '400px',
+          position: 'relative',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          justifyContent: 'center',
+        },
+        body: {
+          padding: '16px',
+          fontSize: '14px',
+          wordWrap: 'break-word'
+        }
+      },
+      onOk: () => {
+        if (fileId) {
+          fileStorageService.deleteFile(fileId).then(() => {
+            saveUser(null);
+            authData.changeAvatarUrl(null, undefined);
+            message.success('Фото удалено').then();
+          }).catch((error) => {
+            message.error(`Ошибка удаления аватара: ${error}`).then();
+          });
+        } else {
+          authData.changeAvatarUrl(null, undefined);
+        }
+      },
+    });
   };
 
   return (
-    <Space style={{ justifyContent: 'center' }}>
-      <Flex gap="large" wrap align="center" justify="flex-end">
-        <Avatar
-          draggable
-          size={{
-            xs: 64,
-            sm: 90,
-            md: 128,
-            lg: 200,
-            xl: 256,
-            xxl: 300,
-          }}
-          icon={<UserOutlined style={{ fontSize: 72 }} />}
-          src={authData.avatarUrl}
-        />
-      </Flex>
-      <div style={{ justifyItems: 'right', margin: 8 }}>
-        <Button
-          style={{ margin: 'auto', marginBottom: 12, width: 128 }}
-          onClick={onDeleteFile}
-          disabled={!fileId}
-        >
-          <DeleteOutlined />
-          Удалить
-        </Button>
+    <div className="avatar-container">
+      <Tooltip
+        title="Нажмите для загрузки фото"
+        placement="bottom"
+      >
         <Upload
           name="avatar"
           showUploadList={false}
           beforeUpload={beforeUpload}
           onChange={handleChange}
           customRequest={customRequest}
+          accept="image/jpeg,image/png"
         >
-          <Button style={{ margin: 'auto', width: 128 }}>
-            {loading ? <LoadingOutlined /> : <PlusOutlined />}
-            Загрузить
-          </Button>
+          <div className="avatar-wrapper">
+            <Avatar
+              className="user-avatar"
+              size={{
+                xs: 120,
+                sm: 160,
+                md: 200,
+                lg: 240,
+                xl: 280,
+                xxl: 320
+              }}
+              icon={
+                <div className="avatar-placeholder">
+                  <UserOutlined className="placeholder-icon" />
+                </div>
+              }
+              src={authData.avatarUrl}
+            />
+          </div>
         </Upload>
-      </div>
-    </Space>
+      </Tooltip>
+
+      {authData.avatarUrl && (
+        <Tooltip title="Удалить фото">
+          <button className="delete-button" onClick={handleDelete}>
+            <CloseOutlined />
+          </button>
+        </Tooltip>
+      )}
+    </div>
   );
 }

@@ -36,7 +36,6 @@ export function MainApp() {
       <SiderBar isCommunityWS={false} isNotAuthorized={!authData.user} />
       <Layout>
         <Header className="header">
-          {/*<Logo />*/}
           {icons}
         </Header>
         <Content className="content">

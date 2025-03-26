@@ -57,6 +57,8 @@ export const AuthProvider = (component: ProviderComponent) => {
         } catch (error) {
           console.log(`Ошибка получения файла аватара: ${error}`);
         }
+      } else {
+        setAvatarUrl(null);
       }
     } else {
       setAvatarUrl(base64);
