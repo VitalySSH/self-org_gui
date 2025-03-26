@@ -279,6 +279,8 @@ export function RuleDetail() {
             yesPercent={voteInPercent.yes}
             noPercent={voteInPercent.no}
             abstainPercent={voteInPercent.abstain}
+            resource="rule"
+            ruleId={id}
             extraQuestion={rule.extra_question}
             selectedOptions={selectedOptions}
             minorityOptions={minorityOptions}

@@ -20,3 +20,4 @@ export type Orders = OrderItem[];
 export type ModelType<T> = new (...args: any[]) => T;
 export type MenuItem = Required<MenuProps>['items'][number];
 export type Resource = 'rule' | 'initiative';
+export type AIResponseStatus = 'OK' | 'ERROR' | 'NOVOTES';

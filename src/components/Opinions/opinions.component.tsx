@@ -11,10 +11,8 @@ import {
 } from 'react';
 import { CrudDataSourceService } from 'src/services';
 import { OpinionModel } from 'src/models';
-import { EditOutlined } from '@ant-design/icons';
-import {
-  AISummaryOpinions
-} from 'src/components/AI/AISummaryOpinions/ai-summary-opinions.component.tsx';
+import { BulbOutlined, EditOutlined } from '@ant-design/icons';
+import { AISummaryOpinions } from 'src/components';
 
 export function Opinions(props: OpinionsProps) {
   const authData: AuthContextProvider = useAuth();
@@ -216,6 +214,7 @@ export function Opinions(props: OpinionsProps) {
           </div>
           <Button
             type="primary"
+            icon={<BulbOutlined style={{ color: 'white'}} />}
             onClick={handleSummarizeOpinions}
           >
             AI суммирование мнений

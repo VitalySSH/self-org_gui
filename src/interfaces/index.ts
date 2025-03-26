@@ -49,4 +49,4 @@ export * from './ao/community-name-data.interface';
 export * from './fileStorage/file-metadata.interface';
 export * from './opinions/opinions-props.interface';
 export * from './ai/ai-modal-props.interface';
-export * from './ai/ai-summary-opinions-props.interface';
+export * from './ai/ai-resource-props.interface';

@@ -23,4 +23,7 @@ export * from './Voting/UserVoting/user-voting.page';
 export * from './Voting/VotingResults/voting-results.page';
 export * from './Opinions/opinions.component';
 export * from './DelegateFilterModal/delegate-filter-modal.component';
-export * from 'src/components/ResourceCard/resource-card.component';
+export * from './ResourceCard/resource-card.component';
+export * from './AI/AISummaryOpinions/ai-summary-opinions.component';
+export * from './AI/AIModal/ai-modal.component';
+export * from './AI/AICompromise/ai-compromise.component';

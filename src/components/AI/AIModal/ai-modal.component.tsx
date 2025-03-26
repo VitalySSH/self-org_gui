@@ -19,10 +19,21 @@ export function AIModal(props: AiModalProps) {
   useEffect(() => {
     if (props.visible) {
       setLoading(true);
-      // Mock
-      fetchAISummary()
-        .then((result) => {
-          setResponse(result);
+      props.request()
+        .then((resp) => {
+          let content = '';
+          switch (resp.status) {
+            case 'OK':
+              content = resp.content;
+              break;
+            case 'NOVOTES':
+              content = 'В настоящий момент ещё никто не отдал свой голос.';
+              break;
+            case 'ERROR':
+              content = 'При выполнении запроса произошла ошибка, попробуйте повторить запрос позднее.';
+              break;
+          }
+          setResponse(content);
         })
         .catch((error) => {
           console.error('Ошибка при получении AI-суммирования:', error);
@@ -42,7 +53,6 @@ export function AIModal(props: AiModalProps) {
     setFontSize((prev) => Math.max(prev - 2, 12));
   };
 
-  // Копирование текста в буфер обмена
   const copyToClipboard = () => {
     navigator.clipboard.writeText(response).then(() => {
       message.success('Текст скопирован в буфер обмена').then();
@@ -51,7 +61,7 @@ export function AIModal(props: AiModalProps) {
 
   return (
     <Modal
-      title="Сумма мнений участников голосования"
+      title={props.title}
       open={props.visible}
       onCancel={props.onClose}
       footer={null}
@@ -62,7 +72,7 @@ export function AIModal(props: AiModalProps) {
         <div style={{ textAlign: 'center', padding: 24 }}>
           <Spin size="large" />
           <Text style={{ marginTop: 16, display: 'block' }}>
-            Идёт обработка мнений...
+            Идёт обработка запроса...
           </Text>
         </div>
       ) : (
@@ -90,15 +100,4 @@ export function AIModal(props: AiModalProps) {
       )}
     </Modal>
   );
-}
-
-// Заглушка для вызова API
-async function fetchAISummary(): Promise<string> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(
-        'Здесь будет отображаться ответ LLM, которая обобщит мнения участников голосования, предоставит статистические данные и ответит на любые вопросы, как если бы они были заданы коллективному разуму всех членов сообшества.'
-      );
-    }, 2000); // Имитация задержки запроса
-  });
 }

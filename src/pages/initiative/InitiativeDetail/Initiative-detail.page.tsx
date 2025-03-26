@@ -299,6 +299,8 @@ export function InitiativeDetail() {
             yesPercent={voteInPercent.yes}
             noPercent={voteInPercent.no}
             abstainPercent={voteInPercent.abstain}
+            resource="initiative"
+            initiativeId={id}
             extraQuestion={initiative.extra_question}
             selectedOptions={selectedOptions}
             minorityOptions={minorityOptions}

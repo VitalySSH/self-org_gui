@@ -1,6 +1,6 @@
 import { Resource } from 'src/shared/types.ts';
 
-export interface AiSummaryOpinionsProps {
+export interface AiResourceProps {
   visible: boolean;
   onClose: () => void;
   resource: Resource;
