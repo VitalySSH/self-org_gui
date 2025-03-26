@@ -6,7 +6,7 @@ import {
   Input,
   InputRef,
   Select,
-  Space,
+  Space, Spin,
 } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { SelectInterface } from 'src/interfaces';
@@ -25,6 +25,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const textAreaRef = useRef<TextAreaRef>(null);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalOptions, setTotalOptions] = useState(0);
   const [uploadedFieldValue, setUploadedFieldValue] = useState(false);
@@ -165,6 +166,36 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     setNewTextValue('');
   };
 
+  const onDropdownVisibleChange = (open: boolean) => {
+    setIsDropdownOpen(open);
+    if (open && !options) {
+      fetchOptions(1);
+    }
+  };
+
+  const renderDropdownContent = (menu: React.ReactNode) => {
+    if (isDropdownOpen && isLoading && !options) {
+      return (
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '16px 0'
+        }}>
+          <Spin size="large" />
+        </div>
+      );
+    }
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ maxHeight: 200, overflowY: 'auto' }}>
+          {menu}
+          {renderLoadMoreButton()}
+        </div>
+        {props.addOwnValue && addingOwnValue}
+      </div>
+    );
+  };
+
   const addingOwnValue = (
     <>
       <Divider style={{ margin: '8px 0' }} />
@@ -221,6 +252,9 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   return (
     <ConfigProvider
       renderEmpty={() => {
+        if (isLoading && !options) {
+          return null;
+        }
         return (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -237,25 +271,14 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         // @ts-expect-error
         value={fieldValue}
         mode={props.multiple ? 'multiple' : undefined}
-        dropdownRender={(menu) => (
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <div style={{ maxHeight: 200, overflowY: 'auto' }}>
-              {menu}
-              {renderLoadMoreButton()}
-            </div>
-            {props.addOwnValue && addingOwnValue}
-          </div>
-        )}
-        onDropdownVisibleChange={(open) => {
-          if (open && !options) {
-            fetchOptions(1);
-          }
-        }}
+        dropdownRender={renderDropdownContent}
+        onDropdownVisibleChange={onDropdownVisibleChange}
         options={(options || []).map((item: any) => ({
           key: item.id,
           value: item[props.bindLabel],
           obj: item,
         }))}
+        loading={isLoading}
         placeholder={props.label}
         allowClear={true}
       />
