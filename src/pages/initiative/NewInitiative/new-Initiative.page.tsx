@@ -90,21 +90,27 @@ export function NewInitiative(props: any) {
     setDisabled(!isValid);
   };
 
-  const fetchCategories = async (pagination?: Pagination) => {
-    const filters: Filters = [
+  const fetchCategories = async (
+    pagination?: Pagination,
+    filters?: Filters,
+  ) => {
+    const newFilters: Filters = filters || [];
+    newFilters.push(
       {
         field: 'community_id',
         op: 'equals',
         val: communityId,
-      },
+      }
+    );
+    newFilters.push(
       {
         field: 'status.code',
         op: 'in',
         val: [CategorySelectedCode, SystemCategoryCode],
-      },
-    ];
+      }
+    );
 
-    return categoryService.list(filters, undefined, pagination);
+    return categoryService.list(newFilters, undefined, pagination);
   };
 
   const extraOptions = (
@@ -361,6 +367,7 @@ export function NewInitiative(props: any) {
               onChange={onCustomSelectChange}
               formField="category"
               bindLabel="name"
+              enableSearch={true}
             />
           </Form.Item>
           <Form.Item

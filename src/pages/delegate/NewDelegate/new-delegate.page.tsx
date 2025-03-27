@@ -63,35 +63,45 @@ export function NewDelegate(props: any) {
     setDisabled(!isValid);
   };
 
-  const fetchCategories = async (pagination?: Pagination) => {
-    const filters: Filters = [
+  const fetchCategories = async (
+    pagination?: Pagination,
+    filters?: Filters,
+  ) => {
+    const newFilters: Filters = filters || [];
+    newFilters.push(
       {
         field: 'community_id',
         op: 'equals',
         val: communityId,
-      },
+      }
+    );
+    newFilters.push(
       {
         field: 'status.code',
         op: 'in',
         val: [CategorySelectedCode, SystemCategoryCode],
-      },
-    ];
+      }
+    );
 
     if (categoryIds) {
-      filters.push({
+      newFilters.push({
         field: 'id',
         op: 'notin',
         val: categoryIds,
       });
     }
 
-    return categoryService.list(filters, undefined, pagination);
+    return categoryService.list(newFilters, undefined, pagination);
   };
 
-  const fetchUsers = async (pagination?: Pagination) => {
+  const fetchUsers = async (
+    pagination?: Pagination,
+    filters?: Filters,
+  ) => {
+    const newFilters: Filters = filters || [];
     return authApiClientService.communityListUsers(
       communityId,
-      undefined,
+      newFilters,
       undefined,
       pagination,
       undefined,
@@ -159,6 +169,7 @@ export function NewDelegate(props: any) {
               onChange={onCustomSelectChange}
               formField="category"
               bindLabel="name"
+              enableSearch={true}
             />
           </Form.Item>
           <Form.Item
@@ -185,6 +196,7 @@ export function NewDelegate(props: any) {
               onChange={onCustomSelectChange}
               formField="delegate"
               bindLabel="fullname"
+              enableSearch={true}
             />
           </Form.Item>
         </Form>

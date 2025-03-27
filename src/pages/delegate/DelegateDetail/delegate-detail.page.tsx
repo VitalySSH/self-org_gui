@@ -8,6 +8,7 @@ import { CustomSelect } from 'src/components';
 import { Pagination } from 'src/interfaces';
 import { CategoryLabel, DelegateLabel } from 'src/consts';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Filters } from 'src/shared/types.ts';
 
 export function DelegateDetail(props: any) {
   const communityId = props.communityId;
@@ -76,10 +77,14 @@ export function DelegateDetail(props: any) {
     setDisabled(!Boolean(form.getFieldValue('delegate')));
   };
 
-  const fetchUsers = async (pagination?: Pagination) => {
+  const fetchUsers = async (
+    pagination?: Pagination,
+    filters?: Filters,
+  ) => {
+    const newFilters: Filters = filters || [];
     return authApiClientService.communityListUsers(
       communityId,
-      undefined,
+      newFilters,
       undefined,
       pagination,
       undefined,
@@ -171,6 +176,7 @@ export function DelegateDetail(props: any) {
               value={delegate?.delegate}
               formField="delegate"
               bindLabel="fullname"
+              enableSearch={true}
             />
           </Form.Item>
         </Form>

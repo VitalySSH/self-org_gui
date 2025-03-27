@@ -6,7 +6,8 @@ import {
   Input,
   InputRef,
   Select,
-  Space, Spin,
+  Space,
+  Spin,
 } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { SelectInterface } from 'src/interfaces';
@@ -19,6 +20,8 @@ import React, {
 } from 'react';
 import TextArea, { TextAreaRef } from 'antd/lib/input/TextArea';
 import { ApiModel } from 'src/models';
+import { useDebounceFn } from 'ahooks';
+import { Filters } from 'src/shared/types.ts';
 
 export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const inputRef = useRef<InputRef>(null);
@@ -30,28 +33,58 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const [totalOptions, setTotalOptions] = useState(0);
   const [uploadedFieldValue, setUploadedFieldValue] = useState(false);
   const [value, setValue] = useState(null as T | T[] | null);
-  const [fieldValue, setFieldValue] = useState(
-    null as string | string[] | null
-  );
+  const [fieldValue, setFieldValue] = useState(null as string | string[] | null);
   const [options, setOptions] = useState(null as T[] | null);
   const [newTextValue, setNewTextValue] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showMinCharsHint, setShowMinCharsHint] = useState(false);
 
-  const fetchOptions = (page: number = 1, append: boolean = false) => {
-    if ((options || []).length >= totalOptions && append) return;
+  const MIN_SEARCH_CHARS = 3;
 
-    setIsLoading(true);
-    props
-      .requestOptions({ skip: page, limit: 20 })
-      .then(({ data, total }) => {
-        setTotalOptions(total);
-        setOptions((prev) => (append ? [...(prev || []), ...data] : data));
-        setCurrentPage(page);
-      })
-      .catch(() => setOptions([]))
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
+  const fetchOptions = useCallback(
+    (page: number = 1, append: boolean = false, search: string = searchQuery) => {
+      if ((options || []).length >= totalOptions &&
+        append && (!search || !props.enableSearch)) return;
+
+      setIsLoading(true);
+      const filters: Filters = [];
+      if (props.enableSearch && search?.length >= MIN_SEARCH_CHARS) {
+        filters.push(
+          {
+            field: props.bindLabel,
+            op: 'ilike',
+            val: search,
+          },
+        );
+      }
+      props
+        .requestOptions({ skip: page, limit: 20, }, filters)
+        .then(({ data, total }) => {
+          setTotalOptions(total);
+          setOptions((prev) => {
+            if (!append || search) return data;
+            return [...(prev || []), ...data];
+          });
+          setCurrentPage(page);
+        })
+        .catch(() => setOptions([]))
+        .finally(() => setIsLoading(false));
+    },
+    [props, searchQuery, options, totalOptions, props.enableSearch]
+  );
+
+  const { run: handleSearch } = useDebounceFn(
+    (value: string) => {
+      if (!props.enableSearch) return;
+
+      setSearchQuery(value);
+      const _isShowMinCharsHint =
+        value?.length > 0 && value?.length < MIN_SEARCH_CHARS;
+      setShowMinCharsHint(_isShowMinCharsHint);
+      if (!_isShowMinCharsHint) fetchOptions(1, false, value);
+    },
+    { wait: 500 }
+  );
 
   const getInitValue = useCallback(() => {
     if (fieldValue === null && !uploadedFieldValue) {
@@ -115,6 +148,10 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     }
     setFieldValue(currentFieldValue);
     props.onChange(props.formField, currentValue);
+    if (searchQuery?.length) {
+      setSearchQuery('');
+      fetchOptions(1, false, '');
+    }
   };
 
   const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -154,9 +191,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
           })
           .catch((error) => {
             setOptions([]);
-            console.log(
-              `Ошибка создания нового значения в селекторе: ${error}`
-            );
+            console.log(`Ошибка создания нового значения в селекторе: ${error}`);
           });
       } else {
         currentOptions.push(newObj);
@@ -174,22 +209,28 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   };
 
   const renderDropdownContent = (menu: React.ReactNode) => {
-    if (isDropdownOpen && isLoading && !options) {
+    if (isDropdownOpen && isLoading) {
       return (
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          padding: '16px 0'
-        }}>
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '16px 0' }}>
           <Spin size="large" />
         </div>
       );
     }
+
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ maxHeight: 200, overflowY: 'auto' }}>
-          {menu}
-          {renderLoadMoreButton()}
+          {props.enableSearch && showMinCharsHint ? (
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              description={`Введите минимум ${MIN_SEARCH_CHARS} символа для поиска`}
+            />
+          ) : (
+            <>
+              {menu}
+              {renderLoadMoreButton()}
+            </>
+          )}
         </div>
         {props.addOwnValue && addingOwnValue}
       </div>
@@ -235,7 +276,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   );
 
   const renderLoadMoreButton = () => {
-    if ((options || []).length >= totalOptions) return null;
+    if ((options || []).length >= totalOptions || searchQuery.length < MIN_SEARCH_CHARS) return null;
 
     return (
       <Button
@@ -244,7 +285,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         loading={isLoading}
         style={{ width: '100%' }}
       >
-        {isLoading ? 'Загрузка...' : 'Больше значений'}
+        {isLoading ? 'Загрузка...' : 'Загрузить ещё'}
       </Button>
     );
   };
@@ -252,27 +293,26 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   return (
     <ConfigProvider
       renderEmpty={() => {
-        if (isLoading && !options) {
-          return null;
-        }
+        if (isLoading && !options) return null;
         return (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description="Значения не найдены"
+            description={searchQuery ? "Ничего не найдено" : "Значения не найдены"}
           />
         );
       }}
     >
       <Select
+        showSearch={props.enableSearch}
         onChange={onValueChange}
-        // TODO: добавить фильтрацию для использования в CRUD сервисе
-        // showSearch={true}
+        onSearch={props.enableSearch ? handleSearch : undefined}
+        filterOption={false}
+        dropdownRender={renderDropdownContent}
+        onDropdownVisibleChange={onDropdownVisibleChange}
         /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
         // @ts-expect-error
         value={fieldValue}
         mode={props.multiple ? 'multiple' : undefined}
-        dropdownRender={renderDropdownContent}
-        onDropdownVisibleChange={onDropdownVisibleChange}
         options={(options || []).map((item: any) => ({
           key: item.id,
           value: item[props.bindLabel],
@@ -281,6 +321,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         loading={isLoading}
         placeholder={props.label}
         allowClear={true}
+        style={{ width: '100%' }}
       />
     </ConfigProvider>
   );

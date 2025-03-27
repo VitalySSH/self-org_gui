@@ -29,11 +29,14 @@ export function ResourceFilterModal({
   const authApiClientService = new AuthApiClientService();
   const [isOneDayEvent, setIsOneDayEvent] = useState(false);
 
-  const loadStatuses = async (pagination?: Pagination) => {
-    const filters: Filters = [];
+  const loadStatuses = async (
+    pagination?: Pagination,
+    filters?: Filters,
+  ) => {
+    const newFilters: Filters = filters || [];
     switch (resource) {
       case 'rule':
-        filters.push({
+        newFilters.push({
           field: 'code',
           op: 'in',
           val: [
@@ -45,7 +48,7 @@ export function ResourceFilterModal({
         });
         break;
       case 'initiative':
-        filters.push({
+        newFilters.push({
           field: 'code',
           op: 'in',
           val: [
@@ -58,14 +61,17 @@ export function ResourceFilterModal({
         break;
     }
 
-    return statusService.list(filters, undefined, pagination);
+    return statusService.list(newFilters, undefined, pagination);
   };
 
-  const loadUsers = async (pagination?: Pagination) => {
-    const filters: Filters = [];
+  const loadUsers = async (
+    pagination?: Pagination,
+    filters?: Filters,
+  ) => {
+    const newFilters: Filters = filters || [];
     return authApiClientService.communityListUsers(
       communityId,
-      filters,
+      newFilters,
       undefined,
       pagination
     );
@@ -139,6 +145,7 @@ export function ResourceFilterModal({
             requestOptions={loadStatuses}
             onChange={onCustomSelectChange}
             label="Выберите статус"
+            enableSearch={true}
           />
         </Form.Item>
 
@@ -149,6 +156,7 @@ export function ResourceFilterModal({
             requestOptions={loadUsers}
             onChange={onCustomSelectChange}
             label="Выберите автора"
+            enableSearch={true}
           />
         </Form.Item>
       </Form>

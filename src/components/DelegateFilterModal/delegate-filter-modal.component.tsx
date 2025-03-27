@@ -18,27 +18,37 @@ export function DelegateFilterModal({
   const categoryService = new CrudDataSourceService(CategoryModel);
   const authApiClientService = new AuthApiClientService();
 
-  const fetchCategories = async (pagination?: Pagination) => {
-    const filters: Filters = [
+  const fetchCategories = async (
+    pagination?: Pagination,
+    filters?: Filters,
+  ) => {
+    const newFilters: Filters = filters || [];
+    newFilters.push(
       {
         field: 'community_id',
         op: 'equals',
         val: communityId,
-      },
+      }
+    );
+    newFilters.push(
       {
         field: 'status.code',
         op: 'equals',
         val: CategorySelectedCode,
-      },
-    ];
+      }
+    );
 
-    return categoryService.list(filters, undefined, pagination);
+    return categoryService.list(newFilters, undefined, pagination);
   };
 
-  const fetchUsers = async (pagination?: Pagination) => {
+  const fetchUsers = async (
+    pagination?: Pagination,
+    filters?: Filters,
+  ) => {
+    const newFilters: Filters = filters || [];
     return authApiClientService.communityListUsers(
       communityId,
-      undefined,
+      newFilters,
       undefined,
       pagination,
       undefined,
@@ -87,6 +97,7 @@ export function DelegateFilterModal({
             requestOptions={fetchCategories}
             onChange={onCustomSelectChange}
             label="Выберите категорию"
+            enableSearch={true}
           />
         </Form.Item>
 
@@ -97,6 +108,7 @@ export function DelegateFilterModal({
             requestOptions={fetchUsers}
             onChange={onCustomSelectChange}
             label="Выберите делегата"
+            enableSearch={true}
           />
         </Form.Item>
       </Form>

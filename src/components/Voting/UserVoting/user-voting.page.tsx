@@ -14,25 +14,29 @@ export function UserVoting(props: UserVotingProps) {
 
   const votingOptionService = new CrudDataSourceService(VotingOptionModel);
 
-  const getFilters = (): Filters => {
+  const getFilters = (optionalFilters?: Filters): Filters => {
+    const filters = optionalFilters || [];
     switch (props.resource) {
       case 'initiative':
-        return [
+        filters.push(
           {
             field: 'initiative_id',
             op: 'equals',
             val: props.initiativeId,
-          },
-        ];
+          }
+        );
+        break;
       case 'rule':
-        return [
+        filters.push(
           {
             field: 'rule_id',
             op: 'equals',
             val: props.ruleId,
-          },
-        ];
+          }
+        );
+        break;
     }
+    return filters;
   };
 
   const handleVote = (vote: boolean) => {
@@ -40,8 +44,13 @@ export function UserVoting(props: UserVotingProps) {
     props.onVote(vote);
   };
 
-  const getVotingOptions = async (pagination?: Pagination) => {
-    return votingOptionService.list(getFilters(), undefined, pagination);
+  const getVotingOptions = async (
+    pagination?: Pagination,
+    filters?: Filters,
+  ) => {
+    return votingOptionService.list(
+      getFilters(filters), undefined, pagination
+    );
   };
 
   return (
@@ -79,6 +88,7 @@ export function UserVoting(props: UserVotingProps) {
             fieldService={votingOptionService}
             requestOptions={getVotingOptions}
             multiple={props.isMultiSelect}
+            enableSearch={true}
             label="Выберите дополнительные параметры"
             onChange={props.onSelectChange}
             value={props.options}

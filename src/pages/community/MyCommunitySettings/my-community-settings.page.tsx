@@ -44,6 +44,7 @@ import {
   SystemCategoryCode,
   VoteLabel,
 } from 'src/consts';
+import { Filters } from 'src/shared/types.ts';
 
 export function MyCommunitySettings(props: any) {
   const navigate = useNavigate();
@@ -156,51 +157,58 @@ export function MyCommunitySettings(props: any) {
     }
   }, [authData.user, communityId, errorInfo, form, navigate, settings.id]);
 
-  const getCommunityNames = async (pagination?: Pagination) => {
-    return await nameService.list(
-      [
-        {
-          field: 'community_id',
-          op: 'equals',
-          val: communityId,
-        },
-      ],
-      undefined,
-      pagination
+  const getCommunityNames = async (
+    pagination?: Pagination,
+    filters?: Filters,
+  ) => {
+    const newFilters: Filters = filters || [];
+    newFilters.push(
+      {
+        field: 'community_id',
+        op: 'equals',
+        val: communityId,
+      }
     );
+    return await nameService.list(newFilters, undefined, pagination);
   };
 
-  const getCommunityDescriptions = async (pagination?: Pagination) => {
+  const getCommunityDescriptions = async (
+    pagination?: Pagination,
+    filters?: Filters,
+  ) => {
+    const newFilters: Filters = filters || [];
+    newFilters.push(
+      {
+        field: 'community_id',
+        op: 'equals',
+        val: communityId,
+      }
+    );
     return await descriptionService.list(
-      [
-        {
-          field: 'community_id',
-          op: 'equals',
-          val: communityId,
-        },
-      ],
-      undefined,
-      pagination
+      newFilters, undefined, pagination
     );
   };
 
-  const getCategories = async (pagination?: Pagination) => {
-    return categoryService.list(
-      [
-        {
-          field: 'community_id',
-          op: 'equals',
-          val: communityId,
-        },
-        {
-          field: 'status.code',
-          op: 'ne',
-          val: SystemCategoryCode,
-        },
-      ],
-      undefined,
-      pagination
+  const getCategories = async (
+    pagination?: Pagination,
+    filters?: Filters,
+  ) => {
+    const newFilters: Filters = filters || [];
+    newFilters.push(
+      {
+        field: 'community_id',
+        op: 'equals',
+        val: communityId,
+      }
     );
+    newFilters.push(
+      {
+        field: 'status.code',
+        op: 'ne',
+        val: SystemCategoryCode,
+      }
+    );
+    return categoryService.list(newFilters, undefined, pagination);
   };
 
   useEffect(() => {
@@ -290,6 +298,7 @@ export function MyCommunitySettings(props: any) {
                     value={settings?.name}
                     formField="name"
                     bindLabel="name"
+                    enableSearch={true}
                     addOwnValue={true}
                     ownValuePlaceholder="Введите своё наименование"
                     ownValueMaxLength={80}
@@ -322,6 +331,7 @@ export function MyCommunitySettings(props: any) {
                     value={settings?.description}
                     formField="description"
                     bindLabel="value"
+                    enableSearch={true}
                     addOwnValue={true}
                     ownFieldTextarea={true}
                     ownValuePlaceholder="Введите своё описание"
@@ -524,6 +534,7 @@ export function MyCommunitySettings(props: any) {
                     formField="categories"
                     bindLabel="name"
                     multiple={true}
+                    enableSearch={true}
                     addOwnValue={true}
                     ownValuePlaceholder="Введите свою категорию"
                     ownValueMaxLength={80}
