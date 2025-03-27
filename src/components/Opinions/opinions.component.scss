@@ -2,23 +2,90 @@
 
 .comments-section {
   margin-top: 20px;
-}
 
-.comments-section .ant-input {
-  margin-bottom: 10px;
-}
+  .header-section {
+    margin-bottom: 16px;
 
-.comments-section .ant-list-item {
-  padding: 10px;
-  border-bottom: 1px solid $border-color;
-}
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
 
-.comments-section .user-comment {
-  background-color: $background-color;
-  border-radius: 4px;
-}
+    .filter-section {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 0;
+      border-bottom: 1px solid $border-color;
 
-.comments-section .ant-pagination {
-  margin-top: 20px;
-  text-align: center;
+      .ant-checkbox-wrapper {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .add-comment-section {
+    margin-bottom: 20px;
+
+    .ant-btn {
+      margin-top: 10px;
+    }
+  }
+
+  .notice {
+    padding: 16px;
+    background-color: rgba($primary-color, 0.05);
+    border-radius: 4px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .ant-list-item {
+    padding: 12px 0;
+    border-bottom: 1px solid $border-color;
+    transition: background-color 0.3s;
+
+    &.user-comment {
+      background-color: rgba($primary-color, 0.05);
+      border-radius: 4px;
+      padding: 12px;
+    }
+
+    .edit-section {
+      width: 100%;
+
+      .edit-actions {
+        margin-top: 10px;
+        display: flex;
+        gap: 8px;
+      }
+    }
+
+    .ant-list-item-meta {
+      width: 100%;
+    }
+
+    .anticon {
+      font-size: 16px;
+      color: $text-color;
+      transition: color 0.3s;
+      padding: 4px;
+      cursor: pointer;
+
+      &:hover {
+        color: $primary-color;
+      }
+
+      &.delete-icon:hover {
+        color: $error-color;
+      }
+    }
+  }
+
+  .ant-pagination {
+    margin-top: 20px;
+    text-align: center;
+  }
 }

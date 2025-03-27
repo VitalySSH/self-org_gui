@@ -1,296 +1,277 @@
 import { useAuth } from 'src/hooks';
 import { AuthContextProvider, FilterItem, OpinionsProps } from 'src/interfaces';
-import { Badge, Button, Input, List, message, Pagination } from 'antd';
+import { Badge, Button, Checkbox, List, message, Pagination, Spin } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
-import {
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CrudDataSourceService } from 'src/services';
 import { OpinionModel } from 'src/models';
-import { BulbOutlined, EditOutlined } from '@ant-design/icons';
+import { BulbOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { AISummaryOpinions } from 'src/components';
+import './opinions.component.scss';
 
 export function Opinions(props: OpinionsProps) {
   const authData: AuthContextProvider = useAuth();
   const maxPageSize = 20;
   const [messageApi, contextHolder] = message.useMessage();
-  const [newOpinion, setNewOpinion] = useState<string>('');
+  const [newOpinion, setNewOpinion] = useState('');
   const [loading, setLoading] = useState(true);
-  const [dataSource, setDataSource] = useState([] as OpinionModel[]);
+  const [dataSource, setDataSource] = useState<OpinionModel[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(props.maxPageSize || maxPageSize);
   const [total, setTotal] = useState(0);
   const [isMyOpinion, setIsMyOpinion] = useState<boolean | null>(null);
+  const [myOpinion, setMyOpinion] = useState<OpinionModel | null>(null);
   const [editingOpinionId, setEditingOpinionId] = useState<string | null>(null);
-  const [editedText, setEditedText] = useState<string>('');
+  const [editedText, setEditedText] = useState('');
   const [isSummaryModalVisible, setSummaryModalVisible] = useState(false);
+  const [searchMyOpinion, setSearchMyOpinion] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
 
-  const opinionService = useMemo(
-    () => new CrudDataSourceService(OpinionModel),
-    []
-  );
+  const opinionService = useMemo(() => new CrudDataSourceService(OpinionModel), []);
 
   const successInfo = (content: string) => {
-    messageApi
-      .open({
-        type: 'success',
-        content: content,
-      })
-      .then();
+    messageApi.open({ type: 'success', content }).then();
   };
 
   const errorInfo = useCallback(
-    (content: string) => {
-      messageApi
-        .open({
-          type: 'error',
-          content: content,
-        })
-        .then();
-    },
+    (content: string) => messageApi.open({ type: 'error', content }).then(),
     [messageApi]
   );
 
   const getFilter = useCallback((): FilterItem => {
-    switch (props.resource) {
-      case 'initiative':
-        return {
-          field: 'initiative_id',
-          op: 'equals',
-          val: props.initiativeId,
-        };
-      case 'rule':
-        return {
-          field: 'rule_id',
-          op: 'equals',
-          val: props.ruleId,
-        };
-    }
-  }, [props.initiativeId, props.resource, props.ruleId]);
+    return {
+      field: props.resource === 'initiative' ? 'initiative_id' : 'rule_id',
+      op: 'equals',
+      val: props.resource === 'initiative' ? props.initiativeId : props.ruleId,
+    };
+  }, [props.resource, props.initiativeId, props.ruleId]);
 
   const fetchOpinions = useCallback(() => {
     if (loading && props) {
       opinionService
-        .list(
-          [getFilter()],
-          undefined,
-          { skip: currentPage, limit: pageSize },
-          ['creator']
-        )
+        .list([getFilter()], undefined, { skip: currentPage, limit: pageSize }, ['creator'])
         .then((resp) => {
           setTotal(resp.total);
           setDataSource(resp.data);
         })
-        .catch((error) => {
-          errorInfo(`При получении мнений возникла ошибка: ${error}`);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+        .catch((error) => errorInfo(`Ошибка получения мнений: ${error}`))
+        .finally(() => setLoading(false));
     }
-  }, [
-    currentPage,
-    errorInfo,
-    getFilter,
-    loading,
-    opinionService,
-    pageSize,
-    props,
-  ]);
+  }, [currentPage, errorInfo, getFilter, loading, opinionService, pageSize, props]);
 
-  const fetchMyOpinion = useCallback(() => {
+  const fetchMyOpinion = useCallback(async () => {
     const userId = authData.user?.id;
-    if (userId && isMyOpinion === null) {
-      opinionService
-        .list([
-          getFilter(),
-          {
-            field: 'creator_id',
-            op: 'equals',
-            val: userId,
-          },
-        ])
-        .then((resp) => {
-          setIsMyOpinion(resp.total > 0);
-        });
+    if (!userId) return;
+
+    try {
+      const resp = await opinionService.list([
+        getFilter(),
+        { field: 'creator_id', op: 'equals', val: userId }
+      ]);
+      setIsMyOpinion(resp.total > 0);
+      setMyOpinion(resp.data[0] || null);
+    } catch (error) {
+      errorInfo('Ошибка поиска вашего мнения');
     }
-  }, [authData.user?.id, getFilter, isMyOpinion, opinionService]);
+  }, [authData.user?.id, getFilter, opinionService, errorInfo]);
 
   useEffect(() => {
     fetchOpinions();
     fetchMyOpinion();
   }, [fetchOpinions, fetchMyOpinion]);
 
-  const handleAddComment = () => {
-    if (newOpinion.trim()) {
-      const opinion = opinionService.createRecord();
-      opinion.text = newOpinion;
-      opinion.creator = authData.getUserRelation();
-      switch (props.resource) {
-        case 'rule':
-          opinion.rule_id = props.ruleId;
-          break;
-        case 'initiative':
-          opinion.initiative_id = props.initiativeId;
-          break;
+  const handleSearchMyOpinion = async () => {
+    if (searchMyOpinion) {
+      setSearchMyOpinion(false);
+      return;
+    }
+
+    setSearchLoading(true);
+    try {
+      if (!myOpinion) {
+        await fetchMyOpinion();
       }
-      opinionService
-        .save(opinion)
-        .then((resp) => {
-          setIsMyOpinion(true);
-          dataSource.unshift(resp);
-          setDataSource(dataSource);
-        })
-        .catch((error) => {
-          errorInfo(`При сохранении мнений возникла ошибка: ${error}`);
-        })
-        .finally(() => {
-          setNewOpinion('');
-        });
-      setNewOpinion('');
-      setTotal(total + 1);
+      setSearchMyOpinion(true);
+    } finally {
+      setSearchLoading(false);
     }
   };
 
-  const handlePageChange = (
-    page: SetStateAction<number>,
-    size: SetStateAction<number>
-  ) => {
+  const filteredDataSource = useMemo(() => {
+    if (!searchMyOpinion || !myOpinion) return dataSource;
+
+    const isInCurrentPage = dataSource.some(item => item.id === myOpinion.id);
+    return isInCurrentPage
+      ? dataSource.filter(item => item.id === myOpinion.id)
+      : [myOpinion];
+  }, [dataSource, searchMyOpinion, myOpinion]);
+
+  const handleAddComment = async () => {
+    if (!newOpinion.trim()) return;
+
+    const opinion = opinionService.createRecord();
+    opinion.text = newOpinion;
+    opinion.creator = authData.getUserRelation();
+
+    if (props.resource === 'rule') {
+      opinion.rule_id = props.ruleId;
+    } else {
+      opinion.initiative_id = props.initiativeId;
+    }
+
+    try {
+      const resp = await opinionService.save(opinion);
+      setIsMyOpinion(true);
+      setMyOpinion(resp);
+      setDataSource([resp, ...dataSource]);
+      setTotal(total + 1);
+      setNewOpinion('');
+      successInfo('Мнение добавлено');
+    } catch (error) {
+      errorInfo('Ошибка сохранения мнения');
+    }
+  };
+
+  const handleDeleteOpinion = async (opinionId: string) => {
+    try {
+      await opinionService.delete(opinionId);
+      setDataSource(dataSource.filter(item => item.id !== opinionId));
+      setTotal(total - 1);
+      setIsMyOpinion(false);
+      setMyOpinion(null);
+      successInfo('Мнение удалено');
+    } catch (error) {
+      errorInfo('Ошибка удаления мнения');
+    }
+  };
+
+  const handleSaveOpinion = async (opinion: OpinionModel) => {
+    try {
+      opinion.text = editedText;
+      await opinionService.save(opinion);
+      setEditingOpinionId(null);
+      setEditedText('');
+      successInfo('Мнение обновлено');
+      fetchOpinions();
+    } catch (error) {
+      errorInfo('Ошибка обновления мнения');
+    }
+  };
+
+  const handlePageChange = (page: number, size: number) => {
     setCurrentPage(page);
     setPageSize(size);
     setLoading(true);
   };
 
-  const handleEditOpinion = (opinion: OpinionModel) => {
-    setEditingOpinionId(opinion.id);
-    setEditedText(opinion.text || '');
-  };
-
-  const handleSaveOpinion = (opinion: OpinionModel) => {
-    opinion.text = editedText;
-    opinionService
-      .save(opinion)
-      .then(() => {
-        successInfo('Мнение сохранено');
-        setEditingOpinionId(null);
-      })
-      .catch((error) => {
-        errorInfo(`При сохранении мнения возникла ошибка: ${error}`);
-      });
-  };
-
-  const handleCancelEdit = () => {
-    setEditingOpinionId(null);
-    setEditedText('');
-  };
-
-  const handleSummarizeOpinions = () => {
-    setSummaryModalVisible(true);
-  };
-
   return (
     <div className="comments-section">
       {contextHolder}
-      <div
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <h3>Мнения</h3>
-            <Badge count={total} style={{ marginLeft: 8 }} />
-          </div>
+
+      <div className="header-section">
+        <div className="header-top">
+          <h3>
+            Мнения <Badge count={total} />
+          </h3>
           <Button
             type="primary"
             icon={<BulbOutlined style={{ color: 'white'}} />}
-            onClick={handleSummarizeOpinions}
+            onClick={() => setSummaryModalVisible(true)}
           >
             AI суммирование мнений
           </Button>
         </div>
+
+        {isMyOpinion && (
+          <div className="filter-section">
+            <Checkbox
+              checked={searchMyOpinion}
+              onChange={handleSearchMyOpinion}
+              disabled={searchLoading}
+            >
+              Показать только моё мнение
+            </Checkbox>
+            {searchLoading && <Spin size="small" />}
+          </div>
+        )}
+
       </div>
 
       {!isMyOpinion && (
-        <>
+        <div className="add-comment-section">
           <TextArea
             rows={4}
             value={newOpinion}
             onChange={(e) => setNewOpinion(e.target.value)}
-            placeholder="Поделитесь своим мнением"
+            placeholder="Обязательно оставьте своё аргументированное мнение, это поможет сообществу принять наилучшее решение из возможных..."
           />
-          <Button
-            type="primary"
-            onClick={handleAddComment}
-            style={{ marginTop: 10 }}
-          >
+          <Button type="primary" onClick={handleAddComment}>
             Отправить
           </Button>
-        </>
+        </div>
+      )}
+
+      {searchMyOpinion && !myOpinion && !searchLoading && (
+        <div className="notice">Вы ещё не оставляли мнение</div>
       )}
 
       <List
-        dataSource={dataSource}
+        dataSource={filteredDataSource}
         loading={loading}
         locale={{ emptyText: 'Нет мнений' }}
-        size="large"
         renderItem={(opinion) => (
           <List.Item
             className={
               opinion.creator?.id === authData.user?.id ? 'user-comment' : ''
             }
+            actions={
+              opinion.creator?.id === authData.user?.id &&
+              editingOpinionId !== opinion.id
+                ? [
+                    <EditOutlined
+                      key="edit"
+                      onClick={() => {
+                        setEditingOpinionId(opinion.id);
+                        setEditedText(opinion.text || '');
+                      }}
+                    />,
+                    <DeleteOutlined
+                      key="delete"
+                      onClick={() => handleDeleteOpinion(opinion.id)}
+                      className="delete-icon"
+                    />,
+                  ]
+                : []
+            }
           >
-            <List.Item.Meta
-              title={opinion.creator?.fullname}
-              description={
-                opinion.creator?.id === authData.user?.id ? (
-                  <>
-                    {editingOpinionId === opinion.id ? (
-                      <>
-                        <Input.TextArea
-                          value={editedText}
-                          onChange={(e) => setEditedText(e.target.value)}
-                        />
-                        <div style={{ marginTop: 10 }}>
-                          <Button
-                            type="primary"
-                            onClick={() => handleSaveOpinion(opinion)}
-                            style={{ marginRight: 10 }}
-                          >
-                            Сохранить
-                          </Button>
-                          <Button onClick={handleCancelEdit}>Отменить</Button>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        {opinion.text}
-                        <EditOutlined
-                          onClick={() => handleEditOpinion(opinion)}
-                          style={{ marginLeft: 10, fontSize: 20 }}
-                        />
-                      </>
-                    )}
-                  </>
-                ) : (
-                  opinion.text
-                )
-              }
-            />
+            {editingOpinionId === opinion.id ? (
+              <div className="edit-section">
+                <TextArea
+                  value={editedText}
+                  onChange={(e) => setEditedText(e.target.value)}
+                />
+                <div className="edit-actions">
+                  <Button
+                    type="primary"
+                    onClick={() => handleSaveOpinion(opinion)}
+                  >
+                    Сохранить
+                  </Button>
+                  <Button onClick={() => setEditingOpinionId(null)}>
+                    Отменить
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <List.Item.Meta
+                title={opinion.creator?.fullname}
+                description={opinion.text}
+              />
+            )}
           </List.Item>
         )}
       />
+
       {total > pageSize && (
         <Pagination
           current={currentPage}
@@ -299,9 +280,7 @@ export function Opinions(props: OpinionsProps) {
           onChange={handlePageChange}
           showSizeChanger
           pageSizeOptions={['10', '20', '50', '100']}
-          defaultPageSize={props.maxPageSize || maxPageSize}
           showTotal={(total, range) => `${range[0]}-${range[1]} из ${total}`}
-          style={{ marginTop: 16, textAlign: 'center' }}
         />
       )}
 
