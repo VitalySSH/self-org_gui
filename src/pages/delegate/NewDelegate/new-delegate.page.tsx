@@ -126,11 +126,11 @@ export function NewDelegate(props: any) {
     delegateService
       .save(delegateSettings)
       .then(() => {
-        successInfo('Выбор делегата сохранён');
+        successInfo('Выбор советника сохранён');
         navigate(-1);
       })
       .catch((error) => {
-        errorInfo(`Ошибка создания нстроек делегата: ${error}`);
+        errorInfo(`Ошибка создания нстроек советника: ${error}`);
       })
       .finally(() => setButtonLoading(false));
   };
@@ -139,7 +139,7 @@ export function NewDelegate(props: any) {
     <>
       <div className="form-container">
         {contextHolder}
-        <div className="form-header">Новый делегат</div>
+        <div className="form-header">Новый советник</div>
         <Form
           form={form}
           name="new-delegate-settings"
@@ -150,7 +150,7 @@ export function NewDelegate(props: any) {
             label={
               <span>
                 {CategoryLabel}&nbsp;
-                <Tooltip title="Выберите категорию, для которой хотите назначить делегата.">
+                <Tooltip title="Выберите категорию, для которой хотите назначить советника.">
                   <QuestionCircleOutlined />
                 </Tooltip>
               </span>
@@ -177,7 +177,7 @@ export function NewDelegate(props: any) {
             label={
               <span>
                 {DelegateLabel}&nbsp;
-                <Tooltip title="Выберите делегата, голос которого станет вашим голосом в голосованиях в выбранной выше категории.">
+                <Tooltip title="Выберите советника, голос которого станет вашим голосом в голосованиях в выбранной выше категории.">
                   <QuestionCircleOutlined />
                 </Tooltip>
               </span>
@@ -186,7 +186,7 @@ export function NewDelegate(props: any) {
             rules={[
               {
                 required: true,
-                message: 'Пожалуйста, выберите делегата',
+                message: 'Пожалуйста, выберите советника',
               },
             ]}
             hasFeedback

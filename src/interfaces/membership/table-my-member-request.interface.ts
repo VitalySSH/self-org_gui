@@ -7,6 +7,5 @@ export interface TableMyMemberRequest {
   statusCode: string;
   reason: string;
   created: string;
-  solution: string;
   children?: TableMyMemberRequest[];
 }

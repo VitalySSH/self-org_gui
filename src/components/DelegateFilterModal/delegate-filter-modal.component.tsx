@@ -4,7 +4,7 @@ import { AuthApiClientService, CrudDataSourceService } from 'src/services';
 import { CategoryModel } from 'src/models';
 import { Filters } from 'src/shared/types.ts';
 import { CustomSelect } from 'src/components';
-import { CategorySelectedCode } from 'src/consts';
+import { CategorySelectedCode, DelegateLabel } from 'src/consts';
 
 export function DelegateFilterModal({
   communityId,
@@ -101,13 +101,13 @@ export function DelegateFilterModal({
           />
         </Form.Item>
 
-        <Form.Item label="Делегат" name="delegate">
+        <Form.Item label={DelegateLabel} name="delegate">
           <CustomSelect
             bindLabel="fullname"
             formField="delegate"
             requestOptions={fetchUsers}
             onChange={onCustomSelectChange}
-            label="Выберите делегата"
+            label="Выберите доверенного советника"
             enableSearch={true}
           />
         </Form.Item>

@@ -1,300 +1,167 @@
 import {
-  Button,
-  Input,
-  InputRef,
-  Space,
-  Table,
-  TableColumnsType,
-  TableColumnType,
+  Layout,
+  List,
+  Typography,
+  Empty,
+  Breadcrumb,
 } from 'antd';
-import { useCallback, useEffect, useRef, useState } from 'react';
 import { TableMyMemberRequest } from 'src/interfaces';
 import { RequestMemberAoService } from 'src/services';
-import { FilterDropdownProps } from 'antd/es/table/interface';
-import Highlighter from 'react-highlight-words';
-import { SearchOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
-import {
-  MemberRequestDisputeButton,
-  MemberRequestJoinButton,
-  MemberRequestRemoveButton,
-} from 'src/components';
-import {
-  CommunityMemberCode,
-  OnConsiderationCode,
-  MemberExcludedCode,
-  RequestSuccessfulCode,
-  RequestDeniedCode,
-} from 'src/consts';
+import { useCallback, useEffect, useState } from 'react';
+import styles from 'src/shared/assets/scss/module/list.module.scss';
+import './my-add-member-requests.page.scss';
+import { MemberRequestCard } from 'src/components';
 
-type DataIndex = keyof TableMyMemberRequest;
+const { Title } = Typography;
+
+type NavigationState = {
+  currentLevel: number;
+  breadcrumbs: { id: string; name: string }[];
+  currentData: TableMyMemberRequest[];
+};
 
 export function MyAddMemberRequests() {
   const [loading, setLoading] = useState(true);
-  const [dataSource, setDataSource] = useState([] as TableMyMemberRequest[]);
-  const [searchedColumn, setSearchedColumn] = useState('');
-  const [searchText, setSearchText] = useState('');
-
-  const searchInput = useRef<InputRef>(null);
-
-  const handleSearch = (
-    selectedKeys: string[],
-    confirm: FilterDropdownProps['confirm'],
-    dataIndex: DataIndex
-  ) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
-
-  const handleReset = (clearFilters: () => void) => {
-    clearFilters();
-    setSearchText('');
-  };
-
-  const getColumnSearchProps = (
-    dataIndex: DataIndex
-  ): TableColumnType<TableMyMemberRequest> => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-      close,
-    }) => (
-      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
-        <Input
-          ref={searchInput}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() =>
-            handleSearch(selectedKeys as string[], confirm, dataIndex)
-          }
-          style={{ marginBottom: 8, display: 'block' }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() =>
-              handleSearch(selectedKeys as string[], confirm, dataIndex)
-            }
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Найти
-          </Button>
-          <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Сбросить
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({ closeDropdown: false });
-              setSearchText((selectedKeys as string[])[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            Отфильтровать
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            Закрыть
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
-    ),
-    onFilter: (value, record) =>
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ''}
-        />
-      ) : (
-        text
-      ),
+  const [dataSource, setDataSource] = useState<TableMyMemberRequest[]>([]);
+  const [navState, setNavState] = useState<NavigationState>({
+    currentLevel: 1,
+    breadcrumbs: [],
+    currentData: [],
   });
+  // const [showFilters, setShowFilters] = useState(false);
 
-  const renderAction = (row: TableMyMemberRequest) => {
-    switch (row.statusCode) {
-      case OnConsiderationCode:
-        return (
-          <MemberRequestRemoveButton tableRow={row} setLoading={setLoading} />
-        );
-      case RequestDeniedCode:
-        return (
-          <MemberRequestRemoveButton tableRow={row} setLoading={setLoading} />
-        );
-      case RequestSuccessfulCode:
-        return (
-          <>
-            <MemberRequestJoinButton tableRow={row} setLoading={setLoading} />
-            <div
-              style={{
-                marginTop: 10,
-              }}
-            >
-              <MemberRequestRemoveButton
-                tableRow={row}
-                setLoading={setLoading}
-              />
-            </div>
-          </>
-        );
-      case CommunityMemberCode:
-        return (
-          <MemberRequestRemoveButton tableRow={row} setLoading={setLoading} />
-        );
-      case MemberExcludedCode:
-        return (
-          <>
-            <MemberRequestDisputeButton
-              tableRow={row}
-              setLoading={setLoading}
-            />
-            <div
-              style={{
-                marginTop: 10,
-              }}
-            >
-              <MemberRequestRemoveButton
-                tableRow={row}
-                setLoading={setLoading}
-              />
-            </div>
-          </>
-        );
-    }
-  };
-
-  const columns: TableColumnsType<TableMyMemberRequest> = [
-    {
-      title: 'Наименование сообщества',
-      dataIndex: 'communityName',
-      key: 'communityName',
-      ...getColumnSearchProps('communityName'),
-    },
-    // {
-    //   title: 'Описание сообщества',
-    //   dataIndex: 'communityDescription',
-    //   key: 'communityDescription',
-    //   ...getColumnSearchProps('communityDescription'),
-    // },
-    {
-      title: 'Сопроводительное письмо',
-      dataIndex: 'reason',
-      key: 'reason',
-    },
-    {
-      title: 'Статус',
-      dataIndex: 'status',
-      key: 'status',
-      ...getColumnSearchProps('status'),
-    },
-    // {
-    //   title: 'Решение',
-    //   dataIndex: 'solution',
-    //   key: 'solution',
-    //   ...getColumnSearchProps('solution'),
-    // },
-    {
-      title: 'Дата создания',
-      dataIndex: 'created',
-      key: 'created',
-      ...getColumnSearchProps('created'),
-    },
-    {
-      title: 'Действие',
-      dataIndex: '',
-      key: 'action',
-      render: (item: TableMyMemberRequest) => {
-        return renderAction(item);
-      },
-    },
-  ];
-
-  const loadData = useCallback(() => {
-    if (loading) {
+  const loadData = useCallback(async () => {
+    setLoading(true);
+    try {
       const requestMemberAoService = new RequestMemberAoService();
-      requestMemberAoService
-        .myList()
-        .then((resp) => {
-          setDataSource(resp.data);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      const resp = await requestMemberAoService.myList();
+
+      setDataSource(resp.data);
+      setNavState({
+        currentLevel: 1,
+        breadcrumbs: [],
+        currentData: resp.data,
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-  }, [loading]);
+  }, []);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
 
+  const handleShowSubcommunities = (item: TableMyMemberRequest) => {
+    if (!item.children || item.children.length === 0) return;
+
+    setNavState((prev) => ({
+      currentLevel: prev.currentLevel + 1,
+      breadcrumbs: [
+        ...prev.breadcrumbs,
+        { id: item.key, name: item.communityName },
+      ],
+      currentData: item.children || [],
+    }));
+  };
+
+  const handleGoBack = () => {
+    setNavState({
+      currentLevel: 1,
+      breadcrumbs: [],
+      currentData: dataSource,
+    });
+  };
+
+  const handleBreadcrumbClick = (index: number) => {
+    if (index === 0) return handleGoBack();
+
+    const newBreadcrumbs = navState.breadcrumbs.slice(0, index);
+    const parentItem = newBreadcrumbs[newBreadcrumbs.length - 1];
+
+    const findData = (
+      items: TableMyMemberRequest[],
+      targetId: string
+    ): TableMyMemberRequest[] => {
+      for (const item of items) {
+        if (item.key === targetId) return item.children || [];
+        if (item.children) {
+          const found = findData(item.children, targetId);
+          if (found.length) return found;
+        }
+      }
+      return [];
+    };
+
+    setNavState({
+      currentLevel: index + 1,
+      breadcrumbs: newBreadcrumbs,
+      currentData: findData(dataSource, parentItem.id),
+    });
+  };
+
   return (
-    <div className="table-container">
-      <div className="table-header">Мои заявки на вступление в сообщества</div>
-      <Table
-        columns={columns}
-        loading={loading}
-        dataSource={dataSource}
-        pagination={false}
-        expandable={{
-          rowExpandable: (record) =>
-            record.children && record.children.length > 0,
-          expandIcon: ({ expanded, onExpand, record }) => {
-            if (!record.children || record.children.length === 0) {
-              return null;
-            }
-            return (
-              <span onClick={(e) => onExpand(record, e)}>
-                {expanded ? (
-                  <MinusOutlined style={{ marginRight: 6 }} />
-                ) : (
-                  <PlusOutlined style={{ marginRight: 6 }} />
-                )}
-              </span>
-            );
-          },
-        }}
-        locale={{ emptyText: 'Заявки не найдены' }}
+    <Layout className={styles.container}>
+      <div className={styles.header}>
+        <Title level={3} className={styles.title}>
+          Мои заявки на вступление в сообщества
+        </Title>
+        {/*{navState.currentLevel === 1 && (*/}
+        {/*  <div className={styles.buttons}>*/}
+        {/*    <Button type="text" onClick={() => setShowFilters(true)}>*/}
+        {/*      <Badge count={0} offset={[5, 0]}>*/}
+        {/*        <FilterOutlined style={{ fontSize: 20 }} />*/}
+        {/*      </Badge>*/}
+        {/*      Фильтры*/}
+        {/*    </Button>*/}
+        {/*  </div>*/}
+        {/*)}*/}
+      </div>
+
+      <div
+        className="content-wrapper"
         style={{
-          marginRight: 20,
-          marginLeft: 20,
-          marginBottom: 20,
-        }}
-      />
-    </div>
+          maxWidth: 800,
+          margin: '0 auto',
+          padding: '0 16px',
+          width: '100%',
+      }}
+      >
+        {navState.currentLevel > 1 && (
+          <Breadcrumb
+            items={navState.breadcrumbs.map((crumb, index) => ({
+              title: (
+                <span
+                  className="breadcrumb-item"
+                  onClick={() => handleBreadcrumbClick(index)}
+                >
+                  {crumb.name}
+                </span>
+              ),
+              key: crumb.id,
+            }))}
+            className="custom-breadcrumbs"
+          />
+        )}
+
+        <List
+          itemLayout="vertical"
+          dataSource={navState.currentData}
+          loading={loading}
+          locale={{ emptyText: <Empty description="Заявки не найдены" /> }}
+          className={styles.list}
+          renderItem={(item) => (
+            <List.Item className={styles.listItem}>
+              <MemberRequestCard
+                item={item}
+                setLoading={setLoading}
+                onShowSubcommunities={handleShowSubcommunities}
+              />
+            </List.Item>
+          )}
+        />
+      </div>
+    </Layout>
   );
 }

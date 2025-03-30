@@ -519,7 +519,7 @@ export function MyCommunitySettings(props: any) {
                   label={
                     <span>
                       {CategoriesLabel}&nbsp;
-                      <Tooltip title="Категории - это темы или направления для голосований. Они помогают структурировать вопросы и выбирать делегатов.">
+                      <Tooltip title="Категории - это темы или направления для голосований. Они помогают структурировать вопросы и выбирать советников.">
                         <QuestionCircleOutlined />
                       </Tooltip>
                     </span>

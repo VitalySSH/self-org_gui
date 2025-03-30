@@ -57,7 +57,7 @@ export function DelegateDetail(props: any) {
           form.setFieldValue('delegate', delegateInst.delegate);
         })
         .catch((error) => {
-          errorInfo(`Не удалось загрузить настройки делегата: ${error}`);
+          errorInfo(`Не удалось загрузить настройки советника: ${error}`);
         })
         .finally(() => {
           setLoading(false);
@@ -103,12 +103,12 @@ export function DelegateDetail(props: any) {
       const delegateService = new CrudDataSourceService(DelegateSettingsModel);
       updatedDelegate.delegate = form.getFieldValue('delegate');
       delegateService.save(updatedDelegate).then(() => {
-        successInfo('Делегат успешно изменён');
+        successInfo('Советник успешно изменён');
         setButtonLoading(false);
         onCancel();
       });
     } else {
-      errorInfo('Делегат не выбран');
+      errorInfo('Советник не выбран');
       setButtonLoading(false);
     }
   };
@@ -131,7 +131,7 @@ export function DelegateDetail(props: any) {
     <>
       {contextHolder}
       <div className="form-container">
-        <div className="form-header">Замена делегата</div>
+        <div className="form-header">Замена советника</div>
         <Form
           form={form}
           name="delegate-settings-detail"
@@ -142,7 +142,7 @@ export function DelegateDetail(props: any) {
             label={
               <span>
                 {CategoryLabel}&nbsp;
-                <Tooltip title="Категорию, для которой хотите поменять делегата.">
+                <Tooltip title="Категорию, для которой хотите поменять советника.">
                   <QuestionCircleOutlined />
                 </Tooltip>
               </span>
@@ -156,7 +156,7 @@ export function DelegateDetail(props: any) {
             label={
               <span>
                 {DelegateLabel}&nbsp;
-                <Tooltip title="Выберите делегата, голос которого станет вашим голосом в голосованиях в указанной выше категории.">
+                <Tooltip title="Выберите советника, голос которого станет вашим голосом в голосованиях в указанной выше категории.">
                   <QuestionCircleOutlined />
                 </Tooltip>
               </span>
@@ -165,7 +165,7 @@ export function DelegateDetail(props: any) {
             rules={[
               {
                 required: true,
-                message: 'Пожалуйста, выберите делегата',
+                message: 'Пожалуйста, выберите советника',
               },
             ]}
             hasFeedback

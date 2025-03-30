@@ -111,7 +111,7 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
             label={
               <span>
                 {QuorumLabel}&nbsp;
-                <Tooltip title="Введите минимальный процент от числа участников сообщества, требующийся для правомочности голосования. Значение от 1 до 100%.">
+                <Tooltip title="Введите минимальный процент участников для действительности голосования. Значение от 1 до 100%.">
                   <QuestionCircleOutlined />
                 </Tooltip>
               </span>
@@ -140,7 +140,7 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
             label={
               <span>
                 {VoteLabel}&nbsp;
-                <Tooltip title="Введите минимальный процент от всех голосов, который должен получить вариант, требующийся для победы в голосовании. Значение от 50 до 100%.">
+                <Tooltip title="Введите минимальную долю голосов, необходимую для принятия решения. Значение от 50 до 100%.">
                   <QuestionCircleOutlined />
                 </Tooltip>
               </span>
@@ -169,7 +169,7 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
             label={
               <span>
                 {SignificantMinorityLabel}&nbsp;
-                <Tooltip title="Введите минимальный процент от всех голосов, при достижении которого вариант голосования будет считаться общественно-значимым. Значение от 1 до 50%.">
+                <Tooltip title="Введите минимальный процент голосов, при достижении которого вариант считается общественно значимым. Значение от 1 до 50%.">
                   <QuestionCircleOutlined />
                 </Tooltip>
               </span>
@@ -295,7 +295,7 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
               >
                 Добавить категорию
               </Button>
-              <Tooltip title="Категории - это темы или направления для голосований. Они помогают структурировать вопросы и выбирать делегатов. Максимум 60 символов.">
+              <Tooltip title="Категории - это темы или направления для голосований. Они помогают структурировать вопросы и выбирать советников. Максимум 60 символов.">
                 <QuestionCircleOutlined style={{ marginLeft: 6 }} />
               </Tooltip>
             </Form.Item>

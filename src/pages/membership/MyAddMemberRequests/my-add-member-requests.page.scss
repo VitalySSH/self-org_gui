@@ -1,0 +1,65 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+.custom-breadcrumbs {
+  border-radius: 8px;
+  width: 100%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+
+  .ant-breadcrumb-separator {
+    margin: 0 8px;
+    color: rgba(0, 0, 0, 0.45);
+  }
+
+  .breadcrumb-item {
+    font-size: 15px;
+    color: #1890ff;
+    cursor: pointer;
+    transition: color 0.2s;
+    display: inline-block;
+    //max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:hover {
+      color: $primary-color;
+      text-decoration: underline;
+    }
+  }
+
+  @media (max-width: $breakpoint-md) {
+    padding: 8px 12px;
+    border-radius: 6px;
+    overflow-x: auto;
+    white-space: nowrap;
+    display: flex;
+
+    &::-webkit-scrollbar {
+      height: 4px;
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #d9d9d9;
+      border-radius: 2px;
+    }
+
+    .breadcrumb-item {
+      max-width: 120px;
+      font-size: 13px;
+    }
+
+    .ant-breadcrumb-separator {
+      margin: 0 6px;
+      flex-shrink: 0;
+    }
+  }
+
+  @media (max-width: $breakpoint-xs) {
+    .breadcrumb-item {
+      max-width: 80px;
+    }
+  }
+}

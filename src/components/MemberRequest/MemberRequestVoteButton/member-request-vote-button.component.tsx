@@ -81,9 +81,9 @@ export function MemberRequestVoteButton(props: any) {
         }
         requestMember.vote = formData.yes;
         requestMemberService
-          .save(requestMember)
-          .then((r) => {
-            setVote(r.vote as boolean);
+          .save(requestMember, false)
+          .then(() => {
+            setVote(formData.yes || false);
             successInfo('Голос отдан');
             setModalOpen(false);
             setDisabled(true);

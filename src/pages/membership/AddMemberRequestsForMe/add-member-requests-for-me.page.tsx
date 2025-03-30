@@ -180,7 +180,7 @@ export function AddMemberRequestsForMe(props: any) {
           <MemberRequestVoteButton
             key={item.key}
             tableRow={item}
-            onChangeStatus={setLoading}
+            setLoading={setLoading}
           />
         );
       },

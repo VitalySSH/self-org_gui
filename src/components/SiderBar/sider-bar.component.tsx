@@ -44,7 +44,7 @@ const userGuideMenuItems: MenuItem[] = [
   {
     key: 'test2',
     icon: <InfoCircleOutlined />,
-    label: 'Делегаты',
+    label: 'Советники',
   },
   {
     key: 'test3',
@@ -87,7 +87,7 @@ const communityWSMenuItems: MenuItem[] = [
   {
     key: 'my-delegates',
     icon: <TeamOutlined />,
-    label: 'Мои делегаты',
+    label: 'Мои советники',
   },
   {
     key: 'rules',

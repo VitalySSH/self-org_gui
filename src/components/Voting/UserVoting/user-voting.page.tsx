@@ -59,7 +59,7 @@ export function UserVoting(props: UserVotingProps) {
         <h3>Ваш голос:</h3>
         {props.isDelegateVote && (
           <Tag className="delegate-tag" color="default">
-            Голос делегата
+            Голос советника
           </Tag>
         )}
       </div>

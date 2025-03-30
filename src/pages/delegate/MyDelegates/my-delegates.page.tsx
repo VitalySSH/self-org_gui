@@ -153,14 +153,14 @@ export function MyDelegates(props: any) {
     <Layout className={styles.container}>
       <div className={styles.header}>
         <Typography.Title level={3} className={styles.title}>
-          Мои делегаты
+          Мои советники
         </Typography.Title>
 
         <div className={styles.buttons}>
           {(categoryIds || []).length < (categoryCount || 0) && (
             <Button type="text" onClick={addNewDelegate}>
               <PlusCircleOutlined style={{ fontSize: 20 }} />
-              Добавить делегата
+              Добавить советника
             </Button>
           )}
           <Button type="text" onClick={() => setShowFilters(true)}>
@@ -189,7 +189,7 @@ export function MyDelegates(props: any) {
         itemLayout="vertical"
         dataSource={dataSource}
         loading={loading}
-        locale={{ emptyText: 'Не найдено ни одного делегата' }}
+        locale={{ emptyText: 'Не найдено ни одного советника' }}
         pagination={false}
         className={styles.list}
         renderItem={(item: DelegateCardInterface) => (
@@ -202,7 +202,7 @@ export function MyDelegates(props: any) {
                 <strong>Категория:</strong> {item.category}
               </div>
               <div style={{ marginTop: 10 }}>
-                <strong>Делегат:</strong> {item.userFullName}
+                <strong>Доверенный советник:</strong> {item.userFullName}
               </div>
             </Card>
           </List.Item>
