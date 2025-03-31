@@ -1,6 +1,6 @@
 @use 'src/shared/assets/scss/variables' as *;
 
-.memberRequestVoteCard {
+.member-request-vote-card {
   display: flex;
   flex-direction: column;
   border-radius: $border-radius;
@@ -13,7 +13,8 @@
   }
 
   .ant-card-body {
-    height: 180px;
+    height: auto;
+    min-height: 180px;
   }
 
   .ant-card-actions {
@@ -39,34 +40,42 @@
     }
   }
 
-  .cardContent {
+  .card-content {
     flex-grow: 1;
     margin-top: 20px;
     font-size: 14px;
 
-    .reason {
-      margin-top: 12px;
-      font-size: 14px;
-      color: #666;
-      line-height: 1.5;
-      overflow: hidden;
-      position: relative;
-
-      &.collapsed {
-        max-height: 5em;
-      }
-
-      &.expanded {
-        max-height: none;
-      }
+    > div {
+      margin-bottom: 8px;
     }
 
-    .expandButton {
-      margin-top: 8px;
+    .reason-container {
+      margin-top: 12px;
+    }
+
+    .reason-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: baseline;
+    }
+
+    .reason-text {
+      color: #666;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    .expand-button {
+      margin-top: 4px;
       color: #1890ff;
       cursor: pointer;
       font-size: 14px;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      justify-content: center;
+      width: 100%;
 
       &:hover {
         text-decoration: underline;

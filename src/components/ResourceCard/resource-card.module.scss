@@ -15,13 +15,18 @@
     line-height: 1.5;
     overflow: hidden;
     position: relative;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 
     &.collapsed {
-      max-height: 5em;
+      max-height: 4.5em;;
     }
 
     &.expanded {
       max-height: none;
+      -webkit-line-clamp: unset;
     }
   }
 

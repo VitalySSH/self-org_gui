@@ -1,5 +1,6 @@
 import './member-request-vote-card.component.scss';
 import { Card } from 'antd';
+import { useState } from 'react';
 import {
   MemberRequestCardProps,
   TableMemberRequest,
@@ -7,10 +8,13 @@ import {
 import {
   MemberRequestVoteButton,
 } from 'src/components';
+import { DownOutlined, UpOutlined } from '@ant-design/icons';
 
 export function MemberRequestVoteCard({ item, setLoading }: MemberRequestCardProps<TableMemberRequest>) {
-  const renderActions = () => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const MAX_REASON_LENGTH = 20;
 
+  const renderActions = () => {
     return [
       <MemberRequestVoteButton
         key={item.key}
@@ -18,6 +22,43 @@ export function MemberRequestVoteCard({ item, setLoading }: MemberRequestCardPro
         setLoading={setLoading}
       />
     ];
+  };
+
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const renderReason = () => {
+    if (!item.reason) return null;
+
+    const shouldTruncate = item.reason.length > MAX_REASON_LENGTH;
+    const displayText = isExpanded || !shouldTruncate
+      ? item.reason
+      : `${item.reason.substring(0, MAX_REASON_LENGTH)}...`;
+
+    return (
+      <div className="reason-container">
+        <div className="reason-content">
+          <strong>Сопроводительное письмо:</strong>
+          <span className={`reason-text ${isExpanded ? 'expanded' : 'collapsed'}`}>
+            {displayText}
+          </span>
+        </div>
+        {shouldTruncate && (
+          <div className="expand-button" onClick={toggleExpand}>
+            {isExpanded ? (
+              <>
+                <UpOutlined /> Свернуть текст
+              </>
+            ) : (
+              <>
+                <DownOutlined /> Раскрыть текст
+              </>
+            )}
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -35,11 +76,7 @@ export function MemberRequestVoteCard({ item, setLoading }: MemberRequestCardPro
         <div>
           <strong>Дата подачи:</strong> {item.created}
         </div>
-        {item.reason && (
-          <div>
-            <strong>Сопроводительное письмо:</strong> {item.reason}
-          </div>
-        )}
+        {renderReason()}
       </div>
     </Card>
   );

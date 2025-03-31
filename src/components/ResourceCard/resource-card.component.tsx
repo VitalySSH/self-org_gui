@@ -4,6 +4,7 @@ import { Card, Flex } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { StatusTag } from 'src/components/StatusTag/status-tag.component.tsx';
 import { OneDayEventLabel } from 'src/consts';
+import { DownOutlined, UpOutlined } from '@ant-design/icons';
 
 const { Meta } = Card;
 
@@ -50,7 +51,15 @@ export function ResourceCard(props: any) {
             toggleExpand();
           }}
         >
-          {isExpanded ? 'Свернуть описание' : 'Раскрыть описание'}
+          {isExpanded ? (
+            <>
+              <UpOutlined /> Свернуть описание
+            </>
+          ) : (
+            <>
+              <DownOutlined /> Раскрыть описание
+            </>
+          )}
         </div>
       )}
       <div style={{ fontSize: 14 }}>
