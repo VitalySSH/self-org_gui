@@ -46,7 +46,7 @@ export function ResourceCard(props: any) {
         <div
           className={styles.expandButton}
           onClick={(e) => {
-            e.stopPropagation(); // Останавливаем всплытие события
+            e.stopPropagation();
             toggleExpand();
           }}
         >

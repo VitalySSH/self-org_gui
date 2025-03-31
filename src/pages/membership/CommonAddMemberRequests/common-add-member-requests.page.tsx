@@ -12,7 +12,7 @@ import moment from 'moment';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AuthContextProvider, TableMemberRequest } from 'src/interfaces';
 import { CrudDataSourceService } from 'src/services';
-import { CommunityModel } from 'src/models';
+import { RequestMemberModel } from 'src/models';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
@@ -183,15 +183,23 @@ export function CommonAddMemberRequests(props: any) {
 
   const loadData = useCallback(() => {
     if (loading && communityId) {
-      const communityService = new CrudDataSourceService(CommunityModel);
-      communityService
-        .get(communityId, [
-          'main_settings.adding_members.member',
-          'main_settings.adding_members.status',
-        ])
-        .then((community) => {
+      const memberRequestService = new CrudDataSourceService(RequestMemberModel);
+      memberRequestService
+        .list( [
+          {
+            field: 'community_id',
+            op: 'equals',
+            val: communityId,
+          },
+          {
+            field: 'parent_id',
+            op: 'null',
+            val: true,
+          },
+        ],undefined, undefined, ['status', 'member'])
+        .then((resp) => {
           const items: TableMemberRequest[] = [];
-          (community.main_settings?.adding_members || []).forEach(
+          (resp.data).forEach(
             (requestMember) => {
               const isMyRequest =
                 requestMember.member?.id === authData.user?.id;

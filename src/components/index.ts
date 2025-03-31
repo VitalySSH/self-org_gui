@@ -16,7 +16,8 @@ export * from './MemberRequest/MemberRequestRemoveButton/member-request-remove-b
 export * from './MemberRequest/MemberRequestVotesButton/member-request-votes-button.component';
 export * from './MemberRequest/MemberRequestJoinButton/member-request-join-button.component';
 export * from './MemberRequest/MemberRequestDisputeButton/member-request-dispute-button.component';
-export * from './MemberRequest/MemberRequestCard/member-request-card.component';
+export * from './MemberRequest/MyMemberRequestCard/my-member-request-card.component';
+export * from './MemberRequest/MemberRequestVoteButton/member-request-vote-button.component';
 export * from './CustomSelect/custom-select.component';
 export * from './UploadAvatar/upload-avatar.component';
 export * from './AuthCard/auth-card.component';

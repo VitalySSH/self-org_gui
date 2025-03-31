@@ -147,7 +147,11 @@ export function MemberRequestVoteButton(props: any) {
           </Form.Item>
         </Form>
       </Modal>
-      <Button disabled={tableRow?.isMyRequest || false} onClick={toVote}>
+      <Button
+        disabled={tableRow?.isMyRequest || false}
+        onClick={toVote}
+        style={{ maxWidth: 120 }}
+      >
         Проголосовать
       </Button>
     </>

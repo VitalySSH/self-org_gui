@@ -10,7 +10,7 @@ import { RequestMemberAoService } from 'src/services';
 import { useCallback, useEffect, useState } from 'react';
 import styles from 'src/shared/assets/scss/module/list.module.scss';
 import './my-add-member-requests.page.scss';
-import { MemberRequestCard } from 'src/components';
+import { MyMemberRequestCard } from 'src/components';
 
 const { Title } = Typography;
 
@@ -153,10 +153,10 @@ export function MyAddMemberRequests() {
           className={styles.list}
           renderItem={(item) => (
             <List.Item className={styles.listItem}>
-              <MemberRequestCard
+              <MyMemberRequestCard
                 item={item}
                 setLoading={setLoading}
-                onShowSubcommunities={handleShowSubcommunities}
+                onShowSubCommunities={handleShowSubcommunities}
               />
             </List.Item>
           )}

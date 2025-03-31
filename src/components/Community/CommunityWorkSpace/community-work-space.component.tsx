@@ -1,7 +1,7 @@
 import { Dropdown, Layout } from 'antd';
 import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import {
-  AddMemberRequest,
+  AddMemberRequestsForMe,
   CommunitySummary,
   MyCommunitySettings,
   Initiatives,
@@ -139,7 +139,7 @@ export function CommunityWorkSpace() {
             <Route path="disputes" element={<Disputes communityId={id} />} />
             <Route
               path="add-member"
-              element={<AddMemberRequest communityId={id} />}
+              element={<AddMemberRequestsForMe communityId={id} />}
             />
           </Routes>
         </Content>

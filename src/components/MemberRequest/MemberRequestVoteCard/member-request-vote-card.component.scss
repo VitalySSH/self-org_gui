@@ -1,0 +1,76 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+.memberRequestVoteCard {
+  display: flex;
+  flex-direction: column;
+  border-radius: $border-radius;
+  border: 1px solid $border-color;
+  background-color: $background-color;
+  transition: box-shadow $transition-speed;
+
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .ant-card-body {
+    height: 180px;
+  }
+
+  .ant-card-actions {
+    background: #fafafa;
+    border-top: 1px solid $border-color;
+    padding: 12px 0;
+
+    > li {
+      margin: 0;
+      padding: 0 8px;
+      text-align: center;
+
+      .ant-btn {
+        width: 100%;
+        border-radius: 4px;
+        transition: all 0.2s;
+
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+      }
+    }
+  }
+
+  .cardContent {
+    flex-grow: 1;
+    margin-top: 20px;
+    font-size: 14px;
+
+    .reason {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #666;
+      line-height: 1.5;
+      overflow: hidden;
+      position: relative;
+
+      &.collapsed {
+        max-height: 5em;
+      }
+
+      &.expanded {
+        max-height: none;
+      }
+    }
+
+    .expandButton {
+      margin-top: 8px;
+      color: #1890ff;
+      cursor: pointer;
+      font-size: 14px;
+      text-align: center;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

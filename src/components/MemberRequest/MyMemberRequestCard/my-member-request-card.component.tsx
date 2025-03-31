@@ -1,6 +1,6 @@
-import './member-request-card.component.scss';
+import './my-member-request-card.component.scss';
 import { Card, Button, Badge } from 'antd';
-import { TableMyMemberRequest } from 'src/interfaces';
+import { MemberRequestCardProps, TableMyMemberRequest } from 'src/interfaces';
 import { TeamOutlined } from '@ant-design/icons';
 import {
   MemberRequestDisputeButton,
@@ -16,13 +16,7 @@ import {
 } from 'src/consts';
 import Meta from 'antd/es/card/Meta';
 
-interface RequestCardProps {
-  item: TableMyMemberRequest;
-  setLoading?: (loading: boolean) => void;
-  onShowSubcommunities?: (item: TableMyMemberRequest) => void;
-}
-
-export function MemberRequestCard({ item, setLoading, onShowSubcommunities }: RequestCardProps) {
+export function MyMemberRequestCard({ item, setLoading, onShowSubCommunities }: MemberRequestCardProps<TableMyMemberRequest>) {
   const renderActions = () => {
     const mainAction = (() => {
       switch (item.statusCode) {
@@ -48,7 +42,7 @@ export function MemberRequestCard({ item, setLoading, onShowSubcommunities }: Re
           icon={<TeamOutlined />}
           onClick={(e) => {
             e.stopPropagation();
-            onShowSubcommunities?.(item);
+            onShowSubCommunities?.(item);
           }}
         >
           Подсообщества
