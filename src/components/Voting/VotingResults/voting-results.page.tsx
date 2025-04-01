@@ -49,18 +49,20 @@ export function VotingResults(props: VotingResultsProps) {
 
       {(props.minorityOptions || []).length > 0 && (
         <div className="minority-section">
-          <Flex justify="space-between" align="center" className="minority-header">
+          <Flex
+            justify="space-between"
+            align="center"
+            className="minority-header"
+          >
             <Space size={8} align="center">
               <Tooltip title="Эти варианты набрали значительное количество голосов и требуют поиска копромисса, учитывающего мнения общественно-значемого меньшинства">
                 <InfoCircleOutlined className="icon" />
               </Tooltip>
-              <span className="minority-text">
-                Важные мнения меньшинства
-              </span>
+              <span className="minority-text">Важные мнения меньшинства</span>
             </Space>
             <Button
               type="primary"
-              icon={<BulbOutlined style={{ color: 'white'}} />}
+              icon={<BulbOutlined style={{ color: 'white' }} />}
               onClick={handleCompromise}
             >
               AI поиск компромиссов

@@ -27,7 +27,10 @@ export function Opinions(props: OpinionsProps) {
   const [searchMyOpinion, setSearchMyOpinion] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
 
-  const opinionService = useMemo(() => new CrudDataSourceService(OpinionModel), []);
+  const opinionService = useMemo(
+    () => new CrudDataSourceService(OpinionModel),
+    []
+  );
 
   const successInfo = (content: string) => {
     messageApi.open({ type: 'success', content }).then();
@@ -49,7 +52,12 @@ export function Opinions(props: OpinionsProps) {
   const fetchOpinions = useCallback(() => {
     if (loading && props) {
       opinionService
-        .list([getFilter()], undefined, { skip: currentPage, limit: pageSize }, ['creator'])
+        .list(
+          [getFilter()],
+          undefined,
+          { skip: currentPage, limit: pageSize },
+          ['creator']
+        )
         .then((resp) => {
           setTotal(resp.total);
           setDataSource(resp.data);
@@ -57,7 +65,15 @@ export function Opinions(props: OpinionsProps) {
         .catch((error) => errorInfo(`Ошибка получения мнений: ${error}`))
         .finally(() => setLoading(false));
     }
-  }, [currentPage, errorInfo, getFilter, loading, opinionService, pageSize, props]);
+  }, [
+    currentPage,
+    errorInfo,
+    getFilter,
+    loading,
+    opinionService,
+    pageSize,
+    props,
+  ]);
 
   const fetchMyOpinion = useCallback(async () => {
     const userId = authData.user?.id;
@@ -66,7 +82,7 @@ export function Opinions(props: OpinionsProps) {
     try {
       const resp = await opinionService.list([
         getFilter(),
-        { field: 'creator_id', op: 'equals', val: userId }
+        { field: 'creator_id', op: 'equals', val: userId },
       ]);
       setIsMyOpinion(resp.total > 0);
       setMyOpinion(resp.data[0] || null);
@@ -100,9 +116,9 @@ export function Opinions(props: OpinionsProps) {
   const filteredDataSource = useMemo(() => {
     if (!searchMyOpinion || !myOpinion) return dataSource;
 
-    const isInCurrentPage = dataSource.some(item => item.id === myOpinion.id);
+    const isInCurrentPage = dataSource.some((item) => item.id === myOpinion.id);
     return isInCurrentPage
-      ? dataSource.filter(item => item.id === myOpinion.id)
+      ? dataSource.filter((item) => item.id === myOpinion.id)
       : [myOpinion];
   }, [dataSource, searchMyOpinion, myOpinion]);
 
@@ -135,7 +151,7 @@ export function Opinions(props: OpinionsProps) {
   const handleDeleteOpinion = async (opinionId: string) => {
     try {
       await opinionService.delete(opinionId);
-      setDataSource(dataSource.filter(item => item.id !== opinionId));
+      setDataSource(dataSource.filter((item) => item.id !== opinionId));
       setTotal(total - 1);
       setIsMyOpinion(false);
       setMyOpinion(null);
@@ -175,7 +191,7 @@ export function Opinions(props: OpinionsProps) {
           </h3>
           <Button
             type="primary"
-            icon={<BulbOutlined style={{ color: 'white'}} />}
+            icon={<BulbOutlined style={{ color: 'white' }} />}
             onClick={() => setSummaryModalVisible(true)}
           >
             AI суммирование мнений
@@ -194,7 +210,6 @@ export function Opinions(props: OpinionsProps) {
             {searchLoading && <Spin size="small" />}
           </div>
         )}
-
       </div>
 
       {!isMyOpinion && (

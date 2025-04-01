@@ -92,23 +92,19 @@ export function NewInitiative(props: any) {
 
   const fetchCategories = async (
     pagination?: Pagination,
-    filters?: Filters,
+    filters?: Filters
   ) => {
     const newFilters: Filters = filters || [];
-    newFilters.push(
-      {
-        field: 'community_id',
-        op: 'equals',
-        val: communityId,
-      }
-    );
-    newFilters.push(
-      {
-        field: 'status.code',
-        op: 'in',
-        val: [CategorySelectedCode, SystemCategoryCode],
-      }
-    );
+    newFilters.push({
+      field: 'community_id',
+      op: 'equals',
+      val: communityId,
+    });
+    newFilters.push({
+      field: 'status.code',
+      op: 'in',
+      val: [CategorySelectedCode, SystemCategoryCode],
+    });
 
     return categoryService.list(newFilters, undefined, pagination);
   };

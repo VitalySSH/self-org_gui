@@ -159,55 +159,42 @@ export function MyCommunitySettings(props: any) {
 
   const getCommunityNames = async (
     pagination?: Pagination,
-    filters?: Filters,
+    filters?: Filters
   ) => {
     const newFilters: Filters = filters || [];
-    newFilters.push(
-      {
-        field: 'community_id',
-        op: 'equals',
-        val: communityId,
-      }
-    );
+    newFilters.push({
+      field: 'community_id',
+      op: 'equals',
+      val: communityId,
+    });
     return await nameService.list(newFilters, undefined, pagination);
   };
 
   const getCommunityDescriptions = async (
     pagination?: Pagination,
-    filters?: Filters,
+    filters?: Filters
   ) => {
     const newFilters: Filters = filters || [];
-    newFilters.push(
-      {
-        field: 'community_id',
-        op: 'equals',
-        val: communityId,
-      }
-    );
-    return await descriptionService.list(
-      newFilters, undefined, pagination
-    );
+    newFilters.push({
+      field: 'community_id',
+      op: 'equals',
+      val: communityId,
+    });
+    return await descriptionService.list(newFilters, undefined, pagination);
   };
 
-  const getCategories = async (
-    pagination?: Pagination,
-    filters?: Filters,
-  ) => {
+  const getCategories = async (pagination?: Pagination, filters?: Filters) => {
     const newFilters: Filters = filters || [];
-    newFilters.push(
-      {
-        field: 'community_id',
-        op: 'equals',
-        val: communityId,
-      }
-    );
-    newFilters.push(
-      {
-        field: 'status.code',
-        op: 'ne',
-        val: SystemCategoryCode,
-      }
-    );
+    newFilters.push({
+      field: 'community_id',
+      op: 'equals',
+      val: communityId,
+    });
+    newFilters.push({
+      field: 'status.code',
+      op: 'ne',
+      val: SystemCategoryCode,
+    });
     return categoryService.list(newFilters, undefined, pagination);
   };
 

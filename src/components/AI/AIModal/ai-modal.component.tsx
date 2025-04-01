@@ -19,7 +19,8 @@ export function AIModal(props: AiModalProps) {
   useEffect(() => {
     if (props.visible) {
       setLoading(true);
-      props.request()
+      props
+        .request()
         .then((resp) => {
           let content = '';
           switch (resp.status) {
@@ -30,7 +31,8 @@ export function AIModal(props: AiModalProps) {
               content = 'В настоящий момент ещё никто не отдал свой голос.';
               break;
             case 'ERROR':
-              content = 'При выполнении запроса произошла ошибка, попробуйте повторить запрос позднее.';
+              content =
+                'При выполнении запроса произошла ошибка, попробуйте повторить запрос позднее.';
               break;
           }
           setResponse(content);

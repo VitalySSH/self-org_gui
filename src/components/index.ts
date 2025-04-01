@@ -17,7 +17,9 @@ export * from './MemberRequest/MemberRequestVotesButton/member-request-votes-but
 export * from './MemberRequest/MemberRequestJoinButton/member-request-join-button.component';
 export * from './MemberRequest/MemberRequestDisputeButton/member-request-dispute-button.component';
 export * from './MemberRequest/MyMemberRequestCard/my-member-request-card.component';
+export * from './MemberRequest/MemberRequestVoteCard/member-request-vote-card.component';
 export * from './MemberRequest/MemberRequestVoteButton/member-request-vote-button.component';
+export * from './MemberRequest/CoverLetter/cover-letter.component';
 export * from './CustomSelect/custom-select.component';
 export * from './UploadAvatar/upload-avatar.component';
 export * from './AuthCard/auth-card.component';
@@ -29,3 +31,4 @@ export * from './ResourceCard/resource-card.component';
 export * from './AI/AISummaryOpinions/ai-summary-opinions.component';
 export * from './AI/AIModal/ai-modal.component';
 export * from './AI/AICompromise/ai-compromise.component';
+export * from './ResourceFilterModal/resource-filter-modal.component';

@@ -183,46 +183,48 @@ export function CommonAddMemberRequests(props: any) {
 
   const loadData = useCallback(() => {
     if (loading && communityId) {
-      const memberRequestService = new CrudDataSourceService(RequestMemberModel);
+      const memberRequestService = new CrudDataSourceService(
+        RequestMemberModel
+      );
       memberRequestService
-        .list( [
-          {
-            field: 'community_id',
-            op: 'equals',
-            val: communityId,
-          },
-          {
-            field: 'parent_id',
-            op: 'null',
-            val: true,
-          },
-        ],undefined, undefined, ['status', 'member'])
+        .list(
+          [
+            {
+              field: 'community_id',
+              op: 'equals',
+              val: communityId,
+            },
+            {
+              field: 'parent_id',
+              op: 'null',
+              val: true,
+            },
+          ],
+          undefined,
+          undefined,
+          ['status', 'member']
+        )
         .then((resp) => {
           const items: TableMemberRequest[] = [];
-          (resp.data).forEach(
-            (requestMember) => {
-              const isMyRequest =
-                requestMember.member?.id === authData.user?.id;
-              const item = {
-                key: requestMember.id || '',
-                member: requestMember.member?.fullname || '',
-                reason: requestMember.reason || '',
-                status: requestMember.status?.name || '',
-                created: moment(requestMember.created).format(
-                  'DD.MM.yyyy HH:mm'
-                ),
-                isMyRequest: isMyRequest,
-                vote: requestMember.vote,
-                decision:
-                  requestMember.vote === true
-                    ? 'Одобрена'
-                    : requestMember.vote === false
-                      ? 'Отклонена'
-                      : 'Нет',
-              };
-              items.push(item);
-            }
-          );
+          resp.data.forEach((requestMember) => {
+            const isMyRequest = requestMember.member?.id === authData.user?.id;
+            const item = {
+              key: requestMember.id || '',
+              member: requestMember.member?.fullname || '',
+              reason: requestMember.reason || '',
+              status: requestMember.status?.name || '',
+              created: moment(requestMember.created).format('DD.MM.yyyy HH:mm'),
+              isMyRequest: isMyRequest,
+              vote: requestMember.vote,
+              decision:
+                requestMember.vote === true
+                  ? 'Одобрена'
+                  : requestMember.vote === false
+                    ? 'Отклонена'
+                    : 'Нет',
+            };
+            items.push(item);
+          });
           setDataSource(items);
         })
         .catch(() => {

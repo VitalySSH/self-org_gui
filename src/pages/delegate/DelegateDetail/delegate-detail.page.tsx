@@ -77,10 +77,7 @@ export function DelegateDetail(props: any) {
     setDisabled(!Boolean(form.getFieldValue('delegate')));
   };
 
-  const fetchUsers = async (
-    pagination?: Pagination,
-    filters?: Filters,
-  ) => {
+  const fetchUsers = async (pagination?: Pagination, filters?: Filters) => {
     const newFilters: Filters = filters || [];
     return authApiClientService.communityListUsers(
       communityId,

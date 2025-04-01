@@ -6,9 +6,8 @@ import { RuleModel } from 'src/models';
 import { FilterOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Filters } from 'src/shared/types.ts';
-import { ResourceFilterModal } from 'src/components/ResourceFilterModal/resource-filter-modal.component.tsx';
 import styles from 'src/shared/assets/scss/module/list.module.scss';
-import { ResourceCard } from 'src/components';
+import { ResourceCard, ResourceFilterModal } from 'src/components';
 
 export function Rules(props: any) {
   const maxPageSize = 20;

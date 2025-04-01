@@ -7,7 +7,7 @@ export interface SelectInterface<T extends ApiModel> {
   fieldService?: CrudDataSourceService<any>;
   requestOptions: (
     pagination?: Pagination,
-    filters?: Filters,
+    filters?: Filters
   ) => Promise<ListResponse<T>>;
   onChange: (fieldName: string, value: any) => void;
   value?: T | T[];

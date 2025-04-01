@@ -1,5 +1,21 @@
-import { UserOutlined, MenuOutlined, LogoutOutlined, SaveOutlined } from '@ant-design/icons';
-import { Avatar, Button, Drawer, Flex, Form, Input, Modal, Space, Divider, Typography } from 'antd';
+import {
+  UserOutlined,
+  MenuOutlined,
+  LogoutOutlined,
+  SaveOutlined,
+} from '@ant-design/icons';
+import {
+  Avatar,
+  Button,
+  Drawer,
+  Flex,
+  Form,
+  Input,
+  Modal,
+  Space,
+  Divider,
+  Typography,
+} from 'antd';
 import { useAuth } from 'src/hooks';
 import './auth-header-icons.component.scss';
 import { useState } from 'react';
@@ -71,10 +87,7 @@ export function AuthHeaderIcons() {
         <div className="icon-text" onClick={avatarOnClick}>
           <Text strong>{authData.user?.fullname}</Text>
         </div>
-        <MenuOutlined
-          className="menu-icon"
-          onClick={drawerOnClick}
-        />
+        <MenuOutlined className="menu-icon" onClick={drawerOnClick} />
       </Space>
       <Modal
         open={modalOpen}
@@ -82,11 +95,7 @@ export function AuthHeaderIcons() {
         onCancel={handleCancel}
         footer={
           <Space className="modal-footer">
-            <Button
-              danger
-              icon={<LogoutOutlined />}
-              onClick={LogoutOnClick}
-            >
+            <Button danger icon={<LogoutOutlined />} onClick={LogoutOnClick}>
               Выйти
             </Button>
             <Button
@@ -104,13 +113,13 @@ export function AuthHeaderIcons() {
           body: {
             maxHeight: 'calc(100vh - 200px)',
             overflowY: 'auto',
-            padding: '16px 24px'
+            padding: '16px 24px',
           },
           content: {
             maxHeight: 'calc(100vh - 40px)',
             display: 'flex',
-            flexDirection: 'column'
-          }
+            flexDirection: 'column',
+          },
         }}
         style={{ top: 20 }}
         width={600}
@@ -159,10 +168,7 @@ export function AuthHeaderIcons() {
             >
               <Input placeholder="Введите вашу фамилию" />
             </Form.Item>
-            <Form.Item
-              name="about_me"
-              label="Обо мне"
-            >
+            <Form.Item name="about_me" label="Обо мне">
               <TextArea
                 placeholder="Расскажите о себе"
                 rows={4}
@@ -180,7 +186,8 @@ export function AuthHeaderIcons() {
                 },
                 {
                   type: 'email',
-                  message: 'Пожалуйста, введите корректный адрес электронной почты',
+                  message:
+                    'Пожалуйста, введите корректный адрес электронной почты',
                 },
               ]}
               hasFeedback

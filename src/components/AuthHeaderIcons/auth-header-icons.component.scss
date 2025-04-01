@@ -3,7 +3,9 @@
 
 .avatar {
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 
   &:hover {
     transform: scale(1.05);
@@ -118,7 +120,8 @@
       }
     }
 
-    .ant-input, .ant-input-textarea {
+    .ant-input,
+    .ant-input-textarea {
       border-radius: 6px;
       transition: all 0.3s;
 

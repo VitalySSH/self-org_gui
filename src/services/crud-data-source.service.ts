@@ -145,7 +145,7 @@ export class CrudDataSourceService<
     });
     Object.keys(model.oneToMany).forEach((attr) => {
       if (model[attr] === null) {
-        relations[attr] = {}
+        relations[attr] = {};
       } else if (model[attr]) {
         relations[attr] = this.modelToJsonApi(model[attr]);
       }

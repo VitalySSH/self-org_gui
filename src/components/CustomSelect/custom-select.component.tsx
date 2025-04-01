@@ -33,7 +33,9 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const [totalOptions, setTotalOptions] = useState(0);
   const [uploadedFieldValue, setUploadedFieldValue] = useState(false);
   const [value, setValue] = useState(null as T | T[] | null);
-  const [fieldValue, setFieldValue] = useState(null as string | string[] | null);
+  const [fieldValue, setFieldValue] = useState(
+    null as string | string[] | null
+  );
   const [options, setOptions] = useState(null as T[] | null);
   const [newTextValue, setNewTextValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -42,23 +44,29 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const MIN_SEARCH_CHARS = 3;
 
   const fetchOptions = useCallback(
-    (page: number = 1, append: boolean = false, search: string = searchQuery) => {
-      if ((options || []).length >= totalOptions &&
-        append && (!search || !props.enableSearch)) return;
+    (
+      page: number = 1,
+      append: boolean = false,
+      search: string = searchQuery
+    ) => {
+      if (
+        (options || []).length >= totalOptions &&
+        append &&
+        (!search || !props.enableSearch)
+      )
+        return;
 
       setIsLoading(true);
       const filters: Filters = [];
       if (props.enableSearch && search?.length >= MIN_SEARCH_CHARS) {
-        filters.push(
-          {
-            field: props.bindLabel,
-            op: 'ilike',
-            val: search,
-          },
-        );
+        filters.push({
+          field: props.bindLabel,
+          op: 'ilike',
+          val: search,
+        });
       }
       props
-        .requestOptions({ skip: page, limit: 20, }, filters)
+        .requestOptions({ skip: page, limit: 20 }, filters)
         .then(({ data, total }) => {
           setTotalOptions(total);
           setOptions((prev) => {
@@ -191,7 +199,9 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
           })
           .catch((error) => {
             setOptions([]);
-            console.log(`Ошибка создания нового значения в селекторе: ${error}`);
+            console.log(
+              `Ошибка создания нового значения в селекторе: ${error}`
+            );
           });
       } else {
         currentOptions.push(newObj);
@@ -211,7 +221,13 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const renderDropdownContent = (menu: React.ReactNode) => {
     if (isDropdownOpen && isLoading) {
       return (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '16px 0' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            padding: '16px 0',
+          }}
+        >
           <Spin size="large" />
         </div>
       );
@@ -276,7 +292,11 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   );
 
   const renderLoadMoreButton = () => {
-    if ((options || []).length >= totalOptions || searchQuery.length < MIN_SEARCH_CHARS) return null;
+    if (
+      (options || []).length >= totalOptions ||
+      searchQuery.length < MIN_SEARCH_CHARS
+    )
+      return null;
 
     return (
       <Button
@@ -297,7 +317,9 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         return (
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description={searchQuery ? "Ничего не найдено" : "Значения не найдены"}
+            description={
+              searchQuery ? 'Ничего не найдено' : 'Значения не найдены'
+            }
           />
         );
       }}

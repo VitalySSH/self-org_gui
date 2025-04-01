@@ -18,22 +18,18 @@ export function UserVoting(props: UserVotingProps) {
     const filters = optionalFilters || [];
     switch (props.resource) {
       case 'initiative':
-        filters.push(
-          {
-            field: 'initiative_id',
-            op: 'equals',
-            val: props.initiativeId,
-          }
-        );
+        filters.push({
+          field: 'initiative_id',
+          op: 'equals',
+          val: props.initiativeId,
+        });
         break;
       case 'rule':
-        filters.push(
-          {
-            field: 'rule_id',
-            op: 'equals',
-            val: props.ruleId,
-          }
-        );
+        filters.push({
+          field: 'rule_id',
+          op: 'equals',
+          val: props.ruleId,
+        });
         break;
     }
     return filters;
@@ -46,11 +42,9 @@ export function UserVoting(props: UserVotingProps) {
 
   const getVotingOptions = async (
     pagination?: Pagination,
-    filters?: Filters,
+    filters?: Filters
   ) => {
-    return votingOptionService.list(
-      getFilters(filters), undefined, pagination
-    );
+    return votingOptionService.list(getFilters(filters), undefined, pagination);
   };
 
   return (

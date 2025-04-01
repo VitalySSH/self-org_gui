@@ -29,10 +29,7 @@ export function ResourceFilterModal({
   const authApiClientService = new AuthApiClientService();
   const [isOneDayEvent, setIsOneDayEvent] = useState(false);
 
-  const loadStatuses = async (
-    pagination?: Pagination,
-    filters?: Filters,
-  ) => {
+  const loadStatuses = async (pagination?: Pagination, filters?: Filters) => {
     const newFilters: Filters = filters || [];
     switch (resource) {
       case 'rule':
@@ -64,10 +61,7 @@ export function ResourceFilterModal({
     return statusService.list(newFilters, undefined, pagination);
   };
 
-  const loadUsers = async (
-    pagination?: Pagination,
-    filters?: Filters,
-  ) => {
+  const loadUsers = async (pagination?: Pagination, filters?: Filters) => {
     const newFilters: Filters = filters || [];
     return authApiClientService.communityListUsers(
       communityId,

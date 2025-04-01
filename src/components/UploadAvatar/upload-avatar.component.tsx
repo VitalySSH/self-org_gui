@@ -1,15 +1,5 @@
-import {
-  UserOutlined,
-  CloseOutlined,
-} from '@ant-design/icons';
-import {
-  Avatar,
-  GetProp,
-  Upload,
-  UploadProps,
-  Tooltip,
-  App,
-} from 'antd';
+import { UserOutlined, CloseOutlined } from '@ant-design/icons';
+import { Avatar, GetProp, Upload, UploadProps, Tooltip, App } from 'antd';
 import { useState } from 'react';
 import { AuthContextProvider, UserUpdateInterface } from 'src/interfaces';
 import { useAuth } from 'src/hooks';
@@ -36,7 +26,9 @@ export function UploadAvatar() {
   const beforeUpload = (file: FileType) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
-      message.error('Вы можете загрузить изображение только форматов JPG или PNG').then();
+      message
+        .error('Вы можете загрузить изображение только форматов JPG или PNG')
+        .then();
       return Upload.LIST_IGNORE;
     }
     const isLt2M = file.size / 1024 / 1024 < 2;
@@ -123,18 +115,21 @@ export function UploadAvatar() {
         body: {
           padding: '16px',
           fontSize: '14px',
-          wordWrap: 'break-word'
-        }
+          wordWrap: 'break-word',
+        },
       },
       onOk: () => {
         if (fileId) {
-          fileStorageService.deleteFile(fileId).then(() => {
-            saveUser(null);
-            authData.changeAvatarUrl(null, undefined);
-            message.success('Фото удалено').then();
-          }).catch((error) => {
-            message.error(`Ошибка удаления аватара: ${error}`).then();
-          });
+          fileStorageService
+            .deleteFile(fileId)
+            .then(() => {
+              saveUser(null);
+              authData.changeAvatarUrl(null, undefined);
+              message.success('Фото удалено').then();
+            })
+            .catch((error) => {
+              message.error(`Ошибка удаления аватара: ${error}`).then();
+            });
         } else {
           authData.changeAvatarUrl(null, undefined);
         }
@@ -144,10 +139,7 @@ export function UploadAvatar() {
 
   return (
     <div className="avatar-container">
-      <Tooltip
-        title="Нажмите для загрузки фото"
-        placement="bottom"
-      >
+      <Tooltip title="Нажмите для загрузки фото" placement="bottom">
         <Upload
           name="avatar"
           showUploadList={false}
@@ -165,7 +157,7 @@ export function UploadAvatar() {
                 md: 200,
                 lg: 240,
                 xl: 280,
-                xxl: 320
+                xxl: 320,
               }}
               icon={
                 <div className="avatar-placeholder">

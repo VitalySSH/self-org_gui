@@ -1,10 +1,4 @@
-import {
-  Layout,
-  List,
-  Typography,
-  Empty,
-  Breadcrumb,
-} from 'antd';
+import { Layout, List, Typography, Empty, Breadcrumb } from 'antd';
 import { TableMyMemberRequest } from 'src/interfaces';
 import { RequestMemberAoService } from 'src/services';
 import { useCallback, useEffect, useState } from 'react';
@@ -126,7 +120,7 @@ export function MyAddMemberRequests() {
           margin: '0 auto',
           padding: '0 16px',
           width: '100%',
-      }}
+        }}
       >
         {navState.currentLevel > 1 && (
           <Breadcrumb

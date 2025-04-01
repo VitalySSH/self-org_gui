@@ -4,11 +4,12 @@ import {
   Empty,
   Layout,
   List,
+  Pagination,
   Typography,
 } from 'antd';
 import styles from 'src/shared/assets/scss/module/list.module.scss';
 import moment from 'moment';
-import { useCallback, useEffect, useState } from 'react';
+import { SetStateAction, useCallback, useEffect, useState } from 'react';
 import {
   AuthContextProvider,
   FilterValues,
@@ -16,18 +17,11 @@ import {
 } from 'src/interfaces';
 import { CrudDataSourceService } from 'src/services';
 import { RequestMemberModel } from 'src/models';
-import {
-  FilterOutlined,
-} from '@ant-design/icons';
+import { FilterOutlined } from '@ant-design/icons';
 import { useAuth } from 'src/hooks';
 import { useNavigate } from 'react-router-dom';
 import { Filters } from 'src/shared/types.ts';
-import {
-  ResourceFilterModal
-} from 'src/components/ResourceFilterModal/resource-filter-modal.component.tsx';
-import {
-  MemberRequestVoteCard
-} from 'src/components/MemberRequest/MemberRequestVoteCard/member-request-vote-card.component.tsx';
+import { MemberRequestVoteCard, ResourceFilterModal } from 'src/components';
 
 export function AddMemberRequestsForMe(props: any) {
   const maxPageSize = 20;
@@ -61,12 +55,18 @@ export function AddMemberRequestsForMe(props: any) {
 
   const loadData = useCallback(() => {
     if (loading && communityId) {
-      const memberRequestService = new CrudDataSourceService(RequestMemberModel);
+      const memberRequestService = new CrudDataSourceService(
+        RequestMemberModel
+      );
       memberRequestService
-        .list(filters,undefined, undefined, ['status', 'member'])
+        .list(filters, undefined, { skip: currentPage, limit: pageSize }, [
+          'status',
+          'member',
+        ])
         .then((resp) => {
+          setTotal(resp.total);
           const items: TableMemberRequest[] = [];
-          (resp.data).forEach((requestMember) => {
+          resp.data.forEach((requestMember) => {
             const isMyRequest = requestMember.member?.id === currentUserId;
             const item = {
               key: requestMember.id || '',
@@ -117,6 +117,15 @@ export function AddMemberRequestsForMe(props: any) {
     }
   };
 
+  const handlePageChange = (
+    page: SetStateAction<number>,
+    size: SetStateAction<number>
+  ) => {
+    setCurrentPage(page);
+    setPageSize(size);
+    setLoading(true);
+  };
+
   return (
     <Layout className={styles.container}>
       <div className={styles.header}>
@@ -156,13 +165,23 @@ export function AddMemberRequestsForMe(props: any) {
         className={styles.list}
         renderItem={(item) => (
           <List.Item className={styles.listItem}>
-            <MemberRequestVoteCard
-              item={item}
-              setLoading={setLoading}
-            />
+            <MemberRequestVoteCard item={item} setLoading={setLoading} />
           </List.Item>
         )}
       />
+      {total > pageSize && (
+        <Pagination
+          current={currentPage}
+          pageSize={pageSize}
+          total={total}
+          onChange={handlePageChange}
+          showSizeChanger
+          pageSizeOptions={['10', '20', '50', '100']}
+          defaultPageSize={maxPageSize}
+          showTotal={(total, range) => `${range[0]}-${range[1]} из ${total}`}
+          className={styles.pagination}
+        />
+      )}
     </Layout>
   );
 }

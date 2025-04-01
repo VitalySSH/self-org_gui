@@ -1,0 +1,32 @@
+.letter-container {
+  margin-top: 12px;
+
+  .letter-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: baseline;
+  }
+
+  .letter-text {
+    color: #666;
+    line-height: 1.5;
+    word-break: break-word;
+  }
+
+  .expand-button {
+    margin-top: 4px;
+    color: #1890ff;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+    width: 100%;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

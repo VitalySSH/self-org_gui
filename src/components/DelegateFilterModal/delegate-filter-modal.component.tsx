@@ -20,31 +20,24 @@ export function DelegateFilterModal({
 
   const fetchCategories = async (
     pagination?: Pagination,
-    filters?: Filters,
+    filters?: Filters
   ) => {
     const newFilters: Filters = filters || [];
-    newFilters.push(
-      {
-        field: 'community_id',
-        op: 'equals',
-        val: communityId,
-      }
-    );
-    newFilters.push(
-      {
-        field: 'status.code',
-        op: 'equals',
-        val: CategorySelectedCode,
-      }
-    );
+    newFilters.push({
+      field: 'community_id',
+      op: 'equals',
+      val: communityId,
+    });
+    newFilters.push({
+      field: 'status.code',
+      op: 'equals',
+      val: CategorySelectedCode,
+    });
 
     return categoryService.list(newFilters, undefined, pagination);
   };
 
-  const fetchUsers = async (
-    pagination?: Pagination,
-    filters?: Filters,
-  ) => {
+  const fetchUsers = async (pagination?: Pagination, filters?: Filters) => {
     const newFilters: Filters = filters || [];
     return authApiClientService.communityListUsers(
       communityId,

@@ -3,6 +3,7 @@ import { Card, Button, Badge } from 'antd';
 import { MemberRequestCardProps, TableMyMemberRequest } from 'src/interfaces';
 import { TeamOutlined } from '@ant-design/icons';
 import {
+  CoverLetter,
   MemberRequestDisputeButton,
   MemberRequestJoinButton,
   MemberRequestRemoveButton,
@@ -16,20 +17,46 @@ import {
 } from 'src/consts';
 import Meta from 'antd/es/card/Meta';
 
-export function MyMemberRequestCard({ item, setLoading, onShowSubCommunities }: MemberRequestCardProps<TableMyMemberRequest>) {
+export function MyMemberRequestCard({
+  item,
+  setLoading,
+  onShowSubCommunities,
+}: MemberRequestCardProps<TableMyMemberRequest>) {
   const renderActions = () => {
     const mainAction = (() => {
       switch (item.statusCode) {
         case OnConsiderationCode:
-          return <MemberRequestRemoveButton tableRow={item} setLoading={setLoading} />;
+          return (
+            <MemberRequestRemoveButton
+              tableRow={item}
+              setLoading={setLoading}
+            />
+          );
         case RequestDeniedCode:
-          return <MemberRequestRemoveButton tableRow={item} setLoading={setLoading} />;
+          return (
+            <MemberRequestRemoveButton
+              tableRow={item}
+              setLoading={setLoading}
+            />
+          );
         case RequestSuccessfulCode:
-          return <MemberRequestJoinButton tableRow={item} setLoading={setLoading} />;
+          return (
+            <MemberRequestJoinButton tableRow={item} setLoading={setLoading} />
+          );
         case CommunityMemberCode:
-          return <MemberRequestRemoveButton tableRow={item} setLoading={setLoading} />;
+          return (
+            <MemberRequestRemoveButton
+              tableRow={item}
+              setLoading={setLoading}
+            />
+          );
         case MemberExcludedCode:
-          return <MemberRequestDisputeButton tableRow={item} setLoading={setLoading} />;
+          return (
+            <MemberRequestDisputeButton
+              tableRow={item}
+              setLoading={setLoading}
+            />
+          );
         default:
           return null;
       }
@@ -67,6 +94,7 @@ export function MyMemberRequestCard({ item, setLoading, onShowSubCommunities }: 
         <div>
           <strong>Дата подачи:</strong> {item.created}
         </div>
+        <CoverLetter letter={item.reason} />
       </div>
     </Card>
   );
