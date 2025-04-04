@@ -5,7 +5,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import { CommunityMemberCode, MemberExcludedCode } from 'src/consts';
 
 export function MemberRequestRemoveButton(props: any) {
-  const tableRow = props.tableRow;
+  const item = props.item;
   const [messageApi, contextHolder] = message.useMessage();
   const statusCodes = [CommunityMemberCode, MemberExcludedCode];
 
@@ -31,7 +31,7 @@ export function MemberRequestRemoveButton(props: any) {
   const removeMemberRequest = () => {
     const requestMemberService = new CrudDataSourceService(RequestMemberModel);
     requestMemberService
-      .delete(tableRow.key)
+      .delete(item.key)
       .then(() => {
         successInfo('Заявка удалена');
         props.setLoading(true);
@@ -54,7 +54,7 @@ export function MemberRequestRemoveButton(props: any) {
         onConfirm={removeMemberRequest}
       >
         <Button danger style={{ width: '90%', maxWidth: 164 }}>
-          {statusCodes.includes(tableRow.statusCode)
+          {statusCodes.includes(item.statusCode)
             ? 'Покинуть сообщество'
             : 'Удалить заявку'}
         </Button>

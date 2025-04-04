@@ -1,5 +1,5 @@
 import { Layout, List, Typography, Empty, Breadcrumb } from 'antd';
-import { TableMyMemberRequest } from 'src/interfaces';
+import { MyMemberRequestCardItem } from 'src/interfaces';
 import { RequestMemberAoService } from 'src/services';
 import { useCallback, useEffect, useState } from 'react';
 import styles from 'src/shared/assets/scss/module/list.module.scss';
@@ -11,12 +11,12 @@ const { Title } = Typography;
 type NavigationState = {
   currentLevel: number;
   breadcrumbs: { id: string; name: string }[];
-  currentData: TableMyMemberRequest[];
+  currentData: MyMemberRequestCardItem[];
 };
 
 export function MyAddMemberRequests() {
   const [loading, setLoading] = useState(true);
-  const [dataSource, setDataSource] = useState<TableMyMemberRequest[]>([]);
+  const [dataSource, setDataSource] = useState<MyMemberRequestCardItem[]>([]);
   const [navState, setNavState] = useState<NavigationState>({
     currentLevel: 1,
     breadcrumbs: [],
@@ -47,7 +47,7 @@ export function MyAddMemberRequests() {
     loadData();
   }, [loadData]);
 
-  const handleShowSubcommunities = (item: TableMyMemberRequest) => {
+  const handleShowSubcommunities = (item: MyMemberRequestCardItem) => {
     if (!item.children || item.children.length === 0) return;
 
     setNavState((prev) => ({
@@ -75,9 +75,9 @@ export function MyAddMemberRequests() {
     const parentItem = newBreadcrumbs[newBreadcrumbs.length - 1];
 
     const findData = (
-      items: TableMyMemberRequest[],
+      items: MyMemberRequestCardItem[],
       targetId: string
-    ): TableMyMemberRequest[] => {
+    ): MyMemberRequestCardItem[] => {
       for (const item of items) {
         if (item.key === targetId) return item.children || [];
         if (item.children) {

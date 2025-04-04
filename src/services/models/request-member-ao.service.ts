@@ -2,7 +2,7 @@ import { CrudDataSourceService } from 'src/services';
 import { RequestMemberModel } from 'src/models';
 import {
   SettingsStatisticsInterface,
-  TableMyMemberRequest,
+  MyMemberRequestCardItem,
 } from 'src/interfaces';
 import { AOApiUrl } from 'src/config/configuration';
 
@@ -14,7 +14,7 @@ export class RequestMemberAoService extends CrudDataSourceService<RequestMemberM
   async myList() {
     const url = `/${this.model.entityName}/my_list`;
 
-    return this.http.get<TableMyMemberRequest[]>(url);
+    return this.http.get<MyMemberRequestCardItem[]>(url);
   }
 
   async votesInPercent(requestId: string) {

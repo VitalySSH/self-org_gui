@@ -3,10 +3,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { SettingsStatisticsInterface } from 'src/interfaces';
 import { RequestMemberAoService } from 'src/services';
 import Meta from 'antd/es/card/Meta';
+import { AreaChartOutlined } from '@ant-design/icons';
 
 export function MemberRequestVotesButton(props: any) {
-  const tableRow = props.tableRow;
-  const modalTitle = tableRow ? `${tableRow?.member} (статистика голосов)` : '';
+  const item = props.item;
+  const modalTitle = item ? `${item?.member} (статистика голосов)` : '';
   const [messageApi, contextHolder] = message.useMessage();
   const [modalOpen, setModalOpen] = useState(false);
   const [votes, setVotes] = useState(
@@ -26,16 +27,16 @@ export function MemberRequestVotesButton(props: any) {
   );
 
   const getVotes = useCallback(() => {
-    if (votes === undefined && tableRow?.key) {
+    if (votes === undefined && item?.key) {
       const requestMemberAoService = new RequestMemberAoService();
       requestMemberAoService
-        .votesInPercent(tableRow.key)
+        .votesInPercent(item.key)
         .then((r) => {
           setVotes(r.data);
         })
         .catch((error) => errorInfo(error));
     }
-  }, [errorInfo, tableRow.key, votes]);
+  }, [errorInfo, item.key, votes]);
 
   useEffect(() => {
     getVotes();
@@ -65,17 +66,23 @@ export function MemberRequestVotesButton(props: any) {
           dataSource={votes}
           locale={{ emptyText: 'Нет данных' }}
           size="large"
-          renderItem={(item: SettingsStatisticsInterface) => (
+          renderItem={(it: SettingsStatisticsInterface) => (
             <List.Item>
               <Card>
-                <Meta title={item.name} />
-                <div>{`${item.percent}%`}</div>
+                <Meta title={it.name} />
+                <div>{`${it.percent}%`}</div>
               </Card>
             </List.Item>
           )}
         />
       </Modal>
-      <Button onClick={displayVotes}>Статистика</Button>
+      <Button
+        onClick={displayVotes}
+        icon={<AreaChartOutlined />}
+        style={{ maxWidth: 120 }}
+      >
+        Статистика
+      </Button>
     </>
   );
 }

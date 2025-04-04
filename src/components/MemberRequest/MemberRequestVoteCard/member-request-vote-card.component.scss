@@ -14,7 +14,13 @@
 
   .ant-card-body {
     height: auto;
-    min-height: 180px;
+    min-height: 100px;
+  }
+
+  &.expanded-card {
+    .ant-card-body {
+      min-height: 180px;
+    }
   }
 
   .ant-card-actions {

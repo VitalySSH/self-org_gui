@@ -4,11 +4,7 @@ import { AuthApiClientService, CrudDataSourceService } from 'src/services';
 import { StatusModel } from 'src/models';
 import { Filters } from 'src/shared/types.ts';
 import { CustomSelect } from 'src/components';
-import {
-  AbstainedCode,
-  VotedCode,
-  VotedByDefaultCode
-} from 'src/consts';
+import { AbstainedCode, VotedCode, VotedByDefaultCode } from 'src/consts';
 import dayjs from 'dayjs';
 
 const { RangePicker } = DatePicker;
@@ -30,11 +26,7 @@ export function MemberRequestFilterModal({
     newFilters.push({
       field: 'code',
       op: 'in',
-      val: [
-        VotedCode,
-        AbstainedCode,
-        VotedByDefaultCode,
-      ],
+      val: [VotedCode, AbstainedCode, VotedByDefaultCode],
     });
 
     return statusService.list(newFilters, undefined, pagination);
@@ -95,14 +87,8 @@ export function MemberRequestFilterModal({
           />
         </Form.Item>
 
-        <Form.Item
-          name="decision"
-          label="Выберите решение"
-        >
-          <Select
-            placeholder="Решение"
-            allowClear
-          >
+        <Form.Item name="decision" label="Выберите решение">
+          <Select placeholder="Решение" allowClear>
             <Select.Option value={true}>Одобрена</Select.Option>
             <Select.Option value={false}>Отклонена</Select.Option>
           </Select>
@@ -119,21 +105,23 @@ export function MemberRequestFilterModal({
           />
         </Form.Item>
 
-        <Form.Item
-          name="created"
-          label="Дата подачи"
-        >
+        <Form.Item name="created" label="Дата подачи">
           <RangePicker
             style={{ width: '100%' }}
             format="DD.MM.YYYY"
             presets={[
               { label: 'Сегодня', value: [dayjs(), dayjs()] },
-              { label: 'Этот месяц', value: [dayjs().startOf('month'), dayjs().endOf('month')] },
-              { label: 'Последние 30 дней', value: [dayjs().subtract(30, 'days'), dayjs()] },
+              {
+                label: 'Этот месяц',
+                value: [dayjs().startOf('month'), dayjs().endOf('month')],
+              },
+              {
+                label: 'Последние 30 дней',
+                value: [dayjs().subtract(30, 'days'), dayjs()],
+              },
             ]}
           />
         </Form.Item>
-
       </Form>
     </Modal>
   );

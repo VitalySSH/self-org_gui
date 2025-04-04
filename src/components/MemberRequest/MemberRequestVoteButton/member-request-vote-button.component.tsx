@@ -4,14 +4,15 @@ import { SimpleVoting } from 'src/interfaces';
 import { CrudDataSourceService } from 'src/services';
 import { RequestMemberModel, StatusModel } from 'src/models';
 import { AbstainedCode, VotedCode } from 'src/consts';
+import { SelectOutlined } from '@ant-design/icons';
 
 export function MemberRequestVoteButton(props: any) {
-  const tableRow = props.tableRow;
-  const modalTitle = tableRow ? `${tableRow?.member} с нами?` : '';
+  const item = props.item;
+  const modalTitle = item ? `${item?.member} с нами?` : '';
   const [messageApi, contextHolder] = message.useMessage();
   const [modalOpen, setModalOpen] = useState(false);
   const [loadFormData, setLoadFormData] = useState(false);
-  const [vote, setVote] = useState(tableRow?.vote as boolean | null);
+  const [vote, setVote] = useState(item?.vote as boolean | null);
   const [disabled, setDisabled] = useState(true);
   const [voteForm] = Form.useForm();
 
@@ -81,7 +82,7 @@ export function MemberRequestVoteButton(props: any) {
           if (s.code === AbstainedCode) abstainedStatus = s;
         });
         const requestMember = new RequestMemberModel();
-        requestMember.id = tableRow?.key;
+        requestMember.id = item?.key;
         if (formData.yes) {
           requestMember.vote = true;
           if (votedStatus) requestMember.status = votedStatus;
@@ -131,13 +132,14 @@ export function MemberRequestVoteButton(props: any) {
       {contextHolder}
       <Modal
         forceRender
+        centered
         open={modalOpen}
         title={modalTitle}
         onCancel={handleCancel}
         footer={[]}
       >
         <Form
-          name={`vote-member-request_${tableRow?.key}`}
+          name={`vote-member-request_${item?.key}`}
           form={voteForm}
           onFinish={onFinish}
           onValuesChange={onValuesChange}
@@ -161,9 +163,10 @@ export function MemberRequestVoteButton(props: any) {
         </Form>
       </Modal>
       <Button
-        disabled={tableRow?.isMyRequest || false}
+        disabled={item?.isMyRequest || false}
         onClick={toVote}
-        style={{ maxWidth: 120 }}
+        icon={<SelectOutlined />}
+        style={{ maxWidth: 140 }}
       >
         Проголосовать
       </Button>

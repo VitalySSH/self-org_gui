@@ -13,7 +13,7 @@ import { SetStateAction, useCallback, useEffect, useState } from 'react';
 import {
   AuthContextProvider,
   MemberRequestFilterValues,
-  TableMemberRequest,
+  MemberRequestCardItem,
 } from 'src/interfaces';
 import { CrudDataSourceService } from 'src/services';
 import { RequestMemberModel } from 'src/models';
@@ -49,7 +49,7 @@ export function AddMemberRequestsForMe(props: any) {
   };
 
   const [loading, setLoading] = useState(true);
-  const [dataSource, setDataSource] = useState([] as TableMemberRequest[]);
+  const [dataSource, setDataSource] = useState([] as MemberRequestCardItem[]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(maxPageSize);
   const [total, setTotal] = useState(0);
@@ -68,7 +68,7 @@ export function AddMemberRequestsForMe(props: any) {
         ])
         .then((resp) => {
           setTotal(resp.total);
-          const items: TableMemberRequest[] = [];
+          const items: MemberRequestCardItem[] = [];
           resp.data.forEach((requestMember) => {
             const isMyRequest = requestMember.member?.id === currentUserId;
             const item = {
@@ -130,7 +130,7 @@ export function AddMemberRequestsForMe(props: any) {
       const dates = [
         values.created[0].format('YYYY-MM-DD'),
         values.created[1].format('YYYY-MM-DD'),
-      ]
+      ];
       newFilters.push({
         field: 'created',
         op: 'between',

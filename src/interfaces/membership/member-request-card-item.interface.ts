@@ -1,4 +1,4 @@
-export interface TableMemberRequest {
+export interface MemberRequestCardItem {
   key: string;
   member: string;
   status: string;

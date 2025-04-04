@@ -1,24 +1,36 @@
 import './member-request-vote-card.component.scss';
 import { Card } from 'antd';
-import { MemberRequestCardProps, TableMemberRequest } from 'src/interfaces';
-import { CoverLetter, MemberRequestVoteButton } from 'src/components';
+import { MemberRequestCardProps, MemberRequestCardItem } from 'src/interfaces';
+import {
+  CoverLetter,
+  MemberRequestVoteButton,
+  MemberRequestVotesButton,
+} from 'src/components';
 
 export function MemberRequestVoteCard({
   item,
   setLoading,
-}: MemberRequestCardProps<TableMemberRequest>) {
+  isParent,
+}: MemberRequestCardProps<MemberRequestCardItem>) {
   const renderActions = () => {
-    return [
-      <MemberRequestVoteButton
-        key={item.key}
-        tableRow={item}
-        setLoading={setLoading}
-      />,
-    ];
+    if (isParent) {
+      return [<MemberRequestVotesButton key={item.key} item={item} />];
+    } else {
+      return [
+        <MemberRequestVoteButton
+          key={item.key}
+          item={item}
+          setLoading={setLoading}
+        />,
+      ];
+    }
   };
 
   return (
-    <Card className="member-request-vote-card" actions={renderActions()}>
+    <Card
+      className={`member-request-vote-card ${!isParent ? 'expanded-card' : ''}`}
+      actions={renderActions()}
+    >
       <div className="card-content">
         <div>
           <strong>Участник сообщества:</strong> {item.member}
@@ -32,7 +44,7 @@ export function MemberRequestVoteCard({
         <div>
           <strong>Дата подачи:</strong> {item.created}
         </div>
-        <CoverLetter letter={item.reason} />
+        {!isParent && <CoverLetter letter={item.reason} />}
       </div>
     </Card>
   );

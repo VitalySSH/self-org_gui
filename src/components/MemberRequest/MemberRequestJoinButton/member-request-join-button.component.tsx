@@ -4,7 +4,7 @@ import { RequestMemberAoService } from 'src/services';
 import { useNavigate } from 'react-router-dom';
 
 export function MemberRequestJoinButton(props: any) {
-  const tableRow = props.tableRow;
+  const item = props.item;
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -23,10 +23,10 @@ export function MemberRequestJoinButton(props: any) {
     setButtonLoading(true);
     const requestMemberAOService = new RequestMemberAoService();
     requestMemberAOService
-      .addNewMember(tableRow.key)
+      .addNewMember(item.key)
       .then(() => {
         setButtonLoading(false);
-        navigate(`/my-communities/${tableRow.communityId}`);
+        navigate(`/my-communities/${item.communityId}`);
       })
       .catch((error) => {
         setButtonLoading(false);

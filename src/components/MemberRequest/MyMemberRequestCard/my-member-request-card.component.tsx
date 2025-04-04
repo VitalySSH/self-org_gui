@@ -1,6 +1,9 @@
 import './my-member-request-card.component.scss';
 import { Card, Button, Badge } from 'antd';
-import { MemberRequestCardProps, TableMyMemberRequest } from 'src/interfaces';
+import {
+  MemberRequestCardProps,
+  MyMemberRequestCardItem,
+} from 'src/interfaces';
 import { TeamOutlined } from '@ant-design/icons';
 import {
   CoverLetter,
@@ -21,41 +24,29 @@ export function MyMemberRequestCard({
   item,
   setLoading,
   onShowSubCommunities,
-}: MemberRequestCardProps<TableMyMemberRequest>) {
+}: MemberRequestCardProps<MyMemberRequestCardItem>) {
   const renderActions = () => {
     const mainAction = (() => {
       switch (item.statusCode) {
         case OnConsiderationCode:
           return (
-            <MemberRequestRemoveButton
-              tableRow={item}
-              setLoading={setLoading}
-            />
+            <MemberRequestRemoveButton item={item} setLoading={setLoading} />
           );
         case RequestDeniedCode:
           return (
-            <MemberRequestRemoveButton
-              tableRow={item}
-              setLoading={setLoading}
-            />
+            <MemberRequestRemoveButton item={item} setLoading={setLoading} />
           );
         case RequestSuccessfulCode:
           return (
-            <MemberRequestJoinButton tableRow={item} setLoading={setLoading} />
+            <MemberRequestJoinButton item={item} setLoading={setLoading} />
           );
         case CommunityMemberCode:
           return (
-            <MemberRequestRemoveButton
-              tableRow={item}
-              setLoading={setLoading}
-            />
+            <MemberRequestRemoveButton item={item} setLoading={setLoading} />
           );
         case MemberExcludedCode:
           return (
-            <MemberRequestDisputeButton
-              tableRow={item}
-              setLoading={setLoading}
-            />
+            <MemberRequestDisputeButton item={item} setLoading={setLoading} />
           );
         default:
           return null;

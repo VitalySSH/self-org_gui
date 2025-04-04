@@ -1,4 +1,4 @@
-export interface TableMyMemberRequest {
+export interface MyMemberRequestCardItem {
   key: string;
   communityName: string;
   communityDescription: string;
@@ -7,5 +7,5 @@ export interface TableMyMemberRequest {
   statusCode: string;
   reason: string;
   created: string;
-  children?: TableMyMemberRequest[];
+  children?: MyMemberRequestCardItem[];
 }
