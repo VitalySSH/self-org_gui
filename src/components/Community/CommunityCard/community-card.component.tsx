@@ -52,6 +52,7 @@ export function CommunityCard(props: CommunityCardProps) {
     const requestMemberService = new CrudDataSourceService(RequestMemberModel);
     const communityService = new CrudDataSourceService(CommunityModel);
     const requestMember = new RequestMemberModel();
+    requestMember.creator_id = authData.user?.id;
     if (formData.reason) {
       requestMember.reason = formData.reason;
     }

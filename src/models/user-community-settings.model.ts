@@ -4,7 +4,6 @@ import { UserModel } from './user.model.ts';
 import { CommunityNameModel } from './community-name.model.ts';
 import { CommunityDescriptionModel } from './community-description.model.ts';
 import { CategoryModel } from './category.model.ts';
-import { RequestMemberModel } from './request-member.model.ts';
 import { DelegateSettingsModel } from './delegate-settings.model.ts';
 
 @modelConfig({
@@ -61,7 +60,4 @@ export class UserCommunitySettingsModel extends ApiModel {
 
   @attribute()
   is_blocked!: boolean;
-
-  @manyToMany('request_member')
-  adding_members?: RequestMemberModel[];
 }

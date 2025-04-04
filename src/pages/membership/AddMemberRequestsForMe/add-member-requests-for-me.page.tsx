@@ -45,6 +45,11 @@ export function AddMemberRequestsForMe(props: any) {
         op: 'null',
         val: false,
       },
+      {
+        field: 'creator_id',
+        op: 'equals',
+        val: currentUserId,
+      },
     ];
   };
 
@@ -137,7 +142,7 @@ export function AddMemberRequestsForMe(props: any) {
         val: JSON.stringify(dates),
       });
     }
-    if (newFilters.length > 2) {
+    if (newFilters.length > 3) {
       setFilters(newFilters);
       setCurrentPage(1);
       setLoading(true);
@@ -163,7 +168,7 @@ export function AddMemberRequestsForMe(props: any) {
 
         <div className={styles.buttons}>
           <Button type="text" onClick={() => setShowFilters(true)}>
-            <Badge count={filters.length - 2}>
+            <Badge count={filters.length - 3}>
               <FilterOutlined style={{ fontSize: 20 }} />
             </Badge>
             Фильтры

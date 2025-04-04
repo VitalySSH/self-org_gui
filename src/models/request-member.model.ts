@@ -26,6 +26,9 @@ export class RequestMemberModel extends ApiModel {
   @attribute()
   parent_id?: string;
 
+  @attribute()
+  creator_id?: string;
+
   @attribute(Date)
   created?: Date;
 

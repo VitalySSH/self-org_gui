@@ -93,7 +93,7 @@ export function MemberRequestVoteButton(props: any) {
           requestMember.vote = null;
           if (abstainedStatus) requestMember.status = abstainedStatus;
         }
-        requestMember.vote = vote;
+
         requestMemberService
           .save(requestMember, false)
           .then(() => {
@@ -101,7 +101,7 @@ export function MemberRequestVoteButton(props: any) {
             successInfo('Голос отдан');
             setModalOpen(false);
             setDisabled(true);
-            props.setLoading();
+            props.setLoading(true);
           })
           .catch((error) => {
             errorInfo(`Ошибка сохранения запроса: ${error}`);

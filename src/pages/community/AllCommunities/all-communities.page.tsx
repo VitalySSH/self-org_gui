@@ -1,6 +1,6 @@
 import { Badge, Button, Layout, List, Pagination, Typography } from 'antd';
 import { CrudDataSourceService } from 'src/services';
-import { CommunityModel } from 'src/models';
+import { CommunityModel, RequestMemberModel } from 'src/models';
 import { SetStateAction, useCallback, useEffect, useState } from 'react';
 import {
   AuthContextProvider,
@@ -16,6 +16,7 @@ import { FilterOutlined } from '@ant-design/icons';
 export function AllCommunities() {
   const maxPageSize = 20;
   const authData: AuthContextProvider = useAuth();
+  const currentUserId = authData.user?.id;
 
   const getBaseFilters = (): Filters => {
     return [
@@ -43,36 +44,61 @@ export function AllCommunities() {
           'user_settings.user',
           'main_settings.name',
           'main_settings.description',
-          'main_settings.adding_members.creator',
         ])
         .then((resp) => {
           setTotal(resp.total);
           const items: CommunityCardInterface[] = [];
-          resp.data.forEach((community) => {
-            const isMyCommunity =
-              (community.user_settings || []).filter(
-                (ucs) => ucs.user?.id === authData.user?.id
-              ).length > 0;
-            const isAddRequest =
-              (community.main_settings?.adding_members || []).filter(
-                (rm) => rm.member?.id === authData.user?.id
-              ).length > 0;
-            const item = {
-              id: community.id || '',
-              title: community.main_settings?.name?.name || '',
-              description: community.main_settings?.description?.value || '',
-              members: (community.user_settings || []).length,
-              isMyCommunity: isMyCommunity || isAddRequest,
-            };
-            items.push(item);
-          });
-          setDataSource(items);
+          const communityIds = resp.data.map((com) => com.id);
+          const requestMemberService = new CrudDataSourceService(RequestMemberModel);
+          requestMemberService.list(
+            [
+              {
+                field: 'community_id',
+                op: 'in',
+                val: communityIds,
+              },
+              {
+                field: 'member_id',
+                op: 'equals',
+                val: currentUserId,
+              },
+              {
+                field: 'parent_id',
+                op: 'null',
+                val: true,
+              },
+            ],
+            undefined,
+            { skip: 1, limit: pageSize },
+            ['community'],
+          ).then(
+            (res) => {
+              const memberRequests = res.data;
+              resp.data.forEach((community) => {
+                const isMyCommunity =
+                  (community.user_settings || []).filter(
+                    (ucs) => ucs.user?.id === currentUserId
+                  ).length > 0;
+                const isAddRequest =
+                  memberRequests.filter((rm) => rm.community?.id === community.id).length > 0;
+                const item = {
+                  id: community.id || '',
+                  title: community.main_settings?.name?.name || '',
+                  description: community.main_settings?.description?.value || '',
+                  members: (community.user_settings || []).length,
+                  isMyCommunity: isMyCommunity || isAddRequest,
+                };
+                items.push(item);
+              });
+              setDataSource(items);
+            }
+          );
         })
         .finally(() => {
           setLoading(false);
         });
     }
-  }, [authData.user?.id, currentPage, loading, pageSize, filters]);
+  }, [currentUserId, currentPage, loading, pageSize, filters]);
 
   useEffect(() => {
     loadData();

@@ -25,26 +25,27 @@ export function MyAddMemberRequests() {
   // const [showFilters, setShowFilters] = useState(false);
 
   const loadData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const requestMemberAoService = new RequestMemberAoService();
-      const resp = await requestMemberAoService.myList();
+    if (loading) {
+      try {
+        const requestMemberAoService = new RequestMemberAoService();
+        const resp = await requestMemberAoService.myList();
 
-      setDataSource(resp.data);
-      setNavState({
-        currentLevel: 1,
-        breadcrumbs: [],
-        currentData: resp.data,
-      });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+        setDataSource(resp.data);
+        setNavState({
+          currentLevel: 1,
+          breadcrumbs: [],
+          currentData: resp.data,
+        });
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     }
-  }, []);
+  }, [loading]);
 
   useEffect(() => {
-    loadData();
+    loadData().then();
   }, [loadData]);
 
   const handleShowSubcommunities = (item: MyMemberRequestCardItem) => {

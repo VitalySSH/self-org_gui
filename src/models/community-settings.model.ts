@@ -2,7 +2,6 @@ import { ApiModel } from './api-model.model.ts';
 import { attribute, manyToMany, modelConfig, oneToMany } from 'src/annotations';
 import { CommunityDescriptionModel } from './community-description.model.ts';
 import { CommunityNameModel } from './community-name.model.ts';
-import { RequestMemberModel } from './request-member.model.ts';
 import { CategoryModel } from './category.model.ts';
 import { UserCommunitySettingsModel } from './user-community-settings.model.ts';
 
@@ -39,7 +38,4 @@ export class CommunitySettingsModel extends ApiModel {
 
   @manyToMany('user_community_settings')
   sub_communities_settings?: UserCommunitySettingsModel[];
-
-  @manyToMany('request_member')
-  adding_members?: RequestMemberModel[];
 }
