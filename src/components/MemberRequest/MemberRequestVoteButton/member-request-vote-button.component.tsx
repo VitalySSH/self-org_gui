@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { SimpleVoting } from 'src/interfaces';
 import { CrudDataSourceService } from 'src/services';
 import { RequestMemberModel, StatusModel } from 'src/models';
+import { AbstainedCode, VotedCode } from 'src/consts';
 
 export function MemberRequestVoteButton(props: any) {
   const tableRow = props.tableRow;
@@ -68,18 +69,30 @@ export function MemberRequestVoteButton(props: any) {
       .list([
         {
           field: 'code',
-          op: 'equals',
-          val: 'voted',
+          op: 'in',
+          val: [VotedCode, AbstainedCode],
         },
       ])
       .then((resp) => {
-        const status = resp.data.length ? resp.data[0] : undefined;
+        let votedStatus: StatusModel | undefined = undefined;
+        let abstainedStatus: StatusModel | undefined = undefined;
+        resp.data.forEach((s) => {
+          if (s.code === VotedCode) votedStatus = s;
+          if (s.code === AbstainedCode) abstainedStatus = s;
+        });
         const requestMember = new RequestMemberModel();
         requestMember.id = tableRow?.key;
-        if (status) {
-          requestMember.status = status;
+        if (formData.yes) {
+          requestMember.vote = true;
+          if (votedStatus) requestMember.status = votedStatus;
+        } else if (formData.no) {
+          requestMember.vote = false;
+          if (votedStatus) requestMember.status = votedStatus;
+        } else {
+          requestMember.vote = null;
+          if (abstainedStatus) requestMember.status = abstainedStatus;
         }
-        requestMember.vote = formData.yes;
+        requestMember.vote = vote;
         requestMemberService
           .save(requestMember, false)
           .then(() => {

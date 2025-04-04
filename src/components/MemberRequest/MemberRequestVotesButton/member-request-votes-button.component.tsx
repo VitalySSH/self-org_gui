@@ -54,6 +54,7 @@ export function MemberRequestVotesButton(props: any) {
       {contextHolder}
       <Modal
         forceRender
+        centered
         open={modalOpen}
         title={modalTitle}
         onCancel={handleCancel}

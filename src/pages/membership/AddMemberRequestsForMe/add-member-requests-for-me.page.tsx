@@ -12,7 +12,7 @@ import moment from 'moment';
 import { SetStateAction, useCallback, useEffect, useState } from 'react';
 import {
   AuthContextProvider,
-  FilterValues,
+  MemberRequestFilterValues,
   TableMemberRequest,
 } from 'src/interfaces';
 import { CrudDataSourceService } from 'src/services';
@@ -21,7 +21,10 @@ import { FilterOutlined } from '@ant-design/icons';
 import { useAuth } from 'src/hooks';
 import { useNavigate } from 'react-router-dom';
 import { Filters } from 'src/shared/types.ts';
-import { MemberRequestVoteCard, ResourceFilterModal } from 'src/components';
+import {
+  MemberRequestFilterModal,
+  MemberRequestVoteCard,
+} from 'src/components';
 
 export function AddMemberRequestsForMe(props: any) {
   const maxPageSize = 20;
@@ -100,13 +103,38 @@ export function AddMemberRequestsForMe(props: any) {
     loadData();
   }, [loadData]);
 
-  const handleApplyFilters = (values: FilterValues) => {
+  const handleApplyFilters = (values: MemberRequestFilterValues) => {
     const newFilters: Filters = getBaseFilters();
-    if (values.title) {
+    if (values.status) {
       newFilters.push({
-        field: 'title',
-        op: 'ilike',
-        val: values.title,
+        field: 'status.id',
+        op: 'equals',
+        val: values.status.id,
+      });
+    }
+    if (values.member) {
+      newFilters.push({
+        field: 'member.id',
+        op: 'equals',
+        val: values.member.id,
+      });
+    }
+    if (values.decision !== undefined) {
+      newFilters.push({
+        field: 'vote',
+        op: 'equals',
+        val: values.decision,
+      });
+    }
+    if (values.created !== undefined) {
+      const dates = [
+        values.created[0].format('YYYY-MM-DD'),
+        values.created[1].format('YYYY-MM-DD'),
+      ]
+      newFilters.push({
+        field: 'created',
+        op: 'between',
+        val: JSON.stringify(dates),
       });
     }
     if (newFilters.length > 2) {
@@ -143,7 +171,7 @@ export function AddMemberRequestsForMe(props: any) {
         </div>
       </div>
 
-      <ResourceFilterModal
+      <MemberRequestFilterModal
         communityId={props.communityId}
         resource="rule"
         visible={showFilters}

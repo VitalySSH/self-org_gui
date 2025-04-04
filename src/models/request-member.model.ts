@@ -18,7 +18,7 @@ export class RequestMemberModel extends ApiModel {
   status?: StatusModel;
 
   @attribute()
-  vote?: boolean;
+  vote?: boolean | null;
 
   @attribute()
   reason?: string;

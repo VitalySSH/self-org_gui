@@ -12,7 +12,7 @@ export type FilterOperations =
   | 'in'
   | 'like'
   | 'ilike'
-  | 'beetween'
+  | 'between'
   | 'notin'
   | 'null';
 export type Filters = FilterItem[];

@@ -101,7 +101,7 @@ export function ResourceFilterModal({
       ]}
     >
       <Form
-        name="filterModalForm"
+        name="resourceFilterModalForm"
         form={form}
         onFinish={onApply}
         layout="vertical"

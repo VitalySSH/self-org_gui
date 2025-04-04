@@ -29,7 +29,7 @@ export function CommunityFilterModal({
       ]}
     >
       <Form
-        name="filterModalForm"
+        name="communityFilterModalForm"
         form={form}
         onFinish={onApply}
         layout="vertical"
