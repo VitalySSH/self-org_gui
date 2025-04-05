@@ -33,11 +33,13 @@ export function CommunityWorkSpace() {
   const [communityData, setCommunityData] = useState(
     null as CommunityWorkSpaceData | null
   );
+  const [isBlocked, setIsBlocked] = useState(false);
 
   const getCommunity = useCallback(() => {
     if (id && communityData?.id !== id) {
       const communityService = new CommunityAOService();
       communityService.getNameData(id).then((resp) => {
+        setIsBlocked(resp.is_blocked);
         if (resp.is_blocked) navigate('/no-much-page');
         setCommunityData({
           id: id,
@@ -63,7 +65,7 @@ export function CommunityWorkSpace() {
 
   return (
     <Layout className="community">
-      <SiderBar isCommunityWS={true} />
+      <SiderBar isCommunityWS={true} isBlocked={isBlocked} />
       <Layout>
         <Header className="header">
           <div className="header-content">

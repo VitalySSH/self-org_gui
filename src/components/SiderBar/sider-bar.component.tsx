@@ -142,6 +142,7 @@ export function SiderBar(props: SiderBarInterface) {
   };
 
   useEffect(() => {
+    if (props.isBlocked) navigate('/no-much-page');
     if (location.pathname === '/') {
       cleanKeys();
     } else {
