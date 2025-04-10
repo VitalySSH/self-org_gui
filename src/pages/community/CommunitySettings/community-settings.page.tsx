@@ -6,9 +6,10 @@ import { CommunityModel } from 'src/models';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+  CategoriesLabel,
   IsMinorityNotParticipateLabel,
   IsSecretBallotLabel,
-  QuorumLabel,
+  QuorumLabel, ResponsibilitiesLabel,
   SignificantMinorityLabel,
   VoteLabel,
 } from 'src/consts';
@@ -29,11 +30,15 @@ export function CommunitySettings(props: any) {
           'main_settings.name',
           'main_settings.description',
           'main_settings.categories',
+          'main_settings.responsibilities',
         ])
         .then((community) => {
           const settingsInst = community.main_settings;
           const categories = (settingsInst?.categories || []).map(
             (category) => category.name
+          );
+          const responsibilities = (settingsInst?.responsibilities || []).map(
+            (responsibility) => responsibility.name
           );
           form.setFieldValue('name', settingsInst?.name?.name);
           form.setFieldValue(
@@ -60,6 +65,7 @@ export function CommunitySettings(props: any) {
           );
           form.setFieldValue('creator', community?.creator?.fullname);
           form.setFieldValue('categories', categories);
+          form.setFieldValue('responsibilities', responsibilities);
         })
         .catch(() => {
           navigate('/no-much-page');
@@ -168,7 +174,7 @@ export function CommunitySettings(props: any) {
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
             <Form.Item
               name="categories"
-              label="Категории"
+              label={CategoriesLabel}
               labelCol={{ span: 24 }}
             >
               <Select
@@ -179,6 +185,22 @@ export function CommunitySettings(props: any) {
               ></Select>
             </Form.Item>
           </Col>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
+            <Form.Item
+              name="responsibilities"
+              label={ResponsibilitiesLabel}
+              labelCol={{ span: 24 }}
+            >
+              <Select
+                mode="multiple"
+                suffixIcon={null}
+                open={false}
+                removeIcon={null}
+              ></Select>
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={[16, 16]}>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
             <Form.Item
               name="creator"

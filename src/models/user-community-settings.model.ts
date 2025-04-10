@@ -4,7 +4,7 @@ import { UserModel } from './user.model.ts';
 import { CommunityNameModel } from './community-name.model.ts';
 import { CommunityDescriptionModel } from './community-description.model.ts';
 import { CategoryModel } from './category.model.ts';
-import { DelegateSettingsModel } from './delegate-settings.model.ts';
+import { ResponsibilityModel } from './responsibility.model.ts';
 
 @modelConfig({
   entityName: 'user_community_settings',
@@ -19,11 +19,11 @@ export class UserCommunitySettingsModel extends ApiModel {
   @attribute()
   parent_community_id?: string;
 
-  @oneToMany('community_name')
-  name!: CommunityNameModel;
+  @manyToMany('community_name')
+  names?: CommunityNameModel[];
 
-  @oneToMany('community_description')
-  description!: CommunityDescriptionModel;
+  @manyToMany('community_description')
+  descriptions?: CommunityDescriptionModel[];
 
   @attribute()
   quorum!: number;
@@ -33,6 +33,12 @@ export class UserCommunitySettingsModel extends ApiModel {
 
   @attribute()
   significant_minority!: number;
+
+  @attribute()
+  decision_delay!: number;
+
+  @attribute()
+  dispute_time_limit!: number;
 
   @attribute()
   is_secret_ballot!: boolean;
@@ -49,8 +55,8 @@ export class UserCommunitySettingsModel extends ApiModel {
   @manyToMany('user_community_settings')
   sub_communities_settings?: UserCommunitySettingsModel[];
 
-  @manyToMany('delegate_settings')
-  delegate_settings?: DelegateSettingsModel[];
+  @manyToMany('responsibility')
+  responsibilities?: ResponsibilityModel[];
 
   @attribute()
   is_not_delegate!: boolean;

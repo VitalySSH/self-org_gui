@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CrudDataSourceService, VotingResultAoService } from 'src/services';
 import {
+  NoncomplianceModel,
   RuleModel,
   UserVotingResultModel,
   VotingOptionModel,
@@ -31,6 +32,7 @@ export function RuleDetail() {
   const [voteInPercent, setVoteInPercent] = useState({} as VoteInPercent);
   const [userVote, setUserVote] = useState<boolean | undefined>(undefined);
   const [userOption, setUserOption] = useState<VotingOptionModel[]>([]);
+  const [noncompliance, setNoncompliance] = useState<NoncomplianceModel[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [minorityOptions, setMinorityOptions] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -42,6 +44,7 @@ export function RuleDetail() {
     []
   );
   const votingOptionService = new CrudDataSourceService(VotingOptionModel);
+  const noncomplianceService = new CrudDataSourceService(NoncomplianceModel);
 
   const successInfo = (content: string) => {
     messageApi
@@ -137,7 +140,7 @@ export function RuleDetail() {
           ],
           undefined,
           undefined,
-          ['extra_options']
+          ['extra_options', 'noncompliance']
         )
         .then((resp) => {
           if (resp.total) {
@@ -146,6 +149,7 @@ export function RuleDetail() {
             setUserVote(result.vote);
             setDisabled(true);
             if (result.vote) setUserOption(result.extra_options || []);
+            setNoncompliance(result.noncompliance || []);
           }
         })
         .catch((error) => {
@@ -162,14 +166,27 @@ export function RuleDetail() {
     fetchUserVotingResult();
   }, [fetchRule, fetchVoteInPercent, fetchUserVotingResult]);
 
-  const handleSelectChange = (_fieldName: string, value: any) => {
-    if (value === null) {
-      setUserOption([]);
-      if (!disabled) setDisabled(true);
-    } else {
-      const currentValue = Array.isArray(value) ? value : [value];
-      setUserOption(currentValue);
-      if (disabled && currentValue.length) setDisabled(false);
+  const handleSelectChange = (fieldName: string, value: any) => {
+    switch (fieldName) {
+      case 'options':
+        if (value === null) {
+          setUserOption([]);
+          if (!disabled) setDisabled(true);
+        } else {
+          const currentValue = Array.isArray(value) ? value : [value];
+          setUserOption(currentValue);
+          if (disabled && currentValue.length) setDisabled(false);
+        }
+        break;
+      case 'noncompliance':
+        if (value === null) {
+          setNoncompliance([]);
+          if (!disabled) setDisabled(true);
+        } else {
+          const currentValue = Array.isArray(value) ? value : [value];
+          setNoncompliance(currentValue);
+          if (disabled && currentValue.length) setDisabled(false);
+        }
     }
   };
 
@@ -179,7 +196,8 @@ export function RuleDetail() {
 
   const handleVote = (vote: boolean) => {
     setUserVote(vote);
-    if (vote && rule?.is_extra_options && !userOption.length) {
+    const isNotOptions = Boolean(rule?.is_extra_options) && !userOption.length;
+    if (isNotOptions || !noncompliance.length) {
       setDisabled(true);
     } else {
       setDisabled(false);
@@ -196,6 +214,7 @@ export function RuleDetail() {
         userVotingResult.vote = userVote;
       }
       const options: VotingOptionModel[] = [];
+      const resultNoncompliance: NoncomplianceModel[] = [];
       if (userVote) {
         for (const option of Array.isArray(userOption)
           ? userOption
@@ -212,8 +231,23 @@ export function RuleDetail() {
             }
           }
         }
+        for (const _noncompliance of Array.isArray(noncompliance)
+          ? noncompliance
+          : [noncompliance]) {
+          if (_noncompliance) {
+            if (!_noncompliance?.id) {
+              _noncompliance.community_id = rule?.community_id;
+              _noncompliance.creator_id = rule?.creator?.id;
+              const newNoncompliance = await noncomplianceService.save(_noncompliance, true);
+              resultNoncompliance.push(newNoncompliance);
+            } else {
+              resultNoncompliance.push(_noncompliance);
+            }
+          }
+        }
       }
       userVotingResult.extra_options = options;
+      userVotingResult.noncompliance = resultNoncompliance;
       if (!userVotingResult.is_voted_myself) {
         userVotingResult.is_voted_myself = true;
       }
@@ -288,6 +322,7 @@ export function RuleDetail() {
 
           {userVotingResult && (
             <UserVoting
+              communityId={userVotingResult.community_id}
               resource="rule"
               ruleId={id}
               question={rule.question || ''}
@@ -295,7 +330,7 @@ export function RuleDetail() {
               vote={userVotingResult.vote}
               isOptions={rule.is_extra_options || false}
               options={userOption}
-              isMultiSelect={rule.is_multi_select || false}
+              noncompliance={noncompliance}
               isDelegateVote={!userVotingResult.is_voted_myself}
               onVote={handleVote}
               onSelectChange={handleSelectChange}

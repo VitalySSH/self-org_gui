@@ -13,6 +13,8 @@ import {
 import {
   CommunityDescriptionLabel,
   CommunityNameLabel,
+  DecisionDelayLabel,
+  DisputeTimeLimitLabel,
   IsCanOfferLabel,
   IsDefaultAddMemberLabel,
   IsMinorityNotParticipateLabel,
@@ -39,7 +41,9 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
       Boolean(formData.description) &&
       Boolean(formData.quorum) &&
       Boolean(formData.significant_minority) &&
-      Boolean(formData.vote);
+      Boolean(formData.vote) &&
+      Boolean(formData.decision_delay) &&
+      Boolean(formData.dispute_time_limit);
     props.setDisabledButton(!isValid);
   };
 
@@ -195,6 +199,70 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
         </Col>
         <Col xs={24} sm={12}>
           <Form.Item
+            name="decision_delay"
+            label={
+              <span>
+                {DecisionDelayLabel}&nbsp;
+                <Tooltip title="Укажите количество дней между достижением кворума и моментом вступления решения в силу. Данный период предоставляет участникам возможность для узучения мнений друг друга, анализа последствий и корректировки своей позиции перед принятием решения. Максимальное значение 30 дней.">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </span>
+            }
+            labelCol={{ span: 24 }}
+            rules={[
+              {
+                required: true,
+                message:
+                  'Пожалуйста, укажите количество дней отсрочки вступления решения в силу, значение от 1 до 30 дней.',
+              },
+            ]}
+          >
+            <InputNumber
+              type="number"
+              controls={false}
+              max={30}
+              min={1}
+              step={1}
+              style={{
+                width: 50,
+              }}
+            />
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={12}>
+          <Form.Item
+            name="dispute_time_limit"
+            label={
+              <span>
+                {DisputeTimeLimitLabel}&nbsp;
+                <Tooltip title="Укажите максимальное количество дней, которое потребуется для урегилирования спорных ситуаций. Максимальное значение 30 дней.">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </span>
+            }
+            labelCol={{ span: 24 }}
+            rules={[
+              {
+                required: true,
+                message:
+                  'Пожалуйста, укажите количество дней для рассмотрения споров, значение от 1 до 30 дней.',
+              },
+            ]}
+          >
+            <InputNumber
+              type="number"
+              controls={false}
+              max={30}
+              min={1}
+              step={1}
+              style={{
+                width: 50,
+              }}
+            />
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={12}>
+          <Form.Item
             name="is_secret_ballot"
             label={IsSecretBallotLabel}
             labelCol={{ span: 24 }}
@@ -282,7 +350,7 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
                     },
                   ]}
                 >
-                  <Input placeholder="Наименование категории" maxLength={60} />
+                  <Input placeholder="Наименование категории" maxLength={80} />
                 </Form.Item>
                 <MinusCircleOutlined onClick={() => remove(name)} />
               </Space>

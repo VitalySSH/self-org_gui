@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react';
 import { SiderBarInterface } from 'src/interfaces';
 import { AuthCard } from 'src/components';
 import { MenuItem } from 'src/shared/types.ts';
+import { SubCommunitiesLabel } from 'src/consts';
 
 const { Sider } = Layout;
 
@@ -77,7 +78,7 @@ const communityWSMenuItems: MenuItem[] = [
   {
     key: 'sub-communities',
     icon: <ApartmentOutlined />,
-    label: 'Внутренние сообщества',
+    label: SubCommunitiesLabel,
   },
   {
     key: 'my-settings',

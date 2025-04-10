@@ -33,6 +33,9 @@ export class RuleModel extends ApiModel {
   @attribute(Date)
   created?: Date;
 
+  @attribute(Date)
+  start_time?: Date;
+
   @oneToMany('status')
   status?: StatusModel;
 
@@ -44,4 +47,7 @@ export class RuleModel extends ApiModel {
 
   @attribute()
   extra_question?: string;
+
+  @attribute()
+  tracker?: string;
 }

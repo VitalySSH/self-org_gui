@@ -22,6 +22,7 @@ import TextArea, { TextAreaRef } from 'antd/lib/input/TextArea';
 import { ApiModel } from 'src/models';
 import { useDebounceFn } from 'ahooks';
 import { Filters } from 'src/shared/types.ts';
+import './custom-select.component.scss';
 
 export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const inputRef = useRef<InputRef>(null);
@@ -221,21 +222,19 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const renderDropdownContent = (menu: React.ReactNode) => {
     if (isDropdownOpen && isLoading) {
       return (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            padding: '16px 0',
-          }}
-        >
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '16px 0',
+        }}>
           <Spin size="large" />
         </div>
       );
     }
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div style={{ maxHeight: 200, overflowY: 'auto' }}>
+      <>
+        <div style={{ maxHeight: 300, overflowY: 'auto' }}>
           {props.enableSearch && showMinCharsHint ? (
             <Empty
               image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -249,45 +248,51 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
           )}
         </div>
         {props.addOwnValue && addingOwnValue}
-      </div>
+      </>
     );
   };
 
   const addingOwnValue = (
     <>
       <Divider style={{ margin: '8px 0' }} />
-      <Space style={{ padding: '0 8px 4px' }}>
-        {props.ownFieldTextarea ? (
-          <TextArea
-            rows={5}
-            placeholder={props.ownValuePlaceholder}
-            ref={textAreaRef}
-            onChange={onTextareaChange}
-            value={newTextValue}
-            onKeyDown={(e) => e.stopPropagation()}
-            maxLength={props.ownValueMaxLength}
-            style={{ width: 400 }}
-          />
-        ) : (
-          <Input
-            placeholder={props.ownValuePlaceholder}
-            ref={inputRef}
-            onChange={onInputChange}
-            value={newTextValue}
-            onKeyDown={(e) => e.stopPropagation()}
-            maxLength={props.ownValueMaxLength}
-            style={{ width: 400 }}
-          />
-        )}
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={addOwnValue}
-          disabled={newTextValue.length === 0}
+      <div className="add-own-value-container">
+        <Space
+          direction="vertical"
+          size={12}
+          style={{ width: '100%', padding: '0 4px' }}
         >
-          Добавить
-        </Button>
-      </Space>
+          {props.ownFieldTextarea ? (
+            <TextArea
+              rows={3}
+              placeholder={props.ownValuePlaceholder}
+              ref={textAreaRef}
+              onChange={onTextareaChange}
+              value={newTextValue}
+              onKeyDown={(e) => e.stopPropagation()}
+              maxLength={props.ownValueMaxLength}
+              style={{ marginBottom: 0 }}
+            />
+          ) : (
+            <Input
+              placeholder={props.ownValuePlaceholder}
+              ref={inputRef}
+              onChange={onInputChange}
+              value={newTextValue}
+              onKeyDown={(e) => e.stopPropagation()}
+              maxLength={props.ownValueMaxLength}
+              style={{ marginBottom: 0 }}
+            />
+          )}
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={addOwnValue}
+            disabled={newTextValue.length === 0}
+          >
+            Добавить
+          </Button>
+        </Space>
+      </div>
     </>
   );
 
@@ -344,6 +349,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         placeholder={props.label}
         allowClear={true}
         style={{ width: '100%' }}
+        popupClassName="custom-select-dropdown"
       />
     </ConfigProvider>
   );

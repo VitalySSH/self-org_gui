@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Checkbox, Tag } from 'antd';
 import { CustomSelect } from 'src/components';
 import { CrudDataSourceService } from 'src/services';
-import { VotingOptionModel } from 'src/models';
+import { NoncomplianceModel, VotingOptionModel } from 'src/models';
 import { Filters } from 'src/shared/types.ts';
 
 export function UserVoting(props: UserVotingProps) {
@@ -13,8 +13,9 @@ export function UserVoting(props: UserVotingProps) {
   );
 
   const votingOptionService = new CrudDataSourceService(VotingOptionModel);
+  const noncomplianceService = new CrudDataSourceService(NoncomplianceModel);
 
-  const getFilters = (optionalFilters?: Filters): Filters => {
+  const getResourceFilters = (optionalFilters?: Filters): Filters => {
     const filters = optionalFilters || [];
     switch (props.resource) {
       case 'initiative':
@@ -35,6 +36,17 @@ export function UserVoting(props: UserVotingProps) {
     return filters;
   };
 
+  const getNoncomplianceFilters = (optionalFilters?: Filters): Filters => {
+    const filters = optionalFilters || [];
+    filters.push({
+      field: 'community_id',
+      op: 'equals',
+      val: props.communityId,
+    });
+
+    return filters;
+  };
+
   const handleVote = (vote: boolean) => {
     setUserVote(vote);
     props.onVote(vote);
@@ -44,7 +56,18 @@ export function UserVoting(props: UserVotingProps) {
     pagination?: Pagination,
     filters?: Filters
   ) => {
-    return votingOptionService.list(getFilters(filters), undefined, pagination);
+    return votingOptionService.list(
+      getResourceFilters(filters), undefined, pagination
+    );
+  };
+
+  const getNoncompliance = async (
+    pagination?: Pagination,
+    filters?: Filters
+  ) => {
+    return noncomplianceService.list(
+      getNoncomplianceFilters(filters), undefined, pagination
+    );
   };
 
   return (
@@ -81,13 +104,33 @@ export function UserVoting(props: UserVotingProps) {
           <CustomSelect
             fieldService={votingOptionService}
             requestOptions={getVotingOptions}
-            multiple={props.isMultiSelect}
+            multiple={true}
             enableSearch={true}
-            label="Выберите дополнительные параметры"
+            label="Выберите любые понравившиеся варианты"
             onChange={props.onSelectChange}
             value={props.options}
-            formField="voting_options"
+            formField="options"
             bindLabel="content"
+            addOwnValue={true}
+            ownValuePlaceholder="Введите свой вариант"
+            ownValueMaxLength={140}
+          />
+        </div>
+      )}
+
+      {props.resource === 'rule' && (
+        <div className="additional-question">
+          <p>Последствия несоблюдения правила</p>
+          <CustomSelect
+            fieldService={noncomplianceService}
+            requestOptions={getNoncompliance}
+            multiple={true}
+            enableSearch={true}
+            label="Выберите последствия"
+            onChange={props.onSelectChange}
+            value={props.noncompliance}
+            formField="noncompliance"
+            bindLabel="name"
             addOwnValue={true}
             ownValuePlaceholder="Введите свой вариант"
             ownValueMaxLength={140}

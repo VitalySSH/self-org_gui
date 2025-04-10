@@ -52,3 +52,5 @@ export * from './opinions/opinions-props.interface';
 export * from './ai/ai-modal-props.interface';
 export * from './ai/ai-resource-props.interface';
 export * from './components/member-request-filter-values.interface';
+export * from './rule/responsibility-data.interface';
+export * from './shared/recommendation-modal-props.interface';

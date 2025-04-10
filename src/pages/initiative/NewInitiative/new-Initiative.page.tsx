@@ -142,7 +142,7 @@ export function NewInitiative(props: any) {
         label={
           <span>
             {IsMultiSelectLabel}&nbsp;
-            <Tooltip title="Включите эту опцию, если при голосовании возможен выбор нескольких вариантов ответов.">
+            <Tooltip title="При включении этой опции итоговое решение может включать несколько вариантов, соответствующих установленным критериям. По умолчанию выбирается один наиболее популярный вариант.">
               <QuestionCircleOutlined />
             </Tooltip>
           </span>

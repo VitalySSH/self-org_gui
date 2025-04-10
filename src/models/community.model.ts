@@ -25,4 +25,7 @@ export class CommunityModel extends ApiModel {
 
   @attribute(Date)
   created?: Date;
+
+  @attribute()
+  tracker?: string;
 }

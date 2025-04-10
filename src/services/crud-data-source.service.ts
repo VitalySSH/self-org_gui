@@ -23,6 +23,8 @@ import {
   VotingOptionModel,
   InitiativeModel,
   RuleModel,
+  ResponsibilityModel,
+  NoncomplianceModel,
 } from 'src/models';
 import * as types from 'src/shared/types';
 import { dataSourceConfig } from 'src/annotations';
@@ -46,6 +48,8 @@ import { baseApiUrl } from 'src/config/configuration';
     user_voting_result: UserVotingResultModel,
     initiative: InitiativeModel,
     rule: RuleModel,
+    responsibility: ResponsibilityModel,
+    noncompliance: NoncomplianceModel,
   },
 })
 export class CrudDataSourceService<

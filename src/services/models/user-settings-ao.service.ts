@@ -5,7 +5,7 @@ import {
   CategoryModel,
   StatusModel,
   UserCommunitySettingsModel,
-  UserModel,
+  UserModel, ResponsibilityModel,
 } from 'src/models';
 import { AOApiUrl } from 'src/config/configuration';
 import {
@@ -47,15 +47,15 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
     const settingsService = new CrudDataSourceService(
       UserCommunitySettingsModel
     );
-    const name = await this._getOrCreateName(
-      formData.name,
-      communityId,
-      user.id
+    const names = await Promise.all(
+      formData.names.map(name =>
+        this._getOrCreateName(name, communityId, user.id)
+      )
     );
-    const description = await this._getOrCreateDescription(
-      formData.description,
-      communityId,
-      user.id
+    const descriptions = await Promise.all(
+      formData.descriptions.map(description =>
+        this._getOrCreateDescription(description, communityId, user.id)
+      )
     );
     const categories = await this._getOrCreateCategories(
       formData.categories || [],
@@ -70,13 +70,21 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
       );
       subSettings.push(_subSettings);
     }
+    const responsibilities = await Promise.all(
+      (formData.responsibilities || []).map(responsibility =>
+        this._getOrCreateResponsibility(responsibility, communityId, user.id)
+      )
+    );
     settings.sub_communities_settings = subSettings;
-    settings.name = name as CommunityNameModel;
-    settings.description = description as CommunityDescriptionModel;
+    settings.names = names;
+    settings.descriptions = descriptions;
     settings.categories = categories as CategoryModel[];
+    settings.responsibilities = responsibilities;
     settings.vote = formData.vote;
     settings.quorum = formData.quorum;
     settings.significant_minority = formData.significant_minority;
+    settings.decision_delay = formData.decision_delay;
+    settings.dispute_time_limit = formData.dispute_time_limit;
     settings.is_secret_ballot = formData.is_secret_ballot;
     settings.is_can_offer = formData.is_can_offer;
     settings.is_minority_not_participate = formData.is_minority_not_participate;
@@ -99,6 +107,8 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
       quorum: settings.quorum,
       vote: settings.vote,
       significant_minority: settings.significant_minority,
+      decision_delay: settings.decision_delay,
+      dispute_time_limit: settings.dispute_time_limit,
       is_secret_ballot: settings.is_secret_ballot,
       is_can_offer: settings.is_can_offer,
       is_minority_not_participate: settings.is_minority_not_participate,
@@ -117,9 +127,7 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
     communityId: string | undefined,
     userId: string
   ) {
-    if (nameInst === undefined) {
-      return undefined;
-    } else if (nameInst.id) {
+    if (nameInst.id) {
       return nameInst;
     } else {
       return await this._createName(nameInst.name, communityId, userId);
@@ -145,9 +153,7 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
     communityId: string | undefined,
     userId: string
   ) {
-    if (descriptionInst === undefined) {
-      return undefined;
-    } else if (descriptionInst.id) {
+    if (descriptionInst.id) {
       return descriptionInst;
     } else {
       return await this._createDescription(
@@ -156,6 +162,36 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
         userId
       );
     }
+  }
+
+  private async _getOrCreateResponsibility(
+    responsibility: ResponsibilityModel,
+    communityId: string | undefined,
+    userId: string
+  ) {
+    if (responsibility.id) {
+      return responsibility;
+    } else {
+      return await this._createResponsibility(
+        responsibility.name,
+        communityId,
+        userId
+      );
+    }
+  }
+
+  private async _createResponsibility(
+    name: string,
+    communityId: string | undefined,
+    userId: string
+  ) {
+    const responsibilityService = new CrudDataSourceService(ResponsibilityModel);
+    const responsibilityObj = responsibilityService.createRecord();
+    responsibilityObj.name = name;
+    responsibilityObj.creator_id = userId;
+    responsibilityObj.community_id = communityId;
+
+    return responsibilityService.save(responsibilityObj, true);
   }
 
   private async _createDescription(
@@ -174,11 +210,14 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
     return descriptionService.save(descriptionObj, true);
   }
 
+  responsibility
+
   private async _getOrCreateCategories(
     categoriesInst: CategoryModel[],
     communityId: string | undefined,
     userId: string
   ) {
+    // FIXME: переделать.
     const categories: CategoryModel[] = [];
     for (const category of categoriesInst) {
       if (category) {

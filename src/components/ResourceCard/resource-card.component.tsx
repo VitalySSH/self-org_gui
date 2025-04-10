@@ -35,7 +35,7 @@ export function ResourceCard(props: any) {
   return (
     <Card
       onClick={() => navigate(props.item.id)}
-      className={styles.initiativeCard}
+      className={styles.resourceCard}
     >
       <Meta title={props.item.title} description={null} />
       <div
@@ -63,6 +63,9 @@ export function ResourceCard(props: any) {
         </div>
       )}
       <div style={{ fontSize: 14 }}>
+        <div style={{ marginTop: 10 }}>
+          <strong>Номер:</strong> {props.item.tracker}
+        </div>
         <div style={{ marginTop: 10 }}>
           <strong>Автор:</strong> {props.item.creator}
         </div>

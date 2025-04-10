@@ -1,8 +1,8 @@
 @use 'src/shared/assets/scss/variables' as *;
 
-.initiativeCard {
+.resourceCard {
   width: 100%;
-  min-height: 270px;
+  min-height: 280px;
 
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);

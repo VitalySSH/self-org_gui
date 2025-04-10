@@ -31,4 +31,9 @@
     background: $status-inactive-bg;
     color: $status-inactive-text;
   }
+
+  &-noncompliance {
+    background: $status-warning-bg;
+    color: $status-warning-text;
+  }
 }

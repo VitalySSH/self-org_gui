@@ -33,3 +33,4 @@ export * from './ResourceCard/resource-card.component';
 export * from './AI/AISummaryOpinions/ai-summary-opinions.component';
 export * from './AI/AIModal/ai-modal.component';
 export * from './AI/AICompromise/ai-compromise.component';
+export * from './Recommendation/recommendation-voting-modal.component';

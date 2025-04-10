@@ -48,8 +48,8 @@ export function CommunitySelect(props: CommunitySelectProps) {
       }
     });
     const newSettings = new UserCommunitySettingsModel();
-    newSettings.name = name;
-    newSettings.description = desc;
+    newSettings.names = [name];
+    newSettings.descriptions = [desc];
     if (categories.length) {
       newSettings.categories = categories;
     }
@@ -75,6 +75,14 @@ export function CommunitySelect(props: CommunitySelectProps) {
     form.setFieldValue(
       'significant_minority',
       props.parentSettings?.significant_minority
+    );
+    form.setFieldValue(
+      'decision_delay',
+      props.parentSettings?.decision_delay
+    );
+    form.setFieldValue(
+      'dispute_time_limit',
+      props.parentSettings?.dispute_time_limit
     );
     form.setFieldValue(
       'is_secret_ballot',
@@ -118,7 +126,7 @@ export function CommunitySelect(props: CommunitySelectProps) {
             ],
             undefined,
             undefined,
-            ['name', 'description']
+            ['names', 'descriptions']
           )
           .then((r) => {
             setOptions(r.data);

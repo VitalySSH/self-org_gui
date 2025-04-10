@@ -1,0 +1,53 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+.ant-select-dropdown.custom-select-dropdown {
+  padding: 8px 0;
+
+  .ant-select-item {
+    padding: 8px 12px;
+  }
+
+  .add-own-value-container {
+    padding: 0 16px 8px;
+    width: auto;
+
+    .ant-input,
+    .ant-input-textarea {
+      width: 100%;
+      margin-bottom: 12px;
+      border-radius: 4px;
+    }
+
+    .ant-btn {
+      background-color: $primary-color;
+      border-color: $primary-color;
+      color: white;
+      transition: all 0.2s;
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      &[disabled] {
+        background-color: #ff7875;
+        border-color: #ff7875;
+        color: white;
+        opacity: 0.6;
+      }
+
+      .anticon {
+        color: white;
+      }
+    }
+  }
+
+  @media (max-width: $breakpoint-sm) {
+    width: 100% !important;
+    min-width: 200px !important;
+
+    .add-own-value-container {
+      padding: 0 12px 8px;
+    }
+  }
+}

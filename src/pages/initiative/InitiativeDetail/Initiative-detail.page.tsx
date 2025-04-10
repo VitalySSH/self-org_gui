@@ -186,7 +186,7 @@ export function InitiativeDetail() {
 
   const handleVote = (vote: boolean) => {
     setUserVote(vote);
-    if (vote && initiative?.is_extra_options && !userOption.length) {
+    if (Boolean(initiative?.is_extra_options) && !userOption.length) {
       setDisabled(true);
     } else {
       setDisabled(false);
@@ -308,6 +308,7 @@ export function InitiativeDetail() {
 
           {userVotingResult && (
             <UserVoting
+              communityId={userVotingResult.community_id}
               resource="initiative"
               initiativeId={id}
               question={initiative.question || ''}
@@ -315,7 +316,6 @@ export function InitiativeDetail() {
               vote={userVotingResult.vote}
               isOptions={initiative.is_extra_options || false}
               options={userOption}
-              isMultiSelect={initiative.is_multi_select || false}
               isDelegateVote={!userVotingResult.is_voted_myself}
               onVote={handleVote}
               onSelectChange={handleSelectChange}

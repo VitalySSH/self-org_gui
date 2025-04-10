@@ -8,4 +8,5 @@ export interface SettingsInPercentInterface {
   can_offer: SettingsStatisticsInterface[];
   categories: SettingsStatisticsInterface[];
   sub_communities: SettingsStatisticsInterface[];
+  responsibilities: SettingsStatisticsInterface[];
 }

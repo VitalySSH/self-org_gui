@@ -3,7 +3,14 @@ import { CommunityAOService } from 'src/services';
 import { SettingsInPercentInterface } from 'src/interfaces';
 import { Collapse, CollapseProps } from 'antd';
 import { SettingsStatistics } from 'src/components';
-import { IsMinorityNotParticipateLabel } from 'src/consts';
+import {
+  CategoriesLabel,
+  IsCanOfferLabel,
+  IsMinorityNotParticipateLabel,
+  IsSecretBallotLabel,
+  ResponsibilitiesLabel,
+  SubCommunitiesLabel,
+} from 'src/consts';
 
 export function ParameterStatistics(props: any) {
   const [loading, setLoading] = useState(true);
@@ -34,39 +41,44 @@ export function ParameterStatistics(props: any) {
   const items: CollapseProps['items'] = [
     {
       key: '1',
-      label: 'Названия',
+      label: 'Наименования сообщества',
       children: <SettingsStatistics data={parameters.names} />,
     },
     {
       key: '2',
-      label: 'Описания',
+      label: 'Описания сообщества',
       children: <SettingsStatistics data={parameters.descriptions} />,
     },
     {
       key: '3',
-      label: 'Внутренние сообщества',
+      label: SubCommunitiesLabel,
       children: <SettingsStatistics data={parameters.sub_communities} />,
     },
     {
       key: '4',
-      label: 'Категории',
+      label: CategoriesLabel,
       children: <SettingsStatistics data={parameters.categories} />,
     },
     {
       key: '5',
-      label: 'Тайное голосование?',
-      children: <SettingsStatistics data={parameters.secret_ballot} />,
+      label: ResponsibilitiesLabel,
+      children: <SettingsStatistics data={parameters.responsibilities} />,
     },
     {
       key: '6',
+      label: IsSecretBallotLabel,
+      children: <SettingsStatistics data={parameters.secret_ballot} />,
+    },
+    {
+      key: '7',
       label: IsMinorityNotParticipateLabel,
       children: (
         <SettingsStatistics data={parameters.minority_not_participate} />
       ),
     },
     {
-      key: '7',
-      label: 'Оказываем услуги другим сообществам?',
+      key: '8',
+      label: IsCanOfferLabel,
       children: <SettingsStatistics data={parameters.can_offer} />,
     },
   ];
