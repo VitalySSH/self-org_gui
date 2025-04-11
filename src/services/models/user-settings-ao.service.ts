@@ -5,7 +5,8 @@ import {
   CategoryModel,
   StatusModel,
   UserCommunitySettingsModel,
-  UserModel, ResponsibilityModel,
+  UserModel,
+  ResponsibilityModel,
 } from 'src/models';
 import { AOApiUrl } from 'src/config/configuration';
 import {
@@ -48,12 +49,12 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
       UserCommunitySettingsModel
     );
     const names = await Promise.all(
-      formData.names.map(name =>
+      formData.names.map((name) =>
         this._getOrCreateName(name, communityId, user.id)
       )
     );
     const descriptions = await Promise.all(
-      formData.descriptions.map(description =>
+      formData.descriptions.map((description) =>
         this._getOrCreateDescription(description, communityId, user.id)
       )
     );
@@ -71,7 +72,7 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
       subSettings.push(_subSettings);
     }
     const responsibilities = await Promise.all(
-      (formData.responsibilities || []).map(responsibility =>
+      (formData.responsibilities || []).map((responsibility) =>
         this._getOrCreateResponsibility(responsibility, communityId, user.id)
       )
     );
@@ -99,8 +100,8 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
     parent_community_id?: string
   ): CreatingCommunitySettings {
     const formData = {
-      name: settings.name.name,
-      description: settings.description.value,
+      names: settings.names?.map((n) => n.name),
+      descriptions: settings.descriptions?.map((d) => d.value),
       categories: (settings.categories || []).map((it) => {
         return { name: it.name };
       }),
@@ -185,7 +186,9 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
     communityId: string | undefined,
     userId: string
   ) {
-    const responsibilityService = new CrudDataSourceService(ResponsibilityModel);
+    const responsibilityService = new CrudDataSourceService(
+      ResponsibilityModel
+    );
     const responsibilityObj = responsibilityService.createRecord();
     responsibilityObj.name = name;
     responsibilityObj.creator_id = userId;
@@ -210,7 +213,7 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
     return descriptionService.save(descriptionObj, true);
   }
 
-  responsibility
+  responsibility;
 
   private async _getOrCreateCategories(
     categoriesInst: CategoryModel[],

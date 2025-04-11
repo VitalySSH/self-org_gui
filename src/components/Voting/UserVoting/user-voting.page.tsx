@@ -57,7 +57,9 @@ export function UserVoting(props: UserVotingProps) {
     filters?: Filters
   ) => {
     return votingOptionService.list(
-      getResourceFilters(filters), undefined, pagination
+      getResourceFilters(filters),
+      undefined,
+      pagination
     );
   };
 
@@ -66,7 +68,9 @@ export function UserVoting(props: UserVotingProps) {
     filters?: Filters
   ) => {
     return noncomplianceService.list(
-      getNoncomplianceFilters(filters), undefined, pagination
+      getNoncomplianceFilters(filters),
+      undefined,
+      pagination
     );
   };
 

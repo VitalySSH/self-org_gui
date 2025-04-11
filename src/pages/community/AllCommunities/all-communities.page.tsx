@@ -49,30 +49,33 @@ export function AllCommunities() {
           setTotal(resp.total);
           const items: CommunityCardInterface[] = [];
           const communityIds = resp.data.map((com) => com.id);
-          const requestMemberService = new CrudDataSourceService(RequestMemberModel);
-          requestMemberService.list(
-            [
-              {
-                field: 'community_id',
-                op: 'in',
-                val: communityIds,
-              },
-              {
-                field: 'member_id',
-                op: 'equals',
-                val: currentUserId,
-              },
-              {
-                field: 'parent_id',
-                op: 'null',
-                val: true,
-              },
-            ],
-            undefined,
-            { skip: 1, limit: pageSize },
-            ['community'],
-          ).then(
-            (res) => {
+          const requestMemberService = new CrudDataSourceService(
+            RequestMemberModel
+          );
+          requestMemberService
+            .list(
+              [
+                {
+                  field: 'community_id',
+                  op: 'in',
+                  val: communityIds,
+                },
+                {
+                  field: 'member_id',
+                  op: 'equals',
+                  val: currentUserId,
+                },
+                {
+                  field: 'parent_id',
+                  op: 'null',
+                  val: true,
+                },
+              ],
+              undefined,
+              { skip: 1, limit: pageSize },
+              ['community']
+            )
+            .then((res) => {
               const memberRequests = res.data;
               resp.data.forEach((community) => {
                 const isMyCommunity =
@@ -80,19 +83,21 @@ export function AllCommunities() {
                     (ucs) => ucs.user?.id === currentUserId
                   ).length > 0;
                 const isAddRequest =
-                  memberRequests.filter((rm) => rm.community?.id === community.id).length > 0;
+                  memberRequests.filter(
+                    (rm) => rm.community?.id === community.id
+                  ).length > 0;
                 const item = {
                   id: community.id || '',
                   title: community.main_settings?.name?.name || '',
-                  description: community.main_settings?.description?.value || '',
+                  description:
+                    community.main_settings?.description?.value || '',
                   members: (community.user_settings || []).length,
                   isMyCommunity: isMyCommunity || isAddRequest,
                 };
                 items.push(item);
               });
               setDataSource(items);
-            }
-          );
+            });
         })
         .finally(() => {
           setLoading(false);

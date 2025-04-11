@@ -6,7 +6,7 @@
   border: 1px solid $border-color;
   padding: 16px;
   margin-bottom: 24px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   position: relative;
 
   &-header {
@@ -25,7 +25,7 @@
       top: 16px;
       right: 16px;
       background-color: $accent-yellow !important;
-      color: $text-color!important;
+      color: $text-color !important;
       border-radius: 4px;
       transition: all 0.2s;
 
@@ -36,7 +36,6 @@
     }
   }
 }
-
 
 @media (max-width: $breakpoint-md) {
   .voting-core-settings {

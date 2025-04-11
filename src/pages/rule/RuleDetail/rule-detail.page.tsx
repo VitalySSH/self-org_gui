@@ -238,7 +238,10 @@ export function RuleDetail() {
             if (!_noncompliance?.id) {
               _noncompliance.community_id = rule?.community_id;
               _noncompliance.creator_id = rule?.creator?.id;
-              const newNoncompliance = await noncomplianceService.save(_noncompliance, true);
+              const newNoncompliance = await noncomplianceService.save(
+                _noncompliance,
+                true
+              );
               resultNoncompliance.push(newNoncompliance);
             } else {
               resultNoncompliance.push(_noncompliance);

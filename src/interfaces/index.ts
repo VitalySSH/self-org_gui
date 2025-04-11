@@ -18,7 +18,6 @@ export * from './community/community-card.interface';
 export * from './community/community-settings.interface';
 export * from './community/community-select.interface';
 export * from './community/new-community-form.interface';
-export * from './community/new-community-settings.interface';
 export * from './community/community-card-props.interface';
 export * from './community/creating-community-settings.interface';
 export * from './community/community-work-space-data.interface';

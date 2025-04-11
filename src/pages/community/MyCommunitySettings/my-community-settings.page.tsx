@@ -20,7 +20,8 @@ import { CrudDataSourceService, UserSettingsAoService } from 'src/services';
 import {
   CategoryModel,
   CommunityDescriptionModel,
-  CommunityNameModel, ResponsibilityModel,
+  CommunityNameModel,
+  ResponsibilityModel,
   UserCommunitySettingsModel,
 } from 'src/models';
 import {
@@ -130,38 +131,25 @@ export function MyCommunitySettings(props: any) {
           if (resp.total) {
             const settingsInst = resp.data[0];
             setSettings(settingsInst);
-            form.setFieldValue('categories', settingsInst?.categories);
-            form.setFieldValue('names', settingsInst.names);
-            form.setFieldValue('descriptions', settingsInst.descriptions);
-            form.setFieldValue('responsibilities', settingsInst.responsibilities);
-            form.setFieldValue('quorum', settingsInst.quorum);
-            form.setFieldValue('vote', settingsInst.vote);
-            form.setFieldValue('decision_delay', settingsInst.decision_delay);
-            form.setFieldValue('dispute_time_limit', settingsInst.dispute_time_limit);
-            form.setFieldValue(
-              'significant_minority',
-              settingsInst.significant_minority
-            );
-            form.setFieldValue(
-              'is_secret_ballot',
-              settingsInst.is_secret_ballot || false
-            );
-            form.setFieldValue(
-              'is_can_offer',
-              settingsInst.is_can_offer || false
-            );
-            form.setFieldValue(
-              'is_minority_not_participate',
-              settingsInst.is_minority_not_participate || false
-            );
-            form.setFieldValue(
-              'is_default_add_member',
-              settingsInst.is_default_add_member || false
-            );
-            form.setFieldValue(
-              'is_not_delegate',
-              settingsInst.is_not_delegate || false
-            );
+            form.setFieldsValue({
+              categories: settingsInst?.categories,
+              names: settingsInst.names,
+              descriptions: settingsInst.descriptions,
+              responsibilities: settingsInst?.responsibilities,
+              sub_communities_settings: settingsInst.sub_communities_settings,
+              quorum: settingsInst?.quorum,
+              vote: settingsInst?.vote,
+              significant_minority: settingsInst?.significant_minority,
+              decision_delay: settingsInst?.decision_delay,
+              dispute_time_limit: settingsInst?.dispute_time_limit,
+              is_secret_ballot: settingsInst?.is_secret_ballot || false,
+              is_can_offer: settingsInst?.is_can_offer || false,
+              is_minority_not_participate:
+                settingsInst?.is_minority_not_participate || false,
+              is_default_add_member:
+                settingsInst?.is_default_add_member || false,
+              is_not_delegate: settingsInst?.is_not_delegate || false,
+            });
           } else {
             navigate('/no-much-page');
           }
@@ -399,7 +387,7 @@ export function MyCommunitySettings(props: any) {
                     min={1}
                     step={1}
                     style={{
-                      width: '20%',
+                      width: 50,
                     }}
                   />
                 </Form.Item>
@@ -431,7 +419,7 @@ export function MyCommunitySettings(props: any) {
                     min={50}
                     step={1}
                     style={{
-                      width: '20%',
+                      width: 50,
                     }}
                   />
                 </Form.Item>
@@ -463,7 +451,7 @@ export function MyCommunitySettings(props: any) {
                     min={1}
                     step={1}
                     style={{
-                      width: '20%',
+                      width: 50,
                     }}
                   />
                 </Form.Item>
@@ -497,7 +485,7 @@ export function MyCommunitySettings(props: any) {
                     min={1}
                     step={1}
                     style={{
-                      width: '20%',
+                      width: 50,
                     }}
                   />
                 </Form.Item>
@@ -529,7 +517,7 @@ export function MyCommunitySettings(props: any) {
                     min={1}
                     step={1}
                     style={{
-                      width: '20%',
+                      width: 50,
                     }}
                   />
                 </Form.Item>

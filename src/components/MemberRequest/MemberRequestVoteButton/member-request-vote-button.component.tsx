@@ -37,14 +37,20 @@ export function MemberRequestVoteButton(props: any) {
   const updateForm = useCallback(() => {
     if (modalOpen && !loadFormData) {
       if (vote === null) {
-        voteForm.setFieldValue('yes', false);
-        voteForm.setFieldValue('no', false);
+        voteForm.setFieldsValue({
+          yes: false,
+          no: false,
+        });
       } else if (vote) {
-        voteForm.setFieldValue('yes', true);
-        voteForm.setFieldValue('no', false);
+        voteForm.setFieldsValue({
+          yes: true,
+          no: false,
+        });
       } else {
-        voteForm.setFieldValue('yes', false);
-        voteForm.setFieldValue('no', true);
+        voteForm.setFieldsValue({
+          yes: false,
+          no: true,
+        });
       }
       setLoadFormData(true);
     }

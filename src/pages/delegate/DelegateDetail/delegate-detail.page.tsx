@@ -53,8 +53,10 @@ export function DelegateDetail(props: any) {
         .get(id, ['category', 'delegate'])
         .then((delegateInst) => {
           setDelegate(delegateInst);
-          form.setFieldValue('category', delegateInst.category?.name);
-          form.setFieldValue('delegate', delegateInst.delegate);
+          form.setFieldsValue({
+            category: delegateInst.category?.name,
+            delegate: delegateInst.delegate,
+          });
         })
         .catch((error) => {
           errorInfo(`Не удалось загрузить настройки советника: ${error}`);

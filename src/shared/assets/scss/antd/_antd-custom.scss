@@ -136,6 +136,10 @@
   .ant-btn-primary {
     @include button-style($primary-color, $background-color);
   }
+
+  .ant-btn-variant-solid {
+    @include button-style($primary-color, $background-color);
+  }
 }
 
 .ant-avatar {

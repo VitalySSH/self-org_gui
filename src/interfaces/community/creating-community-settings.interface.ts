@@ -1,6 +1,6 @@
 export interface CreatingCommunitySettings {
-  name: string;
-  description: string;
+  names?: string[];
+  descriptions?: string[];
   categories?: { name: string }[];
   quorum: number;
   vote: number;

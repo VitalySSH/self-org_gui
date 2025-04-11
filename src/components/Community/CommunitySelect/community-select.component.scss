@@ -1,14 +1,10 @@
-.custom-modal {
-  @media (max-width: 768px) {
-    width: 80% !important;
-  }
-  @media (max-width: 480px) {
-    width: 95% !important;
-  }
+@use 'src/shared/assets/scss/variables' as *;
 
-  top: 1px !important;
+.ant-modal.custom-modal {
   display: flex;
   flex-direction: column;
+  width: 60% !important;
+  max-width: 60% !important;
 
   .ant-modal-content {
     display: flex;
@@ -18,5 +14,12 @@
 
   .ant-modal-body {
     flex: 1;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    width: 80% !important;
+  }
+  @media (max-width: $breakpoint-xs) {
+    width: 95% !important;
   }
 }

@@ -1,7 +1,8 @@
 import {
   CategoryModel,
   CommunityDescriptionModel,
-  CommunityNameModel, ResponsibilityModel,
+  CommunityNameModel,
+  ResponsibilityModel,
   UserCommunitySettingsModel,
 } from 'src/models';
 

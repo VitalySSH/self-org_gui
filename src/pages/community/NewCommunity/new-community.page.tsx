@@ -1,5 +1,4 @@
 import { Button, Form, message } from 'antd';
-import { NewCommunitySettingsInterface } from 'src/interfaces';
 import { UserSettingsAoService } from 'src/services';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -24,10 +23,16 @@ export function NewCommunity() {
 
   const onFinish = () => {
     setButtonLoading(true);
-    const formData: NewCommunitySettingsInterface = form.getFieldsValue();
+    const { name, ...formData } = form.getFieldsValue();
+    const { description, ...resultFormData } = formData;
+    const communityData = {
+      names: [name],
+      descriptions: [description],
+      ...resultFormData,
+    };
     const userSettingsAOService = new UserSettingsAoService();
     userSettingsAOService
-      .createCommunity(formData)
+      .createCommunity(communityData)
       .then(() => {
         setButtonLoading(false);
         navigate('/my-communities', { preventScrollReset: true });

@@ -222,11 +222,13 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const renderDropdownContent = (menu: React.ReactNode) => {
     if (isDropdownOpen && isLoading) {
       return (
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          padding: '16px 0',
-        }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            padding: '16px 0',
+          }}
+        >
           <Spin size="large" />
         </div>
       );
@@ -263,7 +265,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         >
           {props.ownFieldTextarea ? (
             <TextArea
-              rows={3}
+              rows={2}
               placeholder={props.ownValuePlaceholder}
               ref={textAreaRef}
               onChange={onTextareaChange}

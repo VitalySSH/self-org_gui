@@ -11,6 +11,7 @@ import { CrudDataSourceService } from 'src/services';
 import { CommunitySelectProps } from 'src/interfaces';
 import { NewCommunityForm } from 'src/components';
 import { components } from 'react-select';
+import './community-select.component.scss';
 
 export function CommunitySelect(props: CommunitySelectProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -24,11 +25,27 @@ export function CommunitySelect(props: CommunitySelectProps) {
 
   const [form] = Form.useForm();
 
+  const communityName = (settings: UserCommunitySettingsModel) => {
+    if (settings.names?.length) {
+      return settings.names[0].name;
+    } else {
+      return '';
+    }
+  };
+
+  const communityDescription = (settings: UserCommunitySettingsModel) => {
+    if (settings.descriptions?.length) {
+      return settings.descriptions[0].value;
+    } else {
+      return '';
+    }
+  };
+
   const formatOptionLabel = (option: UserCommunitySettingsModel) => (
     <div>
-      <div style={{ fontSize: 14 }}>{option.name?.name}</div>
+      <div style={{ fontSize: 14 }}>{communityName(option)}</div>
       <div style={{ fontSize: 12, color: '#888' }}>
-        {option.description?.value}
+        {communityDescription(option)}
       </div>
     </div>
   );
@@ -56,6 +73,8 @@ export function CommunitySelect(props: CommunitySelectProps) {
     newSettings.quorum = formData.quorum;
     newSettings.vote = formData.vote;
     newSettings.significant_minority = formData.significant_minority;
+    newSettings.decision_delay = formData.decision_delay;
+    newSettings.dispute_time_limit = formData.dispute_time_limit;
     newSettings.is_secret_ballot = formData.is_secret_ballot;
     newSettings.is_can_offer = formData.is_can_offer;
     newSettings.is_minority_not_participate =
@@ -70,40 +89,20 @@ export function CommunitySelect(props: CommunitySelectProps) {
   };
 
   const handleClick = () => {
-    form.setFieldValue('quorum', props.parentSettings?.quorum);
-    form.setFieldValue('vote', props.parentSettings?.vote);
-    form.setFieldValue(
-      'significant_minority',
-      props.parentSettings?.significant_minority
-    );
-    form.setFieldValue(
-      'decision_delay',
-      props.parentSettings?.decision_delay
-    );
-    form.setFieldValue(
-      'dispute_time_limit',
-      props.parentSettings?.dispute_time_limit
-    );
-    form.setFieldValue(
-      'is_secret_ballot',
-      props.parentSettings?.is_secret_ballot || false
-    );
-    form.setFieldValue(
-      'is_can_offer',
-      props.parentSettings?.is_can_offer || false
-    );
-    form.setFieldValue(
-      'is_minority_not_participate',
-      props.parentSettings?.is_minority_not_participate || false
-    );
-    form.setFieldValue(
-      'is_default_add_member',
-      props.parentSettings?.is_default_add_member || false
-    );
-    form.setFieldValue(
-      'is_not_delegate',
-      props.parentSettings?.is_not_delegate || false
-    );
+    form.setFieldsValue({
+      quorum: props.parentSettings?.quorum,
+      vote: props.parentSettings?.vote,
+      significant_minority: props.parentSettings?.significant_minority,
+      decision_delay: props.parentSettings?.decision_delay,
+      dispute_time_limit: props.parentSettings?.dispute_time_limit,
+      is_secret_ballot: props.parentSettings?.is_secret_ballot || false,
+      is_can_offer: props.parentSettings?.is_can_offer || false,
+      is_minority_not_participate:
+        props.parentSettings?.is_minority_not_participate || false,
+      is_default_add_member:
+        props.parentSettings?.is_default_add_member || false,
+      is_not_delegate: props.parentSettings?.is_not_delegate || false,
+    });
     setIsModalVisible(true);
   };
 
@@ -181,7 +180,9 @@ export function CommunitySelect(props: CommunitySelectProps) {
           props.onChange(_values);
           setValues(_values);
         }}
-        getOptionLabel={(e) => `${e.name} - ${e.description}`}
+        getOptionLabel={(e) =>
+          `${communityName(e)} - ${communityDescription(e)}`
+        }
         getOptionValue={(e) => e.id}
         formatOptionLabel={formatOptionLabel}
         placeholder="Выбирите или добавте свои сообщества"
@@ -215,6 +216,7 @@ export function CommunitySelect(props: CommunitySelectProps) {
         }}
         width="60%"
         className="custom-modal"
+        centered
       >
         <NewCommunityForm form={form} setDisabledButton={setDisabled} />
       </Modal>
