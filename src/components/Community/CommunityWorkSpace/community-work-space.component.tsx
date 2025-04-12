@@ -22,7 +22,8 @@ import { AuthHeaderIcons, SiderBar } from 'src/components';
 import { CommunityAOService } from 'src/services';
 import { useCallback, useEffect, useState } from 'react';
 import { CommunityWorkSpaceData } from 'src/interfaces';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, HomeOutlined } from '@ant-design/icons';
+import styles from './community-work-space.module.scss';
 
 const { Header, Content } = Layout;
 
@@ -81,11 +82,27 @@ export function CommunityWorkSpace() {
                   </h1>
                   {!!communityData?.menuItems?.length && (
                     <Dropdown
+                      overlayClassName={styles.dropdownMenu}
                       menu={{
-                        items: communityData.menuItems,
-                        onClick: (e: { key: string }) => handleMenuClick(e.key),
+                        items: communityData.menuItems.map(item => ({
+                          key: item.key,
+                          className: styles.dropdownMenuItem,
+                          label: (
+                            <a className={styles.dropdownLink} href={item.key}>
+                              <HomeOutlined className={styles.dropdownLinkIcon} />
+                              <span className={styles.dropdownLinkName}>
+                              {item.label}
+                            </span>
+                            </a>
+                          )
+                        })),
+                        onClick: (e) => {
+                          e.domEvent.preventDefault();
+                          handleMenuClick(e.key);
+                        },
                       }}
                       placement="bottom"
+                      trigger={['click']}
                     >
                       <DownOutlined className="dropdown-icon" />
                     </Dropdown>
