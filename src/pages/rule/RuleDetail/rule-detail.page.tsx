@@ -35,6 +35,8 @@ export function RuleDetail() {
   const [noncompliance, setNoncompliance] = useState<NoncomplianceModel[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [minorityOptions, setMinorityOptions] = useState<string[]>([]);
+  const [selectedNoncompliance, setSelectedNoncompliance] = useState<string[]>([]);
+  const [minorityNoncompliance, setMinorityNoncompliance] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [disabled, setDisabled] = useState(true);
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -86,6 +88,14 @@ export function RuleDetail() {
               ruleInst.voting_result?.minority_options || {}
             );
             setMinorityOptions(_minorityOptions);
+            const _selectedNoncompliance = convertVotingOptions(
+              ruleInst.voting_result?.noncompliance || {}
+            );
+            setSelectedNoncompliance(_selectedNoncompliance);
+            const _minorityNoncompliance = convertVotingOptions(
+              ruleInst.voting_result?.minority_noncompliance || {}
+            );
+            setMinorityNoncompliance(_minorityNoncompliance);
             setRuleStatus(ruleInst.status?.name || '');
             setRuleStatusCode(ruleInst.status?.code || '');
           })
@@ -175,7 +185,9 @@ export function RuleDetail() {
         } else {
           const currentValue = Array.isArray(value) ? value : [value];
           setUserOption(currentValue);
-          if (disabled && currentValue.length) setDisabled(false);
+          if (disabled && currentValue.length > 0 && noncompliance.length > 0) {
+            setDisabled(false);
+          }
         }
         break;
       case 'noncompliance':
@@ -185,7 +197,10 @@ export function RuleDetail() {
         } else {
           const currentValue = Array.isArray(value) ? value : [value];
           setNoncompliance(currentValue);
-          if (disabled && currentValue.length) setDisabled(false);
+          const isOptions = !rule?.is_extra_options ? true : userOption.length > 0;
+          if (disabled && currentValue.length > 0 && isOptions) {
+            setDisabled(false);
+          }
         }
     }
   };
@@ -195,15 +210,16 @@ export function RuleDetail() {
   };
 
   const handleVote = (vote: boolean) => {
+    if (userVote && !vote) {
+      setUserOption([]);
+      setNoncompliance([]);
+    }
     setUserVote(vote);
     const isNotOptions = Boolean(rule?.is_extra_options) && !userOption.length;
-    if (isNotOptions || !noncompliance.length) {
+    if (vote && (isNotOptions || !noncompliance.length)) {
       setDisabled(true);
     } else {
       setDisabled(false);
-    }
-    if (userVote && !vote) {
-      setUserOption([]);
     }
   };
 
@@ -254,6 +270,9 @@ export function RuleDetail() {
       if (!userVotingResult.is_voted_myself) {
         userVotingResult.is_voted_myself = true;
       }
+      if (userVotingResult.is_voted_by_default) {
+        userVotingResult.is_voted_by_default = false;
+      }
       userVotingResultService
         .save(userVotingResult, false)
         .then(() => {
@@ -295,7 +314,13 @@ export function RuleDetail() {
         <Card className="rule-card">
           <h2>{rule.title}</h2>
           <div>
+            <strong>Номер:</strong> {rule.tracker}
+          </div>
+          <div>
             <strong>Автор:</strong> {rule.creator?.fullname}
+          </div>
+          <div>
+            <strong>Категория:</strong> {rule.category?.name}
           </div>
           <div>
             <Flex align="center" gap={8}>
@@ -303,9 +328,7 @@ export function RuleDetail() {
               <StatusTag status={ruleStatus} statusCode={ruleStatusCode} />
             </Flex>
           </div>
-          <div>
-            <strong>Категория:</strong> {rule.category?.name}
-          </div>
+
           <p className="rule-description">
             <strong>Описание: </strong>
             {rule.content}
@@ -321,6 +344,8 @@ export function RuleDetail() {
             extraQuestion={rule.extra_question}
             selectedOptions={selectedOptions}
             minorityOptions={minorityOptions}
+            noncompliance={selectedNoncompliance}
+            minorityNoncompliance={minorityNoncompliance}
           />
 
           {userVotingResult && (
@@ -334,7 +359,8 @@ export function RuleDetail() {
               isOptions={rule.is_extra_options || false}
               options={userOption}
               noncompliance={noncompliance}
-              isDelegateVote={!userVotingResult.is_voted_myself}
+              isDelegateVote={!userVotingResult.is_voted_myself && userVotingResult.vote !== null && !userVotingResult.is_voted_by_default}
+              isVoteByDefault={!!userVotingResult.is_voted_by_default}
               onVote={handleVote}
               onSelectChange={handleSelectChange}
             />

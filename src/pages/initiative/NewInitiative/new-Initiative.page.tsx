@@ -188,7 +188,7 @@ export function NewInitiative(props: any) {
             ))}
             <Form.Item>
               <Button
-                type="dashed"
+                type="primary"
                 onClick={() => add()}
                 icon={<PlusOutlined />}
               >

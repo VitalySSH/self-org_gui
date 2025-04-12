@@ -52,6 +52,7 @@ export function Rules(props: any) {
               id: rule.id,
               title: rule.title,
               description: rule.content,
+              tracker: rule.tracker,
               creator: rule.creator?.fullname,
               status: rule.status?.name,
               statusCode: rule.status?.code,

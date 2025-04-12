@@ -56,6 +56,7 @@ export function Initiatives(props: any) {
               id: initiative.id,
               title: initiative.title,
               description: initiative.content,
+              tracker: initiative.tracker,
               creator: initiative.creator?.fullname,
               status: initiative.status?.name,
               statusCode: initiative.status?.code,

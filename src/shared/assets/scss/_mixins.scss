@@ -8,6 +8,10 @@
 }
 
 @mixin button-style($bg-color, $text-color) {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
   background-color: $bg-color;
   color: $text-color;
   border: none;
@@ -24,5 +28,32 @@
 
   &:disabled {
     background-color: color.mix(black, $border-color, 40%);
+    color: color.mix(white, $text-color, 70%);
+    cursor: not-allowed;
   }
+
+  &:not(:hover) {
+    &:not(:disabled) {
+      &:active {
+        background-color: color.mix(black, $bg-color, 10%);
+      }
+    }
+  }
+
+  &:hover:not(:disabled) {
+    background-color: $accent-yellow !important;
+    color: $bg-color !important;
+    outline: none;
+
+    .anticon {
+      color: $bg-color !important;
+    }
+  }
+
+  // 5. Убираем фокус-стили если не нужны
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba($accent-yellow, 0.5);
+  }
+
 }

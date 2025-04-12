@@ -15,6 +15,9 @@ export class UserVotingResultModel extends ApiModel {
   is_voted_myself?: boolean;
 
   @attribute()
+  is_voted_by_default?: boolean;
+
+  @attribute()
   member_id?: string;
 
   @attribute()

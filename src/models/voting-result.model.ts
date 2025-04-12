@@ -1,6 +1,6 @@
 import { ApiModel } from './api-model.model.ts';
 import { attribute, modelConfig } from 'src/annotations';
-import { ResponsibilityDataI, VotingOptionData } from 'src/interfaces';
+import { ResponsibilityData, VotingOptionData } from 'src/interfaces';
 
 @modelConfig({
   entityName: 'voting_result',
@@ -19,5 +19,8 @@ export class VotingResultModel extends ApiModel {
   minority_options?: { [key: string]: VotingOptionData };
 
   @attribute()
-  noncompliance?: { [key: string]: ResponsibilityDataI };
+  noncompliance?: { [key: string]: ResponsibilityData };
+
+  @attribute()
+  minority_noncompliance?: { [key: string]: ResponsibilityData };
 }

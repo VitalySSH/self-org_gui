@@ -176,7 +176,7 @@ export function NewRule(props: any) {
             ))}
             <Form.Item>
               <Button
-                type="dashed"
+                type="primary"
                 onClick={() => add()}
                 icon={<PlusOutlined />}
               >

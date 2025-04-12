@@ -1,11 +1,12 @@
 import './user-voting.page.scss';
 import { Pagination, UserVotingProps } from 'src/interfaces';
 import { useState } from 'react';
-import { Checkbox, Tag } from 'antd';
+import { Checkbox, Tag, Form, Tooltip } from 'antd';
 import { CustomSelect } from 'src/components';
 import { CrudDataSourceService } from 'src/services';
 import { NoncomplianceModel, VotingOptionModel } from 'src/models';
 import { Filters } from 'src/shared/types.ts';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 export function UserVoting(props: UserVotingProps) {
   const [userVote, setUserVote] = useState<boolean | undefined | null>(
@@ -83,6 +84,16 @@ export function UserVoting(props: UserVotingProps) {
             Голос советника
           </Tag>
         )}
+        {props.isVoteByDefault && (
+          <>
+            <Tag className="delegate-tag" color="default">
+              Голос по умолчанию
+            </Tag>
+            <Tooltip title="Голос был сформирован автоматически, на основе текущего состояния голосования, в момент вашего вступления в сообщество.">
+              <QuestionCircleOutlined />
+            </Tooltip>
+          </>
+        )}
       </div>
       <i className="question">{props.question}</i>
       <div style={{ marginTop: 4 }}>
@@ -122,23 +133,28 @@ export function UserVoting(props: UserVotingProps) {
         </div>
       )}
 
-      {props.resource === 'rule' && (
-        <div className="additional-question">
-          <p>Последствия несоблюдения правила</p>
-          <CustomSelect
-            fieldService={noncomplianceService}
-            requestOptions={getNoncompliance}
-            multiple={true}
-            enableSearch={true}
-            label="Выберите последствия"
-            onChange={props.onSelectChange}
-            value={props.noncompliance}
-            formField="noncompliance"
-            bindLabel="name"
-            addOwnValue={true}
-            ownValuePlaceholder="Введите свой вариант"
-            ownValueMaxLength={140}
-          />
+      {props.resource === 'rule' && userVote && (
+        <div className="noncompliance">
+          <Form.Item
+            label="Последствия несоблюдения правила"
+            required
+            style={{ marginBottom: 8 }}
+          >
+            <CustomSelect
+              fieldService={noncomplianceService}
+              requestOptions={getNoncompliance}
+              multiple={true}
+              enableSearch={true}
+              label="Выберите последствия"
+              onChange={props.onSelectChange}
+              value={props.noncompliance}
+              formField="noncompliance"
+              bindLabel="name"
+              addOwnValue={true}
+              ownValuePlaceholder="Введите свой вариант"
+              ownValueMaxLength={140}
+            />
+          </Form.Item>
         </div>
       )}
     </div>

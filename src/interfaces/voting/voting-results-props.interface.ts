@@ -10,4 +10,6 @@ export interface VotingResultsProps {
   extraQuestion?: string;
   selectedOptions?: string[];
   minorityOptions?: string[];
+  noncompliance?: string[];
+  minorityNoncompliance?: string[];
 }

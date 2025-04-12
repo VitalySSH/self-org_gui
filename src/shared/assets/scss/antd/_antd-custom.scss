@@ -133,11 +133,11 @@
     @include button-style($primary-color, $background-color);
   }
 
-  .ant-btn-primary {
+  &-primary {
     @include button-style($primary-color, $background-color);
   }
 
-  .ant-btn-variant-solid {
+  &-variant-solid {
     @include button-style($primary-color, $background-color);
   }
 }

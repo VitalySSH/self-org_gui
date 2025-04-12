@@ -56,4 +56,7 @@ export class InitiativeModel extends ApiModel {
 
   @oneToMany('auth_user')
   responsible?: UserModel;
+
+  @attribute()
+  tracker?: string;
 }

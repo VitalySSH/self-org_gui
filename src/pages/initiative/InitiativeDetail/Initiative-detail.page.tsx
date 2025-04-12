@@ -224,6 +224,9 @@ export function InitiativeDetail() {
       if (!userVotingResult.is_voted_myself) {
         userVotingResult.is_voted_myself = true;
       }
+      if (userVotingResult.is_voted_by_default) {
+        userVotingResult.is_voted_by_default = false;
+      }
       userVotingResultService
         .save(userVotingResult, false)
         .then(() => {
@@ -316,7 +319,8 @@ export function InitiativeDetail() {
               vote={userVotingResult.vote}
               isOptions={initiative.is_extra_options || false}
               options={userOption}
-              isDelegateVote={!userVotingResult.is_voted_myself}
+              isDelegateVote={!userVotingResult.is_voted_myself && userVotingResult.vote !== null && !userVotingResult.is_voted_by_default}
+              isVoteByDefault={!!userVotingResult.is_voted_by_default}
               onVote={handleVote}
               onSelectChange={handleSelectChange}
             />

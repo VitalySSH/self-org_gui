@@ -4,7 +4,7 @@ import {
   MenuUnfoldOutlined,
   TeamOutlined,
   InfoCircleOutlined,
-  ExceptionOutlined,
+  // ExceptionOutlined,
   ApartmentOutlined,
   ToolOutlined,
   BarChartOutlined,
@@ -228,23 +228,23 @@ export function SiderBar(props: SiderBarInterface) {
               />
             </>
           )}
-          {!collapsed && (
-            <div className="menu-header">Руководство пользователя</div>
-          )}
-          {collapsed && (
-            <Tooltip title="Руководство пользователя" placement="right">
-              <ExceptionOutlined className="menu-header-icon" />
-            </Tooltip>
-          )}
-          <Menu
-            mode="inline"
-            items={userGuideMenuItems}
-            onClick={(item) => {
-              setUserGuideMenuKeys([item.key]);
-              navigate(item.key);
-            }}
-            selectedKeys={userGuideMenuKeys}
-          />
+          {/*{!collapsed && (*/}
+          {/*  <div className="menu-header">Руководство пользователя</div>*/}
+          {/*)}*/}
+          {/*{collapsed && (*/}
+          {/*  <Tooltip title="Руководство пользователя" placement="right">*/}
+          {/*    <ExceptionOutlined className="menu-header-icon" />*/}
+          {/*  </Tooltip>*/}
+          {/*)}*/}
+          {/*<Menu*/}
+          {/*  mode="inline"*/}
+          {/*  items={userGuideMenuItems}*/}
+          {/*  onClick={(item) => {*/}
+          {/*    setUserGuideMenuKeys([item.key]);*/}
+          {/*    navigate(item.key);*/}
+          {/*  }}*/}
+          {/*  selectedKeys={userGuideMenuKeys}*/}
+          {/*/>*/}
         </>
       )}
       {props.isCommunityWS && (
