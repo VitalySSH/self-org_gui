@@ -1,0 +1,85 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+
+.about-page {
+  font-family: $font-family;
+  margin: 0 auto;
+  padding: 4rem 2rem 2rem;
+  color: $text-color;
+  line-height: 1.6;
+
+  .content-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .ant-typography {
+    color: $text-color;
+  }
+
+  h2 {
+    font-size: 2rem;
+    border-bottom: 2px solid $primary-color;
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    color: $primary-color;
+    margin-top: 2rem;
+  }
+
+  p {
+    font-size: 1.125rem;
+  }
+
+  .list-container {
+    ul {
+      list-style-type: none;
+      padding-left: 1rem;
+
+      li {
+        margin-bottom: 0.5rem;
+        position: relative;
+        padding-left: 1rem;
+
+        &::before {
+          content: "•";
+          color: $primary-color;
+          position: absolute;
+          left: 0;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  .nested-list {
+    margin-top: 0.5rem;
+    padding-left: 1rem;
+    border-left: 1px solid color-mix(in srgb, $primary-color 20%, white);
+
+    li::before {
+      content: "◦";
+      color: color-mix(in srgb, $primary-color 60%, white);
+    }
+  }
+
+  @media (max-width: $breakpoint-md) {
+    padding: 5rem 1rem 1rem;
+
+    h2 {
+      font-size: 1.75rem;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+}
