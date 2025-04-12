@@ -125,6 +125,8 @@ export function MyCommunitySettings(props: any) {
             'categories.status',
             'sub_communities_settings.names',
             'sub_communities_settings.descriptions',
+            'sub_communities_settings.community.main_settings.name',
+            'sub_communities_settings.community.main_settings.description',
           ]
         )
         .then((resp) => {

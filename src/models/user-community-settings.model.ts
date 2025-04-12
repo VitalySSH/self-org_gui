@@ -5,6 +5,7 @@ import { CommunityNameModel } from './community-name.model.ts';
 import { CommunityDescriptionModel } from './community-description.model.ts';
 import { CategoryModel } from './category.model.ts';
 import { ResponsibilityModel } from './responsibility.model.ts';
+import { CommunityModel } from 'src/models/community.model.ts';
 
 @modelConfig({
   entityName: 'user_community_settings',
@@ -18,6 +19,9 @@ export class UserCommunitySettingsModel extends ApiModel {
 
   @attribute()
   parent_community_id?: string;
+
+  @oneToMany('community')
+  community?: CommunityModel;
 
   @manyToMany('community_name')
   names?: CommunityNameModel[];

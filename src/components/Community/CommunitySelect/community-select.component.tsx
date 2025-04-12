@@ -26,7 +26,9 @@ export function CommunitySelect(props: CommunitySelectProps) {
   const [form] = Form.useForm();
 
   const communityName = (settings: UserCommunitySettingsModel) => {
-    if (settings.names?.length) {
+    if (settings.community) {
+      return settings.community.main_settings?.name?.name;
+    } else if (settings.names?.length) {
       return settings.names[0].name;
     } else {
       return '';
@@ -34,7 +36,9 @@ export function CommunitySelect(props: CommunitySelectProps) {
   };
 
   const communityDescription = (settings: UserCommunitySettingsModel) => {
-    if (settings.descriptions?.length) {
+    if (settings.community) {
+      return settings.community.main_settings?.description?.value;
+    } else if (settings.descriptions?.length) {
       return settings.descriptions[0].value;
     } else {
       return '';
@@ -125,7 +129,10 @@ export function CommunitySelect(props: CommunitySelectProps) {
             ],
             undefined,
             undefined,
-            ['names', 'descriptions']
+            ['names', 'descriptions',
+              'community.main_settings.names',
+              'community.main_settings.descriptions',
+            ]
           )
           .then((r) => {
             setOptions(r.data);
