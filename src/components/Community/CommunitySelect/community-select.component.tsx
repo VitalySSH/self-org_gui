@@ -129,7 +129,9 @@ export function CommunitySelect(props: CommunitySelectProps) {
             ],
             undefined,
             undefined,
-            ['names', 'descriptions',
+            [
+              'names',
+              'descriptions',
               'community.main_settings.names',
               'community.main_settings.descriptions',
             ]

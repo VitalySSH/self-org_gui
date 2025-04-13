@@ -1,6 +1,5 @@
 @use 'src/shared/assets/scss/variables' as *;
 
-
 .about-page {
   font-family: $font-family;
   margin: 0 auto;
@@ -46,7 +45,7 @@
         padding-left: 1rem;
 
         &::before {
-          content: "•";
+          content: '•';
           color: $primary-color;
           position: absolute;
           left: 0;
@@ -62,7 +61,7 @@
     border-left: 1px solid color-mix(in srgb, $primary-color 20%, white);
 
     li::before {
-      content: "◦";
+      content: '◦';
       color: color-mix(in srgb, $primary-color 60%, white);
     }
   }

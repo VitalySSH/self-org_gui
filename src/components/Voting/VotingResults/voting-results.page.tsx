@@ -62,7 +62,8 @@ export function VotingResults(props: VotingResultsProps) {
         </div>
       )}
 
-      {((props.minorityOptions || []).length > 0 || (props.minorityNoncompliance || []).length > 0 )&& (
+      {((props.minorityOptions || []).length > 0 ||
+        (props.minorityNoncompliance || []).length > 0) && (
         <div className="minority-section">
           <Flex
             justify="space-between"
@@ -85,10 +86,8 @@ export function VotingResults(props: VotingResultsProps) {
           </Flex>
 
           <div className="minority-form_field">
-            {(props.minorityOptions || []).length > 0  && (
-              <Form.Item
-                label="Варианты голосования"
-              >
+            {(props.minorityOptions || []).length > 0 && (
+              <Form.Item label="Варианты голосования">
                 <Select
                   mode="multiple"
                   value={props.minorityOptions}
@@ -98,21 +97,19 @@ export function VotingResults(props: VotingResultsProps) {
                 />
               </Form.Item>
             )}
-            {props.resource === 'rule' && (props.minorityNoncompliance || []).length > 0  && (
-              <Form.Item
-                label="Последствия несоблюдения правила"
-              >
-                <Select
-                  mode="multiple"
-                  value={props.minorityNoncompliance}
-                  suffixIcon={null}
-                  open={false}
-                  removeIcon={null}
-                />
-              </Form.Item>
-            )}
+            {props.resource === 'rule' &&
+              (props.minorityNoncompliance || []).length > 0 && (
+                <Form.Item label="Последствия несоблюдения правила">
+                  <Select
+                    mode="multiple"
+                    value={props.minorityNoncompliance}
+                    suffixIcon={null}
+                    open={false}
+                    removeIcon={null}
+                  />
+                </Form.Item>
+              )}
           </div>
-
         </div>
       )}
 

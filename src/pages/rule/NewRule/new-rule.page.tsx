@@ -22,7 +22,7 @@ import {
   IsMultiSelectLabel,
   SystemCategoryCode,
 } from 'src/consts';
-import { CustomSelect } from 'src/components';
+import { CustomSelect, ResponsibilityCheckModal } from 'src/components';
 import { CategoryModel } from 'src/models';
 import { Filters } from 'src/shared/types.ts';
 
@@ -35,6 +35,8 @@ export function NewRule(props: any) {
   const [buttonLoading, setButtonLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [isExtraOptions, setIsExtraOptions] = useState(false);
+  const [isCheckingResponsibility, setIsCheckingResponsibility] =
+    useState(false);
 
   const categoryService = new CrudDataSourceService(CategoryModel);
   const ruleAoService = new RuleAoService();
@@ -233,6 +235,13 @@ export function NewRule(props: any) {
     <>
       <div className="form-container">
         {contextHolder}
+
+        <ResponsibilityCheckModal
+          visible={isCheckingResponsibility}
+          onClose={() => setIsCheckingResponsibility(false)}
+          onComplete={onFinish}
+        />
+
         <div className="form-header">Новое правило</div>
         <Form
           form={form}
@@ -375,7 +384,7 @@ export function NewRule(props: any) {
           type="primary"
           htmlType="submit"
           loading={buttonLoading}
-          onClick={onFinish}
+          onClick={() => setIsCheckingResponsibility(true)}
           disabled={disabled}
           className="toolbar-button"
         >

@@ -84,17 +84,19 @@ export function CommunityWorkSpace() {
                     <Dropdown
                       overlayClassName={styles.dropdownMenu}
                       menu={{
-                        items: communityData.menuItems.map(item => ({
+                        items: communityData.menuItems.map((item) => ({
                           key: item.key,
                           className: styles.dropdownMenuItem,
                           label: (
                             <a className={styles.dropdownLink} href={item.key}>
-                              <HomeOutlined className={styles.dropdownLinkIcon} />
+                              <HomeOutlined
+                                className={styles.dropdownLinkIcon}
+                              />
                               <span className={styles.dropdownLinkName}>
-                              {item.label}
-                            </span>
+                                {item.label}
+                              </span>
                             </a>
-                          )
+                          ),
                         })),
                         onClick: (e) => {
                           e.domEvent.preventDefault();

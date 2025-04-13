@@ -319,7 +319,11 @@ export function InitiativeDetail() {
               vote={userVotingResult.vote}
               isOptions={initiative.is_extra_options || false}
               options={userOption}
-              isDelegateVote={!userVotingResult.is_voted_myself && userVotingResult.vote !== null && !userVotingResult.is_voted_by_default}
+              isDelegateVote={
+                !userVotingResult.is_voted_myself &&
+                userVotingResult.vote !== null &&
+                !userVotingResult.is_voted_by_default
+              }
               isVoteByDefault={!!userVotingResult.is_voted_by_default}
               onVote={handleVote}
               onSelectChange={handleSelectChange}

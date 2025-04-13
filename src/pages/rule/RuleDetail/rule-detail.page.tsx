@@ -35,8 +35,12 @@ export function RuleDetail() {
   const [noncompliance, setNoncompliance] = useState<NoncomplianceModel[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [minorityOptions, setMinorityOptions] = useState<string[]>([]);
-  const [selectedNoncompliance, setSelectedNoncompliance] = useState<string[]>([]);
-  const [minorityNoncompliance, setMinorityNoncompliance] = useState<string[]>([]);
+  const [selectedNoncompliance, setSelectedNoncompliance] = useState<string[]>(
+    []
+  );
+  const [minorityNoncompliance, setMinorityNoncompliance] = useState<string[]>(
+    []
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [disabled, setDisabled] = useState(true);
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -197,7 +201,9 @@ export function RuleDetail() {
         } else {
           const currentValue = Array.isArray(value) ? value : [value];
           setNoncompliance(currentValue);
-          const isOptions = !rule?.is_extra_options ? true : userOption.length > 0;
+          const isOptions = !rule?.is_extra_options
+            ? true
+            : userOption.length > 0;
           if (disabled && currentValue.length > 0 && isOptions) {
             setDisabled(false);
           }
@@ -359,7 +365,11 @@ export function RuleDetail() {
               isOptions={rule.is_extra_options || false}
               options={userOption}
               noncompliance={noncompliance}
-              isDelegateVote={!userVotingResult.is_voted_myself && userVotingResult.vote !== null && !userVotingResult.is_voted_by_default}
+              isDelegateVote={
+                !userVotingResult.is_voted_myself &&
+                userVotingResult.vote !== null &&
+                !userVotingResult.is_voted_by_default
+              }
               isVoteByDefault={!!userVotingResult.is_voted_by_default}
               onVote={handleVote}
               onSelectChange={handleSelectChange}

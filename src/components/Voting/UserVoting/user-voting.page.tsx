@@ -1,12 +1,12 @@
 import './user-voting.page.scss';
 import { Pagination, UserVotingProps } from 'src/interfaces';
 import { useState } from 'react';
-import { Checkbox, Tag, Form, Tooltip } from 'antd';
+import { Checkbox, Tag, Form, Tooltip, Popover } from 'antd';
 import { CustomSelect } from 'src/components';
 import { CrudDataSourceService } from 'src/services';
 import { NoncomplianceModel, VotingOptionModel } from 'src/models';
 import { Filters } from 'src/shared/types.ts';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, InfoCircleFilled } from '@ant-design/icons';
 
 export function UserVoting(props: UserVotingProps) {
   const [userVote, setUserVote] = useState<boolean | undefined | null>(
@@ -75,6 +75,34 @@ export function UserVoting(props: UserVotingProps) {
     );
   };
 
+  const MultipleChoiceHint = () => (
+    <Popover
+      content={
+        <div style={{ maxWidth: 300 }}>
+          <p>
+            <strong>Как работает множественный выбор?</strong>
+          </p>
+          <p>
+            Вы можете выбрать несколько вариантов. Ваш голос будет автоматически
+            распределён между всеми выбранными вариантами:
+          </p>
+          <ul style={{ paddingLeft: 20, margin: '8px 0' }}>
+            <li>1 вариант = 100% голоса</li>
+            <li>2 варианта = 50% каждому</li>
+            <li>3 варианта = 33% каждому</li>
+          </ul>
+          <p style={{ marginBottom: 0 }}>
+            Чем больше вариантов вы выберете, тем меньше вес каждого.
+          </p>
+        </div>
+      }
+      trigger="hover"
+      placement="right"
+    >
+      <InfoCircleFilled style={{ fontSize: 16 }} />
+    </Popover>
+  );
+
   return (
     <div className="user-voting">
       <div className="voting-header">
@@ -136,7 +164,12 @@ export function UserVoting(props: UserVotingProps) {
       {props.resource === 'rule' && userVote && (
         <div className="noncompliance">
           <Form.Item
-            label="Последствия несоблюдения правила"
+            label={
+              <>
+                Последствия несоблюдения правила&nbsp;
+                <MultipleChoiceHint />
+              </>
+            }
             required
             style={{ marginBottom: 8 }}
           >
