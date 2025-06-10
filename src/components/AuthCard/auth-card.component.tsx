@@ -8,7 +8,8 @@ export function AuthCard() {
     <div className="auth-card">
       <div className="auth-title">Готовы начать?</div>
       <div className="auth-description">
-        Присоединяйтесь и сделайте свой голос услышанным уже сегодня!
+        Присоединяйтесь и превратите свой голос в часть эффективных
+        коллективных решений вместе с другими участниками!
       </div>
       <div className="auth-buttons">
         <button

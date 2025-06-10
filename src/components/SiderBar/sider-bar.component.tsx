@@ -65,7 +65,7 @@ const userGuideMenuItems: MenuItem[] = [
   {
     key: 'user-guide-challenges',
     icon: <InfoCircleOutlined />,
-    label: 'Вызовы',
+    label: 'Лаборатория',
   },
 ];
 
@@ -103,7 +103,7 @@ const communityWSMenuItems: MenuItem[] = [
   {
     key: 'challenges',
     icon: <FireOutlined />,
-    label: 'Вызовы',
+    label: 'Лаборатория',
   },
   {
     key: 'disputes',
