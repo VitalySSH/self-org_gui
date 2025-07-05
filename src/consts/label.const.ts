@@ -10,7 +10,7 @@ export const CategoriesLabel = 'Тематические категории';
 export const SubCommunitiesLabel = 'Внутренние сообщества';
 export const ResponsibilitiesLabel = 'Зоны ответственности';
 export const IsSecretBallotLabel = 'Тайное голосавание';
-export const IsCanOfferLabel = 'Оказываем услуги другим сообществам?';
+export const IsCanOfferLabel = 'Оказываем услуги другим сообществам';
 export const IsMinorityNotParticipateLabel =
   'Меньшинство должно участвовоать в инициативах';
 export const IsExtraOptionsLabel =

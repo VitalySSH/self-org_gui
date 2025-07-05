@@ -155,7 +155,7 @@ export function CommunitySettings(props: any) {
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Form.Item
               name="is_can_offer"
-              label="Оказываем услуги другим сообществам?"
+              label="Оказываем услуги другим сообществам"
               labelCol={{ span: 24 }}
               valuePropName="checked"
             >
