@@ -20,9 +20,11 @@ import {
   IsMinorityNotParticipateLabel,
   IsNotDelegateLabel,
   IsSecretBallotLabel,
+  IsWorkGroupLabel,
   QuorumLabel,
   SignificantMinorityLabel,
   VoteLabel,
+  WorkGroupLabel,
 } from 'src/consts';
 import {
   CheckOutlined,
@@ -32,10 +34,15 @@ import {
   QuestionCircleOutlined,
 } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
+import { useState } from 'react';
 
 export function NewCommunityForm(props: NewCommunityFormProps) {
+
+  const [isWorkGroup, setIsWorkGroup] = useState(false);
+
   const handleFormChange = () => {
     const formData = props.form.getFieldsValue();
+    setIsWorkGroup(formData.is_workgroup);
     const isValid =
       Boolean(formData.name) &&
       Boolean(formData.description) &&
@@ -47,12 +54,44 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
     props.setDisabledButton(!isValid);
   };
 
+  const workgroupItem  = (
+    <Form.Item
+      name="workgroup"
+      label={
+        <span>
+            {WorkGroupLabel}&nbsp;
+          <Tooltip title="Предложите оптимальное, с вашей точки зрения количество участников для формирования рабочих групп. Минимум 3, максимум 15 человек.">
+              <QuestionCircleOutlined />
+            </Tooltip>
+          </span>
+      }
+      labelCol={{ span: 24 }}
+      rules={[
+        {
+          required: true,
+          message:
+            'Пожалуйста, укажите количетсво участников рабочей группы',
+        },
+      ]}
+    >
+      <InputNumber
+        type="number"
+        controls={false}
+        max={15}
+        min={3}
+        step={1}
+        style={{ width: 50 }}
+      />
+    </Form.Item>
+  );
+
   return (
     <Form
       form={props.form}
       name="new-community-settings"
       onFieldsChange={handleFormChange}
       initialValues={{
+        is_workgroup: false,
         is_secret_ballot: false,
         is_can_offer: false,
         is_minority_not_participate: false,
@@ -228,6 +267,27 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
               }}
             />
           </Form.Item>
+        </Col>
+        <Col xs={24} sm={12}>
+          <Form.Item
+            name="is_workgroup"
+            label={
+              <span>
+                {IsWorkGroupLabel}&nbsp;
+                <Tooltip title="Рабочая группа может быть сформрована после утверждения инициативы, для выработки одного или нескольких проектов реализации данной инициативы. При отсутсвиии рабочей группы предполагается, что в выработке проектов реализаций участвуют все желающие участники сообщества.">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </span>
+            }
+            labelCol={{ span: 24 }}
+            valuePropName="checked"
+          >
+            <Switch
+              checkedChildren={<CheckOutlined />}
+              unCheckedChildren={<CloseOutlined />}
+            />
+          </Form.Item>
+          {isWorkGroup && workgroupItem}
         </Col>
         <Col xs={24} sm={12}>
           <Form.Item

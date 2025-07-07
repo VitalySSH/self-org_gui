@@ -8,6 +8,7 @@ import {
   IsCanOfferLabel,
   IsMinorityNotParticipateLabel,
   IsSecretBallotLabel,
+  IsWorkGroupLabel,
   ResponsibilitiesLabel,
   SubCommunitiesLabel,
 } from 'src/consts';
@@ -66,18 +67,23 @@ export function ParameterStatistics(props: any) {
     },
     {
       key: '6',
+      label: IsWorkGroupLabel,
+      children: <SettingsStatistics data={parameters.workgroup} />,
+    },
+    {
+      key: '7',
       label: IsSecretBallotLabel,
       children: <SettingsStatistics data={parameters.secret_ballot} />,
     },
     {
-      key: '7',
+      key: '8',
       label: IsMinorityNotParticipateLabel,
       children: (
         <SettingsStatistics data={parameters.minority_not_participate} />
       ),
     },
     {
-      key: '8',
+      key: '9',
       label: IsCanOfferLabel,
       children: <SettingsStatistics data={parameters.can_offer} />,
     },

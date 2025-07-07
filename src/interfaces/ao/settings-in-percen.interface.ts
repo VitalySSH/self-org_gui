@@ -3,6 +3,7 @@ import { SettingsStatisticsInterface } from 'src/interfaces';
 export interface SettingsInPercentInterface {
   names: SettingsStatisticsInterface[];
   descriptions: SettingsStatisticsInterface[];
+  workgroup: SettingsStatisticsInterface[];
   secret_ballot: SettingsStatisticsInterface[];
   minority_not_participate: SettingsStatisticsInterface[];
   can_offer: SettingsStatisticsInterface[];

@@ -7,6 +7,8 @@ export interface CreatingCommunitySettings {
   significant_minority: number;
   decision_delay: number;
   dispute_time_limit: number;
+  is_workgroup: boolean;
+  workgroup?: number;
   is_secret_ballot: boolean;
   is_can_offer: boolean;
   is_minority_not_participate: boolean;

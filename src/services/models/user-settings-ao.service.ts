@@ -86,6 +86,8 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
     settings.significant_minority = formData.significant_minority;
     settings.decision_delay = formData.decision_delay;
     settings.dispute_time_limit = formData.dispute_time_limit;
+    settings.is_workgroup = formData.is_workgroup;
+    settings.workgroup = formData.workgroup;
     settings.is_secret_ballot = formData.is_secret_ballot;
     settings.is_can_offer = formData.is_can_offer;
     settings.is_minority_not_participate = formData.is_minority_not_participate;
@@ -110,6 +112,8 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
       significant_minority: settings.significant_minority,
       decision_delay: settings.decision_delay,
       dispute_time_limit: settings.dispute_time_limit,
+      is_workgroup: settings.is_workgroup,
+      workgroup: settings.workgroup,
       is_secret_ballot: settings.is_secret_ballot,
       is_can_offer: settings.is_can_offer,
       is_minority_not_participate: settings.is_minority_not_participate,

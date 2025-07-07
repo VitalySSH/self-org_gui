@@ -47,11 +47,13 @@ import {
   IsMinorityNotParticipateLabel,
   IsNotDelegateLabel,
   IsSecretBallotLabel,
+  IsWorkGroupLabel,
   QuorumLabel,
   ResponsibilitiesLabel,
   SignificantMinorityLabel,
   SystemCategoryCode,
   VoteLabel,
+  WorkGroupLabel,
 } from 'src/consts';
 import { Filters } from 'src/shared/types.ts';
 import './my-community-settings.page.scss';
@@ -64,6 +66,7 @@ export function MyCommunitySettings(props: any) {
   const [buttonLoading, setButtonLoading] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isWorkGroup, setIsWorkGroup] = useState(false);
 
   const communityId = props?.communityId;
   const nameService = new CrudDataSourceService(CommunityNameModel);
@@ -133,6 +136,7 @@ export function MyCommunitySettings(props: any) {
           if (resp.total) {
             const settingsInst = resp.data[0];
             setSettings(settingsInst);
+            setIsWorkGroup(Boolean(settingsInst?.is_workgroup));
             form.setFieldsValue({
               categories: settingsInst?.categories,
               names: settingsInst.names,
@@ -144,6 +148,8 @@ export function MyCommunitySettings(props: any) {
               significant_minority: settingsInst?.significant_minority,
               decision_delay: settingsInst?.decision_delay,
               dispute_time_limit: settingsInst?.dispute_time_limit,
+              is_workgroup: settingsInst?.is_workgroup,
+              workgroup: settingsInst?.workgroup,
               is_secret_ballot: settingsInst?.is_secret_ballot || false,
               is_can_offer: settingsInst?.is_can_offer || false,
               is_minority_not_participate:
@@ -230,6 +236,7 @@ export function MyCommunitySettings(props: any) {
 
   const handleFormChange = () => {
     const formData = form.getFieldsValue();
+    setIsWorkGroup(Boolean(formData.is_workgroup));
     const isValid =
       Boolean(formData.names) &&
       Boolean(formData.descriptions) &&
@@ -237,7 +244,8 @@ export function MyCommunitySettings(props: any) {
       Boolean(formData.vote) &&
       Boolean(formData.significant_minority) &&
       Boolean(formData.decision_delay) &&
-      Boolean(formData.dispute_time_limit);
+      Boolean(formData.dispute_time_limit) &&
+      (!formData.is_workgroup || (formData.is_workgroup && formData.workgroup));
     setDisabled(!isValid);
   };
 
@@ -261,6 +269,37 @@ export function MyCommunitySettings(props: any) {
         setButtonLoading(false);
       });
   };
+
+  const workgroupItem  = (
+    <Form.Item
+      name="workgroup"
+      label={
+        <span>
+            {WorkGroupLabel}&nbsp;
+          <Tooltip title="Предложите оптимальное, с вашей точки зрения количество участников для формирования рабочих групп. Минимум 3, максимум 15 человек.">
+              <QuestionCircleOutlined />
+            </Tooltip>
+          </span>
+      }
+      labelCol={{ span: 24 }}
+      rules={[
+        {
+          required: true,
+          message:
+            'Пожалуйста, укажите количетсво участников рабочей группы',
+        },
+      ]}
+    >
+      <InputNumber
+        type="number"
+        controls={false}
+        max={15}
+        min={3}
+        step={1}
+        style={{ width: 50 }}
+      />
+    </Form.Item>
+  );
 
   return (
     <>
@@ -528,6 +567,31 @@ export function MyCommunitySettings(props: any) {
             <Row gutter={16}>
               <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                 <Form.Item
+                  name="is_workgroup"
+                  label={
+                    <span>
+                      {IsWorkGroupLabel}&nbsp;
+                      <Tooltip title="Рабочая группа может быть сформрована после утверждения инициативы, для выработки одного или нескольких проектов реализации данной инициативы. При отсутсвиии рабочей группы предполагается, что в выработке проектов реализаций участвуют все желающие участники сообщества.">
+                        <QuestionCircleOutlined />
+                      </Tooltip>
+                    </span>
+                  }
+                  labelCol={{ span: 24 }}
+                  valuePropName="checked"
+                >
+                  <Switch
+                    checkedChildren={<CheckOutlined />}
+                    unCheckedChildren={<CloseOutlined />}
+                  />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+                {isWorkGroup && workgroupItem}
+              </Col>
+            </Row>
+            <Row gutter={16}>
+              <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+                <Form.Item
                   name="is_secret_ballot"
                   label={IsSecretBallotLabel}
                   labelCol={{ span: 24 }}
@@ -539,7 +603,7 @@ export function MyCommunitySettings(props: any) {
                   />
                 </Form.Item>
               </Col>
-              <Col xs={24} sm={12}>
+              <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
                 <Form.Item
                   name="is_can_offer"
                   label={IsCanOfferLabel}

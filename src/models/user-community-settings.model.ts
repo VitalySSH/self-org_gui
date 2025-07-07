@@ -45,6 +45,12 @@ export class UserCommunitySettingsModel extends ApiModel {
   dispute_time_limit!: number;
 
   @attribute()
+  is_workgroup!: boolean;
+
+  @attribute()
+  workgroup?: number;
+
+  @attribute()
   is_secret_ballot!: boolean;
 
   @attribute()

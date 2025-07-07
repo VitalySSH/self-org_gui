@@ -11,15 +11,18 @@ import {
   DisputeTimeLimitLabel,
   IsMinorityNotParticipateLabel,
   IsSecretBallotLabel,
+  IsWorkGroupLabel,
   QuorumLabel,
   ResponsibilitiesLabel,
   SignificantMinorityLabel,
   VoteLabel,
+  WorkGroupLabel,
 } from 'src/consts';
 
 export function CommunitySettings(props: any) {
   const navigate = useNavigate();
   const [settingsLoading, setSettingsLoading] = useState(true);
+  const [isWorkGroup, setIsWorkGroup] = useState(false);
   const communityService = new CrudDataSourceService(CommunityModel);
 
   const communityId = props?.communityId;
@@ -43,6 +46,7 @@ export function CommunitySettings(props: any) {
           const responsibilities = (settingsInst?.responsibilities || []).map(
             (responsibility) => responsibility.name
           );
+          setIsWorkGroup(Boolean(settingsInst?.is_workgroup));
           form.setFieldsValue({
             name: settingsInst?.name?.name,
             description: settingsInst?.description?.value,
@@ -51,6 +55,8 @@ export function CommunitySettings(props: any) {
             significant_minority: settingsInst?.significant_minority,
             decision_delay: settingsInst?.decision_delay,
             dispute_time_limit: settingsInst?.dispute_time_limit,
+            is_workgroup: settingsInst?.is_workgroup,
+            workgroup: settingsInst?.workgroup,
             is_secret_ballot: settingsInst?.is_secret_ballot || false,
             is_can_offer: settingsInst?.is_can_offer || false,
             is_minority_not_participate:
@@ -138,6 +144,31 @@ export function CommunitySettings(props: any) {
               <InputNumber type="number" style={{ width: 50 }} readOnly />
             </Form.Item>
           </Col>
+          <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+            <Form.Item
+              name="is_workgroup"
+              label={IsWorkGroupLabel}
+              labelCol={{ span: 24 }}
+              valuePropName="checked"
+            >
+              <Switch
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+                disabled
+              />
+            </Form.Item>
+          </Col>
+          {isWorkGroup && (
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+              <Form.Item
+                name="workgroup"
+                label={WorkGroupLabel}
+                labelCol={{ span: 24 }}
+              >
+                <InputNumber type="number" style={{ width: 50 }} readOnly />
+              </Form.Item>
+            </Col>
+          )}
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Form.Item
               name="is_secret_ballot"
