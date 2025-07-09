@@ -14,12 +14,13 @@ import {
   CheckOutlined,
   CloseOutlined,
   QuestionCircleOutlined,
+  RobotOutlined,
 } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import {
   CreatingInitiativeInterface,
   InitiativeFormInterface,
-  Pagination,
+  Pagination, RuleFormInterface,
 } from 'src/interfaces';
 import { CrudDataSourceService, InitiativeAoService } from 'src/services';
 import { useNavigate } from 'react-router-dom';
@@ -32,7 +33,7 @@ import {
   OneDayEventLabel,
   SystemCategoryCode,
 } from 'src/consts';
-import { CustomSelect, ResponsibilityCheckModal } from 'src/components';
+import { AIChat, CustomSelect, ResponsibilityCheckModal } from 'src/components';
 import { CategoryModel } from 'src/models';
 import { Filters } from 'src/shared/types.ts';
 
@@ -48,6 +49,7 @@ export function NewInitiative(props: any) {
   const [isExtraOptions, setIsExtraOptions] = useState(false);
   const [isCheckingResponsibility, setIsCheckingResponsibility] =
     useState(false);
+  const [isAIMode, setIsAIMode] = useState(false);
 
   const categoryService = new CrudDataSourceService(CategoryModel);
   const initiativeAoService = new InitiativeAoService();
@@ -111,14 +113,26 @@ export function NewInitiative(props: any) {
     return categoryService.list(newFilters, undefined, pagination);
   };
 
+  const handleAIComplete = (aiData: RuleFormInterface) => {
+    // Заполняем форму данными от ИИ
+    form.setFieldsValue(aiData);
+    setIsExtraOptions(Boolean(aiData.is_extra_options));
+    setIsAIMode(false);
+
+    // Принудительно вызываем проверку валидности формы
+    setTimeout(() => {
+      handleFormChange();
+    }, 100);
+  };
+
   const extraOptions = (
     <>
       <Form.Item
         name="extra_question"
         label={
           <span>
-            Вопрос для дополнитеных параметров&nbsp;
-            <Tooltip title="Сформулируйте вопрос для определения дополнитеных параметров голосования. Максимум 140 символов.">
+            Вопрос для дополнительных параметров&nbsp;
+            <Tooltip title="Сформулируйте вопрос для определения дополнительных параметров голосования. Максимум 140 символов.">
               <QuestionCircleOutlined />
             </Tooltip>
           </span>
@@ -132,7 +146,7 @@ export function NewInitiative(props: any) {
           },
           {
             max: 140,
-            message: 'Текст вопроса не должен привышать 140 символов',
+            message: 'Текст вопроса не должен превышать 140 символов',
           },
         ]}
         hasFeedback
@@ -247,6 +261,17 @@ export function NewInitiative(props: any) {
       .finally(() => setButtonLoading(false));
   };
 
+  // Если включен AI режим, показываем чат
+  if (isAIMode) {
+    return (
+      <AIChat
+        onComplete={handleAIComplete}
+        onCancel={() => setIsAIMode(false)}
+        fetchCategories={fetchCategories}
+      />
+    );
+  }
+
   return (
     <>
       <div className="form-container">
@@ -258,7 +283,18 @@ export function NewInitiative(props: any) {
           onComplete={onFinish}
         />
 
-        <div className="form-header">Новая инициатива</div>
+        <div className="form-header">
+          <div>Новая инициатива</div>
+          <Button
+            type="default"
+            icon={<RobotOutlined />}
+            onClick={() => setIsAIMode(true)}
+            className="ai-mode-button"
+          >
+            ИИ-режим
+          </Button>
+        </div>
+
         <Form
           form={form}
           name="new-initiative"
@@ -287,7 +323,7 @@ export function NewInitiative(props: any) {
               },
               {
                 max: 140,
-                message: 'Текст заголовка не должен привышать 140 символов',
+                message: 'Текст заголовка не должен превышать 140 символов',
               },
             ]}
             hasFeedback
@@ -309,11 +345,11 @@ export function NewInitiative(props: any) {
               {
                 required: true,
                 message:
-                  'Пожалуйста, укажите вопрос, на которой должны ответить при голосовании',
+                  'Пожалуйста, укажите вопрос, на который должны ответить при голосовании',
               },
               {
                 max: 140,
-                message: 'Текст вопроса не должен привышать 140 символов',
+                message: 'Текст вопроса не должен превышать 140 символов',
               },
             ]}
             hasFeedback
@@ -340,7 +376,7 @@ export function NewInitiative(props: any) {
               {
                 max: 1000,
                 message:
-                  'Текст описания инициативы не должен привышать 1000 символов',
+                  'Текст описания правила не должен превышать 1000 символов',
               },
             ]}
             hasFeedback

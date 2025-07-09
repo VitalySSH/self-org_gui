@@ -67,7 +67,7 @@ export function AIModal(props: AiModalProps) {
       open={props.visible}
       onCancel={props.onClose}
       footer={null}
-      width="60%"
+      width="50%"
       className="ai-summary-modal"
     >
       {loading ? (

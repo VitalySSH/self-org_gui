@@ -35,3 +35,4 @@ export * from './AI/AIModal/ai-modal.component';
 export * from './AI/AICompromise/ai-compromise.component';
 export * from './AI/ResponsibilityCheckModal/responsibility-check-modal.component';
 export * from './Recommendation/recommendation-voting-modal.component';
+export * from './AI/AIChat/ai-chat.component';

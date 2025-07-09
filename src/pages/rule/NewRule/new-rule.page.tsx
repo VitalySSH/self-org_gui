@@ -5,6 +5,7 @@ import {
   CheckOutlined,
   CloseOutlined,
   QuestionCircleOutlined,
+  RobotOutlined,
 } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import {
@@ -22,7 +23,7 @@ import {
   IsMultiSelectLabel,
   SystemCategoryCode,
 } from 'src/consts';
-import { CustomSelect, ResponsibilityCheckModal } from 'src/components';
+import { AIChat, CustomSelect, ResponsibilityCheckModal } from 'src/components';
 import { CategoryModel } from 'src/models';
 import { Filters } from 'src/shared/types.ts';
 
@@ -35,8 +36,8 @@ export function NewRule(props: any) {
   const [buttonLoading, setButtonLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [isExtraOptions, setIsExtraOptions] = useState(false);
-  const [isCheckingResponsibility, setIsCheckingResponsibility] =
-    useState(false);
+  const [isCheckingResponsibility, setIsCheckingResponsibility] = useState(false);
+  const [isAIMode, setIsAIMode] = useState(false);
 
   const categoryService = new CrudDataSourceService(CategoryModel);
   const ruleAoService = new RuleAoService();
@@ -99,14 +100,26 @@ export function NewRule(props: any) {
     return categoryService.list(newFilters, undefined, pagination);
   };
 
+  const handleAIComplete = (aiData: RuleFormInterface) => {
+    // Заполняем форму данными от ИИ
+    form.setFieldsValue(aiData);
+    setIsExtraOptions(Boolean(aiData.is_extra_options));
+    setIsAIMode(false);
+
+    // Принудительно вызываем проверку валидности формы
+    setTimeout(() => {
+      handleFormChange();
+    }, 100);
+  };
+
   const extraOptions = (
     <>
       <Form.Item
         name="extra_question"
         label={
           <span>
-            Вопрос для дополнитеных параметров&nbsp;
-            <Tooltip title="Сформулируйте вопрос для определения дополнитеных параметров голосования. Максимум 140 символов.">
+            Вопрос для дополнительных параметров&nbsp;
+            <Tooltip title="Сформулируйте вопрос для определения дополнительных параметров голосования. Максимум 140 символов.">
               <QuestionCircleOutlined />
             </Tooltip>
           </span>
@@ -120,7 +133,7 @@ export function NewRule(props: any) {
           },
           {
             max: 140,
-            message: 'Текст вопроса не должен привышать 140 символов',
+            message: 'Текст вопроса не должен превышать 140 символов',
           },
         ]}
         hasFeedback
@@ -231,6 +244,17 @@ export function NewRule(props: any) {
       .finally(() => setButtonLoading(false));
   };
 
+  // Если включен AI режим, показываем чат
+  if (isAIMode) {
+    return (
+      <AIChat
+        onComplete={handleAIComplete}
+        onCancel={() => setIsAIMode(false)}
+        fetchCategories={fetchCategories}
+      />
+    );
+  }
+
   return (
     <>
       <div className="form-container">
@@ -242,7 +266,18 @@ export function NewRule(props: any) {
           onComplete={onFinish}
         />
 
-        <div className="form-header">Новое правило</div>
+        <div className="form-header">
+          <div>Новое правило</div>
+          <Button
+            type="default"
+            icon={<RobotOutlined />}
+            onClick={() => setIsAIMode(true)}
+            className="ai-mode-button"
+          >
+            ИИ-режим
+          </Button>
+        </div>
+
         <Form
           form={form}
           name="new-rule"
@@ -270,7 +305,7 @@ export function NewRule(props: any) {
               },
               {
                 max: 140,
-                message: 'Текст заголовка не должен привышать 140 символов',
+                message: 'Текст заголовка не должен превышать 140 символов',
               },
             ]}
             hasFeedback
@@ -292,11 +327,11 @@ export function NewRule(props: any) {
               {
                 required: true,
                 message:
-                  'Пожалуйста, укажите вопрос, на которой должны ответить при голосовании',
+                  'Пожалуйста, укажите вопрос, на который должны ответить при голосовании',
               },
               {
                 max: 140,
-                message: 'Текст вопроса не должен привышать 140 символов',
+                message: 'Текст вопроса не должен превышать 140 символов',
               },
             ]}
             hasFeedback
@@ -323,7 +358,7 @@ export function NewRule(props: any) {
               {
                 max: 1000,
                 message:
-                  'Текст описания правиа не должен привышать 1000 символов',
+                  'Текст описания правила не должен превышать 1000 символов',
               },
             ]}
             hasFeedback
