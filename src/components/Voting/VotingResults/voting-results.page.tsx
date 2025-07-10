@@ -1,7 +1,10 @@
 import './voting-results.page.scss';
 import { Button, Form, Progress, Select, Tooltip, Space, Flex } from 'antd';
 import { VotingResultsProps } from 'src/interfaces';
-import { InfoCircleOutlined, BulbOutlined } from '@ant-design/icons';
+import {
+  InfoCircleOutlined,
+  RobotOutlined,
+} from '@ant-design/icons';
 import { useState } from 'react';
 import { AiCompromise } from 'src/components';
 
@@ -78,10 +81,11 @@ export function VotingResults(props: VotingResultsProps) {
             </Space>
             <Button
               type="primary"
-              icon={<BulbOutlined style={{ color: 'white' }} />}
+              icon={<RobotOutlined style={{ color: 'white' }} />}
               onClick={handleCompromise}
+              className="ai-button-primary"
             >
-              AI поиск компромиссов
+              ИИ поиск компромиссов
             </Button>
           </Flex>
 

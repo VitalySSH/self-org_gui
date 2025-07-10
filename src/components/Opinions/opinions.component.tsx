@@ -5,7 +5,11 @@ import TextArea from 'antd/lib/input/TextArea';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CrudDataSourceService } from 'src/services';
 import { OpinionModel } from 'src/models';
-import { BulbOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import {
+  EditOutlined,
+  DeleteOutlined,
+  RobotOutlined,
+} from '@ant-design/icons';
 import { AISummaryOpinions } from 'src/components';
 import './opinions.component.scss';
 
@@ -191,10 +195,11 @@ export function Opinions(props: OpinionsProps) {
           </h3>
           <Button
             type="primary"
-            icon={<BulbOutlined style={{ color: 'white' }} />}
+            icon={<RobotOutlined style={{ color: 'white' }} />}
             onClick={() => setSummaryModalVisible(true)}
+            className="ai-button-primary"
           >
-            AI суммирование мнений
+            ИИ суммирование мнений
           </Button>
         </div>
 

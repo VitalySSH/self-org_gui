@@ -270,9 +270,9 @@ export function NewRule(props: any) {
           <div>Новое правило</div>
           <Button
             type="default"
-            icon={<RobotOutlined />}
+            icon={<RobotOutlined style={{ color: 'white' }} />}
             onClick={() => setIsAIMode(true)}
-            className="ai-mode-button"
+            className="ai-button-primary"
           >
             ИИ-режим
           </Button>

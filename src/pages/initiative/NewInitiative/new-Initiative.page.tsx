@@ -114,12 +114,10 @@ export function NewInitiative(props: any) {
   };
 
   const handleAIComplete = (aiData: RuleFormInterface) => {
-    // Заполняем форму данными от ИИ
     form.setFieldsValue(aiData);
     setIsExtraOptions(Boolean(aiData.is_extra_options));
     setIsAIMode(false);
 
-    // Принудительно вызываем проверку валидности формы
     setTimeout(() => {
       handleFormChange();
     }, 100);
@@ -261,7 +259,6 @@ export function NewInitiative(props: any) {
       .finally(() => setButtonLoading(false));
   };
 
-  // Если включен AI режим, показываем чат
   if (isAIMode) {
     return (
       <AIChat
@@ -287,9 +284,9 @@ export function NewInitiative(props: any) {
           <div>Новая инициатива</div>
           <Button
             type="default"
-            icon={<RobotOutlined />}
+            icon={<RobotOutlined style={{ color: 'white' }} />}
             onClick={() => setIsAIMode(true)}
-            className="ai-mode-button"
+            className="ai-button-primary"
           >
             ИИ-режим
           </Button>

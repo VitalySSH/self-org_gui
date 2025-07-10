@@ -1,4 +1,292 @@
+@use 'src/shared/assets/scss/variables' as *;
+
 .ant-modal.ai-summary-modal {
-  width: 50% !important;
-  max-width: 50% !important;
+  width: 90% !important;
+  max-width: 800px !important;
+  top: 80px !important;
+  animation-duration: 0.2s !important; // Синхронизируем с Ant Design
+}
+
+.ant-modal.ai-summary-modal .ant-modal-content {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+  border: none !important;
+}
+
+/* Заголовок модального окна */
+.ant-modal.ai-summary-modal .ant-modal-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border-bottom: none !important;
+  padding: 20px 24px !important;
+  border-radius: 16px 16px 0 0 !important;
+  position: relative;
+  z-index: 1;
+}
+
+.ant-modal.ai-summary-modal .ant-modal-title {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin-right: 12px;
+}
+
+/* Кнопка закрытия */
+.ant-modal.ai-summary-modal .ant-modal-close {
+  color: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 50% !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+  position: absolute !important;
+  right: 24px !important;
+  top: 20px !important;
+  z-index: 2;
+}
+
+.ant-modal.ai-summary-modal .ant-modal-close:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  transform: scale(1.1) !important;
+}
+
+/* Тело модального окна */
+.ant-modal.ai-summary-modal .ant-modal-body {
+  padding: 24px !important;
+  background: #f8fafc !important;
+  max-height: 70vh !important;
+  overflow-y: auto !important;
+}
+
+/* Область загрузки */
+.ai-modal-loading {
+  text-align: center;
+  padding: 40px 24px;
+  background: white;
+  border-radius: 12px;
+  margin: 0 auto;
+  max-width: 400px;
+}
+
+.ai-modal-loading .ant-spin-dot {
+  font-size: 24px !important;
+}
+
+.ai-modal-loading .ant-spin-dot-item {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.ai-modal-loading-text {
+  margin-top: 16px !important;
+  font-size: 16px !important;
+  color: #64748b !important;
+  font-weight: 500 !important;
+}
+
+/* Панель управления */
+.ai-modal-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.ai-modal-control-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  background: white;
+  color: #64748b;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.ai-modal-control-button:hover {
+  border-color: #1890ff;
+  color: #1890ff;
+  background: #f0f9ff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.15);
+}
+
+.ai-modal-control-button.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: transparent;
+  color: white;
+}
+
+.ai-modal-copy-button {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border: none !important;
+  color: white !important;
+}
+
+.ai-modal-copy-button:hover {
+  background: $accent-yellow !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Область контента */
+.ai-modal-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.ai-modal-textarea {
+  border: none !important;
+  background: white !important;
+  resize: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  line-height: 1.6 !important;
+  color: #374151 !important;
+  padding: 20px !important;
+}
+
+.ai-modal-textarea:focus {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Скроллбар для контента */
+.ai-modal-content::-webkit-scrollbar,
+.ai-modal-textarea::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ai-modal-content::-webkit-scrollbar-track,
+.ai-modal-textarea::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.ai-modal-content::-webkit-scrollbar-thumb,
+.ai-modal-textarea::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.ai-modal-content::-webkit-scrollbar-thumb:hover,
+.ai-modal-textarea::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Анимации */
+.ai-modal-fade-in {
+  animation: fadeInModal 0.3s ease-out;
+}
+
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .ant-modal.ai-summary-modal {
+    width: 95% !important;
+    max-width: none !important;
+    top: 10px !important;
+  }
+
+  .ant-modal.ai-summary-modal .ant-modal-body {
+    padding: 16px !important;
+    max-height: 75vh !important;
+  }
+
+  .ai-modal-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ai-modal-control-button {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .ai-modal-textarea {
+    padding: 16px !important;
+    font-size: 16px !important; /* Предотвращает зум на iOS */
+  }
+}
+
+@media (max-width: 480px) {
+  .ant-modal.ai-summary-modal .ant-modal-header {
+    padding: 16px 20px !important;
+  }
+
+  .ant-modal.ai-summary-modal .ant-modal-title {
+    font-size: 16px !important;
+  }
+
+  .ai-modal-loading {
+    padding: 32px 16px;
+  }
+
+  .ai-modal-controls {
+    padding: 12px;
+  }
+}
+
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+  .ant-modal.ai-summary-modal .ant-modal-body {
+    background: #1e293b !important;
+  }
+
+  .ai-modal-controls {
+    background: #334155 !important;
+  }
+
+  .ai-modal-control-button {
+    background: #475569 !important;
+    border-color: #64748b !important;
+    color: #e2e8f0 !important;
+  }
+
+  .ai-modal-control-button:hover {
+    background: #374151 !important;
+    border-color: #1890ff !important;
+    color: #1890ff !important;
+  }
+
+  .ai-modal-content {
+    background: #334155 !important;
+  }
+
+  .ai-modal-textarea {
+    background: #334155 !important;
+    color: #e2e8f0 !important;
+  }
+
+  .ai-modal-loading {
+    background: #334155 !important;
+  }
+
+  .ai-modal-loading-text {
+    color: #94a3b8 !important;
+  }
 }

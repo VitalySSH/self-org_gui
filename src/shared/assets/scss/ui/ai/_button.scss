@@ -1,0 +1,378 @@
+.ai-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  overflow: hidden;
+  text-decoration: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.ai-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ai-button:hover::before {
+  opacity: 1;
+}
+
+.ai-button-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+}
+
+.ai-button-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  color: white;
+}
+
+.ai-button-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.ai-button-primary:disabled {
+  opacity: 0.6;
+  transform: none;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+  cursor: not-allowed;
+}
+
+/* Вторичная AI кнопка */
+.ai-button-secondary {
+  background: white;
+  color: #667eea;
+  border: 1px solid #667eea;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+}
+
+.ai-button-secondary:hover {
+  background: #667eea;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.ai-button-secondary:active {
+  transform: translateY(0);
+}
+
+/* Кнопка призыва к действию */
+.ai-button-cta {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+  font-size: 16px;
+  padding: 12px 24px;
+  height: auto;
+}
+
+.ai-button-cta:hover {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  color: white;
+}
+
+.ai-button-cta:active {
+  transform: translateY(0);
+}
+
+/* Компактная AI кнопка */
+.ai-button-compact {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 18px;
+  gap: 4px;
+}
+
+/* Большая AI кнопка */
+.ai-button-large {
+  padding: 16px 32px;
+  font-size: 16px;
+  border-radius: 30px;
+  gap: 12px;
+}
+
+/* Плавающая AI кнопка */
+.ai-button-floating {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  padding: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.ai-button-floating:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5);
+  color: white;
+}
+
+.ai-button-floating:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* Кнопка с анимацией загрузки */
+.ai-button-loading {
+  position: relative;
+  color: transparent !important;
+}
+
+.ai-button-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Кнопка с пульсацией */
+.ai-button-pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+  }
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Кнопка с градиентной анимацией */
+.ai-button-gradient-animated {
+  background: linear-gradient(
+                  45deg,
+                  #667eea,
+                  #764ba2,
+                  #f093fb,
+                  #f5576c,
+                  #667eea
+  );
+  background-size: 300% 300%;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Кнопка с эффектом свечения */
+.ai-button-glow {
+  position: relative;
+  overflow: visible;
+}
+
+.ai-button-glow::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.ai-button-glow:hover::before {
+  opacity: 1;
+}
+
+/* Группа AI кнопок */
+.ai-button-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.ai-button-group .ai-button {
+  flex: 1;
+  min-width: 0;
+  justify-content: center;
+}
+
+.ai-button-group .ai-button:first-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.ai-button-group .ai-button:last-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.ai-button-group .ai-button:not(:first-child):not(:last-child) {
+  border-radius: 8px;
+}
+
+/* Toolbar с AI кнопками */
+.ai-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e2e8f0;
+}
+
+.ai-toolbar .ai-button {
+  padding: 8px 16px;
+  border-radius: 20px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .ai-button {
+    padding: 8px 16px;
+    font-size: 13px;
+    gap: 6px;
+  }
+
+  .ai-button-large {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+
+  .ai-button-floating {
+    bottom: 16px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+  }
+
+  .ai-button-group {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .ai-button-group .ai-button {
+    width: 100%;
+    border-radius: 25px;
+  }
+
+  .ai-toolbar {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ai-button {
+    padding: 6px 12px;
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  .ai-button-cta {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .ai-button-large {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+  .ai-button-secondary {
+    background: #334155;
+    color: #94a3b8;
+    border-color: #475569;
+  }
+
+  .ai-button-secondary:hover {
+    background: #475569;
+    color: white;
+  }
+
+  .ai-toolbar {
+    background: #334155;
+    border-color: #475569;
+  }
+}
+
+/* Специфичные кнопки для различных AI функций */
+.ai-button-chat {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.ai-button-summary {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.ai-button-analyze {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.ai-button-generate {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+
+.ai-button-translate {
+  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+}
+
+/* Hover эффекты для специфичных кнопок */
+.ai-button-chat:hover { box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); }
+.ai-button-summary:hover { box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
+.ai-button-analyze:hover { box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4); }
+.ai-button-generate:hover { box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4); }
+.ai-button-translate:hover { box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4); }
