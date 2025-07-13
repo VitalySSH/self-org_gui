@@ -10,6 +10,14 @@ export default defineConfig({
       src: '/src',
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true
+      }
+    }
+  },
   css: {
     modules: {
       localsConvention: 'camelCase',
@@ -21,4 +29,7 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    outDir: 'dist'
+  }
 });

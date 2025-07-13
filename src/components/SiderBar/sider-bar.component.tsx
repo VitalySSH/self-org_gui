@@ -4,7 +4,7 @@ import {
   MenuUnfoldOutlined,
   TeamOutlined,
   InfoCircleOutlined,
-  // ExceptionOutlined,
+  ExceptionOutlined,
   ApartmentOutlined,
   ToolOutlined,
   BarChartOutlined,
@@ -66,6 +66,16 @@ const userGuideMenuItems: MenuItem[] = [
     key: 'user-guide-challenges',
     icon: <InfoCircleOutlined />,
     label: 'Лаборатория',
+  },
+  {
+    key: 'test5',
+    icon: <InfoCircleOutlined />,
+    label: 'Коллективный опыт',
+  },
+  {
+    key: 'test6',
+    icon: <InfoCircleOutlined />,
+    label: 'Интеграции',
   },
 ];
 
@@ -207,44 +217,40 @@ export function SiderBar(props: SiderBarInterface) {
         ></Image>
       </Flex>
 
-      {!props.isCommunityWS && (
+      {!props.isCommunityWS && !props.isNotAuthorized && (
         <>
-          {!props.isNotAuthorized && (
-            <>
-              {!collapsed && <div className="menu-header">Сообщества</div>}
-              {collapsed && (
-                <Tooltip title="Сообщества" placement="right">
-                  <ApartmentOutlined className="menu-header-icon" />
-                </Tooltip>
-              )}
-              <Menu
-                mode="inline"
-                items={communitiesMenuItems}
-                onClick={(item) => {
-                  setCommunitiesMenuKeys([item.key]);
-                  navigate(item.key);
-                }}
-                selectedKeys={communitiesMenuKeys}
-              />
-            </>
+          {!collapsed && <div className="menu-header">Сообщества</div>}
+          {collapsed && (
+            <Tooltip title="Сообщества" placement="right">
+              <ApartmentOutlined className="menu-header-icon" />
+            </Tooltip>
           )}
-          {/*{!collapsed && (*/}
-          {/*  <div className="menu-header">Руководство пользователя</div>*/}
-          {/*)}*/}
-          {/*{collapsed && (*/}
-          {/*  <Tooltip title="Руководство пользователя" placement="right">*/}
-          {/*    <ExceptionOutlined className="menu-header-icon" />*/}
-          {/*  </Tooltip>*/}
-          {/*)}*/}
-          {/*<Menu*/}
-          {/*  mode="inline"*/}
-          {/*  items={userGuideMenuItems}*/}
-          {/*  onClick={(item) => {*/}
-          {/*    setUserGuideMenuKeys([item.key]);*/}
-          {/*    navigate(item.key);*/}
-          {/*  }}*/}
-          {/*  selectedKeys={userGuideMenuKeys}*/}
-          {/*/>*/}
+          <Menu
+            mode="inline"
+            items={communitiesMenuItems}
+            onClick={(item) => {
+              setCommunitiesMenuKeys([item.key]);
+              navigate(item.key);
+            }}
+            selectedKeys={communitiesMenuKeys}
+          />
+          {!collapsed && (
+            <div className="menu-header">Руководство пользователя</div>
+          )}
+          {collapsed && (
+            <Tooltip title="Руководство пользователя" placement="right">
+              <ExceptionOutlined className="menu-header-icon" />
+            </Tooltip>
+          )}
+          <Menu
+            mode="inline"
+            items={userGuideMenuItems}
+            onClick={(item) => {
+              // setUserGuideMenuKeys([item.key]);
+              // navigate(item.key);
+            }}
+            selectedKeys={userGuideMenuKeys}
+          />
         </>
       )}
       {props.isCommunityWS && (

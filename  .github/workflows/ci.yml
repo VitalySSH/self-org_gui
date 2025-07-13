@@ -1,0 +1,61 @@
+name: CI/CD — self-org_gui
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-push-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🧾 Клонирование репозитория
+        uses: actions/checkout@v4
+
+      - name: 🧰 Установка Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.11.1'
+
+      - name: 🐳 Docker login в YCR
+        run: |
+          echo '${{ secrets.YCR_PASSWORD }}' > key.json
+          docker login --username json_key --password-stdin ${{ secrets.YCR_REGISTRY }} < key.json
+          rm key.json
+
+      - name: 🔧 Сборка и пуш Docker-образа фронтенда
+        run: |
+          IMAGE_TAG=build-${{ github.run_number }}
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          docker build -t ${{ secrets.YCR_REGISTRY }}/${{ secrets.YCR_IMAGE_NAME_FE }}:$IMAGE_TAG .
+          docker push ${{ secrets.YCR_REGISTRY }}/${{ secrets.YCR_IMAGE_NAME_FE }}:$IMAGE_TAG
+          docker tag ${{ secrets.YCR_REGISTRY }}/${{ secrets.YCR_IMAGE_NAME_FE }}:$IMAGE_TAG ${{ secrets.YCR_REGISTRY }}/${{ secrets.YCR_IMAGE_NAME_FE }}:latest
+          docker push ${{ secrets.YCR_REGISTRY }}/${{ secrets.YCR_IMAGE_NAME_FE }}:latest
+
+      - name: 📤 Копирование docker-compose.yml на сервер
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "docker-compose.yml"
+          target: "/home/selforg/gui/"
+          rm: false
+          overwrite: true
+
+      - name: 🚀 SSH-деплой фронтенда на сервер
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo '${{ secrets.YCR_PASSWORD }}' > key.json
+            docker login --username json_key --password-stdin ${{ secrets.YCR_REGISTRY }} < key.json
+            rm key.json
+            export YCR_REGISTRY=${{ secrets.YCR_REGISTRY }}
+            export YCR_IMAGE_NAME_FE=${{ secrets.YCR_IMAGE_NAME_FE }}
+            export IMAGE_TAG=build-${{ github.run_number }}
+            cd selforg/gui
+            docker-compose pull
+            docker-compose up -d --pull always --force-recreate
