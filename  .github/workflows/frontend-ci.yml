@@ -3,7 +3,11 @@ name: CI/CD — self-org_gui
 on:
   push:
     branches: [main]
+    paths:
+      - 'frontend/**'
   pull_request:
+    paths:
+      - 'frontend/**'
 
 jobs:
   build-push-deploy:
