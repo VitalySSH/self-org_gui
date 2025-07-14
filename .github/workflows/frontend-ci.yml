@@ -44,6 +44,16 @@ jobs:
           rm: false
           overwrite: true
 
+      - name: 🔁 Обновить IMAGE_TAG на сервере
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            sed -i '/^IMAGE_TAG=/d' /home/selforg/gui/.env
+            echo "IMAGE_TAG=build-${{ github.run_number }}" >> /home/selforg/gui/.env
+
       - name: 🚀 SSH-деплой на сервер
         uses: appleboy/ssh-action@master
         with:
@@ -55,17 +65,9 @@ jobs:
             docker login --username json_key --password-stdin ${{ secrets.YCR_REGISTRY }} < key.json
             rm key.json
 
-            export YCR_REGISTRY=${{ secrets.YCR_REGISTRY }}
-            export YCR_FRONT_IMAGE_NAME=${{ secrets.YCR_FRONT_IMAGE_NAME }}
-            export IMAGE_TAG=build-${{ github.run_number }}
-
             cd /home/selforg/gui
             
-            echo "✅ Проверка переменных окружения:"
-            echo "YCR_REGISTRY=$YCR_REGISTRY"
-            echo "YCR_FRONT_IMAGE_NAME=$YCR_FRONT_IMAGE_NAME"
-            echo "IMAGE_TAG=$IMAGE_TAG"
-
-            echo "📦 Перезапуск фронта"
+            docker-compose -f docker-compose.frontend.yml down
             docker-compose -f docker-compose.frontend.yml pull
-            docker-compose -f docker-compose.frontend.yml up -d --pull always --force-recreate
+            docker-compose -f docker-compose.frontend.yml up -d --force-recreate
+            docker image prune -f
