@@ -24,6 +24,11 @@ jobs:
           docker login --username json_key --password-stdin ${{ secrets.YCR_REGISTRY }} < key.json
           rm key.json
 
+      - name: 🧪 Отладка переменных
+        run: |
+          echo "YCR_REGISTRY=${{ secrets.YCR_REGISTRY }}"
+          echo "YCR_IMAGE_NAME_FE=${{ secrets.YCR_FRONT_IMAGE_NAME }}"
+
       - name: 🔧 Сборка и пуш Docker-образа фронтенда
         run: |
           IMAGE_TAG=build-${{ github.run_number }}
