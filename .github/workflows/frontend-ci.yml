@@ -57,15 +57,11 @@ jobs:
             rm key.json
 
             export YCR_REGISTRY=${{ secrets.YCR_REGISTRY }}
+            export YCR_IMAGE_NAME=${{ secrets.YCR_IMAGE_NAME }}
             export YCR_FRONT_IMAGE_NAME=${{ secrets.YCR_FRONT_IMAGE_NAME }}
             export IMAGE_TAG=build-${{ github.run_number }}
 
             cd ~/selforg/gui
-
-            echo "✅ Проверка переменных окружения:"
-            echo "YCR_REGISTRY=$YCR_REGISTRY"
-            echo "YCR_FRONT_IMAGE_NAME=$YCR_FRONT_IMAGE_NAME"
-            echo "IMAGE_TAG=$IMAGE_TAG"
 
             echo "📦 Обновление и перезапуск контейнеров..."
             docker-compose pull || { echo '❌ Ошибка при pull'; exit 1; }
