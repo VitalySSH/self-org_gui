@@ -61,9 +61,7 @@ jobs:
             export YCR_FRONT_IMAGE_NAME=${{ secrets.YCR_FRONT_IMAGE_NAME }}
             export IMAGE_TAG=build-${{ github.run_number }}
 
-            echo "🧭 Текущая директория перед cd:"
-            pwd && ls -al
-            cd selforg/gui
+            cd /home/selforg/gui
 
             echo "📦 Перезапуск фронта"
             docker-compose -f docker-compose.frontend.yml pull || { echo '❌ Ошибка при pull'; exit 1; }
