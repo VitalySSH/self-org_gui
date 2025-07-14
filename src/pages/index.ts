@@ -28,3 +28,4 @@ export * from './delegate/NewDelegate/new-delegate.page';
 export * from './delegate/DelegateDetail/delegate-detail.page';
 export * from './userGuide/userGuideChallenges/user-guide-challenges.page';
 export * from './userGuide/userGuideDisputes/user-guide-disputes.page';
+export * from './userGuide/userGuideDisputes/user-guide-disputes.page';

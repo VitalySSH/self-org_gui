@@ -1,6 +1,8 @@
 import { Flex, Image } from 'antd';
 
 export function Disputes(props: any) {
+  console.log(props);
+
   return (
     <div className="content-container">
       <Flex align="center" justify="center">

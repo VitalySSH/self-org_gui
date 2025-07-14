@@ -245,7 +245,7 @@ export function SiderBar(props: SiderBarInterface) {
           <Menu
             mode="inline"
             items={userGuideMenuItems}
-            onClick={(item) => {
+            onClick={() => {
               // setUserGuideMenuKeys([item.key]);
               // navigate(item.key);
             }}
