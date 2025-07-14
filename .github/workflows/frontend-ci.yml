@@ -39,7 +39,7 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "docker-compose.yml"
+          source: "docker-compose.frontend.yml"
           target: "/home/selforg/gui/"
           rm: false
           overwrite: true
