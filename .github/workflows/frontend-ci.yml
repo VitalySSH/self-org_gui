@@ -44,19 +44,35 @@ jobs:
           rm: false
           overwrite: true
 
-      - name: 🚀 SSH-деплой фронтенда на сервер
+      - name: 🚀 SSH-деплой на сервер
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            set -x
             echo '${{ secrets.YCR_PASSWORD }}' > key.json
             docker login --username json_key --password-stdin ${{ secrets.YCR_REGISTRY }} < key.json
             rm key.json
+
             export YCR_REGISTRY=${{ secrets.YCR_REGISTRY }}
             export YCR_FRONT_IMAGE_NAME=${{ secrets.YCR_FRONT_IMAGE_NAME }}
             export IMAGE_TAG=build-${{ github.run_number }}
-            cd selforg/gui
-            docker-compose pull
-            docker-compose up -d --pull always --force-recreate
+
+            cd ~/selforg/gui
+
+            echo "✅ Проверка переменных окружения:"
+            echo "YCR_REGISTRY=$YCR_REGISTRY"
+            echo "YCR_FRONT_IMAGE_NAME=$YCR_FRONT_IMAGE_NAME"
+            echo "IMAGE_TAG=$IMAGE_TAG"
+
+            echo "📦 Обновление и перезапуск контейнеров..."
+            docker-compose pull || { echo '❌ Ошибка при pull'; exit 1; }
+            docker-compose up -d --pull always --force-recreate || { echo '❌ Ошибка при запуске docker-compose'; exit 1; }
+
+            echo "🚀 Контейнеры:"
+            docker ps -a
+
+            echo "🪵 Логи контейнера frontend (если создан):"
+            docker logs selforg_frontend || echo "❗ Логи недоступны (возможно, контейнер не создан)"
