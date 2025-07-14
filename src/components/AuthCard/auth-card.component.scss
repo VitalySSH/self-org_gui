@@ -1,85 +1,340 @@
 @use 'sass:color';
 @use 'src/shared/assets/scss/variables' as *;
+@use 'src/shared/assets/scss/mixins' as *;
 
 .auth-card {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  background-color: $background-color;
-  border: 1px solid $border-color;
-  border-radius: $border-radius;
-  padding: 20px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 270px;
-  margin: 20px auto;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  background: linear-gradient(135deg,
+          rgba($background-color, 0.98) 0%,
+          rgba(color.mix($background-color, $secondary-color, 70%), 0.95) 100%);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba($border-color, 0.6);
+  border-radius: calc($border-radius * 2);
+  padding: 28px 24px;
+  margin: 20px 16px;
+  width: calc(100% - 32px);
+  box-shadow:
+          0 8px 32px rgba($card-shadow, 0.12),
+          0 2px 8px rgba($card-shadow, 0.08),
+          inset 0 1px 0 rgba(white, 0.5);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  // Декоративная линия сверху
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg,
+            $primary-color 0%,
+            $accent-yellow 50%,
+            $primary-color 100%);
+    opacity: 0;
+    transition: opacity $transition-speed ease;
+  }
+
+  // Тонкий внутренний блик
+  &::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    right: 1px;
+    height: 40%;
+    background: linear-gradient(180deg,
+            rgba(white, 0.1) 0%,
+            transparent 100%);
+    border-radius: calc($border-radius * 2) calc($border-radius * 2) 0 0;
+    pointer-events: none;
+  }
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+    box-shadow:
+            0 16px 48px rgba($hover-shadow, 0.18),
+            0 4px 16px rgba($hover-shadow, 0.12),
+            inset 0 1px 0 rgba(white, 0.6);
+    border-color: rgba($primary-color, 0.4);
+
+    &::before {
+      opacity: 1;
+    }
   }
 
   .auth-title {
-    font-size: 20px;
-    font-weight: bold;
-    color: $primary-color;
-    margin-bottom: 12px;
+    font-size: 24px;
+    font-weight: 700;
+    font-family: $font-family;
+    background: linear-gradient(135deg,
+            $primary-color 0%,
+            color.mix($primary-color, $accent-yellow, 20%) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0 0 18px 0;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-align: center;
   }
 
   .auth-description {
-    font-size: 14px;
-    color: $text-color;
-    margin-bottom: 20px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: color.mix($text-color, black, 15%);
+    margin: 0 0 28px 0;
+    text-align: left;
+    opacity: 0.92;
+    font-family: $font-family;
   }
 
   .auth-buttons {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 14px;
 
     button {
-      flex: 1;
-      padding: 10px 16px;
+      position: relative;
+      padding: 16px 24px;
       font-size: 16px;
-      font-weight: bold;
+      font-weight: 600;
+      font-family: $font-family;
       border: none;
       border-radius: $border-radius;
       cursor: pointer;
-      transition: all 0.3s ease;
+      overflow: hidden;
+      letter-spacing: 0.01em;
+      transition: all $transition-speed cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+      // Убираем стандартные стили из миксина
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+
+      // Анимация блика при ховере
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg,
+                transparent,
+                rgba(white, 0.25),
+                transparent);
+        transition: left 0.6s ease;
+      }
+
+      &:hover::before {
+        left: 100%;
+      }
 
       &.register {
-        background-color: $primary-color;
-        color: #fff;
+        background: linear-gradient(135deg,
+                $primary-color 0%,
+                color.mix($primary-color, black, 8%) 100%);
+        color: $background-color;
+        box-shadow:
+                0 4px 16px rgba($primary-color, 0.35),
+                inset 0 1px 0 rgba(white, 0.2);
 
         &:hover {
-          background-color: color.mix(black, $primary-color, 10%);
+          background: $accent-yellow;
+          color: $primary-color;
+          transform: translateY(-2px);
+          box-shadow:
+                  0 8px 24px rgba($accent-yellow, 0.4),
+                  inset 0 1px 0 rgba(white, 0.3);
+        }
+
+        &:active {
+          transform: translateY(-1px);
+          box-shadow:
+                  0 4px 12px rgba($primary-color, 0.4),
+                  inset 0 1px 0 rgba(white, 0.2);
+        }
+
+        &:focus-visible {
+          outline: 2px solid $accent-yellow;
+          outline-offset: 3px;
         }
       }
 
       &.login {
-        background-color: $text-color;
-        color: #fff;
+        background: rgba($text-color, 0.06);
+        color: $text-color;
+        border: 1px solid rgba($border-color, 0.8);
+        backdrop-filter: blur(8px);
+        box-shadow: inset 0 1px 0 rgba(white, 0.5);
 
         &:hover {
-          background-color: color.mix(white, $text-color, 20%);
+          background: $accent-yellow;
+          color: $primary-color;
+          border-color: $accent-yellow;
+          transform: translateY(-2px);
+          box-shadow:
+                  0 6px 20px rgba($accent-yellow, 0.3),
+                  inset 0 1px 0 rgba(white, 0.4);
+        }
+
+        &:active {
+          transform: translateY(-1px);
+          box-shadow:
+                  0 3px 10px rgba($text-color, 0.2),
+                  inset 0 1px 0 rgba(white, 0.3);
+        }
+
+        &:focus-visible {
+          outline: 2px solid $primary-color;
+          outline-offset: 3px;
+        }
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: none !important;
+        background: color.mix($border-color, white, 20%) !important;
+        color: color.mix($text-color, white, 50%) !important;
+        border-color: color.mix($border-color, white, 40%) !important;
+
+        &::before {
+          display: none;
         }
       }
     }
   }
 
-  animation: fadeIn 0.6s ease-in-out;
+  // Анимация появления
+  animation: authCardSlideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
-  @keyframes fadeIn {
+  @keyframes authCardSlideIn {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(30px) scale(0.96);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
+    }
+  }
+}
+
+// Адаптивность для узких сайдбаров
+@media (max-width: 350px) {
+  .auth-card {
+    margin: 16px 12px;
+    padding: 24px 20px;
+    width: calc(100% - 24px);
+
+    .auth-title {
+      font-size: 22px;
+    }
+
+    .auth-description {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .auth-buttons button {
+      padding: 14px 20px;
+      font-size: 15px;
+    }
+  }
+}
+
+// Специальная адаптация для сайдбара 300px
+@media (max-width: 320px) {
+  .auth-card {
+    margin: 14px 10px;
+    padding: 22px 18px;
+    width: calc(100% - 20px);
+
+    .auth-title {
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+
+    .auth-description {
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+
+    .auth-buttons {
+      gap: 12px;
+
+      button {
+        padding: 12px 18px;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+// Поддержка темной темы
+@media (prefers-color-scheme: dark) {
+  .auth-card {
+    background: linear-gradient(135deg,
+            rgba(color.mix($background-color, black, 80%), 0.95) 0%,
+            rgba(color.mix($secondary-color, black, 85%), 0.9) 100%);
+    border-color: rgba(white, 0.1);
+    box-shadow:
+            0 8px 32px rgba(black, 0.3),
+            0 2px 8px rgba(black, 0.2),
+            inset 0 1px 0 rgba(white, 0.1);
+
+    .auth-description {
+      color: rgba(white, 0.85);
+    }
+
+    .auth-buttons {
+      .login {
+        background: rgba(white, 0.08);
+        color: rgba(white, 0.9);
+        border-color: rgba(white, 0.15);
+
+        &:hover {
+          background: $accent-yellow;
+          color: $primary-color;
+          border-color: $accent-yellow;
+        }
+      }
+    }
+
+    &::after {
+      background: linear-gradient(180deg,
+              rgba(white, 0.05) 0%,
+              transparent 100%);
+    }
+  }
+}
+
+// Анимация для reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .auth-card {
+    animation: none;
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+
+    .auth-buttons button {
+      transition: background-color $transition-speed ease;
+
+      &::before {
+        display: none;
+      }
+
+      &:hover {
+        transform: none;
+      }
     }
   }
 }

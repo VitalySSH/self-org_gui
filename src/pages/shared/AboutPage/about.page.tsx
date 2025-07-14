@@ -12,7 +12,9 @@ import {
   ToolOutlined,
   HeartOutlined,
   StarOutlined,
-  CheckCircleOutlined
+  CheckCircleOutlined,
+  ExpandOutlined,
+  CompressOutlined
 } from '@ant-design/icons';
 import './about.page.scss';
 
@@ -29,15 +31,10 @@ interface ModuleItem {
   description: DescriptionItem[];
   isImplemented: boolean;
 }
-interface TimelineItem {
-  key: string;
-  dot: React.ReactNode;
-  color?: string;
-  children: React.ReactNode;
-}
 
 export function AboutPage() {
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [expandedModules, setExpandedModules] = useState<{ [key: string]: boolean }>({});
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev =>
@@ -45,6 +42,25 @@ export function AboutPage() {
         ? prev.filter(s => s !== section)
         : [...prev, section]
     );
+  };
+
+  const toggleModule = (moduleKey: string) => {
+    setExpandedModules(prev => ({
+      ...prev,
+      [moduleKey]: !prev[moduleKey]
+    }));
+  };
+
+  // Функция для извлечения превью текста из описания
+  const getModulePreview = (description: DescriptionItem[]): string => {
+    let preview = '';
+    for (const item of description) {
+      if (item.type === 'paragraph') {
+        preview += item.content + ' ';
+        if (preview.length > 300) break;
+      }
+    }
+    return preview.length > 300 ? preview.substring(0, 300) + '...' : preview;
   };
 
   const principles = [
@@ -291,9 +307,7 @@ export function AboutPage() {
     { icon: <ExperimentOutlined />, title: "Исследователи", subtitle: "Коллективное принятие решений" }
   ];
 
-  const ModuleDescription = ({
-                               description,
-                             }: {
+  const ModuleDescription = ({ description, }: {
     description: DescriptionItem[];
   }) => (
     <div className="module-description">
@@ -304,12 +318,7 @@ export function AboutPage() {
               key={`paragraph-${index}`}
               className="description-paragraph"
             >
-              {item.strong && (
-                <>
-                  <strong>{item.strong}</strong>
-                  <br />
-                </>
-              )}
+              {item.strong && <strong>{item.strong}</strong>}
               {item.content}
             </Paragraph>
           );
@@ -338,7 +347,7 @@ export function AboutPage() {
     </div>
   );
 
-  const timelineItems: TimelineItem[] = modules.map((module, index) => ({
+  const timelineItems = modules.map((module, index) => ({
     key: `module-${index}`,
     dot: (
       <div
@@ -349,14 +358,59 @@ export function AboutPage() {
     ),
     color: module.isImplemented ? 'green' : 'blue',
     children: (
-      <Card className="module-card">
-        <div className="module-header">
-          <Title level={4}>{module.title}</Title>
-          <Tag color={module.isImplemented ? 'green' : 'blue'}>
-            {module.status}
-          </Tag>
+      <Card
+        className={`module-card-enhanced ${expandedModules[`module-${index}`] ? 'expanded' : ''}`}
+        onClick={() => toggleModule(`module-${index}`)}
+      >
+        <div className="module-header-enhanced">
+          <div className="module-title-section">
+            <Title level={4} className="module-title-enhanced">{module.title}</Title>
+            <Tag
+              color={module.isImplemented ? 'green' : 'blue'}
+              className="module-status-tag"
+            >
+              {module.status}
+            </Tag>
+          </div>
         </div>
-        <ModuleDescription description={module.description} />
+
+        {!expandedModules[`module-${index}`] ? (
+          // Превью состояние
+          <div className="module-preview">
+            <div className="preview-text">
+              {getModulePreview(module.description)}
+            </div>
+            <div className="expand-button-container">
+              <div
+                className="expand-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleModule(`module-${index}`);
+                }}
+              >
+                <ExpandOutlined className="expand-icon" />
+                <span>Развернуть</span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          // Полное содержимое
+          <div className="module-full-content">
+            <ModuleDescription description={module.description} />
+            <div className="collapse-button-container">
+              <div
+                className="collapse-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleModule(`module-${index}`);
+                }}
+              >
+                <CompressOutlined className="collapse-icon" />
+                <span>Свернуть</span>
+              </div>
+            </div>
+          </div>
+        )}
       </Card>
     ),
   }));
@@ -414,22 +468,22 @@ export function AboutPage() {
               <div className="overview-cards">
                 <Card className="overview-card">
                   <div className="card-icon"><UserOutlined /></div>
-                  <Title level={4}>Массовое вовлечение</Title>
+                  <Title level={5}>Массовое вовлечение</Title>
                   <Text>Участие достаточного количества людей, чьи когнитивные способности и знания обычно не задействованы в традиционных системах принятия решений.</Text>
                 </Card>
                 <Card className="overview-card">
                   <div className="card-icon"><HeartOutlined /></div>
-                  <Title level={4}>Высокая мотивация</Title>
+                  <Title level={5}>Высокая мотивация</Title>
                   <Text>Когда большинство участников самостоятельно проявляют инициативу и заинтересованность в процессе коллективного творчества.</Text>
                 </Card>
                 <Card className="overview-card">
                   <div className="card-icon"><StarOutlined /></div>
-                  <Title level={4}>Сбалансированное разнообразие</Title>
+                  <Title level={5}>Сбалансированное разнообразие</Title>
                   <Text>Сочетание экспертного знания с разнообразием мнений и жизненного опыта участников.</Text>
                 </Card>
                 <Card className="overview-card">
                   <div className="card-icon"><RocketOutlined /></div>
-                  <Title level={4}>Алгоритмическая координация</Title>
+                  <Title level={5}>Алгоритмическая координация</Title>
                   <Text>Наличие механизмов для эффективной коллективной коммуникации, поддержка структурированного обмена идеями и синтеза прототипов решений.</Text>
                 </Card>
               </div>
@@ -495,6 +549,11 @@ export function AboutPage() {
 
           <div className="modules-timeline">
             <Timeline items={timelineItems} />
+            <div className="modules-note">
+              Некоторые модули уже доступны для использования, другие находятся в
+              разработке. Мы постоянно улучшаем платформу и добавляем новые
+              возможности.
+            </div>
           </div>
         </section>
 
