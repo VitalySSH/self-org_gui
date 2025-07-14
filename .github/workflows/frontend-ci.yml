@@ -57,18 +57,12 @@ jobs:
             docker login --username json_key --password-stdin ${{ secrets.YCR_REGISTRY }} < key.json
             rm key.json
 
+            cd /home/selforg/gui
+
             export YCR_REGISTRY=${{ secrets.YCR_REGISTRY }}
             export YCR_FRONT_IMAGE_NAME=${{ secrets.YCR_FRONT_IMAGE_NAME }}
             export IMAGE_TAG=build-${{ github.run_number }}
 
-            cd /home/selforg/gui
-
             echo "📦 Перезапуск фронта"
             docker-compose -f docker-compose.frontend.yml pull || { echo '❌ Ошибка при pull'; exit 1; }
             docker-compose -f docker-compose.frontend.yml up -d --pull always --force-recreate || { echo '❌ Ошибка при запуске'; exit 1; }
-
-            echo "🚀 Контейнеры:"
-            docker ps -a
-
-            echo "🪵 Логи frontend:"
-            docker logs selforg_frontend || echo "❗ Логи недоступны"
