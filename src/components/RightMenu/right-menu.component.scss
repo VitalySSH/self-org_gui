@@ -1,18 +1,457 @@
+@use 'sass:color';
 @use 'src/shared/assets/scss/variables' as *;
+@use 'src/shared/assets/scss/mixins' as *;
 
 .ant-drawer {
   .ant-drawer-body {
-    padding: 4px !important;
+    padding: 0 !important;
     overflow-x: hidden;
-    background-color: $secondary-color;
+    background: linear-gradient(135deg,
+            $secondary-color 0%,
+            color.mix($secondary-color, $background-color, 80%) 100%);
   }
 
   .ant-drawer-content {
-    background-color: $secondary-color;
+    background: linear-gradient(135deg,
+            $secondary-color 0%,
+            color.mix($secondary-color, $background-color, 80%) 100%);
+    position: relative;
+    overflow: hidden;
+
+    // Декоративные элементы фона
+    &::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      left: -20%;
+      width: 40%;
+      height: 80%;
+      background: radial-gradient(circle,
+              rgba($gradient-start, 0.04) 0%,
+              transparent 60%);
+      transform: rotate(-20deg);
+      pointer-events: none;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      right: -15%;
+      width: 35%;
+      height: 70%;
+      background: radial-gradient(circle,
+              rgba($gradient-end, 0.03) 0%,
+              transparent 50%);
+      transform: rotate(30deg);
+      pointer-events: none;
+    }
+  }
+
+  .ant-drawer-header {
+    background: linear-gradient(135deg,
+            rgba($background-color, 0.95) 0%,
+            rgba($secondary-color, 0.9) 100%);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba($border-color, 0.6);
+    position: relative;
+
+    // Декоративная линия снизу
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 20%;
+      right: 20%;
+      height: 2px;
+      background: linear-gradient(90deg,
+              transparent 0%,
+              $gradient-start 50%,
+              transparent 100%);
+    }
+
+    .ant-drawer-title {
+      font-family: $font-family;
+      font-weight: 700;
+      background: linear-gradient(135deg,
+              $heading-color 0%,
+              $text-color 40%,
+              $gradient-start 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+}
+
+.right-menu-container {
+  padding: 24px 16px;
+  background: transparent;
+  position: relative;
+  margin-right: 4px;
+  z-index: 1;
+}
+
+.right-menu-header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding: 0 16px;
+
+  .right-menu-title {
+    font-size: 20px;
+    font-weight: 700;
+    font-family: $font-family;
+    background: linear-gradient(135deg,
+            $heading-color 0%,
+            $text-color 40%,
+            $gradient-start 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0 0 12px 0;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .right-menu-subtitle {
+    font-size: 15px;
+    color: color.mix($text-color, white, 20%);
+    margin: 0 -6px;
+    opacity: 0.9;
+    font-family: $font-family;
   }
 }
 
 .right-menu {
-  width: 450px;
-  background-color: $secondary-color;
+  background: transparent;
+  border: none;
+  font-family: $font-family;
+
+  .ant-menu-item {
+    height: 56px;
+    line-height: 56px;
+    margin: 8px 0;
+    border-radius: calc($border-radius * 1.5);
+    background: linear-gradient(135deg,
+            rgba($background-color, 0.9) 0%,
+            rgba($secondary-color, 0.7) 100%);
+    border: 1px solid rgba($border-color, 0.4);
+    transition: all $transition-speed cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba($card-shadow, 0.08);
+
+    // Декоративный блик
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg,
+              transparent,
+              rgba(white, 0.15),
+              transparent);
+      transition: left 0.6s ease;
+    }
+
+    &:hover::before {
+      left: 100%;
+    }
+
+    .right-menu-icon {
+      font-size: 18px;
+      color: $text-color;
+      transition: all $transition-speed ease;
+      margin-right: 4px;
+    }
+
+    .ant-menu-title-content {
+      font-size: 16px;
+      font-weight: 500;
+      color: $text-color;
+      transition: color $transition-speed ease;
+      padding-left: 8px;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg,
+              rgba($background-color, 0.98) 0%,
+              rgba($secondary-color, 0.9) 100%);
+      border-color: rgba($gradient-start, 0.4);
+      transform: translateY(-2px);
+      box-shadow:
+              0 8px 24px rgba($card-shadow, 0.15),
+              0 4px 12px rgba($gradient-start, 0.1);
+
+      .right-menu-icon {
+        color: $gradient-start;
+        transform: scale(1.15) rotate(5deg);
+      }
+
+      .ant-menu-title-content {
+        color: $gradient-start;
+        font-weight: 600;
+      }
+    }
+
+    &:active {
+      transform: translateY(-1px);
+      box-shadow:
+              0 4px 12px rgba($card-shadow, 0.12),
+              0 2px 6px rgba($gradient-start, 0.08);
+    }
+
+    &.ant-menu-item-selected {
+      background: linear-gradient(135deg,
+              rgba($gradient-start, 0.15) 0%,
+              rgba($gradient-end, 0.1) 100%);
+      border-color: rgba($gradient-start, 0.6);
+      border-left: 4px solid $gradient-start;
+      box-shadow:
+              0 6px 20px rgba($gradient-start, 0.2),
+              inset 0 1px 0 rgba(white, 0.4);
+
+      .right-menu-icon {
+        color: $gradient-start;
+        transform: scale(1.1);
+      }
+
+      .ant-menu-title-content {
+        color: $gradient-start;
+        font-weight: 700;
+      }
+
+      &:hover {
+        transform: translateY(-1px);
+        background: linear-gradient(135deg,
+                rgba($gradient-start, 0.2) 0%,
+                rgba($gradient-end, 0.15) 100%);
+      }
+    }
+  }
+
+  // Особые стили для кнопки "Новое сообщество"
+  .ant-menu-item:first-child {
+    background: linear-gradient(135deg,
+            rgba($success-color, 0.1) 0%,
+            rgba($background-color, 0.9) 100%);
+    border-color: rgba($success-color, 0.3);
+
+    .right-menu-icon {
+      color: $success-color;
+    }
+
+    .ant-menu-title-content {
+      color: $success-color;
+      font-weight: 600;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg,
+              rgba($success-color, 0.15) 0%,
+              rgba($background-color, 0.95) 100%);
+      border-color: rgba($success-color, 0.5);
+
+      .right-menu-icon {
+        color: $success-color;
+        transform: scale(1.2) rotate(90deg);
+      }
+
+      .ant-menu-title-content {
+        color: $success-color;
+      }
+    }
+
+    &.ant-menu-item-selected {
+      background: linear-gradient(135deg,
+              rgba($success-color, 0.2) 0%,
+              rgba($background-color, 0.9) 100%);
+      border-left-color: $success-color;
+
+      .right-menu-icon,
+      .ant-menu-title-content {
+        color: $success-color;
+      }
+    }
+  }
+}
+
+// Анимация появления
+.right-menu-container {
+  animation: rightMenuSlideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes rightMenuSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Адаптивность
+@media (max-width: $breakpoint-md) {
+  .right-menu-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px 12px;
+  }
+
+  .right-menu-header {
+    margin-bottom: 24px;
+
+    .right-menu-title {
+      font-size: 22px;
+    }
+
+    .right-menu-subtitle {
+      font-size: 14px;
+    }
+  }
+
+  .right-menu {
+    .ant-menu-item {
+      height: 52px;
+      line-height: 52px;
+      margin: 6px 0;
+
+      .right-menu-icon {
+        font-size: 16px;
+      }
+
+      .ant-menu-title-content {
+        font-size: 15px;
+      }
+    }
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .right-menu-container {
+    width: 100%;
+    padding: 16px 8px;
+  }
+
+  .right-menu-header {
+    .right-menu-title {
+      font-size: 20px;
+    }
+
+    .right-menu-subtitle {
+      font-size: 13px;
+    }
+  }
+
+  .right-menu {
+    .ant-menu-item {
+      height: 48px;
+      line-height: 48px;
+
+      .ant-menu-title-content {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+// Поддержка темной темы
+@media (prefers-color-scheme: dark) {
+  .ant-drawer {
+    .ant-drawer-body,
+    .ant-drawer-content {
+      background: linear-gradient(135deg,
+              color.mix($secondary-color, black, 85%) 0%,
+              color.mix($background-color, black, 90%) 100%);
+    }
+
+    .ant-drawer-header {
+      background: linear-gradient(135deg,
+              rgba(color.mix($background-color, black, 80%), 0.95) 0%,
+              rgba(color.mix($secondary-color, black, 85%), 0.9) 100%);
+      border-color: rgba(white, 0.1);
+    }
+  }
+
+  .right-menu-header {
+    .right-menu-subtitle {
+      color: rgba(white, 0.8);
+    }
+  }
+
+  .right-menu {
+    .ant-menu-item {
+      background: linear-gradient(135deg,
+              rgba(white, 0.08) 0%,
+              rgba(white, 0.05) 100%);
+      border-color: rgba(white, 0.15);
+
+      .right-menu-icon,
+      .ant-menu-title-content {
+        color: rgba(white, 0.85);
+      }
+
+      &:hover {
+        background: linear-gradient(135deg,
+                rgba(white, 0.12) 0%,
+                rgba(white, 0.08) 100%);
+        border-color: rgba($gradient-start, 0.4);
+
+        .right-menu-icon,
+        .ant-menu-title-content {
+          color: $gradient-start;
+        }
+      }
+
+      &.ant-menu-item-selected {
+        background: linear-gradient(135deg,
+                rgba($gradient-start, 0.2) 0%,
+                rgba($gradient-end, 0.15) 100%);
+
+        .right-menu-icon,
+        .ant-menu-title-content {
+          color: $gradient-start;
+        }
+      }
+    }
+
+    .ant-menu-item:first-child {
+      background: linear-gradient(135deg,
+              rgba($success-color, 0.15) 0%,
+              rgba(white, 0.08) 100%);
+
+      .right-menu-icon,
+      .ant-menu-title-content {
+        color: $success-color;
+      }
+    }
+  }
+}
+
+// Анимация для reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .right-menu-container {
+    animation: none;
+  }
+
+  .right-menu .ant-menu-item {
+    transition: none;
+
+    &:hover {
+      transform: none;
+
+      .right-menu-icon {
+        transform: none;
+      }
+    }
+
+    &::before {
+      display: none;
+    }
+  }
 }

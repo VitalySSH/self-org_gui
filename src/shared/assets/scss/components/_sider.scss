@@ -1,87 +1,514 @@
 @use 'sass:color';
 @use 'src/shared/assets/scss/variables' as *;
+@use 'src/shared/assets/scss/mixins' as *;
 
-.sider {
-  height: 100vh;
+.sider-bar {
+  background: linear-gradient(180deg,
+          $sider-background-color 0%,
+          color.mix($sider-background-color, $secondary-color, 85%) 100%);
+  border-right: 1px solid rgba($border-color, 0.6);
+  box-shadow: 2px 0 8px rgba($card-shadow, 0.08);
   position: sticky !important;
   left: 0;
-  bottom: 0;
   top: 0;
-  background-color: $sider-background-color;
-  border-right: 1px solid $border-color;
-  display: flex;
-  flex-direction: column;
+  height: 100vh !important;
+  z-index: 100;
+  overflow-y: auto;
+  overflow-x: hidden;
 
-  .ant-menu {
-    background-color: $sider-background-color;
+  // Декоративный градиент справа
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg,
+            transparent 0%,
+            rgba($gradient-start, 0.2) 30%,
+            rgba($gradient-end, 0.3) 70%,
+            transparent 100%);
+    pointer-events: none;
+  }
 
-    .ant-menu-item {
-      cursor: pointer;
+  // Отключаем стандартный триггер
+  .ant-layout-sider-trigger {
+    display: none;
+  }
+}
+
+.sider-logo {
+  padding: 20px 16px;
+  background: linear-gradient(135deg,
+          rgba($background-color, 0.95) 0%,
+          rgba($secondary-color, 0.9) 100%);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba($border-color, 0.4);
+  margin-bottom: 16px;
+  position: relative;
+
+  // Декоративная линия снизу
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            $gradient-start 50%,
+            transparent 100%);
+  }
+
+  .sider-logo-image {
+    cursor: pointer;
+    transition: all $transition-speed cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: drop-shadow(0 2px 4px rgba($card-shadow, 0.15));
+
+    &:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 4px 8px rgba($card-shadow, 0.25));
+    }
+  }
+}
+
+.menu-header {
+  font-size: 14px;
+  font-weight: 700;
+  font-family: $font-family;
+  color: $text-color;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 16px 24px 8px 24px;
+  margin-bottom: 8px;
+  position: relative;
+  background: linear-gradient(135deg,
+          $heading-color 0%,
+          $text-color 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  // Декоративная линия
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 24px;
+    width: calc(100% - 48px);
+    height: 1px;
+    background: linear-gradient(90deg,
+            $gradient-start 0%,
+            transparent 100%);
+    opacity: 0.6;
+  }
+}
+
+.menu-header-icon {
+  display: block;
+  text-align: center;
+  font-size: 18px;
+  color: $text-color;
+  margin: 16px 0 8px 0;
+  padding: 8px;
+  transition: all $transition-speed ease;
+
+  &:hover {
+    color: $gradient-start;
+    transform: scale(1.1);
+  }
+}
+
+.sider-menu {
+  background: transparent;
+  border: none;
+  margin-bottom: 16px;
+  font-family: $font-family;
+
+  .ant-menu-item {
+    height: 48px;
+    line-height: 48px;
+    margin: 4px 16px;
+    border-radius: $border-radius;
+    background: linear-gradient(135deg,
+            rgba($background-color, 0.8) 0%,
+            rgba($secondary-color, 0.6) 100%);
+    border: 1px solid transparent;
+    transition: all $transition-speed cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+
+    // Декоративный блик
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg,
+              transparent,
+              rgba(white, 0.1),
+              transparent);
+      transition: left 0.5s ease;
+    }
+
+    &:hover::before {
+      left: 100%;
+    }
+
+    .anticon {
+      font-size: 16px;
       color: $text-color;
+      transition: all $transition-speed ease;
+    }
 
-      .ant-menu-item-icon {
-        font-size: 24px;
+    .ant-menu-title-content {
+      font-size: 15px;
+      font-weight: 500;
+      color: $text-color;
+      transition: color $transition-speed ease;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg,
+              rgba($background-color, 0.95) 0%,
+              rgba($secondary-color, 0.85) 100%);
+      border-color: rgba($gradient-start, 0.3);
+      transform: translateX(4px);
+      box-shadow: 0 2px 8px rgba($card-shadow, 0.1);
+
+      .anticon {
+        color: $gradient-start;
+        transform: scale(1.1);
+      }
+
+      .ant-menu-title-content {
+        color: $gradient-start;
+      }
+    }
+
+    &.ant-menu-item-selected {
+      background: linear-gradient(135deg,
+              rgba($gradient-start, 0.12) 0%,
+              rgba($gradient-end, 0.08) 100%);
+      border-color: rgba($gradient-start, 0.4);
+      border-left: 4px solid $gradient-start;
+      box-shadow:
+              0 4px 12px rgba($gradient-start, 0.15),
+              inset 0 1px 0 rgba(white, 0.3);
+
+      .anticon {
+        color: $gradient-start;
+      }
+
+      .ant-menu-title-content {
+        color: $gradient-start;
+        font-weight: 600;
       }
 
       &:hover {
-        background-color: $primary-color;
-        //color: $subtle-gold;
-      }
-
-      &.ant-menu-item-selected {
-        background-color: $primary-color;
-        color: #fff;
-        font-weight: 600;
+        transform: translateX(2px);
+        background: linear-gradient(135deg,
+                rgba($gradient-start, 0.18) 0%,
+                rgba($gradient-end, 0.12) 100%);
       }
     }
   }
 
-  .triger-btn {
-    font-size: 16px;
-    position: fixed;
-    bottom: 10px;
-    left: 10px;
-    margin-bottom: 40px;
+  // Стили для отключенного меню (руководство пользователя)
+  &.sider-menu-disabled {
+    .ant-menu-item {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background: rgba($background-color, 0.3);
+
+      .anticon,
+      .ant-menu-title-content {
+        color: color.mix($text-color, white, 40%);
+      }
+
+      &:hover {
+        background: rgba($background-color, 0.3);
+        border-color: transparent;
+        transform: none;
+
+        .anticon {
+          color: color.mix($text-color, white, 40%);
+          transform: none;
+        }
+
+        .ant-menu-title-content {
+          color: color.mix($text-color, white, 40%);
+        }
+      }
+
+      &::before {
+        display: none;
+      }
+    }
+  }
+}
+
+.sider-auth-container {
+  padding: 0 8px;
+  margin-top: auto;
+}
+
+.trigger-btn {
+  position: fixed !important;
+  bottom: 80px;
+  left: 150px;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg,
+          rgba($background-color, 0.95) 0%,
+          rgba($secondary-color, 0.9) 100%);
+  border: 1px solid rgba($border-color, 0.6);
+  border-radius: 50%;
+  box-shadow:
+          0 4px 12px rgba($card-shadow, 0.15),
+          inset 0 1px 0 rgba(white, 0.5);
+  backdrop-filter: blur(10px);
+  transition: all $transition-speed cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 101; // Поверх сайдбара
+
+  .trigger-icon {
+    font-size: 20px;
+    color: $text-color;
+    transition: all $transition-speed ease;
   }
 
+  &:hover {
+    background: linear-gradient(135deg,
+            $gradient-start 0%,
+            $gradient-end 100%);
+    border-color: $gradient-start;
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow:
+            0 8px 20px rgba($gradient-start, 0.3),
+            inset 0 1px 0 rgba(white, 0.3);
+
+    .trigger-icon {
+      color: $background-color;
+      transform: scale(1.1);
+    }
+  }
+
+  &:active {
+    transform: translateX(-50%) translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $gradient-start;
+    outline-offset: 2px;
+  }
+}
+
+.sider-footer {
+  position: absolute;
+  bottom: 16px;
+  left: 0;
+  right: 0;
+
+  .sider-copyright {
+    font-size: 12px;
+    color: color.mix($text-color, white, 40%);
+    font-family: $font-family;
+    opacity: 0.8;
+    transition: opacity $transition-speed ease;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+// Адаптивность для collapsed состояния
+.ant-layout-sider-collapsed {
+  .menu-header {
+    display: none;
+  }
+
+  .sider-menu {
+    .ant-menu-item {
+      margin: 4px 8px;
+      text-align: center;
+
+      &:hover {
+        transform: translateX(0) scale(1.05);
+      }
+
+      &.ant-menu-item-selected {
+        &:hover {
+          transform: translateX(0) scale(1.02);
+        }
+      }
+    }
+  }
+
+  .sider-auth-container {
+    display: none;
+  }
+
+  // Позиция кнопки для collapsed состояния (ширина ~80px)
+  & + * .trigger-btn,
+  .trigger-btn {
+    left: 40px; // Центр для collapsed сайдбара
+  }
+}
+
+// Адаптивность
+@media (max-width: $breakpoint-lg) {
+  .trigger-btn {
+    left: 40px; // Для мобильных устройств где сайдбар схлопывается
+  }
+}
+
+@media (max-width: $breakpoint-md) {
   .sider-logo {
-    height: $header-height;
-    background-color: $background-color;
-    color: $heading-color;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    font-weight: bold;
-    text-transform: uppercase;
-    border-bottom: 1px solid $border-color;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 16px 12px;
   }
 
   .menu-header {
-    background-color: $background-color;
-    font-size: 18px;
-    font-weight: bold;
-    color: $text-color;
-    text-align: left;
-    word-wrap: break-word;
-    white-space: normal;
-    line-height: 1.4;
-    margin-top: 18px;
-    padding: 6px 10px 6px 20px;
-    border-top: 1px solid $border-color;
-    border-bottom: 1px solid $border-color;
+    padding: 12px 16px 6px 16px;
+    font-size: 13px;
+
+    &::after {
+      left: 16px;
+      width: calc(100% - 32px);
+    }
+  }
+
+  .sider-menu {
+    .ant-menu-item {
+      margin: 3px 12px;
+      height: 44px;
+      line-height: 44px;
+
+      .ant-menu-title-content {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+// Поддержка темной темы
+@media (prefers-color-scheme: dark) {
+  .sider-bar {
+    background: linear-gradient(180deg,
+            color.mix($sider-background-color, black, 80%) 0%,
+            color.mix($secondary-color, black, 85%) 100%);
+    border-color: rgba(white, 0.1);
+  }
+
+  .sider-logo {
+    background: linear-gradient(135deg,
+            rgba(color.mix($background-color, black, 85%), 0.8) 0%,
+            rgba(color.mix($secondary-color, black, 85%), 0.7) 100%);
+  }
+
+  .menu-header {
+    color: rgba(white, 0.9);
   }
 
   .menu-header-icon {
-    background-color: $background-color;
-    font-size: 24px !important;
-    padding-inline: calc(50% - 8px - 4px);
-    margin-bottom: 8px;
-    margin-top: 18px;
-    padding-top: 4px;
-    padding-bottom: 4px;
-    border-top: 1px solid $border-color;
-    border-bottom: 1px solid $border-color;
+    color: rgba(white, 0.8);
+
+    &:hover {
+      color: $gradient-start;
+    }
+  }
+
+  .sider-menu {
+    .ant-menu-item {
+      background: linear-gradient(135deg,
+              rgba(white, 0.08) 0%,
+              rgba(white, 0.05) 100%);
+
+      .anticon,
+      .ant-menu-title-content {
+        color: rgba(white, 0.8);
+      }
+
+      &:hover {
+        background: linear-gradient(135deg,
+                rgba(white, 0.12) 0%,
+                rgba(white, 0.08) 100%);
+        box-shadow: 0 2px 8px rgba(black, 0.1);
+      }
+
+      &.ant-menu-item-selected {
+        background: linear-gradient(135deg,
+                rgba($gradient-start, 0.2) 0%,
+                rgba($gradient-end, 0.15) 100%);
+
+        .anticon,
+        .ant-menu-title-content {
+          color: $gradient-start;
+        }
+
+        &:hover {
+          background: linear-gradient(135deg,
+                  rgba($gradient-start, 0.25) 0%,
+                  rgba($gradient-end, 0.18) 100%);
+        }
+      }
+    }
+
+    &.sider-menu-disabled {
+      .ant-menu-item {
+        background: linear-gradient(135deg,
+                rgba(white, 0.03) 0%,
+                rgba(white, 0.02) 100%);
+
+        .anticon,
+        .ant-menu-title-content {
+          color: rgba(white, 0.4);
+        }
+
+        &:hover {
+          background: linear-gradient(135deg,
+                  rgba(white, 0.03) 0%,
+                  rgba(white, 0.02) 100%);
+        }
+      }
+    }
+  }
+
+  .trigger-btn {
+    background: linear-gradient(135deg,
+            rgba(color.mix($background-color, black, 80%), 0.95) 0%,
+            rgba(color.mix($secondary-color, black, 85%), 0.9) 100%);
+    border-color: rgba(white, 0.15);
+
+    .trigger-icon {
+      color: rgba(white, 0.8);
+    }
+  }
+
+  .sider-copyright {
+    color: rgba(white, 0.5);
+  }
+}
+
+// Анимация для reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .sider-logo-image,
+  .menu-header-icon,
+  .sider-menu .ant-menu-item,
+  .trigger-btn {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  .sider-menu .ant-menu-item::before {
+    display: none;
   }
 }

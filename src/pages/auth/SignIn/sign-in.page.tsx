@@ -1,5 +1,6 @@
 import { Button, Checkbox, Form, Image, Input, message } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import './sign-in.page.scss';
 
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from 'src/hooks';
@@ -44,9 +45,10 @@ export function SignIn() {
         }
       });
   };
-  const handleForgotPassword = () => {
-    console.log('Забыл пароль');
-  };
+
+  // const handleForgotPassword = () => {
+  //   console.log('Забыл пароль');
+  // };
 
   const handleRegister = () => {
     navigate('/sign-up', { preventScrollReset: true });
@@ -58,100 +60,126 @@ export function SignIn() {
 
   return (
     <div className="auth-space">
-      <div style={{ marginBottom: 24 }}>
+      <div className="auth-logo-container">
         <Image
-          height={50}
+          height={60}
           preview={false}
           src="/utu_logo.png"
           onClick={onClickImage}
-          style={{ cursor: 'pointer' }}
-        ></Image>
+          className="auth-logo"
+          alt="UTU Logo"
+        />
       </div>
-      <Form
-        name="login"
-        className="login-form"
-        initialValues={{
-          email: localStorage.getItem('email'),
-          password: localStorage.getItem('password'),
-          remember: true,
-        }}
-        onFinish={onFinish}
-        style={{ width: 500 }}
-      >
-        <Form.Item
-          name="email"
-          label="Электронная почта"
-          labelCol={{ span: 24 }}
-          rules={[
-            {
-              required: true,
-              message: 'Пожалуйста, введите электронную почту',
-            },
-            {
-              type: 'email',
-              message: 'Пожалуйста, введите корректный электронной почты',
-            },
-          ]}
-          hasFeedback
+
+      <div className="auth-form-container">
+        <div className="auth-form-header">
+          <h1 className="auth-form-title">Добро пожаловать!</h1>
+          <p className="auth-form-subtitle">Войдите в свой аккаунт</p>
+        </div>
+
+        <Form
+          name="login"
+          className="auth-form"
+          initialValues={{
+            email: localStorage.getItem('email'),
+            password: localStorage.getItem('password'),
+            remember: true,
+          }}
+          onFinish={onFinish}
+          layout="vertical"
         >
-          <Input prefix={<UserOutlined className="site-form-item-icon" />} />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          label="Пароль"
-          labelCol={{ span: 24 }}
-          rules={[
-            {
-              required: true,
-              message: 'Пожалуйста, введите пароль',
-            },
-            {
-              whitespace: false,
-            },
-            {
-              pattern: /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])/g,
-              message: 'Используйте латинские буквы в разном регистре и цифры',
-            },
-          ]}
-        >
-          <Input.Password
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
-            minLength={8}
-          />
-        </Form.Item>
-        <span>
-          <a
-            style={{ float: 'right' }}
-            className="login-form-forgot"
-            href=""
-            onClick={handleForgotPassword}
+          <Form.Item
+            name="email"
+            label="Электронная почта"
+            rules={[
+              {
+                required: true,
+                message: 'Пожалуйста, введите электронную почту',
+              },
+              {
+                type: 'email',
+                message: 'Пожалуйста, введите корректный электронной почты',
+              },
+            ]}
+            hasFeedback
           >
-            Не помню пароль
-          </a>
-        </span>
-        <Form.Item>
-          <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox>Запомнить меня</Checkbox>
+            <Input
+              prefix={<UserOutlined className="auth-form-icon" />}
+              placeholder="Введите вашу электронную почту"
+              size="large"
+            />
           </Form.Item>
-        </Form.Item>
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
-            block
+
+          <Form.Item
+            name="password"
+            label="Пароль"
+            rules={[
+              {
+                required: true,
+                message: 'Пожалуйста, введите пароль',
+              },
+              {
+                whitespace: false,
+              },
+              {
+                pattern: /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])/g,
+                message: 'Используйте латинские буквы в разном регистре и цифры',
+              },
+            ]}
           >
-            Войти
-          </Button>
-          <div style={{ marginTop: 20 }}>
-            У меня нет аккаунта, хочу{' '}
-            <a href="#" onClick={handleRegister}>
-              зарегистрироваться
+            <Input.Password
+              prefix={<LockOutlined className="auth-form-icon" />}
+              type="password"
+              minLength={8}
+              placeholder="Введите ваш пароль"
+              size="large"
+            />
+          </Form.Item>
+
+          {/* Временно скрыта до реализации функционала
+          <div className="auth-form-forgot">
+            <a
+              className="auth-form-forgot-link"
+              href="#"
+              onClick={handleForgotPassword}
+            >
+              Не помню пароль
             </a>
           </div>
-        </Form.Item>
-      </Form>
+          */}
+
+          <Form.Item className="auth-form-remember">
+            <Form.Item name="remember" valuePropName="checked" noStyle>
+              <Checkbox className="auth-checkbox">Запомнить меня</Checkbox>
+            </Form.Item>
+          </Form.Item>
+
+          <Form.Item className="auth-form-submit">
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="auth-submit-button"
+              size="large"
+              block
+            >
+              Войти
+            </Button>
+          </Form.Item>
+
+          <div className="auth-form-footer">
+            <span className="auth-form-footer-text">
+              У меня нет аккаунта, хочу{' '}
+              <a
+                href="#"
+                onClick={handleRegister}
+                className="auth-form-register-link"
+              >
+                зарегистрироваться
+              </a>
+            </span>
+          </div>
+        </Form>
+      </div>
     </div>
   );
 }

@@ -3,16 +3,21 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   TeamOutlined,
-  InfoCircleOutlined,
-  ExceptionOutlined,
+  BookOutlined,
+  SafetyCertificateOutlined,
   ApartmentOutlined,
   ToolOutlined,
   BarChartOutlined,
   BulbOutlined,
-  FireOutlined,
+  ExperimentOutlined,
   UserAddOutlined,
   ThunderboltOutlined,
   ReadOutlined,
+  CrownOutlined,
+  ApiOutlined,
+  TrophyOutlined,
+  HomeOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -26,12 +31,12 @@ const { Sider } = Layout;
 const communitiesMenuItems: MenuItem[] = [
   {
     key: 'communities',
-    icon: <TeamOutlined />,
+    icon: <HomeOutlined />,
     label: 'Все',
   },
   {
     key: 'my-communities',
-    icon: <TeamOutlined />,
+    icon: <UserOutlined />,
     label: 'Мои',
   },
 ];
@@ -39,42 +44,42 @@ const communitiesMenuItems: MenuItem[] = [
 const userGuideMenuItems: MenuItem[] = [
   {
     key: 'test1',
-    icon: <InfoCircleOutlined />,
+    icon: <TeamOutlined />,
     label: 'Сообщества',
   },
   {
     key: 'test2',
-    icon: <InfoCircleOutlined />,
+    icon: <CrownOutlined />,
     label: 'Советники',
   },
   {
     key: 'test3',
-    icon: <InfoCircleOutlined />,
+    icon: <SafetyCertificateOutlined />,
     label: 'Правила',
   },
   {
     key: 'test4',
-    icon: <InfoCircleOutlined />,
+    icon: <BulbOutlined />,
     label: 'Инициатвы',
   },
   {
     key: 'user-guide/disputes',
-    icon: <InfoCircleOutlined />,
+    icon: <ThunderboltOutlined />,
     label: 'Споры',
   },
   {
     key: 'user-guide-challenges',
-    icon: <InfoCircleOutlined />,
+    icon: <ExperimentOutlined />,
     label: 'Лаборатория',
   },
   {
     key: 'test5',
-    icon: <InfoCircleOutlined />,
+    icon: <TrophyOutlined />,
     label: 'Коллективный опыт',
   },
   {
     key: 'test6',
-    icon: <InfoCircleOutlined />,
+    icon: <ApiOutlined />,
     label: 'Интеграции',
   },
 ];
@@ -97,7 +102,7 @@ const communityWSMenuItems: MenuItem[] = [
   },
   {
     key: 'my-delegates',
-    icon: <TeamOutlined />,
+    icon: <CrownOutlined />,
     label: 'Мои советники',
   },
   {
@@ -112,7 +117,7 @@ const communityWSMenuItems: MenuItem[] = [
   },
   {
     key: 'challenges',
-    icon: <FireOutlined />,
+    icon: <ExperimentOutlined />,
     label: 'Лаборатория',
   },
   {
@@ -196,7 +201,7 @@ export function SiderBar(props: SiderBarInterface) {
       collapsed={collapsed}
       trigger={null}
       width={300}
-      className="sider"
+      className="sider-bar"
       breakpoint="lg"
       onBreakpoint={(broken) => {
         setCollapsed(broken);
@@ -213,8 +218,9 @@ export function SiderBar(props: SiderBarInterface) {
           preview={false}
           src={logoPath}
           onClick={onClickImage}
-          style={{ cursor: 'pointer' }}
-        ></Image>
+          className="sider-logo-image"
+          alt="UTU Logo"
+        />
       </Flex>
 
       {!props.isCommunityWS && !props.isNotAuthorized && (
@@ -233,13 +239,14 @@ export function SiderBar(props: SiderBarInterface) {
               navigate(item.key);
             }}
             selectedKeys={communitiesMenuKeys}
+            className="sider-menu"
           />
           {!collapsed && (
             <div className="menu-header">Руководство пользователя</div>
           )}
           {collapsed && (
             <Tooltip title="Руководство пользователя" placement="right">
-              <ExceptionOutlined className="menu-header-icon" />
+              <BookOutlined className="menu-header-icon" />
             </Tooltip>
           )}
           <Menu
@@ -250,6 +257,7 @@ export function SiderBar(props: SiderBarInterface) {
               // navigate(item.key);
             }}
             selectedKeys={userGuideMenuKeys}
+            className="sider-menu sider-menu-disabled"
           />
         </>
       )}
@@ -269,19 +277,24 @@ export function SiderBar(props: SiderBarInterface) {
               navigate(item.key);
             }}
             selectedKeys={communityWSMenuKeys}
+            className="sider-menu"
           />
         </>
       )}
 
-      {!collapsed && props.isNotAuthorized && <AuthCard />}
+      {!collapsed && props.isNotAuthorized && (
+        <div className="sider-auth-container">
+          <AuthCard />
+        </div>
+      )}
 
       <Button
         type="text"
         icon={
           collapsed ? (
-            <MenuUnfoldOutlined style={{ fontSize: 24 }} />
+            <MenuUnfoldOutlined className="trigger-icon" />
           ) : (
-            <MenuFoldOutlined style={{ fontSize: 24 }} />
+            <MenuFoldOutlined className="trigger-icon" />
           )
         }
         onClick={() => {
@@ -292,16 +305,11 @@ export function SiderBar(props: SiderBarInterface) {
           }
           setCollapsed(!collapsed);
         }}
-        className="triger-btn"
+        className="trigger-btn"
       />
       {!collapsed && (
-        <Flex align="center" justify="center">
-          <div
-            style={{
-              position: 'fixed',
-              bottom: 12,
-            }}
-          >
+        <Flex align="center" justify="center" className="sider-footer">
+          <div className="sider-copyright">
             UtU ©{new Date().getFullYear()}
           </div>
         </Flex>

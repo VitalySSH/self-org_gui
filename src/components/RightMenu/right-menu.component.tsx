@@ -2,9 +2,10 @@ import { Menu } from 'antd';
 import './right-menu.component.scss';
 import React from 'react';
 import {
-  TeamOutlined,
   PlusCircleOutlined,
   UserAddOutlined,
+  HomeOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { MenuItem } from 'src/shared/types.ts';
@@ -29,26 +30,26 @@ const items: MenuItem[] = [
   getItem(
     'Новое сообщество',
     'new-community',
-    'menu-item',
-    <PlusCircleOutlined className="menu-icon" />
+    'right-menu-item',
+    <PlusCircleOutlined className="right-menu-icon" />
   ),
   getItem(
     'Все сообщества',
     'communities',
-    'menu-item',
-    <TeamOutlined className="menu-icon" />
+    'right-menu-item',
+    <HomeOutlined className="right-menu-icon" />
   ),
   getItem(
     'Мои сообщества',
     'my-communities',
-    'menu-item',
-    <TeamOutlined className="menu-icon" />
+    'right-menu-item',
+    <UserOutlined className="right-menu-icon" />
   ),
   getItem(
     'Мои заявки на вступление',
     'my-add-requests',
-    'menu-item',
-    <UserAddOutlined className="menu-icon" />
+    'right-menu-item',
+    <UserAddOutlined className="right-menu-icon" />
   ),
 ];
 
@@ -56,14 +57,21 @@ export function RightMenu(props: any) {
   const navigate = useNavigate();
 
   return (
-    <Menu
-      mode="inline"
-      items={items}
-      onClick={(item) => {
-        props.setDrawerOpen(false);
-        navigate(`/${item.key}`);
-      }}
-      className="right-menu"
-    />
+    <div className="right-menu-container">
+      <div className="right-menu-header">
+        <h3 className="right-menu-title">Навигация</h3>
+        <p className="right-menu-subtitle">Личный кабинет</p>
+      </div>
+
+      <Menu
+        mode="inline"
+        items={items}
+        onClick={(item) => {
+          props.setDrawerOpen(false);
+          navigate(`/${item.key}`);
+        }}
+        className="right-menu"
+      />
+    </div>
   );
 }

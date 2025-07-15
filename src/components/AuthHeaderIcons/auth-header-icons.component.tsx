@@ -99,12 +99,12 @@ export function AuthHeaderIcons() {
             onClick={handleAvatarClick}
             className="user-avatar"
           />
-          <div className="online-indicator" />
+          {/*<div className="online-indicator" />*/}
         </div>
 
         <div className="user-info" onClick={handleAvatarClick}>
           <Text strong className="user-name">{userDisplayName}</Text>
-          <Text className="user-status">В сети</Text>
+          {/*<Text className="user-status">В сети</Text>*/}
         </div>
 
         <Button
@@ -245,7 +245,7 @@ export function AuthHeaderIcons() {
       <Drawer
         title="Меню"
         placement="right"
-        width={320}
+        width={350}
         open={drawerOpen}
         onClose={handleDrawerClose}
         className="navigation-drawer"

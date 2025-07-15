@@ -1,0 +1,609 @@
+@use 'sass:color';
+@use 'src/shared/assets/scss/variables' as *;
+@use 'src/shared/assets/scss/mixins' as *;
+
+.auth-space {
+  @include flex-center;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg,
+          $secondary-color 0%,
+          color.mix($secondary-color, $background-color, 80%) 100%);
+  padding: 40px 20px;
+  position: relative;
+  overflow-x: hidden;
+  box-sizing: border-box;
+
+  // Декоративные элементы фона
+  &::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    right: -20%;
+    width: 40%;
+    height: 80%;
+    background: radial-gradient(circle,
+            rgba($gradient-start, 0.04) 0%,
+            transparent 60%);
+    transform: rotate(-20deg);
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -15%;
+    width: 35%;
+    height: 70%;
+    background: radial-gradient(circle,
+            rgba($gradient-end, 0.03) 0%,
+            transparent 50%);
+    transform: rotate(30deg);
+    pointer-events: none;
+  }
+}
+
+.auth-logo-container {
+  margin-bottom: 24px;
+  animation: logoFadeIn 0.8s ease-out;
+
+  .auth-logo {
+    cursor: pointer;
+    transition: all $transition-speed cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: drop-shadow(0 4px 8px rgba($card-shadow, 0.15));
+
+    &:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 6px 12px rgba($card-shadow, 0.25));
+    }
+  }
+}
+
+.auth-form-container {
+  background: linear-gradient(135deg,
+          rgba($background-color, 0.98) 0%,
+          rgba(color.mix($background-color, $secondary-color, 70%), 0.95) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba($border-color, 0.6);
+  border-radius: calc($border-radius * 2);
+  padding: 40px;
+  width: 100%;
+  max-width: 550px;
+  box-shadow:
+          0 20px 60px rgba($card-shadow, 0.15),
+          0 8px 32px rgba($card-shadow, 0.1),
+          inset 0 1px 0 rgba(white, 0.5);
+  position: relative;
+  overflow: hidden;
+  animation: formSlideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+
+  // Декоративная линия сверху
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg,
+            $heading-color 0%,
+            $text-color 30%,
+            $gradient-start 70%,
+            $gradient-end 100%);
+    border-radius: calc($border-radius * 2) calc($border-radius * 2) 0 0;
+  }
+
+  // Внутренний блик
+  &::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 1px;
+    right: 1px;
+    height: 40%;
+    background: linear-gradient(180deg,
+            rgba(white, 0.08) 0%,
+            transparent 100%);
+    border-radius: calc($border-radius * 2) calc($border-radius * 2) 0 0;
+    pointer-events: none;
+  }
+}
+
+.auth-form-header {
+  text-align: center;
+  margin-bottom: 32px;
+
+  .auth-form-title {
+    font-size: 28px;
+    font-weight: 700;
+    font-family: $font-family;
+    background: linear-gradient(135deg,
+            $heading-color 0%,
+            $text-color 40%,
+            $gradient-start 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0 0 12px 0;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .auth-form-subtitle {
+    font-size: 16px;
+    color: color.mix($text-color, white, 30%);
+    margin: 0;
+    opacity: 0.9;
+    font-family: $font-family;
+  }
+}
+
+.auth-form {
+  .ant-form-item {
+    margin-bottom: 24px;
+
+    &.auth-form-half {
+      margin-bottom: 20px;
+    }
+
+    &.auth-form-agreement {
+      margin-bottom: 16px;
+    }
+
+    &.auth-form-submit {
+      margin-bottom: 24px;
+    }
+  }
+
+  .auth-form-row {
+    display: flex;
+    gap: 16px;
+
+    .auth-form-half {
+      flex: 1;
+    }
+  }
+
+  .ant-form-item-label {
+    padding-bottom: 8px;
+
+    label {
+      font-size: 15px;
+      font-weight: 600;
+      color: $text-color;
+      font-family: $font-family;
+    }
+  }
+
+  .ant-form-item-extra {
+    font-size: 13px;
+    color: color.mix($text-color, white, 30%);
+    margin-top: 4px;
+    font-family: $font-family;
+  }
+
+  .ant-input,
+  .ant-input-password {
+    border-radius: $border-radius;
+    border: 2px solid rgba($border-color, 0.8);
+    background: rgba($background-color, 0.8);
+    backdrop-filter: blur(5px);
+    transition: all $transition-speed cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    padding: 12px 16px;
+    font-size: 15px;
+    font-family: $font-family;
+
+    &:hover {
+      border-color: rgba($gradient-start, 0.6);
+      background: rgba($background-color, 0.95);
+    }
+
+    &:focus,
+    &.ant-input-focused {
+      border-color: $gradient-start;
+      box-shadow:
+              0 0 0 3px rgba($gradient-start, 0.15),
+              0 4px 12px rgba($gradient-start, 0.1);
+      background: $background-color;
+    }
+
+    &::placeholder {
+      color: color.mix($text-color, white, 40%);
+      opacity: 0.8;
+    }
+  }
+
+  .ant-input {
+    &[data-count] {
+      .ant-input {
+        padding-bottom: 24px;
+      }
+    }
+  }
+
+  .auth-form-icon {
+    color: color.mix($text-color, white, 30%);
+    font-size: 16px;
+    transition: color $transition-speed ease;
+  }
+
+  .ant-input:focus + .auth-form-icon,
+  .ant-input-focused .auth-form-icon {
+    color: $gradient-start;
+  }
+
+  // Стили для TextArea
+  .ant-input {
+    &[data-count] {
+      position: relative;
+    }
+  }
+
+  .ant-input.ant-input-borderless {
+    border: 2px solid rgba($border-color, 0.8);
+    border-radius: $border-radius;
+    background: rgba($background-color, 0.8);
+
+    &:hover {
+      border-color: rgba($gradient-start, 0.6);
+    }
+
+    &:focus {
+      border-color: $gradient-start;
+      box-shadow:
+              0 0 0 3px rgba($gradient-start, 0.15),
+              0 4px 12px rgba($gradient-start, 0.1);
+    }
+  }
+}
+
+.auth-checkbox {
+  font-family: $font-family;
+  font-size: 15px;
+  color: $text-color;
+
+  .ant-checkbox {
+    .ant-checkbox-inner {
+      border-radius: calc($border-radius / 2);
+      border: 2px solid rgba($border-color, 0.8);
+      background: rgba($background-color, 0.8);
+      transition: all $transition-speed ease;
+
+      &:hover {
+        border-color: $gradient-start;
+      }
+    }
+
+    &.ant-checkbox-checked {
+      .ant-checkbox-inner {
+        background: linear-gradient(135deg,
+                $gradient-start 0%,
+                $gradient-end 100%);
+        border-color: $gradient-start;
+
+        &:after {
+          border-color: $background-color;
+        }
+      }
+    }
+  }
+}
+
+.auth-agreement-link {
+  color: $gradient-start;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all $transition-speed ease;
+
+  &:hover {
+    color: $gradient-end;
+    text-decoration: none;
+  }
+}
+
+.auth-submit-button {
+  height: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: $font-family;
+  border: none;
+  border-radius: $border-radius;
+  background: linear-gradient(135deg,
+          $heading-color 0%,
+          color.mix($heading-color, $text-color, 80%) 100%);
+  box-shadow:
+          0 4px 16px rgba($heading-color, 0.3),
+          inset 0 1px 0 rgba(white, 0.1);
+  transition: all $transition-speed cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+
+  // Анимация блика
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(white, 0.25),
+            transparent);
+    transition: left 0.6s ease;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg,
+            $gradient-start 0%,
+            $gradient-end 100%);
+    transform: translateY(-2px);
+    box-shadow:
+            0 8px 24px rgba($gradient-start, 0.4),
+            inset 0 1px 0 rgba(white, 0.2);
+
+    &::before {
+      left: 100%;
+    }
+  }
+
+  &:active {
+    transform: translateY(-1px);
+    box-shadow:
+            0 4px 12px rgba($heading-color, 0.4),
+            inset 0 1px 0 rgba(white, 0.1);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $gradient-start;
+    outline-offset: 3px;
+  }
+}
+
+.auth-form-footer {
+  text-align: center;
+  padding-top: 24px;
+  border-top: 1px solid rgba($border-color, 0.5);
+
+  .auth-form-footer-text {
+    font-size: 15px;
+    color: color.mix($text-color, white, 30%);
+    font-family: $font-family;
+  }
+
+  .auth-form-signin-link {
+    color: $gradient-start;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all $transition-speed ease;
+    position: relative;
+
+    &:hover {
+      color: $gradient-end;
+      text-decoration: none;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, $gradient-start, $gradient-end);
+      transition: width $transition-speed ease;
+    }
+
+    &:hover::after {
+      width: 100%;
+    }
+  }
+}
+
+// Анимации
+@keyframes logoFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes formSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Адаптивность
+@media (max-width: $breakpoint-md) {
+  .auth-space {
+    padding: 20px 16px;
+  }
+
+  .auth-form-container {
+    padding: 32px 24px;
+    max-width: 480px;
+  }
+
+  .auth-form-header {
+    .auth-form-title {
+      font-size: 24px;
+    }
+
+    .auth-form-subtitle {
+      font-size: 15px;
+    }
+  }
+
+  .auth-form {
+    .auth-form-row {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .auth-space {
+    padding: 16px 12px;
+  }
+
+  .auth-form-container {
+    padding: 28px 20px;
+    max-width: 100%;
+  }
+
+  .auth-form-header {
+    margin-bottom: 28px;
+
+    .auth-form-title {
+      font-size: 22px;
+    }
+
+    .auth-form-subtitle {
+      font-size: 14px;
+    }
+  }
+
+  .auth-form {
+    .ant-form-item {
+      margin-bottom: 20px;
+
+      &.auth-form-half {
+        margin-bottom: 16px;
+      }
+    }
+
+    .ant-input,
+    .ant-input-password {
+      padding: 10px 14px;
+      font-size: 14px;
+    }
+  }
+
+  .auth-submit-button {
+    height: 46px;
+    font-size: 15px;
+  }
+
+  .auth-form-footer {
+    .auth-form-footer-text {
+      font-size: 14px;
+    }
+  }
+}
+
+// Поддержка темной темы
+@media (prefers-color-scheme: dark) {
+  .auth-space {
+    background: linear-gradient(135deg,
+            color.mix($secondary-color, black, 85%) 0%,
+            color.mix($background-color, black, 90%) 100%);
+  }
+
+  .auth-form-container {
+    background: linear-gradient(135deg,
+            rgba(color.mix($background-color, black, 80%), 0.95) 0%,
+            rgba(color.mix($secondary-color, black, 85%), 0.9) 100%);
+    border-color: rgba(white, 0.1);
+    box-shadow:
+            0 20px 60px rgba(black, 0.3),
+            0 8px 32px rgba(black, 0.2),
+            inset 0 1px 0 rgba(white, 0.1);
+
+    &::after {
+      background: linear-gradient(180deg,
+              rgba(white, 0.05) 0%,
+              transparent 100%);
+    }
+  }
+
+  .auth-form-header {
+    .auth-form-subtitle {
+      color: rgba(white, 0.8);
+    }
+  }
+
+  .auth-form {
+    .ant-form-item-label label {
+      color: rgba(white, 0.9);
+    }
+
+    .ant-form-item-extra {
+      color: rgba(white, 0.6);
+    }
+
+    .ant-input,
+    .ant-input-password {
+      background: rgba(white, 0.08);
+      border-color: rgba(white, 0.15);
+      color: rgba(white, 0.9);
+
+      &:hover {
+        background: rgba(white, 0.12);
+        border-color: rgba($gradient-start, 0.6);
+      }
+
+      &::placeholder {
+        color: rgba(white, 0.5);
+      }
+    }
+
+    .auth-form-icon {
+      color: rgba(white, 0.6);
+    }
+  }
+
+  .auth-checkbox {
+    color: rgba(white, 0.9);
+
+    .ant-checkbox {
+      .ant-checkbox-inner {
+        background: rgba(white, 0.08);
+        border-color: rgba(white, 0.2);
+      }
+    }
+  }
+
+  .auth-form-footer {
+    border-color: rgba(white, 0.1);
+
+    .auth-form-footer-text {
+      color: rgba(white, 0.8);
+    }
+  }
+}
+
+// Анимация для reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .auth-space,
+  .auth-logo-container,
+  .auth-form-container {
+    animation: none;
+  }
+
+  .auth-logo,
+  .auth-submit-button,
+  .auth-form-signin-link {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  .auth-submit-button::before {
+    display: none;
+  }
+}

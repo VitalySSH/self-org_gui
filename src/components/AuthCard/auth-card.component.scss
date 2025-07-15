@@ -32,8 +32,9 @@
     height: 3px;
     background: linear-gradient(90deg,
             $heading-color 0%,
-            $primary-color 70%,
-            $heading-color 100%);
+            $text-color 30%,
+            $gradient-start 70%,
+            $gradient-end 100%);
     opacity: 0;
     transition: opacity $transition-speed ease;
   }
@@ -70,7 +71,10 @@
     font-size: 24px;
     font-weight: 700;
     font-family: $font-family;
-    background: $heading-color;
+    background: linear-gradient(135deg,
+            $heading-color 0%,
+            $text-color 40%,
+            $gradient-start 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
