@@ -30,7 +30,6 @@ import {
   CheckOutlined,
   CloseOutlined,
   MinusCircleOutlined,
-  PlusOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
@@ -419,7 +418,6 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
               <Button
                 type="primary"
                 onClick={() => add()}
-                icon={<PlusOutlined />}
               >
                 Добавить категорию
               </Button>

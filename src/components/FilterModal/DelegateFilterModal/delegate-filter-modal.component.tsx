@@ -69,7 +69,7 @@ export function DelegateFilterModal({
       open={visible}
       onCancel={onClearForm}
       footer={[
-        <Button key="reset" onClick={handleReset}>
+        <Button key="reset" type="primary" onClick={handleReset}>
           Сбросить
         </Button>,
         <Button key="apply" type="primary" onClick={() => form.submit()}>

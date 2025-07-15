@@ -33,7 +33,7 @@ a {
 }
 
 button {
-  @include button-style($primary-color, $background-color);
+  @include button-variant-primary;
 }
 
 .auth-space {

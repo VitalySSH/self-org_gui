@@ -20,7 +20,7 @@ export function CommunityFilterModal({
       open={visible}
       onCancel={onCancel}
       footer={[
-        <Button key="reset" onClick={handleReset}>
+        <Button key="reset" type="primary" onClick={handleReset}>
           Сбросить
         </Button>,
         <Button key="apply" type="primary" onClick={() => form.submit()}>

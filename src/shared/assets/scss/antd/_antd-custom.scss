@@ -130,15 +130,15 @@
   }
 
   .ant-btn {
-    @include button-style($primary-color, $background-color);
+    @include button-variant-primary;
   }
 
   &-primary {
-    @include button-style($primary-color, $background-color);
+    @include button-variant-primary;
   }
 
   &-variant-solid {
-    @include button-style($primary-color, $background-color);
+    @include button-variant-primary;
   }
 }
 
@@ -295,6 +295,12 @@
 
   .ant-modal-content {
     background-color: $secondary-color;
+  }
+
+  .ant-modal-footer {
+    .ant-btn {
+      @include button-variant-secondary;
+    }
   }
 }
 

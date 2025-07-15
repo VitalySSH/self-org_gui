@@ -1,8 +1,6 @@
 import {
   UserOutlined,
   MenuOutlined,
-  LogoutOutlined,
-  SaveOutlined,
 } from '@ant-design/icons';
 import {
   Avatar,
@@ -18,7 +16,7 @@ import {
 } from 'antd';
 import { useAuth } from 'src/hooks';
 import './auth-header-icons.component.scss';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import TextArea from 'antd/lib/input/TextArea';
 import {
   AuthContextProvider,
@@ -36,146 +34,178 @@ export function AuthHeaderIcons() {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm();
 
-  const avatarOnClick = () => {
+  const handleAvatarClick = useCallback(() => {
     setModalOpen(true);
-  };
+  }, []);
 
-  const LogoutOnClick = () => {
+  const handleLogout = useCallback(() => {
     authData.logout();
-  };
+  }, [authData]);
 
-  const onFinish = (formData: object) => {
-    const submitData = Object.assign({}, formData);
-    if (authData.user?.id) {
+  const handleDrawerOpen = useCallback(() => {
+    setDrawerOpen(true);
+  }, []);
+
+  const handleDrawerClose = useCallback(() => {
+    setDrawerOpen(false);
+  }, []);
+
+  const handleFormSubmit = useCallback(async (formData: object) => {
+    if (!authData.user?.id) return;
+
+    setIsLoading(true);
+    try {
+      const submitData = Object.assign({}, formData);
       const user = authData.user;
       const userData: UserUpdateInterface = {};
+
       for (const [key, value] of Object.entries(submitData)) {
         userData[key as keyof UserUpdateInterface] = value;
         user[key as keyof UserInterface] = value;
       }
+
       authData.login(user, false);
-
-      authApiClientService
-        .updateUser(authData.user?.id, userData)
-        .then(() => {
-          setModalOpen(false);
-        })
-        .catch(() => setModalOpen(false));
+      await authApiClientService.updateUser(authData.user.id, userData);
+      setModalOpen(false);
+    } catch (error) {
+      console.error('Error updating user:', error);
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, [authData, authApiClientService]);
 
-  const handleCancel = () => {
+  const handleModalCancel = useCallback(() => {
     setModalOpen(false);
-  };
+    form.resetFields();
+  }, [form]);
 
-  const drawerOnClick = () => {
-    setDrawerOpen(true);
-  };
+  const handleFormSubmitClick = useCallback(() => {
+    form.submit();
+  }, [form]);
+
+  const userDisplayName = authData.user?.fullname || 'Пользователь';
 
   return (
-    <Flex style={{ marginRight: 8 }}>
-      <Space>
-        <Avatar
-          icon={<UserOutlined />}
-          size={40}
-          src={authData.avatarUrl}
-          onClick={avatarOnClick}
-          className="avatar"
-        />
-        <div className="icon-text" onClick={avatarOnClick}>
-          <Text strong>{authData.user?.fullname}</Text>
+    <Flex className="auth-header-icons">
+      <Space size="middle" className="user-info-section">
+        <div className="avatar-container">
+          <Avatar
+            icon={<UserOutlined />}
+            size={40}
+            src={authData.avatarUrl}
+            onClick={handleAvatarClick}
+            className="user-avatar"
+          />
+          <div className="online-indicator" />
         </div>
-        <MenuOutlined className="menu-icon" onClick={drawerOnClick} />
+
+        <div className="user-info" onClick={handleAvatarClick}>
+          <Text strong className="user-name">{userDisplayName}</Text>
+          <Text className="user-status">В сети</Text>
+        </div>
+
+        <Button
+          type="text"
+          icon={<MenuOutlined />}
+          onClick={handleDrawerOpen}
+          className="menu-button"
+          size="large"
+        />
       </Space>
+
       <Modal
         open={modalOpen}
-        title={<span className="modal-title">Профиль пользователя</span>}
-        onCancel={handleCancel}
+        title={
+          <div className="modal-header">
+            <UserOutlined className="modal-icon" />
+            <span>Профиль пользователя</span>
+          </div>
+        }
+        onCancel={handleModalCancel}
         footer={
-          <Space className="modal-footer">
-            <Button danger icon={<LogoutOutlined />} onClick={LogoutOnClick}>
+          <div className="modal-footer">
+            <Button
+              danger
+              onClick={handleLogout}
+              className="logout-button"
+            >
               Выйти
             </Button>
             <Button
               type="primary"
-              icon={<SaveOutlined style={{ color: '#fff' }} />}
-              onClick={() => form.submit()}
+              onClick={handleFormSubmitClick}
+              loading={isLoading}
               className="save-button"
             >
-              Сохранить
+              {isLoading ? 'Сохранение...' : 'Сохранить'}
             </Button>
-          </Space>
+          </div>
         }
         className="profile-modal"
-        styles={{
-          body: {
-            maxHeight: 'calc(100vh - 200px)',
-            overflowY: 'auto',
-            padding: '16px 24px',
-          },
-          content: {
-            maxHeight: 'calc(100vh - 40px)',
-            display: 'flex',
-            flexDirection: 'column',
-          },
-        }}
-        style={{ top: 20 }}
-        width={600}
+        width={640}
+        centered
+        destroyOnClose
       >
         <div className="profile-content">
-          <div className="profile-avatar">
+          <div className="profile-avatar-section">
             <UploadAvatar />
           </div>
-          <Divider className="divider" />
+
+          <Divider className="content-divider" />
+
           <Form
             form={form}
             name="profile"
-            onFinish={onFinish}
+            onFinish={handleFormSubmit}
             initialValues={{
               firstname: authData.user?.firstname,
               surname: authData.user?.surname,
               about_me: authData.user?.about_me,
               email: authData.user?.email,
             }}
-            className="form-container"
+            className="profile-form"
             layout="vertical"
+            requiredMark={false}
           >
-            <Form.Item
-              name="firstname"
-              label="Имя"
-              rules={[
-                {
-                  required: true,
-                  message: 'Пожалуйста, введите ваше имя',
-                },
-              ]}
-              hasFeedback
-            >
-              <Input placeholder="Введите ваше имя" />
-            </Form.Item>
-            <Form.Item
-              name="surname"
-              label="Фамилия"
-              rules={[
-                {
-                  required: true,
-                  message: 'Пожалуйста, введите вашу фамилию',
-                },
-              ]}
-              hasFeedback
-            >
-              <Input placeholder="Введите вашу фамилию" />
-            </Form.Item>
-            <Form.Item name="about_me" label="Обо мне">
-              <TextArea
-                placeholder="Расскажите о себе"
-                rows={4}
-                showCount
-                maxLength={500}
-              />
-            </Form.Item>
+            <div className="form-row">
+              <Form.Item
+                name="firstname"
+                label="Имя"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Пожалуйста, введите ваше имя',
+                  },
+                ]}
+                className="form-item-half"
+              >
+                <Input
+                  placeholder="Введите ваше имя"
+                  size="large"
+                />
+              </Form.Item>
+
+              <Form.Item
+                name="surname"
+                label="Фамилия"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Пожалуйста, введите вашу фамилию',
+                  },
+                ]}
+                className="form-item-half"
+              >
+                <Input
+                  placeholder="Введите вашу фамилию"
+                  size="large"
+                />
+              </Form.Item>
+            </div>
+
             <Form.Item
               name="email"
               label="Электронная почта"
@@ -186,24 +216,40 @@ export function AuthHeaderIcons() {
                 },
                 {
                   type: 'email',
-                  message:
-                    'Пожалуйста, введите корректный адрес электронной почты',
+                  message: 'Пожалуйста, введите корректный адрес электронной почты',
                 },
               ]}
-              hasFeedback
             >
-              <Input placeholder="example@domain.com" />
+              <Input
+                placeholder="example@domain.com"
+                size="large"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="about_me"
+              label="Обо мне"
+            >
+              <TextArea
+                placeholder="Расскажите о себе"
+                rows={4}
+                showCount
+                maxLength={500}
+                size="large"
+              />
             </Form.Item>
           </Form>
         </div>
       </Modal>
+
       <Drawer
-        closable
-        destroyOnClose
+        title="Меню"
         placement="right"
-        width={300}
+        width={320}
         open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
+        onClose={handleDrawerClose}
+        className="navigation-drawer"
+        destroyOnClose
       >
         <RightMenu setDrawerOpen={setDrawerOpen} />
       </Drawer>

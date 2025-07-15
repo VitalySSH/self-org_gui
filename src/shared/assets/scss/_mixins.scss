@@ -7,52 +7,174 @@
   align-items: center;
 }
 
-@mixin button-style($bg-color, $text-color) {
+@mixin button-style($bg-color: $heading-color, $text-color: $background-color) {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
 
   background-color: $bg-color;
   color: $text-color;
-  border: none;
-  border-radius: $border-radius;
-  padding: 10px 20px;
-  font-size: 16px;
+  border: 1px solid color.mix($bg-color, black, 20%);
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: $font-family;
   cursor: pointer;
-  transition: background-color $transition-speed;
+  position: relative;
+  transition: all 0.2s ease-out;
+  box-shadow:
+          0 1px 3px rgba(0, 0, 0, 0.12),
+          0 1px 2px rgba(0, 0, 0, 0.24);
+  text-transform: none;
+  letter-spacing: 0.2px;
+  line-height: 1.4;
+
+  // Внутренняя тень для объема
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(white, 0.1) 0%, transparent 50%);
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+  }
+
+  // Состояние наведения
+  &:hover {
+    background-color: color.mix($bg-color, white, 8%);
+    border-color: color.mix($bg-color, black, 30%);
+    box-shadow:
+            0 4px 8px rgba(0, 0, 0, 0.16),
+            0 2px 4px rgba(0, 0, 0, 0.32);
+    transform: translateY(-1px);
+
+    &::before {
+      opacity: 0.7;
+    }
+  }
+
+  // Активное состояние
+  &:active {
+    background-color: color.mix($bg-color, black, 5%);
+    box-shadow:
+            0 2px 4px rgba(0, 0, 0, 0.16),
+            0 1px 2px rgba(0, 0, 0, 0.32);
+    transform: translateY(0);
+
+    &::before {
+      opacity: 0.3;
+    }
+  }
+
+  // Отключенное состояние
+  &:disabled {
+    background-color: $border-color;
+    color: color.mix($text-color, white, 60%);
+    border-color: color.mix($border-color, black, 10%);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+
+    &:hover {
+      background-color: $border-color;
+      color: color.mix($text-color, white, 60%);
+      border-color: color.mix($border-color, black, 10%);
+      transform: none;
+      box-shadow: none;
+    }
+
+    &::before {
+      display: none;
+    }
+  }
+
+  // Фокус состояние для доступности
+  &:focus-visible {
+    outline: none;
+    box-shadow:
+            0 0 0 3px rgba($accent-yellow, 0.3),
+            0 1px 3px rgba(0, 0, 0, 0.12),
+            0 1px 2px rgba(0, 0, 0, 0.24);
+  }
+
+  // Поддержка иконок
+  .anticon {
+    transition: all 0.2s ease;
+
+    &:first-child {
+      margin-right: 8px;
+    }
+
+    &:last-child {
+      margin-left: 8px;
+    }
+
+    &:only-child {
+      margin: 0;
+    }
+  }
+}
+
+// Дополнительные размеры кнопок
+@mixin button-size-small {
+  padding: 8px 16px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+@mixin button-size-large {
+  padding: 16px 32px;
+  font-size: 16px;
+  border-radius: 10px;
+}
+
+// Специальные варианты
+@mixin button-variant-primary {
+  @include button-style($heading-color, $background-color);
+}
+
+@mixin button-variant-secondary {
+  @include button-style($secondary-color, $text-color);
+  border-color: $border-color;
 
   &:hover {
-    background-color: color.mix(black, $bg-color, 10%);
-    //background-color: $accent-yellow;
+    background-color: color.mix($secondary-color, $text-color, 5%);
+    border-color: color.mix($border-color, $text-color, 20%);
   }
 
-  &:disabled {
-    background-color: color.mix(black, $border-color, 40%);
-    color: color.mix(white, $text-color, 70%);
-    cursor: not-allowed;
+  &:active {
+    background-color: color.mix($secondary-color, $text-color, 10%);
+  }
+}
+
+@mixin button-variant-danger {
+  @include button-style($primary-color, $background-color);
+}
+
+@mixin button-variant-success {
+  @include button-style($success-color, $background-color);
+}
+
+@mixin button-variant-text {
+  @include button-style(transparent, $text-color);
+  border: none;
+  box-shadow: none;
+
+  &:hover {
+    background-color: rgba($text-color, 0.05);
   }
 
-  &:not(:hover) {
-    &:not(:disabled) {
-      &:active {
-        background-color: color.mix(black, $bg-color, 10%);
-      }
-    }
+  &:active {
+    background-color: rgba($text-color, 0.1);
   }
 
-  &:hover:not(:disabled) {
-    background-color: $accent-yellow !important;
-    color: $bg-color !important;
-    outline: none;
-
-    .anticon {
-      color: $bg-color !important;
-    }
-  }
-
-  // 5. Убираем фокус-стили если не нужны
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba($accent-yellow, 0.5);
+  &::before {
+    display: none;
   }
 }
