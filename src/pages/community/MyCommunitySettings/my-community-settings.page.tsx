@@ -8,12 +8,20 @@ import {
   Spin,
   Switch,
   Tooltip,
+  Card,
+  Typography,
+  Space,
+  Alert,
 } from 'antd';
 import {
   CheckOutlined,
   CloseOutlined,
   QuestionCircleOutlined,
   InfoCircleOutlined,
+  SettingOutlined,
+  TeamOutlined,
+  UserOutlined,
+  TagOutlined,
 } from '@ant-design/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { CrudDataSourceService, UserSettingsAoService } from 'src/services';
@@ -58,6 +66,8 @@ import {
 import { Filters } from 'src/shared/types.ts';
 import './my-community-settings.page.scss';
 
+const { Title, Text } = Typography;
+
 export function MyCommunitySettings(props: any) {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
@@ -67,111 +77,110 @@ export function MyCommunitySettings(props: any) {
   const [disabled, setDisabled] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isWorkGroup, setIsWorkGroup] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const communityId = props?.communityId;
   const nameService = new CrudDataSourceService(CommunityNameModel);
-  const descriptionService = new CrudDataSourceService(
-    CommunityDescriptionModel
-  );
+  const descriptionService = new CrudDataSourceService(CommunityDescriptionModel);
   const categoryService = new CrudDataSourceService(CategoryModel);
   const responsibilityService = new CrudDataSourceService(ResponsibilityModel);
 
   const [form] = Form.useForm();
 
   const successInfo = (content: string) => {
-    messageApi
-      .open({
-        type: 'success',
-        content: content,
-      })
-      .then();
+    messageApi.open({
+      type: 'success',
+      content: content,
+    });
   };
 
   const errorInfo = useCallback(
     (content: string) => {
-      messageApi
-        .open({
-          type: 'error',
-          content: content,
-        })
-        .then();
+      messageApi.open({
+        type: 'error',
+        content: content,
+      });
     },
     [messageApi]
   );
 
-  const getUserCommunitySettings = useCallback(() => {
-    if (authData.user && communityId && !settings.id) {
-      const settingsService = new CrudDataSourceService(
-        UserCommunitySettingsModel
+  const getUserCommunitySettings = useCallback(async () => {
+    if (!authData.user || !communityId || settings.id) return;
+
+    try {
+      const settingsService = new CrudDataSourceService(UserCommunitySettingsModel);
+      const resp = await settingsService.list(
+        [
+          {
+            field: 'community_id',
+            op: 'equals',
+            val: communityId,
+          },
+          {
+            field: 'user_id',
+            op: 'equals',
+            val: authData.user.id,
+          },
+        ],
+        undefined,
+        undefined,
+        [
+          'user',
+          'names',
+          'descriptions',
+          'responsibilities',
+          'categories.status',
+          'sub_communities_settings.names',
+          'sub_communities_settings.descriptions',
+          'sub_communities_settings.community.main_settings.name',
+          'sub_communities_settings.community.main_settings.description',
+        ]
       );
-      settingsService
-        .list(
-          [
-            {
-              field: 'community_id',
-              op: 'equals',
-              val: communityId,
-            },
-            {
-              field: 'user_id',
-              op: 'equals',
-              val: authData.user.id,
-            },
-          ],
-          undefined,
-          undefined,
-          [
-            'user',
-            'names',
-            'descriptions',
-            'responsibilities',
-            'categories.status',
-            'sub_communities_settings.names',
-            'sub_communities_settings.descriptions',
-            'sub_communities_settings.community.main_settings.name',
-            'sub_communities_settings.community.main_settings.description',
-          ]
-        )
-        .then((resp) => {
-          if (resp.total) {
-            const settingsInst = resp.data[0];
-            setSettings(settingsInst);
-            setIsWorkGroup(Boolean(settingsInst?.is_workgroup));
-            form.setFieldsValue({
-              categories: settingsInst?.categories,
-              names: settingsInst.names,
-              descriptions: settingsInst.descriptions,
-              responsibilities: settingsInst?.responsibilities,
-              sub_communities_settings: settingsInst.sub_communities_settings,
-              quorum: settingsInst?.quorum,
-              vote: settingsInst?.vote,
-              significant_minority: settingsInst?.significant_minority,
-              decision_delay: settingsInst?.decision_delay,
-              dispute_time_limit: settingsInst?.dispute_time_limit,
-              is_workgroup: settingsInst?.is_workgroup,
-              workgroup: settingsInst?.workgroup,
-              is_secret_ballot: settingsInst?.is_secret_ballot || false,
-              is_can_offer: settingsInst?.is_can_offer || false,
-              is_minority_not_participate:
-                settingsInst?.is_minority_not_participate || false,
-              is_default_add_member:
-                settingsInst?.is_default_add_member || false,
-              is_not_delegate: settingsInst?.is_not_delegate || false,
-            });
-          } else {
-            navigate('/no-much-page');
-          }
-        })
-        .catch((error) => {
-          errorInfo(`Ошибка получения настроек: ${error}`);
-        });
+
+      if (resp.total) {
+        const settingsInst = resp.data[0];
+        setSettings(settingsInst);
+
+        const formValues = {
+          categories: settingsInst?.categories,
+          names: settingsInst.names,
+          descriptions: settingsInst.descriptions,
+          responsibilities: settingsInst?.responsibilities,
+          sub_communities_settings: settingsInst.sub_communities_settings,
+          quorum: settingsInst?.quorum,
+          vote: settingsInst?.vote,
+          significant_minority: settingsInst?.significant_minority,
+          decision_delay: settingsInst?.decision_delay,
+          dispute_time_limit: settingsInst?.dispute_time_limit,
+          is_workgroup: settingsInst?.is_workgroup,
+          workgroup: settingsInst?.workgroup,
+          is_secret_ballot: settingsInst?.is_secret_ballot || false,
+          is_can_offer: settingsInst?.is_can_offer || false,
+          is_minority_not_participate: settingsInst?.is_minority_not_participate || false,
+          is_default_add_member: settingsInst?.is_default_add_member || false,
+          is_not_delegate: settingsInst?.is_not_delegate || false,
+        };
+
+        form.setFieldsValue(formValues);
+        setIsWorkGroup(Boolean(settingsInst?.is_workgroup));
+
+        // Принудительно обновляем состояние после установки значений формы
+        setTimeout(() => {
+          const currentFormData = form.getFieldsValue();
+          setIsWorkGroup(Boolean(currentFormData.is_workgroup));
+        }, 0);
+      } else {
+        navigate('/no-much-page');
+      }
+    } catch (error) {
+      console.error('Error loading settings:', error);
+      errorInfo(`Ошибка получения настроек: ${error}`);
+    } finally {
+      setIsLoading(false);
     }
   }, [authData.user, communityId, errorInfo, form, navigate, settings.id]);
 
-  const getCommunityNames = async (
-    pagination?: Pagination,
-    filters?: Filters
-  ) => {
+  const getCommunityNames = async (pagination?: Pagination, filters?: Filters) => {
     const newFilters: Filters = filters || [];
     newFilters.push({
       field: 'community_id',
@@ -181,10 +190,7 @@ export function MyCommunitySettings(props: any) {
     return await nameService.list(newFilters, undefined, pagination);
   };
 
-  const getCommunityDescriptions = async (
-    pagination?: Pagination,
-    filters?: Filters
-  ) => {
+  const getCommunityDescriptions = async (pagination?: Pagination, filters?: Filters) => {
     const newFilters: Filters = filters || [];
     newFilters.push({
       field: 'community_id',
@@ -194,10 +200,7 @@ export function MyCommunitySettings(props: any) {
     return await descriptionService.list(newFilters, undefined, pagination);
   };
 
-  const getResponsibilities = async (
-    pagination?: Pagination,
-    filters?: Filters
-  ) => {
+  const getResponsibilities = async (pagination?: Pagination, filters?: Filters) => {
     const newFilters: Filters = filters || [];
     newFilters.push({
       field: 'community_id',
@@ -236,7 +239,13 @@ export function MyCommunitySettings(props: any) {
 
   const handleFormChange = () => {
     const formData = form.getFieldsValue();
-    setIsWorkGroup(Boolean(formData.is_workgroup));
+    const newIsWorkGroup = Boolean(formData.is_workgroup);
+
+    // Обновляем состояние только если оно изменилось
+    if (isWorkGroup !== newIsWorkGroup) {
+      setIsWorkGroup(newIsWorkGroup);
+    }
+
     const isValid =
       Boolean(formData.names) &&
       Boolean(formData.descriptions) &&
@@ -246,47 +255,65 @@ export function MyCommunitySettings(props: any) {
       Boolean(formData.decision_delay) &&
       Boolean(formData.dispute_time_limit) &&
       (!formData.is_workgroup || (formData.is_workgroup && formData.workgroup));
+
     setDisabled(!isValid);
   };
 
-  const onFinish = () => {
+  // Добавляем отдельный обработчик изменения конкретно для is_workgroup
+  const handleWorkGroupChange = (checked: boolean) => {
+    setIsWorkGroup(checked);
+    form.setFieldValue('is_workgroup', checked);
+  };
+
+  // Добавляем useEffect для отслеживания изменения is_workgroup в форме
+  useEffect(() => {
+    if (!isLoading) {
+      // Даем время форме обновиться после загрузки
+      const timer = setTimeout(() => {
+        handleFormChange();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
+
+  const onFinish = async () => {
     setButtonLoading(true);
-    const formData: CommunitySettingsInterface = form.getFieldsValue();
-    const userSettingsAoService = new UserSettingsAoService();
-    userSettingsAoService
-      .saveSettingsOnForm(
+    try {
+      const formData: CommunitySettingsInterface = form.getFieldsValue();
+      const userSettingsAoService = new UserSettingsAoService();
+
+      await userSettingsAoService.saveSettingsOnForm(
         settings,
         formData,
         communityId,
         authData.getUserRelation()
-      )
-      .then(() => {
-        successInfo('Настройки сохранены');
-        setButtonLoading(false);
-      })
-      .catch((error) => {
-        errorInfo(`Ошибка сохранения настроек: ${error}`);
-        setButtonLoading(false);
-      });
+      );
+
+      successInfo('Настройки сохранены');
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      errorInfo(`Ошибка сохранения настроек: ${error}`);
+    } finally {
+      setButtonLoading(false);
+    }
   };
 
-  const workgroupItem  = (
+  // Компонент поля рабочей группы
+  const WorkgroupField = () => (
     <Form.Item
       name="workgroup"
       label={
         <span>
-            {WorkGroupLabel}&nbsp;
+          {WorkGroupLabel}&nbsp;
           <Tooltip title="Предложите оптимальное, с вашей точки зрения количество участников для формирования рабочих групп. Минимум 3, максимум 15 человек.">
-              <QuestionCircleOutlined />
-            </Tooltip>
-          </span>
+            <QuestionCircleOutlined />
+          </Tooltip>
+        </span>
       }
-      labelCol={{ span: 24 }}
       rules={[
         {
           required: true,
-          message:
-            'Пожалуйста, укажите количетсво участников рабочей группы',
+          message: 'Пожалуйста, укажите количество участников рабочей группы',
         },
       ]}
     >
@@ -296,459 +323,564 @@ export function MyCommunitySettings(props: any) {
         max={15}
         min={3}
         step={1}
-        style={{ width: 50 }}
+        style={{ width: '100%', maxWidth: 120 }}
+        addonAfter="чел."
       />
     </Form.Item>
   );
 
-  return (
-    <>
-      <div className="community-work-space-with-toolbar">
-        {contextHolder}
-        <div className="section-header">Мои настройки сообщества</div>
-        <Spin
-          tip="Загрузка данных"
-          size="large"
-          spinning={Boolean(!settings.id)}
-        >
-          <Form
-            name="my-community-settings"
-            form={form}
-            onFieldsChange={handleFormChange}
-            preserve={true}
+  // Основная информация
+  const renderBasicInfo = () => (
+    <Card
+      title={
+        <Space>
+          <UserOutlined />
+          <span>Основная информация</span>
+        </Space>
+      }
+      className="settings-section"
+    >
+      <Row gutter={[24, 16]}>
+        <Col xs={24} lg={12}>
+          <Form.Item
+            name="names"
+            label={
+              <span>
+                {CommunityNameLabel}&nbsp;
+                <Tooltip title="Выберите из доступных вариантов понравившееся название для сообщества или предложите своё.">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </span>
+            }
+            rules={[
+              {
+                required: true,
+                message: 'Пожалуйста, выберите наименование сообщества',
+              },
+            ]}
           >
-            <Row gutter={[16, 16]}>
-              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
-                <Form.Item
-                  name="names"
-                  label={
-                    <span>
-                      {CommunityNameLabel}&nbsp;
-                      <Tooltip title="Выберите из доступных вариантов понравившееся название для сообщества или предложите своё.">
-                        <QuestionCircleOutlined />
-                      </Tooltip>
-                    </span>
-                  }
-                  labelCol={{ span: 24 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Пожалуйста, выберите наименование сообщества',
-                    },
-                  ]}
-                >
-                  <CustomSelect
-                    fieldService={nameService}
-                    requestOptions={getCommunityNames}
-                    onChange={onCustomSelectChange}
-                    value={settings?.names}
-                    formField="names"
-                    bindLabel="name"
-                    multiple={true}
-                    enableSearch={true}
-                    addOwnValue={true}
-                    ownValuePlaceholder="Если не нашли подходящее, введите своё наименование"
-                    ownValueMaxLength={80}
-                  />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
-                <Form.Item
-                  name="descriptions"
-                  label={
-                    <span>
-                      {CommunityDescriptionLabel}&nbsp;
-                      <Tooltip title="Выберите из доступных вариантов наилучшее описание сообщества или предложите своё.">
-                        <QuestionCircleOutlined />
-                      </Tooltip>
-                    </span>
-                  }
-                  labelCol={{ span: 24 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Пожалуйста, выберите описание сообщества',
-                    },
-                  ]}
-                >
-                  <CustomSelect
-                    fieldService={descriptionService}
-                    requestOptions={getCommunityDescriptions}
-                    onChange={onCustomSelectChange}
-                    value={settings?.descriptions}
-                    formField="descriptions"
-                    bindLabel="value"
-                    multiple={true}
-                    enableSearch={true}
-                    addOwnValue={true}
-                    ownFieldTextarea={true}
-                    ownValuePlaceholder="Если не нашли подходящее, введите своё описание"
-                    ownValueMaxLength={200}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={[16, 16]} className="voting-core-settings">
-              <Col span={24}>
-                <div className="voting-core-settings-header">
-                  <h3>Основные параметры голосования</h3>
-                  <Button
-                    type="text"
-                    icon={<InfoCircleOutlined style={{ fontSize: 18 }} />}
-                    onClick={() => setIsModalOpen(true)}
-                  >
-                    Рекомендации
-                  </Button>
-                </div>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-                <Form.Item
-                  name="quorum"
-                  label={
-                    <span>
-                      {QuorumLabel}&nbsp;
-                      <Tooltip title="Введите минимальный процент от числа участников сообщества, требующийся для правомочности голосования. Значение от 1 до 100%.">
-                        <QuestionCircleOutlined />
-                      </Tooltip>
-                    </span>
-                  }
-                  labelCol={{ span: 24 }}
-                  rules={[
-                    {
-                      required: true,
-                      message:
-                        'Пожалуйста, укажите кворум сообщества, значение от 1 до 100%.',
-                    },
-                  ]}
-                >
-                  <InputNumber
-                    type="number"
-                    controls={false}
-                    max={100}
-                    min={1}
-                    step={1}
-                    style={{
-                      width: 50,
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-                <Form.Item
-                  name="vote"
-                  label={
-                    <span>
-                      {VoteLabel}&nbsp;
-                      <Tooltip title="Введите минимальный процент от всех голосов, который должен получить вариант, требующийся для победы в голосовании. Значение от 50 до 100%.">
-                        <QuestionCircleOutlined />
-                      </Tooltip>
-                    </span>
-                  }
-                  labelCol={{ span: 24 }}
-                  rules={[
-                    {
-                      required: true,
-                      message:
-                        'Пожалуйста, укажите процент голосов для принятия решения, значение от 50 до 100%.',
-                    },
-                  ]}
-                >
-                  <InputNumber
-                    type="number"
-                    controls={false}
-                    max={100}
-                    min={50}
-                    step={1}
-                    style={{
-                      width: 50,
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-                <Form.Item
-                  name="significant_minority"
-                  label={
-                    <span>
-                      {SignificantMinorityLabel}&nbsp;
-                      <Tooltip title="Введите минимальный процент от всех голосов, при достижении которого вариант голосования будет считаться общественно-значимым. Значение от 1 до 50%.">
-                        <QuestionCircleOutlined />
-                      </Tooltip>
-                    </span>
-                  }
-                  labelCol={{ span: 24 }}
-                  rules={[
-                    {
-                      required: true,
-                      message:
-                        'Пожалуйста, укажите процент общественно-значимого меньшинства, значение от 1 до 49%.',
-                    },
-                  ]}
-                >
-                  <InputNumber
-                    type="number"
-                    controls={false}
-                    max={49}
-                    min={1}
-                    step={1}
-                    style={{
-                      width: 50,
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-                <Form.Item
-                  name="decision_delay"
-                  label={
-                    <span>
-                      {DecisionDelayLabel}&nbsp;
-                      <Tooltip title="Укажите количество дней между достижением кворума и моментом вступления решения в силу. Данный период предоставляет участникам возможность для изучения мнений друг друга, анализа последствий и корректировки своей позиции перед принятием решения. Максимальное значение 30 дней.">
-                        <QuestionCircleOutlined />
-                      </Tooltip>
-                    </span>
-                  }
-                  labelCol={{ span: 24 }}
-                  rules={[
-                    {
-                      required: true,
-                      message:
-                        'Пожалуйста, укажите количество дней отсрочки вступления решения в силу, значение от 1 до 30 дней.',
-                    },
-                  ]}
-                >
-                  <InputNumber
-                    type="number"
-                    controls={false}
-                    max={30}
-                    min={1}
-                    step={1}
-                    style={{
-                      width: 50,
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-                <Form.Item
-                  name="dispute_time_limit"
-                  label={
-                    <span>
-                      {DisputeTimeLimitLabel}&nbsp;
-                      <Tooltip title="Укажите максимальное количество дней, которое потребуется для урегилирования спорных ситуаций. Максимальное значение 30 дней.">
-                        <QuestionCircleOutlined />
-                      </Tooltip>
-                    </span>
-                  }
-                  labelCol={{ span: 24 }}
-                  rules={[
-                    {
-                      required: true,
-                      message:
-                        'Пожалуйста, укажите количество дней для рассмотрения споров, значение от 1 до 30 дней.',
-                    },
-                  ]}
-                >
-                  <InputNumber
-                    type="number"
-                    controls={false}
-                    max={30}
-                    min={1}
-                    step={1}
-                    style={{
-                      width: 50,
-                    }}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-                <Form.Item
-                  name="is_workgroup"
-                  label={
-                    <span>
-                      {IsWorkGroupLabel}&nbsp;
-                      <Tooltip title="Рабочая группа может быть сформрована после утверждения инициативы, для выработки одного или нескольких проектов реализации данной инициативы. При отсутсвиии рабочей группы предполагается, что в выработке проектов реализаций участвуют все желающие участники сообщества.">
-                        <QuestionCircleOutlined />
-                      </Tooltip>
-                    </span>
-                  }
-                  labelCol={{ span: 24 }}
-                  valuePropName="checked"
-                >
-                  <Switch
-                    checkedChildren={<CheckOutlined />}
-                    unCheckedChildren={<CloseOutlined />}
-                  />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-                {isWorkGroup && workgroupItem}
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-                <Form.Item
-                  name="is_secret_ballot"
-                  label={IsSecretBallotLabel}
-                  labelCol={{ span: 24 }}
-                  valuePropName="checked"
-                >
-                  <Switch
-                    checkedChildren={<CheckOutlined />}
-                    unCheckedChildren={<CloseOutlined />}
-                  />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-                <Form.Item
-                  name="is_can_offer"
-                  label={IsCanOfferLabel}
-                  labelCol={{ span: 24 }}
-                  valuePropName="checked"
-                >
-                  <Switch
-                    checkedChildren={<CheckOutlined />}
-                    unCheckedChildren={<CloseOutlined />}
-                  />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-                <Form.Item
-                  name="is_minority_not_participate"
-                  label={
-                    <span>
-                      {IsMinorityNotParticipateLabel}&nbsp;
-                      <Tooltip title="В случае утверждения инициативы, меньшинство, которое её не поддержало обязано принимать участие в её исполнении или достаточно того, что оно не должно препятствовать?">
-                        <QuestionCircleOutlined />
-                      </Tooltip>
-                    </span>
-                  }
-                  labelCol={{ span: 24 }}
-                  valuePropName="checked"
-                >
-                  <Switch
-                    checkedChildren={<CheckOutlined />}
-                    unCheckedChildren={<CloseOutlined />}
-                  />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-                <Form.Item
-                  name="is_default_add_member"
-                  label={IsDefaultAddMemberLabel}
-                  labelCol={{ span: 24 }}
-                  valuePropName="checked"
-                >
-                  <Switch
-                    checkedChildren={<CheckOutlined />}
-                    unCheckedChildren={<CloseOutlined />}
-                  />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-                <Form.Item
-                  name="is_not_delegate"
-                  label={IsNotDelegateLabel}
-                  labelCol={{ span: 24 }}
-                  valuePropName="checked"
-                >
-                  <Switch
-                    checkedChildren={<CheckOutlined />}
-                    unCheckedChildren={<CloseOutlined />}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={[16, 16]}>
-              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
-                <Form.Item
-                  name="categories"
-                  label={
-                    <span>
-                      {CategoriesLabel}&nbsp;
-                      <Tooltip title="Категории - это темы или направления для голосований. Они помогают структурировать вопросы и выбирать советников.">
-                        <QuestionCircleOutlined />
-                      </Tooltip>
-                    </span>
-                  }
-                  labelCol={{ span: 24 }}
-                >
-                  <CustomSelect
-                    fieldService={categoryService}
-                    requestOptions={getCategories}
-                    onChange={onCustomSelectChange}
-                    value={settings?.categories}
-                    formField="categories"
-                    bindLabel="name"
-                    multiple={true}
-                    enableSearch={true}
-                    addOwnValue={true}
-                    ownValuePlaceholder="Если не нашли подходящюю, введите свою категорию"
-                    ownValueMaxLength={80}
-                  />
-                </Form.Item>
-              </Col>
-              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
-                <Form.Item
-                  name="responsibilities"
-                  label={
-                    <span>
-                      {ResponsibilitiesLabel}&nbsp;
-                      <Tooltip title="Зона ответственности - это закрепленная за сообществом сфера полномочий, которая определяет типы вопросов для утверждения. Устанавливает границы влияния, запрещая принятие решений по этим вопросам во внутренних сообществах.">
-                        <QuestionCircleOutlined />
-                      </Tooltip>
-                    </span>
-                  }
-                  labelCol={{ span: 24 }}
-                >
-                  <CustomSelect
-                    fieldService={responsibilityService}
-                    requestOptions={getResponsibilities}
-                    onChange={onCustomSelectChange}
-                    value={settings?.responsibilities}
-                    formField="responsibilities"
-                    bindLabel="name"
-                    multiple={true}
-                    enableSearch={true}
-                    addOwnValue={true}
-                    ownFieldTextarea={true}
-                    ownValuePlaceholder="Если не нашли подходящюю, введите свою зону ответственности"
-                    ownValueMaxLength={200}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={[16, 16]}>
-              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
-                <Form.Item
-                  name="sub_communities_settings"
-                  label={
-                    <span>
-                      Внутренние сообщетсва&nbsp;
-                      <Tooltip title="Внутренние сообщества отображают границы структурных подразделений основного сообщества.">
-                        <QuestionCircleOutlined />
-                      </Tooltip>
-                    </span>
-                  }
-                  labelCol={{ span: 24 }}
-                >
-                  <CommunitySelect
-                    parentCommunityId={communityId}
-                    parentSettings={settings}
-                    onChange={onCommunitySelectChange}
-                    values={settings?.sub_communities_settings}
-                    readonly={false}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
-        </Spin>
+            <CustomSelect
+              fieldService={nameService}
+              requestOptions={getCommunityNames}
+              onChange={onCustomSelectChange}
+              value={settings?.names}
+              formField="names"
+              bindLabel="name"
+              multiple={true}
+              enableSearch={true}
+              addOwnValue={true}
+              ownValuePlaceholder="Если не нашли подходящее, введите своё наименование"
+              ownValueMaxLength={80}
+            />
+          </Form.Item>
+        </Col>
+        <Col xs={24} lg={12}>
+          <Form.Item
+            name="descriptions"
+            label={
+              <span>
+                {CommunityDescriptionLabel}&nbsp;
+                <Tooltip title="Выберите из доступных вариантов наилучшее описание сообщества или предложите своё.">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </span>
+            }
+            rules={[
+              {
+                required: true,
+                message: 'Пожалуйста, выберите описание сообщества',
+              },
+            ]}
+          >
+            <CustomSelect
+              fieldService={descriptionService}
+              requestOptions={getCommunityDescriptions}
+              onChange={onCustomSelectChange}
+              value={settings?.descriptions}
+              formField="descriptions"
+              bindLabel="value"
+              multiple={true}
+              enableSearch={true}
+              addOwnValue={true}
+              ownFieldTextarea={true}
+              ownValuePlaceholder="Если не нашли подходящее, введите своё описание"
+              ownValueMaxLength={200}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Card>
+  );
+
+  // Настройки голосования
+  const renderVotingSettings = () => (
+    <Card
+      title={
+        <Space>
+          <SettingOutlined />
+          <span>Основные параметры голосования</span>
+        </Space>
+      }
+      className="settings-section voting-settings-card"
+      extra={
+        <Button
+          type="text"
+          icon={<InfoCircleOutlined />}
+          onClick={() => setIsModalOpen(true)}
+          className="recommendations-button"
+        >
+          Рекомендации
+        </Button>
+      }
+    >
+      <Alert
+        message="Важные параметры"
+        description="Эти настройки определяют основные правила принятия решений в вашем сообществе"
+        type="info"
+        icon={<InfoCircleOutlined />}
+        showIcon
+        style={{ marginBottom: 24 }}
+      />
+
+      <Row gutter={[24, 16]}>
+        <Col xs={24} sm={12} lg={8}>
+          <Form.Item
+            name="quorum"
+            label={
+              <span>
+                {QuorumLabel}&nbsp;
+                <Tooltip title="Введите минимальный процент от числа участников сообщества, требующийся для правомочности голосования. Значение от 1 до 100%.">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </span>
+            }
+            rules={[
+              {
+                required: true,
+                message: 'Пожалуйста, укажите кворум сообщества, значение от 1 до 100%.',
+              },
+            ]}
+          >
+            <InputNumber
+              type="number"
+              controls={false}
+              max={100}
+              min={1}
+              step={1}
+              style={{ width: '100%', maxWidth: 120 }}
+              addonAfter="%"
+            />
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={12} lg={8}>
+          <Form.Item
+            name="vote"
+            label={
+              <span>
+                {VoteLabel}&nbsp;
+                <Tooltip title="Введите минимальный процент от всех голосов, который должен получить вариант, требующийся для победы в голосовании. Значение от 50 до 100%.">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </span>
+            }
+            rules={[
+              {
+                required: true,
+                message: 'Пожалуйста, укажите процент голосов для принятия решения, значение от 50 до 100%.',
+              },
+            ]}
+          >
+            <InputNumber
+              type="number"
+              controls={false}
+              max={100}
+              min={50}
+              step={1}
+              style={{ width: '100%', maxWidth: 120 }}
+              addonAfter="%"
+            />
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={12} lg={8}>
+          <Form.Item
+            name="significant_minority"
+            label={
+              <span>
+                {SignificantMinorityLabel}&nbsp;
+                <Tooltip title="Введите минимальный процент от всех голосов, при достижении которого вариант голосования будет считаться общественно-значимым. Значение от 1 до 50%.">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </span>
+            }
+            rules={[
+              {
+                required: true,
+                message: 'Пожалуйста, укажите процент общественно-значимого меньшинства, значение от 1 до 49%.',
+              },
+            ]}
+          >
+            <InputNumber
+              type="number"
+              controls={false}
+              max={49}
+              min={1}
+              step={1}
+              style={{ width: '100%', maxWidth: 120 }}
+              addonAfter="%"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Card>
+  );
+
+  // Временные настройки
+  const renderTimeSettings = () => (
+    <Card
+      title={
+        <Space>
+          <InfoCircleOutlined />
+          <span>Временные параметры</span>
+        </Space>
+      }
+      className="settings-section"
+    >
+      <Row gutter={[24, 16]}>
+        <Col xs={24} sm={12} lg={8}>
+          <Form.Item
+            name="decision_delay"
+            label={
+              <span>
+                {DecisionDelayLabel}&nbsp;
+                <Tooltip title="Укажите количество дней между достижением кворума и моментом вступления решения в силу. Данный период предоставляет участникам возможность для изучения мнений друг друга, анализа последствий и корректировки своей позиции перед принятием решения. Максимальное значение 30 дней.">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </span>
+            }
+            rules={[
+              {
+                required: true,
+                message: 'Пожалуйста, укажите количество дней отсрочки вступления решения в силу, значение от 1 до 30 дней.',
+              },
+            ]}
+          >
+            <InputNumber
+              type="number"
+              controls={false}
+              max={30}
+              min={1}
+              step={1}
+              style={{ width: '100%', maxWidth: 120 }}
+              addonAfter="дн."
+            />
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={12} lg={8}>
+          <Form.Item
+            name="dispute_time_limit"
+            label={
+              <span>
+                {DisputeTimeLimitLabel}&nbsp;
+                <Tooltip title="Укажите максимальное количество дней, которое потребуется для урегулирования спорных ситуаций. Максимальное значение 30 дней.">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </span>
+            }
+            rules={[
+              {
+                required: true,
+                message: 'Пожалуйста, укажите количество дней для рассмотрения споров, значение от 1 до 30 дней.',
+              },
+            ]}
+          >
+            <InputNumber
+              type="number"
+              controls={false}
+              max={30}
+              min={1}
+              step={1}
+              style={{ width: '100%', maxWidth: 120 }}
+              addonAfter="дн."
+            />
+          </Form.Item>
+        </Col>
+        {isWorkGroup && (
+          <Col xs={24} sm={12} lg={8}>
+            <WorkgroupField />
+          </Col>
+        )}
+      </Row>
+    </Card>
+  );
+
+  // Дополнительные настройки
+  const renderAdditionalSettings = () => (
+    <Card
+      title={
+        <Space>
+          <CheckOutlined />
+          <span>Дополнительные настройки</span>
+        </Space>
+      }
+      className="settings-section"
+    >
+      <Row gutter={[24, 20]}>
+        <Col xs={24} sm={12} lg={8}>
+          <Form.Item
+            name="is_workgroup"
+            label={
+              <span>
+                {IsWorkGroupLabel}&nbsp;
+                <Tooltip title="Рабочая группа может быть сформирована после утверждения инициативы, для выработки одного или нескольких проектов реализации данной инициативы. При отсутствии рабочей группы предполагается, что в выработке проектов реализаций участвуют все желающие участники сообщества.">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </span>
+            }
+            valuePropName="checked"
+          >
+            <div className="switch-container">
+              <Switch
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+                checked={isWorkGroup}
+                onChange={handleWorkGroupChange}
+              />
+              <Text type="secondary" className="switch-description">
+                {isWorkGroup ? 'Требуются рабочие группы' : 'Рабочие группы не требуются'}
+              </Text>
+            </div>
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={12} lg={8}>
+          <Form.Item
+            name="is_secret_ballot"
+            label={IsSecretBallotLabel}
+            valuePropName="checked"
+          >
+            <div className="switch-container">
+              <Switch
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+              />
+            </div>
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={12} lg={8}>
+          <Form.Item
+            name="is_can_offer"
+            label={IsCanOfferLabel}
+            valuePropName="checked"
+          >
+            <div className="switch-container">
+              <Switch
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+              />
+            </div>
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={12} lg={8}>
+          <Form.Item
+            name="is_minority_not_participate"
+            label={
+              <span>
+                {IsMinorityNotParticipateLabel}&nbsp;
+                <Tooltip title="В случае утверждения инициативы, меньшинство, которое её не поддержало обязано принимать участие в её исполнении или достаточно того, что оно не должно препятствовать?">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </span>
+            }
+            valuePropName="checked"
+          >
+            <div className="switch-container">
+              <Switch
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+              />
+            </div>
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={12} lg={8}>
+          <Form.Item
+            name="is_default_add_member"
+            label={IsDefaultAddMemberLabel}
+            valuePropName="checked"
+          >
+            <div className="switch-container">
+              <Switch
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+              />
+            </div>
+          </Form.Item>
+        </Col>
+        <Col xs={24} sm={12} lg={8}>
+          <Form.Item
+            name="is_not_delegate"
+            label={IsNotDelegateLabel}
+            valuePropName="checked"
+          >
+            <div className="switch-container">
+              <Switch
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+              />
+            </div>
+          </Form.Item>
+        </Col>
+      </Row>
+    </Card>
+  );
+
+  // Категории и обязанности
+  const renderCategoriesAndResponsibilities = () => (
+    <Card
+      title={
+        <Space>
+          <TagOutlined />
+          <span>Категории и зоны ответственности</span>
+        </Space>
+      }
+      className="settings-section"
+    >
+      <Row gutter={[24, 16]}>
+        <Col xs={24} lg={12}>
+          <Form.Item
+            name="categories"
+            label={
+              <span>
+                {CategoriesLabel}&nbsp;
+                <Tooltip title="Категории - это темы или направления для голосований. Они помогают структурировать вопросы и выбирать советников.">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </span>
+            }
+          >
+            <CustomSelect
+              fieldService={categoryService}
+              requestOptions={getCategories}
+              onChange={onCustomSelectChange}
+              value={settings?.categories}
+              formField="categories"
+              bindLabel="name"
+              multiple={true}
+              enableSearch={true}
+              addOwnValue={true}
+              ownValuePlaceholder="Если не нашли подходящую, введите свою категорию"
+              ownValueMaxLength={80}
+            />
+          </Form.Item>
+        </Col>
+        <Col xs={24} lg={12}>
+          <Form.Item
+            name="responsibilities"
+            label={
+              <span>
+                {ResponsibilitiesLabel}&nbsp;
+                <Tooltip title="Зона ответственности - это закрепленная за сообществом сфера полномочий, которая определяет типы вопросов для утверждения. Устанавливает границы влияния, запрещая принятие решений по этим вопросам во внутренних сообществах.">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </span>
+            }
+          >
+            <CustomSelect
+              fieldService={responsibilityService}
+              requestOptions={getResponsibilities}
+              onChange={onCustomSelectChange}
+              value={settings?.responsibilities}
+              formField="responsibilities"
+              bindLabel="name"
+              multiple={true}
+              enableSearch={true}
+              addOwnValue={true}
+              ownFieldTextarea={true}
+              ownValuePlaceholder="Если не нашли подходящую, введите свою зону ответственности"
+              ownValueMaxLength={200}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Card>
+  );
+
+  // Внутренние сообщества
+  const renderSubCommunities = () => (
+    <Card
+      title={
+        <Space>
+          <TeamOutlined />
+          <span>Структура сообщества</span>
+        </Space>
+      }
+      className="settings-section"
+    >
+      <Row gutter={[24, 16]}>
+        <Col xs={24}>
+          <Form.Item
+            name="sub_communities_settings"
+            label={
+              <span>
+                Внутренние сообщества&nbsp;
+                <Tooltip title="Внутренние сообщества отображают границы структурных подразделений основного сообщества.">
+                  <QuestionCircleOutlined />
+                </Tooltip>
+              </span>
+            }
+          >
+            <CommunitySelect
+              parentCommunityId={communityId}
+              parentSettings={settings}
+              onChange={onCommunitySelectChange}
+              values={settings?.sub_communities_settings}
+              readonly={false}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Card>
+  );
+
+  if (isLoading) {
+    return (
+      <div className="my-community-settings-loading">
+        <Spin size="large" />
+        <Text type="secondary" style={{ marginTop: 16 }}>
+          Загрузка настроек сообщества...
+        </Text>
       </div>
+    );
+  }
+
+  return (
+    <div className="my-community-settings-container">
+      {contextHolder}
+
+      <div className="settings-header">
+        <Title level={2} className="settings-title">
+          Мои настройки сообщества
+        </Title>
+        <Text type="secondary" className="settings-subtitle">
+          Настройте параметры участия в сообществе под свои предпочтения
+        </Text>
+      </div>
+
+      <Form
+        name="my-community-settings"
+        form={form}
+        onFieldsChange={handleFormChange}
+        preserve={true}
+        layout="vertical"
+        className="my-community-settings-form"
+      >
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          {renderBasicInfo()}
+          {renderVotingSettings()}
+          {renderTimeSettings()}
+          {renderAdditionalSettings()}
+          {renderCategoriesAndResponsibilities()}
+          {renderSubCommunities()}
+        </Space>
+      </Form>
 
       <RecommendationVotingModal
         open={isModalOpen}
@@ -767,6 +899,6 @@ export function MyCommunitySettings(props: any) {
           Сохранить
         </Button>
       </div>
-    </>
+    </div>
   );
 }

@@ -1,60 +1,625 @@
 @use 'src/shared/assets/scss/variables' as *;
 
-.voting-core-settings {
-  background: #f8f9fa;
-  border-radius: 4px;
-  border: 1px solid $border-color;
-  padding: 16px;
-  margin-bottom: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  position: relative;
+// Переменные для MyCommunitySettings
+:root {
+  --my-settings-max-width: 1200px;
+  --my-settings-card-border-radius: 12px;
+  --my-settings-section-gap: 24px;
+  --my-settings-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --my-settings-card-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --my-settings-header-bg: linear-gradient(135deg, rgba(204, 0, 0, 0.05) 0%, rgba(204, 0, 0, 0.02) 100%);
+  --my-settings-voting-card-bg: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 215, 0, 0.02) 100%);
+  --my-settings-transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  --my-settings-input-width: 120px;
+}
 
-  &-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
+// Основной контейнер
+.my-community-settings-container {
+  max-width: var(--my-settings-max-width);
+  margin: 0 auto;
+  padding-bottom: 60px;
 
-    h3 {
-      margin: 0;
-      font-size: 16px;
+  .settings-header {
+    margin-bottom: 32px;
+    padding: 24px;
+    background: var(--my-settings-header-bg);
+    border-radius: var(--my-settings-card-border-radius);
+    border: 1px solid rgba(204, 0, 0, 0.1);
+    text-align: center;
+
+    .settings-title {
+      color: $heading-color;
+      margin-bottom: 8px;
+      font-weight: 600;
+
+      &.ant-typography {
+        margin-bottom: 8px;
+      }
     }
 
-    .ant-btn {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background-color: $accent-yellow !important;
-      color: $text-color !important;
-      border-radius: 4px;
-      transition: all 0.2s;
+    .settings-subtitle {
+      font-size: 16px;
+      color: $text-color;
+      opacity: 0.8;
+    }
+  }
+}
 
-      &:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.my-community-settings-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  width: 100%;
+
+  .ant-spin {
+    .ant-spin-dot {
+      .ant-spin-dot-item {
+        background-color: $primary-color;
+      }
+    }
+  }
+
+  .ant-typography {
+    margin-top: 16px;
+    text-align: center;
+  }
+}
+
+// Форма настроек
+.my-community-settings-form {
+  .ant-form-item {
+    margin-bottom: 20px;
+
+    .ant-form-item-label {
+      padding-bottom: 8px;
+
+      > label {
+        font-weight: 500;
+        color: $heading-color;
+        font-size: 14px;
+        line-height: 1.5;
+
+        .anticon {
+          color: $info-color;
+          margin-left: 4px;
+          cursor: help;
+
+          &:hover {
+            color: $primary-color;
+          }
+        }
+      }
+    }
+
+    .ant-form-item-explain-error {
+      font-size: 12px;
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+  }
+}
+
+// Секции настроек
+.settings-section {
+  border-radius: var(--my-settings-card-border-radius);
+  box-shadow: var(--my-settings-card-shadow);
+  transition: var(--my-settings-transition);
+  border: 1px solid $border-color;
+
+  &:hover {
+    box-shadow: var(--my-settings-card-hover-shadow);
+  }
+
+  .ant-card-head {
+    background: linear-gradient(135deg, rgba(204, 0, 0, 0.03) 0%, rgba(204, 0, 0, 0.01) 100%);
+    border-bottom: 1px solid rgba(204, 0, 0, 0.1);
+    border-radius: var(--my-settings-card-border-radius) var(--my-settings-card-border-radius) 0 0;
+
+    .ant-card-head-title {
+      color: $heading-color;
+      font-weight: 600;
+      font-size: 16px;
+
+      .anticon {
+        color: $primary-color;
+        margin-right: 8px;
+      }
+    }
+
+    .ant-card-extra {
+      .recommendations-button {
+        color: $accent-yellow;
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        background: rgba(255, 215, 0, 0.1);
+        border-radius: 6px;
+        font-weight: 500;
+        transition: var(--my-settings-transition);
+
+        &:hover {
+          color: #e6c200;
+          border-color: rgba(255, 215, 0, 0.5);
+          background: rgba(255, 215, 0, 0.15);
+          transform: translateY(-1px);
+          box-shadow: 0 2px 8px rgba(255, 215, 0, 0.2);
+        }
+
+        .anticon {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .ant-card-body {
+    padding: 24px;
+  }
+
+  // Специальная карточка для настроек голосования
+  &.voting-settings-card {
+    .ant-card-head {
+      background: var(--my-settings-voting-card-bg);
+      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+    }
+  }
+}
+
+// Стили для InputNumber
+.ant-input-number {
+  border-radius: 6px;
+  transition: var(--my-settings-transition);
+
+  &:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  }
+
+  &:focus,
+  &.ant-input-number-focused {
+    box-shadow: 0 0 0 2px rgba(204, 0, 0, 0.1);
+  }
+
+  .ant-input-number-input {
+    text-align: center;
+    font-weight: 500;
+  }
+}
+
+// Контейнер для переключателей
+.switch-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+
+  .ant-switch {
+    background-color: rgba(0, 0, 0, 0.25);
+    transition: var(--my-settings-transition);
+
+    &:hover:not(.ant-switch-disabled) {
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    &.ant-switch-checked {
+      background-color: $primary-color;
+
+      &:hover:not(.ant-switch-disabled) {
+        background-color: #e60000;
+      }
+    }
+  }
+
+  .switch-description {
+    font-size: 12px;
+    color: $text-color;
+    opacity: 0.7;
+    font-style: italic;
+  }
+}
+
+// Стили для Alert
+.ant-alert {
+  border-radius: 8px;
+
+  &.ant-alert-info {
+    background-color: rgba(24, 144, 255, 0.05);
+    border: 1px solid rgba(24, 144, 255, 0.2);
+
+    .ant-alert-icon {
+      color: $info-color;
+    }
+
+    .ant-alert-message {
+      color: $heading-color;
+      font-weight: 500;
+    }
+
+    .ant-alert-description {
+      color: $text-color;
+      opacity: 0.8;
+    }
+  }
+}
+
+// Стили для Tooltip
+.ant-tooltip {
+  .ant-tooltip-inner {
+    background-color: rgba(0, 0, 0, 0.85);
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.4;
+    max-width: 300px;
+  }
+
+  .ant-tooltip-arrow {
+    &::before {
+      background-color: rgba(0, 0, 0, 0.85);
+    }
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 1200px) {
+  .my-community-settings-container {
+    max-width: 100%;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --my-settings-input-width: 100px;
+  }
+
+  .my-community-settings-container {
+    padding: 12px;
+
+    .settings-header {
+      padding: 20px 16px;
+      margin-bottom: 24px;
+
+      .settings-title {
+        font-size: 24px;
+      }
+
+      .settings-subtitle {
+        font-size: 14px;
+      }
+    }
+
+  }
+
+  .settings-section {
+    .ant-card-body {
+      padding: 16px;
+    }
+
+    .ant-card-head {
+      .ant-card-head-title {
+        font-size: 15px;
+      }
+
+      .ant-card-extra {
+        .recommendations-button {
+          font-size: 13px;
+          padding: 4px 8px;
+        }
+      }
+    }
+  }
+
+  .my-community-settings-form {
+    .ant-form-item {
+      margin-bottom: 16px;
+
+      .ant-form-item-label {
+        padding-bottom: 6px;
+
+        > label {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+
+  .ant-input-number {
+    width: 100% !important;
+    max-width: var(--my-settings-input-width);
+
+    .ant-input-number-input {
+      font-size: 14px;
+    }
+  }
+
+  .switch-container {
+    .switch-description {
+      font-size: 11px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --my-settings-input-width: 80px;
+  }
+
+  .my-community-settings-container {
+    padding: 8px;
+
+    .settings-header {
+      padding: 16px 12px;
+      margin-bottom: 16px;
+
+      .settings-title {
+        font-size: 20px;
+      }
+
+      .settings-subtitle {
+        font-size: 13px;
+      }
+    }
+
+  }
+
+  .settings-section {
+    .ant-card-body {
+      padding: 12px;
+    }
+
+    .ant-card-head {
+      padding: 12px 16px;
+
+      .ant-card-head-title {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .my-community-settings-form {
+    .ant-form-item {
+      margin-bottom: 12px;
+
+      .ant-form-item-label {
+        padding-bottom: 4px;
+
+        > label {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+
+  .ant-input-number {
+    .ant-input-number-input {
+      font-size: 13px;
+    }
+  }
+
+  .ant-alert {
+    .ant-alert-message {
+      font-size: 13px;
+    }
+
+    .ant-alert-description {
+      font-size: 12px;
+    }
+  }
+}
+
+// Высококонтрастный режим
+@media (prefers-contrast: more) {
+  .settings-section {
+    border: 2px solid $text-color;
+
+    .ant-card-head {
+      border-bottom: 2px solid $text-color;
+    }
+  }
+
+  .ant-input-number {
+    border: 2px solid $text-color;
+
+    &:focus,
+    &.ant-input-number-focused {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.2);
+    }
+  }
+
+  .switch-container {
+    .ant-switch {
+      border: 2px solid $text-color;
+
+      &.ant-switch-checked {
+        border-color: $primary-color;
       }
     }
   }
 }
 
-@media (max-width: $breakpoint-md) {
-  .voting-core-settings {
-    padding: 12px;
+// Темная тема
+.dark-theme {
+  :root {
+    --my-settings-header-bg: linear-gradient(135deg, rgba(204, 0, 0, 0.1) 0%, rgba(204, 0, 0, 0.05) 100%);
+    --my-settings-voting-card-bg: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+  }
 
-    .ant-col {
-      width: 100% !important;
-      max-width: 100% !important;
+  .my-community-settings-container {
+    .settings-header {
+      .settings-title {
+        color: #ffffff;
+      }
+
+      .settings-subtitle {
+        color: #cccccc;
+      }
+    }
+  }
+
+  .settings-section {
+    background-color: #1f1f1f;
+    border-color: #434343;
+
+    .ant-card-head {
+      background: linear-gradient(135deg, rgba(204, 0, 0, 0.08) 0%, rgba(204, 0, 0, 0.03) 100%);
+      border-bottom-color: rgba(204, 0, 0, 0.2);
+
+      .ant-card-head-title {
+        color: #ffffff;
+      }
+
+      .ant-card-extra {
+        .recommendations-button {
+          color: $accent-yellow;
+          background: rgba(255, 215, 0, 0.15);
+          border-color: rgba(255, 215, 0, 0.3);
+
+          &:hover {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: rgba(255, 215, 0, 0.5);
+          }
+        }
+      }
     }
 
-    &-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 8px;
+    .ant-card-body {
+      background-color: #1f1f1f;
     }
 
-    .ant-btn {
-      position: static;
-      align-self: flex-end;
+    &.voting-settings-card {
+      .ant-card-head {
+        background: var(--my-settings-voting-card-bg);
+        border-bottom-color: rgba(255, 215, 0, 0.3);
+      }
+    }
+  }
+
+  .ant-input-number {
+    background-color: #262626;
+    border-color: #434343;
+    color: #ffffff;
+
+    .ant-input-number-input {
+      background-color: transparent;
+      color: #ffffff;
+    }
+
+    &:hover {
+      border-color: #666666;
+    }
+
+    &:focus,
+    &.ant-input-number-focused {
+      border-color: $primary-color;
+      background-color: #262626;
+    }
+  }
+
+  .switch-container {
+    .switch-description {
+      color: #cccccc;
+    }
+  }
+
+  .ant-alert {
+    &.ant-alert-info {
+      background-color: rgba(24, 144, 255, 0.1);
+      border-color: rgba(24, 144, 255, 0.3);
+
+      .ant-alert-message {
+        color: #ffffff;
+      }
+
+      .ant-alert-description {
+        color: #cccccc;
+      }
+    }
+  }
+}
+
+// Стили для печати
+@media print {
+  .my-community-settings-container {
+    max-width: none;
+    padding: 0;
+
+    .settings-header {
+      background: none;
+      border: 1px solid #000;
+      padding: 16px;
+      margin-bottom: 20px;
+
+      .settings-title {
+        color: #000;
+        font-size: 18px;
+      }
+
+      .settings-subtitle {
+        color: #666;
+        font-size: 14px;
+      }
+    }
+
+  }
+
+  .settings-section {
+    box-shadow: none;
+    border: 1px solid #000;
+    margin-bottom: 20px;
+    break-inside: avoid;
+
+    .ant-card-head {
+      background: none;
+      border-bottom: 1px solid #000;
+
+      .ant-card-head-title {
+        color: #000;
+        font-size: 14px;
+      }
+
+      .ant-card-extra {
+        display: none;
+      }
+    }
+
+    .ant-card-body {
+      background: none;
+    }
+  }
+
+  .ant-input-number {
+    background: none;
+    border: 1px solid #000;
+    color: #000;
+
+    .ant-input-number-input {
+      color: #000;
+    }
+  }
+
+  .switch-container {
+    .ant-switch {
+      &.ant-switch-checked {
+        background-color: #000;
+      }
+
+      &:not(.ant-switch-checked) {
+        background-color: #ccc;
+      }
+    }
+
+    .switch-description {
+      color: #000;
+    }
+  }
+
+  .ant-alert {
+    background: none !important;
+    border: 1px solid #000 !important;
+
+    .ant-alert-message,
+    .ant-alert-description {
+      color: #000 !important;
     }
   }
 }

@@ -20,12 +20,13 @@ import {
 } from 'src/consts';
 import './community-settings.page.scss';
 
-const { Text } = Typography;
+const { Title, Text } = Typography;
 
 export function CommunitySettings(props: any) {
   const navigate = useNavigate();
   const [settingsLoading, setSettingsLoading] = useState(true);
   const [isWorkGroup, setIsWorkGroup] = useState(false);
+  const [formData, setFormData] = useState<any>({});
   const communityService = new CrudDataSourceService(CommunityModel);
 
   const communityId = props?.communityId;
@@ -65,6 +66,7 @@ export function CommunitySettings(props: any) {
         creator: community.creator?.fullname || 'Не указан',
       };
 
+      setFormData(initialValues);
       form.setFieldsValue(initialValues);
     } catch (error) {
       console.error('Error loading community settings:', error);
@@ -142,6 +144,7 @@ export function CommunitySettings(props: any) {
               <InputNumber
                 readOnly
                 className="readonly-number"
+                value={formData.quorum}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value?.replace('%', '') || ''}
               />
@@ -154,6 +157,7 @@ export function CommunitySettings(props: any) {
               <InputNumber
                 readOnly
                 className="readonly-number"
+                value={formData.vote}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value?.replace('%', '') || ''}
               />
@@ -166,6 +170,7 @@ export function CommunitySettings(props: any) {
               <InputNumber
                 readOnly
                 className="readonly-number"
+                value={formData.significant_minority}
                 formatter={(value) => `${value}%`}
                 parser={(value) => value?.replace('%', '') || ''}
               />
@@ -178,6 +183,7 @@ export function CommunitySettings(props: any) {
               <InputNumber
                 readOnly
                 className="readonly-number"
+                value={formData.decision_delay}
                 formatter={(value) => `${value} дн.`}
                 parser={(value) => value?.replace(' дн.', '') || ''}
               />
@@ -190,6 +196,7 @@ export function CommunitySettings(props: any) {
               <InputNumber
                 readOnly
                 className="readonly-number"
+                value={formData.dispute_time_limit}
                 formatter={(value) => `${value} дн.`}
                 parser={(value) => value?.replace(' дн.', '') || ''}
               />
@@ -203,6 +210,7 @@ export function CommunitySettings(props: any) {
                 <InputNumber
                   readOnly
                   className="readonly-number"
+                  value={formData.workgroup}
                   formatter={(value) => `${value} чел.`}
                   parser={(value) => value?.replace(' чел.', '') || ''}
                 />
@@ -233,9 +241,10 @@ export function CommunitySettings(props: any) {
                 unCheckedChildren={<CloseOutlined />}
                 disabled
                 className="readonly-switch"
+                checked={formData.is_workgroup}
               />
               <Text type="secondary" className="switch-label">
-                {isWorkGroup ? 'Рабочая группа' : 'Обычное сообщество'}
+                {formData.is_workgroup ? 'Рабочая группа' : 'Обычное сообщество'}
               </Text>
             </div>
           </Form.Item>
@@ -248,9 +257,10 @@ export function CommunitySettings(props: any) {
                 unCheckedChildren={<CloseOutlined />}
                 disabled
                 className="readonly-switch"
+                checked={formData.is_secret_ballot}
               />
               <Text type="secondary" className="switch-label">
-                {form.getFieldValue('is_secret_ballot') ? 'Включено' : 'Отключено'}
+                {formData.is_secret_ballot ? 'Включено' : 'Отключено'}
               </Text>
             </div>
           </Form.Item>
@@ -263,9 +273,10 @@ export function CommunitySettings(props: any) {
                 unCheckedChildren={<CloseOutlined />}
                 disabled
                 className="readonly-switch"
+                checked={formData.is_can_offer}
               />
               <Text type="secondary" className="switch-label">
-                {form.getFieldValue('is_can_offer') ? 'Да' : 'Нет'}
+                {formData.is_can_offer ? 'Да' : 'Нет'}
               </Text>
             </div>
           </Form.Item>
@@ -278,9 +289,10 @@ export function CommunitySettings(props: any) {
                 unCheckedChildren={<CloseOutlined />}
                 disabled
                 className="readonly-switch"
+                checked={formData.is_minority_not_participate}
               />
               <Text type="secondary" className="switch-label">
-                {form.getFieldValue('is_minority_not_participate') ? 'Да' : 'Нет'}
+                {formData.is_minority_not_participate ? 'Да' : 'Нет'}
               </Text>
             </div>
           </Form.Item>
@@ -303,22 +315,17 @@ export function CommunitySettings(props: any) {
         <Col xs={24} lg={12}>
           <Form.Item name="categories" label={CategoriesLabel}>
             <div className="tags-display">
-              {/*<Form.Item name="categories" noStyle>*/}
-              {/*  <Select*/}
-              {/*    mode="multiple"*/}
-              {/*    suffixIcon={null}*/}
-              {/*    open={false}*/}
-              {/*    removeIcon={null}*/}
-              {/*    className="readonly-select"*/}
-              {/*    placeholder="Категории не указаны"*/}
-              {/*  />*/}
-              {/*</Form.Item>*/}
               <div className="tags-container">
-                {form.getFieldValue('categories')?.map((category: string, index: number) => (
-                  <Tag key={index} className="category-tag">
-                    {category}
-                  </Tag>
-                ))}
+                {/* Используем данные из состояния */}
+                {formData.categories?.length > 0 ? (
+                  formData.categories.map((category: string, index: number) => (
+                    <Tag key={index} className="category-tag">
+                      {category}
+                    </Tag>
+                  ))
+                ) : (
+                  <Text type="secondary">Категории не указаны</Text>
+                )}
               </div>
             </div>
           </Form.Item>
@@ -326,22 +333,17 @@ export function CommunitySettings(props: any) {
         <Col xs={24} lg={12}>
           <Form.Item name="responsibilities" label={ResponsibilitiesLabel}>
             <div className="tags-display">
-              {/*<Form.Item name="responsibilities" noStyle>*/}
-              {/*  <Select*/}
-              {/*    mode="multiple"*/}
-              {/*    suffixIcon={null}*/}
-              {/*    open={false}*/}
-              {/*    removeIcon={null}*/}
-              {/*    className="readonly-select"*/}
-              {/*    placeholder="Обязанности не указаны"*/}
-              {/*  />*/}
-              {/*</Form.Item>*/}
               <div className="tags-container">
-                {form.getFieldValue('responsibilities')?.map((responsibility: string, index: number) => (
-                  <Tag key={index} className="responsibility-tag">
-                    {responsibility}
-                  </Tag>
-                ))}
+                {/* Используем данные из состояния */}
+                {formData.responsibilities?.length > 0 ? (
+                  formData.responsibilities.map((responsibility: string, index: number) => (
+                    <Tag key={index} className="responsibility-tag">
+                      {responsibility}
+                    </Tag>
+                  ))
+                ) : (
+                  <Text type="secondary">Обязанности не указаны</Text>
+                )}
               </div>
             </div>
           </Form.Item>
@@ -363,6 +365,14 @@ export function CommunitySettings(props: any) {
 
   return (
     <div className="community-settings-container">
+      <div className="settings-header">
+        <Title level={2} className="settings-title">
+          Настройки сообщества
+        </Title>
+        <Text type="secondary" className="settings-subtitle">
+          Просмотр параметров и конфигурации сообщества
+        </Text>
+      </div>
       {renderInfoCard()}
 
       <Form

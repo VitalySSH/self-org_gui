@@ -18,18 +18,23 @@
   border: 1px solid var(--custom-select-border-color);
   background-color: var(--custom-select-background);
   padding: 4px 0;
-  overflow: hidden;
+  // Убираем overflow: hidden который может скрывать контент
+  overflow: visible;
+  // Убеждаемся что dropdown виден
+  z-index: 1050;
 
   .custom-select-dropdown-content {
-    display: flex;
-    flex-direction: column;
-    max-height: 400px;
+    display: block; // Меняем с flex на block для лучшей совместимости
+    // Увеличиваем максимальную высоту
+    max-height: 60vh;
+    min-height: 80px; // Минимальная высота чтобы dropdown не схлопывался
   }
 
   .custom-select-menu {
-    flex: 1;
+    // Убираем flex: 1 и min-height: 0 которые могут вызывать проблемы
+    max-height: 300px; // Фиксированная максимальная высота для прокрутки
     overflow-y: auto;
-    min-height: 0;
+    overflow-x: hidden;
 
     // Кастомный скроллбар
     &::-webkit-scrollbar {
@@ -113,6 +118,11 @@
     background-color: #fafafa;
     border-top: 1px solid $border-color;
     margin-top: 4px;
+    // Убеждаемся что секция добавления всегда видна
+    position: relative;
+    z-index: 1;
+    // Убираем flex-shrink чтобы секция не сжималась
+    flex-shrink: 0;
 
     .ant-input,
     .ant-input-textarea {
@@ -228,6 +238,35 @@
       }
     }
   }
+
+  // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Убеждаемся что dropdown остается открытым
+  &.ant-slide-up-enter,
+  &.ant-slide-up-enter-active,
+  &.ant-slide-up-leave,
+  &.ant-slide-up-leave-active {
+    pointer-events: auto !important;
+  }
+
+  // Убеждаемся что контент виден при пустых options
+  &:empty::after {
+    content: '';
+    display: block;
+    height: 1px;
+  }
+}
+
+// ДОПОЛНИТЕЛЬНОЕ ИСПРАВЛЕНИЕ: Принудительно показываем dropdown с добавлением
+.ant-select-dropdown.custom-select-dropdown:has(.add-own-value-container) {
+  display: block !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+// Альтернативное решение для браузеров без поддержки :has()
+.ant-select-dropdown.custom-select-dropdown[data-has-add-section="true"] {
+  display: block !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 // Адаптивные стили

@@ -8,9 +8,9 @@
   height: 100%;
   background: transparent;
   font-family: $font-family;
-  max-width: 1200px; // Максимальная ширина контента
-  margin: 0 auto; // Центрирование
-  padding: 0 20px; // Отступы по бокам
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 // Общие стили для табов
@@ -93,8 +93,6 @@
 
       .ant-tabs-tabpane {
         height: 100%;
-        overflow-y: auto;
-        overflow-x: hidden; // Запрещаем горизонтальный скролл
 
         &::-webkit-scrollbar {
           width: 6px;

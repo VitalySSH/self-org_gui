@@ -533,7 +533,160 @@
   }
 }
 
-// Улучшенная адаптивность
+// Стили для Tooltip
+.ant-tooltip {
+  z-index: 1060;
+
+  .ant-tooltip-inner {
+    background-color: rgba(0, 0, 0, 0.85);
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.4;
+    max-width: 300px;
+    padding: 8px 12px;
+    text-align: left;
+    word-wrap: break-word;
+  }
+
+  .ant-tooltip-arrow {
+    &::before {
+      background-color: rgba(0, 0, 0, 0.85);
+    }
+  }
+}
+
+// Стили для Alert
+.ant-alert {
+  border-radius: var(--form-border-radius);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border: 1px solid;
+
+  &.ant-alert-info {
+    background-color: rgba(24, 144, 255, 0.05);
+    border-color: rgba(24, 144, 255, 0.2);
+    color: var(--form-text-color);
+
+    .ant-alert-icon {
+      color: $info-color;
+    }
+
+    .ant-alert-message {
+      color: $heading-color;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .ant-alert-description {
+      color: var(--form-text-color);
+      font-size: 13px;
+      margin-top: 4px;
+    }
+  }
+
+  &.ant-alert-success {
+    background-color: rgba(82, 196, 26, 0.05);
+    border-color: rgba(82, 196, 26, 0.2);
+
+    .ant-alert-icon {
+      color: $success-color;
+    }
+  }
+
+  &.ant-alert-warning {
+    background-color: rgba(255, 193, 7, 0.05);
+    border-color: rgba(255, 193, 7, 0.2);
+
+    .ant-alert-icon {
+      color: $accent-yellow;
+    }
+  }
+
+  &.ant-alert-error {
+    background-color: rgba(255, 77, 79, 0.05);
+    border-color: rgba(255, 77, 79, 0.2);
+
+    .ant-alert-icon {
+      color: $error-color;
+    }
+  }
+}
+
+// Улучшенные стили для валидации
+.ant-form-item {
+  &.ant-form-item-has-error {
+    .ant-input,
+    .ant-input-affix-wrapper,
+    .ant-input-number,
+    .ant-picker,
+    .ant-select-selector {
+      border-color: $error-color;
+      box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.1);
+    }
+  }
+
+  &.ant-form-item-has-success {
+    .ant-input,
+    .ant-input-affix-wrapper,
+    .ant-input-number,
+    .ant-picker,
+    .ant-select-selector {
+      border-color: $success-color;
+      box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.1);
+    }
+  }
+
+  &.ant-form-item-has-warning {
+    .ant-input,
+    .ant-input-affix-wrapper,
+    .ant-input-number,
+    .ant-picker,
+    .ant-select-selector {
+      border-color: $accent-yellow;
+      box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.1);
+    }
+  }
+}
+
+// Стили для Message компонента
+.ant-message {
+  .ant-message-notice {
+    .ant-message-notice-content {
+      border-radius: var(--form-border-radius);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+      .ant-message-custom-content {
+        font-size: 14px;
+
+        &.ant-message-success {
+          .anticon {
+            color: $success-color;
+          }
+        }
+
+        &.ant-message-error {
+          .anticon {
+            color: $error-color;
+          }
+        }
+
+        &.ant-message-info {
+          .anticon {
+            color: $info-color;
+          }
+        }
+
+        &.ant-message-warning {
+          .anticon {
+            color: $accent-yellow;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Дополнительные улучшения адаптивности
 @media (max-width: 1200px) {
   .ant-card {
     .ant-card-body {

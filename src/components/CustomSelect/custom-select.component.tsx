@@ -30,25 +30,22 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const textAreaRef = useRef<TextAreaRef>(null);
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalOptions, setTotalOptions] = useState(0);
   const [uploadedFieldValue, setUploadedFieldValue] = useState(false);
   const [value, setValue] = useState<T | T[] | null>(null);
   const [fieldValue, setFieldValue] = useState<string | string[] | null>(null);
-  const [options, setOptions] = useState<T[] | null>(null);
+  const [options, setOptions] = useState<T[]>([]);
   const [newTextValue, setNewTextValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [showMinCharsHint, setShowMinCharsHint] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   const MIN_SEARCH_CHARS = 3;
 
-  // Мемоизированные селекторы для оптимизации
+  // Простые мемоизированные селекторы
   const selectOptions = useMemo(() => {
-    if (!options) return [];
-
     return options.map((item: T) => {
-      // Безопасная проверка наличия свойства
       const labelValue = item && typeof item === 'object' && props.bindLabel in item
         ? (item as any)[props.bindLabel]
         : '';
@@ -63,76 +60,70 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   }, [options, props.bindLabel]);
 
   const hasMoreOptions = useMemo(() => {
-    return (options?.length || 0) < totalOptions && searchQuery.length >= MIN_SEARCH_CHARS;
-  }, [options?.length, totalOptions, searchQuery.length]);
+    return options.length < totalOptions && searchQuery.length >= MIN_SEARCH_CHARS;
+  }, [options.length, totalOptions, searchQuery.length]);
 
-  const fetchOptions = useCallback(
-    async (
-      page: number = 1,
-      append: boolean = false,
-      search: string = searchQuery
-    ) => {
-      // Предотвращаем лишние запросы
-      if (hasMoreOptions && append && (!search || !props.enableSearch)) {
-        return;
-      }
+  // Простая функция загрузки без сложных зависимостей
+  const loadOptions = async (page: number = 1, append: boolean = false, search: string = '') => {
+    setIsLoading(true);
 
-      setIsLoading(true);
-
-      try {
-        const filters: Filters = [];
-        if (props.enableSearch && search?.length >= MIN_SEARCH_CHARS) {
-          filters.push({
-            field: props.bindLabel,
-            op: 'ilike',
-            val: search,
-          });
-        }
-
-        const response = await props.requestOptions(
-          { skip: page, limit: 20 },
-          filters
-        );
-
-        const { data, total } = response;
-        setTotalOptions(total);
-
-        setOptions((prev) => {
-          if (!append || search) return data;
-          return [...(prev || []), ...data];
+    try {
+      const filters: Filters = [];
+      if (props.enableSearch && search?.length >= MIN_SEARCH_CHARS) {
+        filters.push({
+          field: props.bindLabel,
+          op: 'ilike',
+          val: search,
         });
-
-        setCurrentPage(page);
-      } catch (error) {
-        console.error('Error fetching options:', error);
-        setOptions([]);
-      } finally {
-        setIsLoading(false);
       }
-    },
-    [props, searchQuery, hasMoreOptions]
-  );
 
+      const response = await props.requestOptions(
+        { skip: page, limit: 20 },
+        filters
+      );
+
+      const { data, total } = response;
+      setTotalOptions(total);
+      setCurrentPage(page);
+      setDataLoaded(true);
+
+      setOptions(prev => {
+        if (!append || search) {
+          return data || [];
+        }
+        return [...prev, ...(data || [])];
+      });
+
+    } catch (error) {
+      console.error('Error fetching options:', error);
+      setOptions([]);
+      setDataLoaded(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Дебаунсированный поиск
   const { run: handleSearch } = useDebounceFn(
     (value: string) => {
       if (!props.enableSearch) return;
 
       setSearchQuery(value);
-      const _isShowMinCharsHint =
-        value?.length > 0 && value?.length < MIN_SEARCH_CHARS;
-      setShowMinCharsHint(_isShowMinCharsHint);
+      const showHint = value?.length > 0 && value?.length < MIN_SEARCH_CHARS;
+      setShowMinCharsHint(showHint);
 
-      if (!_isShowMinCharsHint) {
-        fetchOptions(1, false, value);
+      if (!showHint) {
+        loadOptions(1, false, value);
       }
     },
     { wait: 500 }
   );
 
-  const getInitValue = useCallback(() => {
+  // Инициализация значений
+  const initializeValue = useCallback(() => {
     if (fieldValue !== null || uploadedFieldValue) return;
 
-    let _initFieldValue: string | string[] | null = null;
+    let initFieldValue: string | string[] | null = null;
 
     if (props.value === undefined) {
       setValue(null);
@@ -141,31 +132,32 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
 
       if (props.multiple) {
         if (Array.isArray(props.value)) {
-          _initFieldValue = props.value
+          initFieldValue = props.value
             .filter(item => item && typeof item === 'object' && props.bindLabel in item)
             .map((item) => (item as any)[props.bindLabel]);
         }
       } else {
         if (Array.isArray(props.value)) {
           if (props.value.length > 0 && props.value[0] && typeof props.value[0] === 'object' && props.bindLabel in props.value[0]) {
-            _initFieldValue = (props.value[0] as any)[props.bindLabel];
+            initFieldValue = (props.value[0] as any)[props.bindLabel];
           }
         } else if (props.value && typeof props.value === 'object' && props.bindLabel in props.value) {
-          _initFieldValue = (props.value as any)[props.bindLabel];
+          initFieldValue = (props.value as any)[props.bindLabel];
         }
       }
     }
 
-    if (_initFieldValue !== null) {
+    if (initFieldValue !== null) {
       setUploadedFieldValue(true);
     }
-    setFieldValue(_initFieldValue);
+    setFieldValue(initFieldValue);
   }, [fieldValue, props.bindLabel, props.multiple, props.value, uploadedFieldValue]);
 
   useEffect(() => {
-    getInitValue();
-  }, [getInitValue]);
+    initializeValue();
+  }, [initializeValue]);
 
+  // Обработка изменения значения
   const onValueChange = useCallback((_: string, option: any) => {
     if (!uploadedFieldValue) {
       setUploadedFieldValue(true);
@@ -178,9 +170,11 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
       const validOptions = option.filter(it => it?.obj);
       if (validOptions.length > 0) {
         currentValue = validOptions.map(it => it.obj);
-        currentFieldValue = validOptions.map(it => it.obj && typeof it.obj === 'object' && props.bindLabel in it.obj
-          ? (it.obj as any)[props.bindLabel]
-          : '');
+        currentFieldValue = validOptions.map(it =>
+          it.obj && typeof it.obj === 'object' && props.bindLabel in it.obj
+            ? (it.obj as any)[props.bindLabel]
+            : ''
+        );
       }
     } else {
       if (option?.obj) {
@@ -197,10 +191,11 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     // Очищаем поиск после выбора
     if (searchQuery?.length) {
       setSearchQuery('');
-      fetchOptions(1, false, '');
+      loadOptions(1, false, '');
     }
-  }, [uploadedFieldValue, props, searchQuery, fetchOptions]);
+  }, [uploadedFieldValue, props, searchQuery]);
 
+  // Обработчики для добавления собственного значения
   const onInputChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setNewTextValue(event.target.value);
   }, []);
@@ -212,6 +207,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
 
   const addOwnValue = useCallback((e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
     e.preventDefault();
+    e.stopPropagation();
 
     if (!newTextValue.trim() || !props.fieldService) return;
 
@@ -228,40 +224,39 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     if (!currentValues.includes(newTextValue.trim())) {
       const newObj = props.fieldService.createRecord();
       (newObj as any)[props.bindLabel] = newTextValue.trim();
-      const currentOptions = options || [];
 
       if (props.saveOwnValue) {
         props.fieldService
           .save(newObj)
           .then((resp) => {
-            setOptions([...currentOptions, resp]);
+            setOptions(prev => [...prev, resp]);
           })
           .catch((error) => {
             console.error('Ошибка создания нового значения в селекторе:', error);
-            setOptions([]);
           });
       } else {
-        setOptions([...currentOptions, newObj]);
+        setOptions(prev => [...prev, newObj]);
       }
     }
     setNewTextValue('');
-  }, [newTextValue, props.fieldService, props.bindLabel, props.saveOwnValue, value, options]);
+  }, [newTextValue, props.fieldService, props.bindLabel, props.saveOwnValue, value]);
 
+  // Обработка открытия/закрытия выпадающего списка
   const onDropdownVisibleChange = useCallback((open: boolean) => {
-    setIsDropdownOpen(open);
-    if (open && !options) {
-      fetchOptions(1);
+    if (open && !dataLoaded) {
+      loadOptions(1, false, '');
     }
-  }, [options, fetchOptions]);
+  }, [dataLoaded]);
 
+  // Кнопка "Загрузить ещё" - показываем только если есть ещё данные
   const renderLoadMoreButton = useCallback(() => {
-    if (!hasMoreOptions) return null;
+    if (!hasMoreOptions || options.length === 0) return null;
 
     return (
       <div style={{ padding: '8px 12px', borderTop: '1px solid #f0f0f0' }}>
         <Button
           type="link"
-          onClick={() => fetchOptions(currentPage + 1, true)}
+          onClick={() => loadOptions(currentPage + 1, true, searchQuery)}
           loading={isLoading}
           style={{ width: '100%', padding: 0 }}
           size="small"
@@ -270,16 +265,21 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         </Button>
       </div>
     );
-  }, [hasMoreOptions, fetchOptions, currentPage, isLoading]);
+  }, [hasMoreOptions, options.length, currentPage, isLoading, searchQuery]);
 
+  // Рендер контента выпадающего списка
   const renderDropdownContent = useCallback((menu: React.ReactNode) => {
-    if (isDropdownOpen && isLoading && !options) {
+    // Спиннер при первой загрузке
+    if (isLoading && !dataLoaded) {
       return (
         <div className="custom-select-loading">
           <Spin size="large" />
         </div>
       );
     }
+
+    const showAddOwnSection = props.addOwnValue;
+    const showEmptyMessage = options.length === 0 && dataLoaded && !isLoading && !showAddOwnSection;
 
     return (
       <div className="custom-select-dropdown-content">
@@ -290,12 +290,20 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
               description={`Введите минимум ${MIN_SEARCH_CHARS} символа для поиска`}
               style={{ padding: '20px 0' }}
             />
+          ) : showEmptyMessage ? (
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              description={searchQuery ? 'Ничего не найдено' : 'Значения не найдены'}
+              style={{ padding: '20px 0' }}
+            />
           ) : (
             menu
           )}
         </div>
+
         {renderLoadMoreButton()}
-        {props.addOwnValue && (
+
+        {showAddOwnSection && (
           <>
             <Divider style={{ margin: '8px 0' }} />
             <div className="add-own-value-container">
@@ -337,9 +345,10 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
       </div>
     );
   }, [
-    isDropdownOpen,
     isLoading,
-    options,
+    dataLoaded,
+    options.length,
+    searchQuery,
     props.enableSearch,
     props.addOwnValue,
     props.ownFieldTextarea,
@@ -354,7 +363,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   ]);
 
   const emptyRender = useCallback(() => {
-    if (isLoading && !options) return null;
+    if (isLoading && !dataLoaded) return null;
     return (
       <Empty
         image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -362,7 +371,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         style={{ padding: '20px 0' }}
       />
     );
-  }, [isLoading, options, searchQuery]);
+  }, [isLoading, dataLoaded, searchQuery]);
 
   return (
     <ConfigProvider renderEmpty={emptyRender}>
@@ -378,11 +387,11 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         value={fieldValue}
         mode={props.multiple ? 'multiple' : undefined}
         options={selectOptions}
-        loading={isLoading && !options}
+        loading={isLoading && !dataLoaded}
         placeholder={props.label}
         allowClear={true}
         style={{ width: '100%' }}
-        popupClassName="custom-select-dropdown"
+        popupClassName={`custom-select-dropdown ${props.addOwnValue ? 'has-add-section' : ''}`}
         notFoundContent={isLoading ? <Spin size="small" /> : null}
       />
     </ConfigProvider>
