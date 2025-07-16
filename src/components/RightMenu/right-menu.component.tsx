@@ -6,9 +6,12 @@ import {
   UserAddOutlined,
   HomeOutlined,
   UserOutlined,
+  // MoonOutlined,
+  // SunOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { MenuItem } from 'src/shared/types.ts';
+// import { useTheme } from 'src/contexts/ThemeContext';
 
 function getItem(
   label: React.ReactNode,
@@ -55,6 +58,7 @@ const items: MenuItem[] = [
 
 export function RightMenu(props: any) {
   const navigate = useNavigate();
+  // const { isDarkMode, toggleTheme } = useTheme();
 
   return (
     <div className="right-menu-container">
@@ -72,6 +76,17 @@ export function RightMenu(props: any) {
         }}
         className="right-menu"
       />
+
+      {/*<div className="right-menu-footer">*/}
+      {/*  <Button*/}
+      {/*    type="text"*/}
+      {/*    icon={isDarkMode ? <SunOutlined /> : <MoonOutlined />}*/}
+      {/*    onClick={toggleTheme}*/}
+      {/*    className="theme-toggle-button"*/}
+      {/*  >*/}
+      {/*    {isDarkMode ? 'Светлая тема' : 'Тёмная тема'}*/}
+      {/*  </Button>*/}
+      {/*</div>*/}
     </div>
   );
 }

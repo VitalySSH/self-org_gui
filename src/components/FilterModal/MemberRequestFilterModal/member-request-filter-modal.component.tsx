@@ -1,4 +1,5 @@
 import { Button, DatePicker, Form, Modal, Select } from 'antd';
+import { FilterOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { FilterModalProps, Pagination } from 'src/interfaces';
 import { AuthApiClientService, CrudDataSourceService } from 'src/services';
 import { StatusModel } from 'src/models';
@@ -51,78 +52,133 @@ export function MemberRequestFilterModal({
     onReset();
   };
 
-  const onClearForm = () => {
+  const handleCancel = () => {
     form.resetFields();
     onCancel();
   };
 
   return (
     <Modal
-      title="Фильтры"
+      title={
+        <div>
+          <FilterOutlined className="filter-modal-icon" />
+          Фильтры
+        </div>
+      }
       open={visible}
-      onCancel={onClearForm}
+      onCancel={handleCancel}
       footer={[
-        <Button key="reset" type="primary" onClick={handleReset}>
+        <Button key="reset" onClick={handleReset}>
           Сбросить
         </Button>,
         <Button key="apply" type="primary" onClick={() => form.submit()}>
-          Найти
+          Применить фильтры
         </Button>,
       ]}
+      className="filter-modal"
+      width={550}
+      centered
+      destroyOnClose
+      styles={{
+        body: {
+          maxHeight: 'calc(85vh - 108px)',
+          overflowY: 'auto',
+          padding: 0
+        }
+      }}
     >
-      <Form
-        name="memberRequestFilterModalForm"
-        form={form}
-        onFinish={onApply}
-        layout="vertical"
-      >
-        <Form.Item label="Участник сообщества" name="member">
-          <CustomSelect
-            bindLabel="fullname"
-            formField="member"
-            requestOptions={loadUsers}
-            onChange={onCustomSelectChange}
-            label="Выберите автора"
-            enableSearch={true}
-          />
-        </Form.Item>
+      <div className="filter-modal-content">
+        <Form
+          name="memberRequestFilterModalForm"
+          form={form}
+          onFinish={onApply}
+          layout="vertical"
+          className="filter-form"
+        >
+          <Form.Item
+            label="Участник сообщества"
+            name="member"
+            tooltip="Выберите участника сообщества для фильтрации заявок"
+          >
+            <CustomSelect
+              bindLabel="fullname"
+              formField="member"
+              requestOptions={loadUsers}
+              onChange={onCustomSelectChange}
+              label="Выберите участника"
+              enableSearch={true}
+            />
+          </Form.Item>
 
-        <Form.Item name="decision" label="Выберите решение">
-          <Select placeholder="Решение" allowClear>
-            <Select.Option value={true}>Одобрена</Select.Option>
-            <Select.Option value={false}>Отклонена</Select.Option>
-          </Select>
-        </Form.Item>
+          <Form.Item
+            name="decision"
+            label="Решение по заявке"
+            tooltip="Фильтрация по статусу одобрения заявки"
+          >
+            <Select
+              placeholder="Выберите решение"
+              allowClear
+              size="large"
+            >
+              <Select.Option value={true}>
+                <CheckCircleOutlined style={{ color: '#52c41a', marginRight: 8 }} />
+                Одобрена
+              </Select.Option>
+              <Select.Option value={false}>
+                <CloseCircleOutlined style={{ color: '#ff4d4f', marginRight: 8 }} />
+                Отклонена
+              </Select.Option>
+            </Select>
+          </Form.Item>
 
-        <Form.Item label="Статус" name="status">
-          <CustomSelect
-            bindLabel="name"
-            formField="status"
-            requestOptions={loadStatuses}
-            onChange={onCustomSelectChange}
-            label="Выберите статус"
-            enableSearch={true}
-          />
-        </Form.Item>
+          <Form.Item
+            label="Статус обработки"
+            name="status"
+            tooltip="Текущий статус рассмотрения заявки"
+          >
+            <CustomSelect
+              bindLabel="name"
+              formField="status"
+              requestOptions={loadStatuses}
+              onChange={onCustomSelectChange}
+              label="Выберите статус"
+              enableSearch={true}
+            />
+          </Form.Item>
 
-        <Form.Item name="created" label="Дата подачи">
-          <RangePicker
-            style={{ width: '100%' }}
-            format="DD.MM.YYYY"
-            presets={[
-              { label: 'Сегодня', value: [dayjs(), dayjs()] },
-              {
-                label: 'Этот месяц',
-                value: [dayjs().startOf('month'), dayjs().endOf('month')],
-              },
-              {
-                label: 'Последние 30 дней',
-                value: [dayjs().subtract(30, 'days'), dayjs()],
-              },
-            ]}
-          />
-        </Form.Item>
-      </Form>
+          <Form.Item
+            name="created"
+            label="Период подачи заявки"
+            tooltip="Выберите период, когда была подана заявка"
+          >
+            <RangePicker
+              style={{ width: '100%' }}
+              format="DD.MM.YYYY"
+              size="large"
+              presets={[
+                { label: 'Сегодня', value: [dayjs(), dayjs()] },
+                {
+                  label: 'Эта неделя',
+                  value: [dayjs().startOf('week'), dayjs().endOf('week')],
+                },
+                {
+                  label: 'Этот месяц',
+                  value: [dayjs().startOf('month'), dayjs().endOf('month')],
+                },
+                {
+                  label: 'Последние 30 дней',
+                  value: [dayjs().subtract(30, 'days'), dayjs()],
+                },
+                {
+                  label: 'Последние 3 месяца',
+                  value: [dayjs().subtract(3, 'months'), dayjs()],
+                },
+              ]}
+              placeholder={['Дата от', 'Дата до']}
+            />
+          </Form.Item>
+        </Form>
+      </div>
     </Modal>
   );
 }

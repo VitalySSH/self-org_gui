@@ -397,103 +397,103 @@
 }
 
 // Поддержка темной темы
-//@media (prefers-color-scheme: dark) {
-//  .sider-bar {
-//    background: linear-gradient(180deg,
-//            color.mix($sider-background-color, black, 80%) 0%,
-//            color.mix($secondary-color, black, 85%) 100%);
-//    border-color: rgba(white, 0.1);
-//  }
-//
-//  .sider-logo {
-//    background: linear-gradient(135deg,
-//            rgba(color.mix($background-color, black, 85%), 0.8) 0%,
-//            rgba(color.mix($secondary-color, black, 85%), 0.7) 100%);
-//  }
-//
-//  .menu-header {
-//    color: rgba(white, 0.9);
-//  }
-//
-//  .menu-header-icon {
-//    color: rgba(white, 0.8);
-//
-//    &:hover {
-//      color: $gradient-start;
-//    }
-//  }
-//
-//  .sider-menu {
-//    .ant-menu-item {
-//      background: linear-gradient(135deg,
-//              rgba(white, 0.08) 0%,
-//              rgba(white, 0.05) 100%);
-//
-//      .anticon,
-//      .ant-menu-title-content {
-//        color: rgba(white, 0.8);
-//      }
-//
-//      &:hover {
-//        background: linear-gradient(135deg,
-//                rgba(white, 0.12) 0%,
-//                rgba(white, 0.08) 100%);
-//        box-shadow: 0 2px 8px rgba(black, 0.1);
-//      }
-//
-//      &.ant-menu-item-selected {
-//        background: linear-gradient(135deg,
-//                rgba($gradient-start, 0.2) 0%,
-//                rgba($gradient-end, 0.15) 100%);
-//
-//        .anticon,
-//        .ant-menu-title-content {
-//          color: $gradient-start;
-//        }
-//
-//        &:hover {
-//          background: linear-gradient(135deg,
-//                  rgba($gradient-start, 0.25) 0%,
-//                  rgba($gradient-end, 0.18) 100%);
-//        }
-//      }
-//    }
-//
-//    &.sider-menu-disabled {
-//      .ant-menu-item {
-//        background: linear-gradient(135deg,
-//                rgba(white, 0.03) 0%,
-//                rgba(white, 0.02) 100%);
-//
-//        .anticon,
-//        .ant-menu-title-content {
-//          color: rgba(white, 0.4);
-//        }
-//
-//        &:hover {
-//          background: linear-gradient(135deg,
-//                  rgba(white, 0.03) 0%,
-//                  rgba(white, 0.02) 100%);
-//        }
-//      }
-//    }
-//  }
-//
-//  .trigger-btn {
-//    background: linear-gradient(135deg,
-//            rgba(color.mix($background-color, black, 80%), 0.95) 0%,
-//            rgba(color.mix($secondary-color, black, 85%), 0.9) 100%);
-//    border-color: rgba(white, 0.15);
-//
-//    .trigger-icon {
-//      color: rgba(white, 0.8);
-//    }
-//  }
-//
-//  .sider-copyright {
-//    color: rgba(white, 0.5);
-//  }
-//}
+.dark-theme {
+  .sider-bar {
+    background: linear-gradient(180deg,
+            color.mix($sider-background-color, black, 80%) 0%,
+            color.mix($secondary-color, black, 85%) 100%);
+    border-color: rgba(white, 0.1);
+  }
+
+  .sider-logo {
+    background: linear-gradient(135deg,
+            rgba(color.mix($background-color, black, 85%), 0.8) 0%,
+            rgba(color.mix($secondary-color, black, 85%), 0.7) 100%);
+  }
+
+  .menu-header {
+    color: rgba(white, 0.9);
+  }
+
+  .menu-header-icon {
+    color: rgba(white, 0.8);
+
+    &:hover {
+      color: $gradient-start;
+    }
+  }
+
+  .sider-menu {
+    .ant-menu-item {
+      background: linear-gradient(135deg,
+              rgba(white, 0.08) 0%,
+              rgba(white, 0.05) 100%);
+
+      .anticon,
+      .ant-menu-title-content {
+        color: rgba(white, 0.8);
+      }
+
+      &:hover {
+        background: linear-gradient(135deg,
+                rgba(white, 0.12) 0%,
+                rgba(white, 0.08) 100%);
+        box-shadow: 0 2px 8px rgba(black, 0.1);
+      }
+
+      &.ant-menu-item-selected {
+        background: linear-gradient(135deg,
+                rgba($gradient-start, 0.2) 0%,
+                rgba($gradient-end, 0.15) 100%);
+
+        .anticon,
+        .ant-menu-title-content {
+          color: $gradient-start;
+        }
+
+        &:hover {
+          background: linear-gradient(135deg,
+                  rgba($gradient-start, 0.25) 0%,
+                  rgba($gradient-end, 0.18) 100%);
+        }
+      }
+    }
+
+    &.sider-menu-disabled {
+      .ant-menu-item {
+        background: linear-gradient(135deg,
+                rgba(white, 0.03) 0%,
+                rgba(white, 0.02) 100%);
+
+        .anticon,
+        .ant-menu-title-content {
+          color: rgba(white, 0.4);
+        }
+
+        &:hover {
+          background: linear-gradient(135deg,
+                  rgba(white, 0.03) 0%,
+                  rgba(white, 0.02) 100%);
+        }
+      }
+    }
+  }
+
+  .trigger-btn {
+    background: linear-gradient(135deg,
+            rgba(color.mix($background-color, black, 80%), 0.95) 0%,
+            rgba(color.mix($secondary-color, black, 85%), 0.9) 100%);
+    border-color: rgba(white, 0.15);
+
+    .trigger-icon {
+      color: rgba(white, 0.8);
+    }
+  }
+
+  .sider-copyright {
+    color: rgba(white, 0.5);
+  }
+}
 
 // Анимация для reduced motion
 @media (prefers-reduced-motion: reduce) {

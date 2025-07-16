@@ -1,0 +1,549 @@
+@use 'sass:color';
+@use 'src/shared/assets/scss/variables' as *;
+@use 'src/shared/assets/scss/mixins' as *;
+
+// Общие стили для всех модальных окон фильтров
+.filter-modal {
+  .ant-modal {
+    max-height: 85vh;
+
+    &-content {
+      border-radius: calc($border-radius * 1.5);
+      overflow: hidden;
+      box-shadow:
+              0 16px 48px rgba($card-shadow, 0.15),
+              0 4px 16px rgba($card-shadow, 0.1);
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    &-header {
+      border-bottom: 1px solid rgba($border-color, 0.4);
+      padding: 20px 24px;
+      background: linear-gradient(135deg,
+              rgba($background-color, 0.98) 0%,
+              rgba($secondary-color, 0.95) 100%);
+      backdrop-filter: blur(10px);
+      flex-shrink: 0;
+      position: relative;
+
+      // Декоративная линия снизу
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 20%;
+        right: 20%;
+        height: 2px;
+        background: linear-gradient(90deg,
+                transparent 0%,
+                rgba($primary-color, 0.3) 50%,
+                transparent 100%);
+      }
+    }
+
+    &-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: $heading-color;
+      font-family: $font-family;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .filter-modal-icon {
+        font-size: 22px;
+        color: $primary-color;
+      }
+    }
+
+    &-body {
+      flex: 1;
+      overflow-y: auto;
+      min-height: 0;
+      padding: 0;
+
+      // Кастомный скроллбар
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: rgba($border-color, 0.1);
+        border-radius: 3px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: rgba($text-color, 0.2);
+        border-radius: 3px;
+
+        &:hover {
+          background: rgba($text-color, 0.3);
+        }
+      }
+    }
+
+    &-footer {
+      padding: 16px 24px;
+      border-top: 1px solid rgba($border-color, 0.4);
+      background: linear-gradient(135deg,
+              rgba($secondary-color, 0.9) 0%,
+              rgba($background-color, 0.95) 100%);
+      flex-shrink: 0;
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+
+      .ant-btn {
+        border-radius: $border-radius;
+        font-family: $font-family;
+        font-weight: 500;
+        min-width: 100px;
+        height: 40px;
+
+        &:first-child {
+          background: rgba($background-color, 0.8);
+          border-color: rgba($border-color, 0.6);
+          color: $text-color;
+
+          &:hover {
+            background: rgba($background-color, 0.95);
+            border-color: rgba($text-color, 0.4);
+            color: $text-color;
+            transform: translateY(-1px);
+          }
+        }
+
+        &:last-child {
+          background: $primary-color;
+          border-color: $primary-color;
+
+          &:hover {
+            background: color.mix($primary-color, black, 10%);
+            border-color: color.mix($primary-color, black, 10%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Контент модального окна фильтра
+.filter-modal-content {
+  padding: 24px;
+  background: $background-color;
+  min-height: 100%;
+
+  .filter-form {
+    .ant-form-item {
+      margin-bottom: 24px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .ant-form-item-label {
+        padding-bottom: 8px;
+
+        label {
+          font-size: 15px;
+          font-weight: 600;
+          color: $text-color;
+          font-family: $font-family;
+          margin-bottom: 0;
+        }
+      }
+
+      .ant-form-item-control {
+        .ant-input,
+        .ant-select-selector,
+        .ant-picker,
+        .ant-input-number {
+          border-radius: $border-radius;
+          border: 2px solid rgba($border-color, 0.6);
+          transition: all $transition-speed ease;
+          font-family: $font-family;
+          background: rgba($background-color, 0.8);
+
+          &:hover {
+            border-color: rgba($primary-color, 0.4);
+            background: rgba($background-color, 0.95);
+          }
+
+          &:focus,
+          &.ant-input-focused,
+          &.ant-select-focused {
+            border-color: $primary-color;
+            box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+            background: $background-color;
+          }
+
+          &::placeholder {
+            color: color.mix($text-color, white, 40%);
+            opacity: 0.8;
+          }
+        }
+
+        // Стили для TextArea
+        .ant-input {
+          resize: vertical;
+          min-height: 80px;
+
+          &[data-count] {
+            padding-bottom: 24px;
+          }
+        }
+
+        // Стили для Select
+        .ant-select {
+          .ant-select-arrow {
+            color: color.mix($text-color, white, 30%);
+          }
+
+          &.ant-select-open .ant-select-arrow {
+            color: $primary-color;
+          }
+        }
+
+        // Стили для DatePicker
+        .ant-picker {
+          width: 100%;
+
+          &-suffix {
+            color: color.mix($text-color, white, 30%);
+          }
+        }
+
+        // Стили для Switch
+        .ant-switch {
+          background: rgba($border-color, 0.8);
+
+          &.ant-switch-checked {
+            background: $primary-color;
+          }
+
+          .ant-switch-handle {
+            &::before {
+              background: $background-color;
+            }
+          }
+        }
+
+        // Стили для CustomSelect (если есть)
+        .custom-select {
+          .ant-select-selector {
+            border: 2px solid rgba($border-color, 0.6);
+            background: rgba($background-color, 0.8);
+
+            &:hover {
+              border-color: rgba($primary-color, 0.4);
+            }
+          }
+
+          &.ant-select-focused .ant-select-selector {
+            border-color: $primary-color;
+            box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+          }
+        }
+      }
+
+      // Стили для специальных полей
+      &.date-event-field {
+        margin-top: 16px;
+        padding: 16px;
+        background: rgba($secondary-color, 0.5);
+        border-radius: $border-radius;
+        border: 1px solid rgba($border-color, 0.4);
+      }
+
+      &.switch-field {
+        .ant-form-item-control {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+
+          .ant-switch {
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+  }
+
+  // Группировка полей
+  .form-group {
+    padding: 20px;
+    background: rgba($secondary-color, 0.3);
+    border-radius: calc($border-radius * 1.5);
+    border: 1px solid rgba($border-color, 0.3);
+    margin-bottom: 20px;
+
+    .form-group-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: $heading-color;
+      margin-bottom: 16px;
+      font-family: $font-family;
+    }
+  }
+}
+
+// Стили для темной темы
+.dark-theme {
+  .filter-modal {
+    .ant-modal {
+      &-header {
+        background: linear-gradient(135deg,
+                rgba(color.mix($background-color, black, 80%), 0.98) 0%,
+                rgba(color.mix($secondary-color, black, 85%), 0.95) 100%);
+        border-color: rgba(white, 0.1);
+      }
+
+      &-title {
+        color: rgba(white, 0.9);
+
+        .filter-modal-icon {
+          color: $primary-color;
+        }
+      }
+
+      &-footer {
+        background: linear-gradient(135deg,
+                rgba(color.mix($secondary-color, black, 85%), 0.9) 0%,
+                rgba(color.mix($background-color, black, 80%), 0.95) 100%);
+        border-color: rgba(white, 0.1);
+
+        .ant-btn {
+          &:first-child {
+            background: rgba(white, 0.08);
+            border-color: rgba(white, 0.2);
+            color: rgba(white, 0.8);
+
+            &:hover {
+              background: rgba(white, 0.12);
+              border-color: rgba(white, 0.3);
+              color: rgba(white, 0.9);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .filter-modal-content {
+    background: color.mix($background-color, black, 85%);
+
+    .filter-form {
+      .ant-form-item {
+        .ant-form-item-label label {
+          color: rgba(white, 0.9);
+        }
+
+        .ant-form-item-control {
+          .ant-input,
+          .ant-select-selector,
+          .ant-picker,
+          .ant-input-number {
+            background: rgba(white, 0.05);
+            border-color: rgba(white, 0.15);
+            color: rgba(white, 0.9);
+
+            &:hover {
+              background: rgba(white, 0.08);
+              border-color: rgba($primary-color, 0.4);
+            }
+
+            &:focus,
+            &.ant-input-focused,
+            &.ant-select-focused {
+              background: rgba(white, 0.1);
+              border-color: $primary-color;
+            }
+
+            &::placeholder {
+              color: rgba(white, 0.5);
+            }
+          }
+
+          .ant-select {
+            .ant-select-arrow {
+              color: rgba(white, 0.6);
+            }
+
+            &.ant-select-open .ant-select-arrow {
+              color: $primary-color;
+            }
+          }
+
+          .ant-picker-suffix {
+            color: rgba(white, 0.6);
+          }
+        }
+      }
+    }
+
+    .form-group {
+      background: rgba(white, 0.05);
+      border-color: rgba(white, 0.1);
+
+      .form-group-title {
+        color: rgba(white, 0.9);
+      }
+    }
+  }
+}
+
+// Адаптивность
+@media (max-width: $breakpoint-lg) {
+  .filter-modal {
+    .ant-modal {
+      &-content {
+        max-height: 80vh;
+      }
+
+      &-header {
+        padding: 16px 20px;
+      }
+
+      &-footer {
+        padding: 12px 20px;
+
+        .ant-btn {
+          min-width: 80px;
+          height: 36px;
+        }
+      }
+    }
+  }
+
+  .filter-modal-content {
+    padding: 20px;
+
+    .filter-form {
+      .ant-form-item {
+        margin-bottom: 20px;
+      }
+    }
+  }
+}
+
+@media (max-width: $breakpoint-md) {
+  .filter-modal {
+    .ant-modal {
+      margin: 16px;
+      max-width: calc(100vw - 32px);
+
+      &-content {
+        max-height: calc(100vh - 32px);
+      }
+
+      &-header {
+        padding: 14px 16px;
+
+        &-title {
+          font-size: 18px;
+        }
+      }
+
+      &-footer {
+        padding: 10px 16px;
+        flex-direction: column;
+        gap: 8px;
+
+        .ant-btn {
+          width: 100%;
+          min-width: auto;
+        }
+      }
+    }
+  }
+
+  .filter-modal-content {
+    padding: 16px;
+
+    .filter-form {
+      .ant-form-item {
+        margin-bottom: 16px;
+
+        .ant-form-item-label label {
+          font-size: 14px;
+        }
+      }
+    }
+
+    .form-group {
+      padding: 16px;
+      margin-bottom: 16px;
+
+      .form-group-title {
+        font-size: 15px;
+      }
+    }
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .filter-modal {
+    .ant-modal {
+      margin: 8px;
+      max-width: calc(100vw - 16px);
+
+      &-header {
+        padding: 12px;
+
+        &-title {
+          font-size: 16px;
+        }
+      }
+
+      &-footer {
+        padding: 8px 12px;
+      }
+    }
+  }
+
+  .filter-modal-content {
+    padding: 12px;
+
+    .filter-form {
+      .ant-form-item {
+        margin-bottom: 12px;
+      }
+    }
+  }
+}
+
+// Анимация для reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .filter-modal {
+    .ant-modal {
+      &-content {
+        transition: none;
+      }
+
+      &-footer .ant-btn {
+        transition: none;
+
+        &:hover {
+          transform: none;
+        }
+      }
+    }
+  }
+
+  .filter-modal-content {
+    .filter-form {
+      .ant-form-item-control {
+        .ant-input,
+        .ant-select-selector,
+        .ant-picker {
+          transition: none;
+        }
+      }
+    }
+  }
+}

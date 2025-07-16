@@ -1,4 +1,5 @@
 import { Button, DatePicker, Form, Input, Modal, Switch } from 'antd';
+import { FilterOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { FilterModalProps, Pagination } from 'src/interfaces';
 import { AuthApiClientService, CrudDataSourceService } from 'src/services';
 import { StatusModel } from 'src/models';
@@ -12,7 +13,6 @@ import {
   RuleApprovedCode,
   RuleRevokedCode,
 } from 'src/consts';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 
 export function ResourceFilterModal({
@@ -88,72 +88,107 @@ export function ResourceFilterModal({
 
   return (
     <Modal
-      title="Фильтры"
+      title={
+        <div>
+          <FilterOutlined className="filter-modal-icon" />
+          Фильтры
+        </div>
+      }
       open={visible}
       onCancel={onClearForm}
       footer={[
-        <Button key="reset" type="primary" onClick={handleReset}>
+        <Button key="reset" onClick={handleReset}>
           Сбросить
         </Button>,
         <Button key="apply" type="primary" onClick={() => form.submit()}>
-          Найти
+          Применить фильтры
         </Button>,
       ]}
+      className="filter-modal"
+      width={550}
+      centered
+      destroyOnClose
+      styles={{
+        body: {
+          maxHeight: 'calc(85vh - 108px)',
+          overflowY: 'auto',
+          padding: 0
+        }
+      }}
     >
-      <Form
-        name="resourceFilterModalForm"
-        form={form}
-        onFinish={onApply}
-        layout="vertical"
-      >
-        <Form.Item label="Наименование" name="title">
-          <Input placeholder="Поиск по названию" />
-        </Form.Item>
+      <div className="filter-modal-content">
+        <Form
+          name="resourceFilterModalForm"
+          form={form}
+          onFinish={onApply}
+          layout="vertical"
+          className="filter-form"
+        >
+          <Form.Item
+            label="Наименование"
+            name="title"
+            tooltip="Поиск будет выполнен по названию"
+          >
+            <Input placeholder="Поиск по названию" />
+          </Form.Item>
 
-        <Form.Item label="Описание" name="content">
-          <Input.TextArea placeholder="Поиск по описанию" />
-        </Form.Item>
+          <Form.Item
+            label="Описание"
+            name="content"
+            tooltip="Поиск будет выполнен по фрагменту описания"
+          >
+            <Input.TextArea placeholder="Поиск по описанию" />
+          </Form.Item>
 
-        {resource === 'initiative' && (
-          <>
-            <Form.Item label="Однодневное событие" name="isOneDayEvent">
-              <Switch
-                checkedChildren={<CheckOutlined />}
-                unCheckedChildren={<CloseOutlined />}
-                value={isOneDayEvent}
-                onChange={(value) => setIsOneDayEvent(value)}
-              />
-            </Form.Item>
-            {isOneDayEvent && (
-              <Form.Item label="Дата события" name="eventDate">
-                <DatePicker format="DD.MM.YYYY" />
+          {resource === 'initiative' && (
+            <>
+              <Form.Item label="Однодневное событие" name="isOneDayEvent">
+                <Switch
+                  checkedChildren={<CheckOutlined />}
+                  unCheckedChildren={<CloseOutlined />}
+                  value={isOneDayEvent}
+                  onChange={(value) => setIsOneDayEvent(value)}
+                />
               </Form.Item>
-            )}
-          </>
-        )}
+              {isOneDayEvent && (
+                <Form.Item label="Дата события" name="eventDate">
+                  <DatePicker format="DD.MM.YYYY" />
+                </Form.Item>
+              )}
+            </>
+          )}
 
-        <Form.Item label="Статус" name="status">
-          <CustomSelect
-            bindLabel="name"
-            formField="status"
-            requestOptions={loadStatuses}
-            onChange={onCustomSelectChange}
-            label="Выберите статус"
-            enableSearch={true}
-          />
-        </Form.Item>
+          <Form.Item
+            label="Статус"
+            name="status"
+            tooltip="Выберите статус для фильтрации"
+          >
+            <CustomSelect
+              bindLabel="name"
+              formField="status"
+              requestOptions={loadStatuses}
+              onChange={onCustomSelectChange}
+              label="Выберите статус"
+              enableSearch={true}
+            />
+          </Form.Item>
 
-        <Form.Item label="Автор" name="creator">
-          <CustomSelect
-            bindLabel="fullname"
-            formField="creator"
-            requestOptions={loadUsers}
-            onChange={onCustomSelectChange}
-            label="Выберите автора"
-            enableSearch={true}
-          />
-        </Form.Item>
-      </Form>
+          <Form.Item
+            label="Автор"
+            name="creator"
+            tooltip="Выберите участника сообщества для фильтрации по авторству"
+          >
+            <CustomSelect
+              bindLabel="fullname"
+              formField="creator"
+              requestOptions={loadUsers}
+              onChange={onCustomSelectChange}
+              label="Выберите автора"
+              enableSearch={true}
+            />
+          </Form.Item>
+        </Form>
+      </div>
     </Modal>
-  );
+);
 }

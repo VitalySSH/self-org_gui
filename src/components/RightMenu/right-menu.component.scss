@@ -279,6 +279,46 @@
   }
 }
 
+.right-menu-footer {
+  padding: 16px 0;
+  border-top: 1px solid rgba($border-color, 0.3);
+  margin-top: 16px;
+  text-align: center;
+
+  .theme-toggle-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: calc($border-radius * 1.5);
+    background: linear-gradient(135deg,
+            rgba($background-color, 0.9) 0%,
+            rgba($secondary-color, 0.8) 100%);
+    border: 1px solid rgba($border-color, 0.4);
+    color: $text-color;
+    font-family: $font-family;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all $transition-speed ease;
+
+    &:hover {
+      background: linear-gradient(135deg,
+              rgba($primary-color, 0.1) 0%,
+              rgba($background-color, 0.95) 100%);
+      border-color: rgba($primary-color, 0.3);
+      color: $primary-color;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba($card-shadow, 0.15);
+    }
+
+    .anticon {
+      font-size: 16px;
+    }
+  }
+}
+
 // Анимация появления
 .right-menu-container {
   animation: rightMenuSlideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -361,77 +401,77 @@
 }
 
 // Поддержка темной темы
-//@media (prefers-color-scheme: dark) {
-//  .ant-drawer {
-//    .ant-drawer-body,
-//    .ant-drawer-content {
-//      background: linear-gradient(135deg,
-//              color.mix($secondary-color, black, 85%) 0%,
-//              color.mix($background-color, black, 90%) 100%);
-//    }
-//
-//    .ant-drawer-header {
-//      background: linear-gradient(135deg,
-//              rgba(color.mix($background-color, black, 80%), 0.95) 0%,
-//              rgba(color.mix($secondary-color, black, 85%), 0.9) 100%);
-//      border-color: rgba(white, 0.1);
-//    }
-//  }
-//
-//  .right-menu-header {
-//    .right-menu-subtitle {
-//      color: rgba(white, 0.8);
-//    }
-//  }
-//
-//  .right-menu {
-//    .ant-menu-item {
-//      background: linear-gradient(135deg,
-//              rgba(white, 0.08) 0%,
-//              rgba(white, 0.05) 100%);
-//      border-color: rgba(white, 0.15);
-//
-//      .right-menu-icon,
-//      .ant-menu-title-content {
-//        color: rgba(white, 0.85);
-//      }
-//
-//      &:hover {
-//        background: linear-gradient(135deg,
-//                rgba(white, 0.12) 0%,
-//                rgba(white, 0.08) 100%);
-//        border-color: rgba($gradient-start, 0.4);
-//
-//        .right-menu-icon,
-//        .ant-menu-title-content {
-//          color: $gradient-start;
-//        }
-//      }
-//
-//      &.ant-menu-item-selected {
-//        background: linear-gradient(135deg,
-//                rgba($gradient-start, 0.2) 0%,
-//                rgba($gradient-end, 0.15) 100%);
-//
-//        .right-menu-icon,
-//        .ant-menu-title-content {
-//          color: $gradient-start;
-//        }
-//      }
-//    }
-//
-//    .ant-menu-item:first-child {
-//      background: linear-gradient(135deg,
-//              rgba($success-color, 0.15) 0%,
-//              rgba(white, 0.08) 100%);
-//
-//      .right-menu-icon,
-//      .ant-menu-title-content {
-//        color: $success-color;
-//      }
-//    }
-//  }
-//}
+.dark-theme {
+  .ant-drawer {
+    .ant-drawer-body,
+    .ant-drawer-content {
+      background: linear-gradient(135deg,
+              color.mix($secondary-color, black, 85%) 0%,
+              color.mix($background-color, black, 90%) 100%);
+    }
+
+    .ant-drawer-header {
+      background: linear-gradient(135deg,
+              rgba(color.mix($background-color, black, 80%), 0.95) 0%,
+              rgba(color.mix($secondary-color, black, 85%), 0.9) 100%);
+      border-color: rgba(white, 0.1);
+    }
+  }
+
+  .right-menu-header {
+    .right-menu-subtitle {
+      color: rgba(white, 0.8);
+    }
+  }
+
+  .right-menu {
+    .ant-menu-item {
+      background: linear-gradient(135deg,
+              rgba(white, 0.08) 0%,
+              rgba(white, 0.05) 100%);
+      border-color: rgba(white, 0.15);
+
+      .right-menu-icon,
+      .ant-menu-title-content {
+        color: rgba(white, 0.85);
+      }
+
+      &:hover {
+        background: linear-gradient(135deg,
+                rgba(white, 0.12) 0%,
+                rgba(white, 0.08) 100%);
+        border-color: rgba($gradient-start, 0.4);
+
+        .right-menu-icon,
+        .ant-menu-title-content {
+          color: $gradient-start;
+        }
+      }
+
+      &.ant-menu-item-selected {
+        background: linear-gradient(135deg,
+                rgba($gradient-start, 0.2) 0%,
+                rgba($gradient-end, 0.15) 100%);
+
+        .right-menu-icon,
+        .ant-menu-title-content {
+          color: $gradient-start;
+        }
+      }
+    }
+
+    .ant-menu-item:first-child {
+      background: linear-gradient(135deg,
+              rgba($success-color, 0.15) 0%,
+              rgba(white, 0.08) 100%);
+
+      .right-menu-icon,
+      .ant-menu-title-content {
+        color: $success-color;
+      }
+    }
+  }
+}
 
 // Анимация для reduced motion
 @media (prefers-reduced-motion: reduce) {

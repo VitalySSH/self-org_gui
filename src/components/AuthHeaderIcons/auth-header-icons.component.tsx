@@ -146,6 +146,12 @@ export function AuthHeaderIcons() {
         }
         className="profile-modal"
         width={640}
+        styles={{
+          body: {
+            maxHeight: 'calc(90vh - 128px)',
+            overflowY: 'scroll',
+          }
+        }}
         centered
         destroyOnClose
       >

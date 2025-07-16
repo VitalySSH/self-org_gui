@@ -740,32 +740,32 @@
   }
 }
 
-//@media (prefers-color-scheme: dark) {
-//  .about-page {
-//    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-//
-//    .hero-title {
-//      color: #ffffff;
-//    }
-//
-//    .hero-description, .section-description {
-//      color: #e0e0e0;
-//    }
-//
-//    .overview-card, .principle-card, .module-card, .tech-card, .role-card, .join-card, .research-card {
-//      background: #2d2d2d;
-//      color: #e0e0e0;
-//
-//      h4 {
-//        color: #ffffff;
-//      }
-//    }
-//
-//    .expected-results {
-//      background: #3a3a3a;
-//    }
-//  }
-//}
+.dark-theme {
+  .about-page {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+
+    .hero-title {
+      color: #ffffff;
+    }
+
+    .hero-description, .section-description {
+      color: #e0e0e0;
+    }
+
+    .overview-card, .principle-card, .module-card, .tech-card, .role-card, .join-card, .research-card {
+      background: #2d2d2d;
+      color: #e0e0e0;
+
+      h4 {
+        color: #ffffff;
+      }
+    }
+
+    .expected-results {
+      background: #3a3a3a;
+    }
+  }
+}
 
 @media print {
   .about-page {
@@ -1024,38 +1024,38 @@
 }
 
 // Темная тема
-//@media (prefers-color-scheme: dark) {
-//  .module-card-enhanced {
-//    background: linear-gradient(135deg, #2d2d2d 0%, #3a3a3a 100%);
-//    border-color: #444;
-//
-//    &:hover,
-//    &.expanded {
-//      background: linear-gradient(135deg, #3a3a3a 0%, #4a4a4a 100%);
-//    }
-//
-//    .module-header-enhanced .module-title-enhanced {
-//      color: #ffffff;
-//    }
-//
-//    .module-preview .preview-text {
-//      color: #e0e0e0;
-//    }
-//
-//    .expand-button-container .expand-button,
-//    .collapse-button-container .collapse-button {
-//      border-color: #444;
-//      color: #4dabf7;
-//
-//      &:hover {
-//        border-color: #4dabf7;
-//        background: rgba(77, 171, 247, 0.1);
-//      }
-//    }
-//  }
-//
-//  .modules-timeline .modules-note {
-//    background: linear-gradient(135deg, #3a3a3a 0%, #2d2d2d 100%);
-//    color: #ccc;
-//  }
-//}
+.dark-theme {
+  .module-card-enhanced {
+    background: linear-gradient(135deg, #2d2d2d 0%, #3a3a3a 100%);
+    border-color: #444;
+
+    &:hover,
+    &.expanded {
+      background: linear-gradient(135deg, #3a3a3a 0%, #4a4a4a 100%);
+    }
+
+    .module-header-enhanced .module-title-enhanced {
+      color: #ffffff;
+    }
+
+    .module-preview .preview-text {
+      color: #e0e0e0;
+    }
+
+    .expand-button-container .expand-button,
+    .collapse-button-container .collapse-button {
+      border-color: #444;
+      color: #4dabf7;
+
+      &:hover {
+        border-color: #4dabf7;
+        background: rgba(77, 171, 247, 0.1);
+      }
+    }
+  }
+
+  .modules-timeline .modules-note {
+    background: linear-gradient(135deg, #3a3a3a 0%, #2d2d2d 100%);
+    color: #ccc;
+  }
+}
