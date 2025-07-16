@@ -47,7 +47,7 @@ export function CommunitySummary(props: any) {
   ];
 
   return (
-    <div className="workspace-page">
+    <div className="workspace-page workspace-tabs-full-width">
       <Tabs
         defaultActiveKey="1"
         items={items}

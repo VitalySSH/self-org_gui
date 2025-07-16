@@ -433,81 +433,81 @@
 }
 
 // Поддержка темной темы
-@media (prefers-color-scheme: dark) {
-  .auth-space {
-    background: linear-gradient(135deg,
-            color.mix($secondary-color, black, 85%) 0%,
-            color.mix($background-color, black, 90%) 100%);
-  }
-
-  .auth-form-container {
-    background: linear-gradient(135deg,
-            rgba(color.mix($background-color, black, 80%), 0.95) 0%,
-            rgba(color.mix($secondary-color, black, 85%), 0.9) 100%);
-    border-color: rgba(white, 0.1);
-    box-shadow:
-            0 20px 60px rgba(black, 0.3),
-            0 8px 32px rgba(black, 0.2),
-            inset 0 1px 0 rgba(white, 0.1);
-
-    &::after {
-      background: linear-gradient(180deg,
-              rgba(white, 0.05) 0%,
-              transparent 100%);
-    }
-  }
-
-  .auth-form-header {
-    .auth-form-subtitle {
-      color: rgba(white, 0.8);
-    }
-  }
-
-  .auth-form {
-    .ant-form-item-label label {
-      color: rgba(white, 0.9);
-    }
-
-    .ant-input,
-    .ant-input-password {
-      background: rgba(white, 0.08);
-      border-color: rgba(white, 0.15);
-      color: rgba(white, 0.9);
-
-      &:hover {
-        background: rgba(white, 0.12);
-        border-color: rgba($gradient-start, 0.6);
-      }
-
-      &::placeholder {
-        color: rgba(white, 0.5);
-      }
-    }
-
-    .auth-form-icon {
-      color: rgba(white, 0.6);
-    }
-  }
-
-  .auth-checkbox {
-    color: rgba(white, 0.9);
-
-    .ant-checkbox {
-      .ant-checkbox-inner {
-        background: rgba(white, 0.08);
-        border-color: rgba(white, 0.2);
-      }
-    }
-  }
-
-  .auth-form-footer {
-    border-color: rgba(white, 0.1);
-
-    .auth-form-footer-text {
-      color: rgba(white, 0.8);
-    }
-  }
-}
+//@media (prefers-color-scheme: dark) {
+//  .auth-space {
+//    background: linear-gradient(135deg,
+//            color.mix($secondary-color, black, 85%) 0%,
+//            color.mix($background-color, black, 90%) 100%);
+//  }
+//
+//  .auth-form-container {
+//    background: linear-gradient(135deg,
+//            rgba(color.mix($background-color, black, 80%), 0.95) 0%,
+//            rgba(color.mix($secondary-color, black, 85%), 0.9) 100%);
+//    border-color: rgba(white, 0.1);
+//    box-shadow:
+//            0 20px 60px rgba(black, 0.3),
+//            0 8px 32px rgba(black, 0.2),
+//            inset 0 1px 0 rgba(white, 0.1);
+//
+//    &::after {
+//      background: linear-gradient(180deg,
+//              rgba(white, 0.05) 0%,
+//              transparent 100%);
+//    }
+//  }
+//
+//  .auth-form-header {
+//    .auth-form-subtitle {
+//      color: rgba(white, 0.8);
+//    }
+//  }
+//
+//  .auth-form {
+//    .ant-form-item-label label {
+//      color: rgba(white, 0.9);
+//    }
+//
+//    .ant-input,
+//    .ant-input-password {
+//      background: rgba(white, 0.08);
+//      border-color: rgba(white, 0.15);
+//      color: rgba(white, 0.9);
+//
+//      &:hover {
+//        background: rgba(white, 0.12);
+//        border-color: rgba($gradient-start, 0.6);
+//      }
+//
+//      &::placeholder {
+//        color: rgba(white, 0.5);
+//      }
+//    }
+//
+//    .auth-form-icon {
+//      color: rgba(white, 0.6);
+//    }
+//  }
+//
+//  .auth-checkbox {
+//    color: rgba(white, 0.9);
+//
+//    .ant-checkbox {
+//      .ant-checkbox-inner {
+//        background: rgba(white, 0.08);
+//        border-color: rgba(white, 0.2);
+//      }
+//    }
+//  }
+//
+//  .auth-form-footer {
+//    border-color: rgba(white, 0.1);
+//
+//    .auth-form-footer-text {
+//      color: rgba(white, 0.8);
+//    }
+//  }
+//}
 
 // Анимация для reduced motion
 @media (prefers-reduced-motion: reduce) {

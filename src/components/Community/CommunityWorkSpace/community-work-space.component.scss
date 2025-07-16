@@ -147,8 +147,8 @@
 }
 
 .community-name {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 600;
   font-family: $font-family;
   background: linear-gradient(135deg,
           $heading-color 0%,
@@ -409,79 +409,79 @@
 }
 
 // Поддержка темной темы
-@media (prefers-color-scheme: dark) {
-  .community-workspace,
-  .community-main-layout,
-  .community-content {
-    background: color.mix($secondary-color, black, 85%);
-  }
-
-  .community-loading-container {
-    background: linear-gradient(135deg,
-            color.mix($secondary-color, black, 85%) 0%,
-            color.mix($background-color, black, 90%) 100%);
-
-    .community-loading-text {
-      color: rgba(white, 0.8);
-    }
-  }
-
-  .community-header {
-    background: linear-gradient(135deg,
-            rgba(color.mix($background-color, black, 80%), 0.98) 0%,
-            rgba(color.mix($secondary-color, black, 85%), 0.95) 100%);
-    border-color: rgba(white, 0.1);
-  }
-
-  .community-back-button {
-    background: linear-gradient(135deg,
-            rgba(white, 0.08) 0%,
-            rgba(white, 0.05) 100%);
-    border-color: rgba(white, 0.15);
-
-    .community-back-icon {
-      color: rgba(white, 0.8);
-    }
-
-    &:hover {
-      .community-back-icon {
-        color: $gradient-start;
-      }
-    }
-  }
-
-  .community-dropdown-trigger {
-    background: linear-gradient(135deg,
-            rgba(white, 0.08) 0%,
-            rgba(white, 0.05) 100%);
-    border-color: rgba(white, 0.15);
-
-    .community-dropdown-arrow {
-      color: rgba(white, 0.8);
-    }
-
-    &:hover .community-dropdown-arrow {
-      color: $gradient-start;
-    }
-  }
-
-  .community-dropdown-menu {
-    background: linear-gradient(135deg,
-            rgba(color.mix($background-color, black, 80%), 0.98) 0%,
-            rgba(color.mix($secondary-color, black, 85%), 0.95) 100%);
-    border-color: rgba(white, 0.1);
-
-    .community-dropdown-item {
-      .community-dropdown-link {
-        color: rgba(white, 0.9);
-
-        &:hover {
-          color: $gradient-start;
-        }
-      }
-    }
-  }
-}
+//@media (prefers-color-scheme: dark) {
+//  .community-workspace,
+//  .community-main-layout,
+//  .community-content {
+//    background: color.mix($secondary-color, black, 85%);
+//  }
+//
+//  .community-loading-container {
+//    background: linear-gradient(135deg,
+//            color.mix($secondary-color, black, 85%) 0%,
+//            color.mix($background-color, black, 90%) 100%);
+//
+//    .community-loading-text {
+//      color: rgba(white, 0.8);
+//    }
+//  }
+//
+//  .community-header {
+//    background: linear-gradient(135deg,
+//            rgba(color.mix($background-color, black, 80%), 0.98) 0%,
+//            rgba(color.mix($secondary-color, black, 85%), 0.95) 100%);
+//    border-color: rgba(white, 0.1);
+//  }
+//
+//  .community-back-button {
+//    background: linear-gradient(135deg,
+//            rgba(white, 0.08) 0%,
+//            rgba(white, 0.05) 100%);
+//    border-color: rgba(white, 0.15);
+//
+//    .community-back-icon {
+//      color: rgba(white, 0.8);
+//    }
+//
+//    &:hover {
+//      .community-back-icon {
+//        color: $gradient-start;
+//      }
+//    }
+//  }
+//
+//  .community-dropdown-trigger {
+//    background: linear-gradient(135deg,
+//            rgba(white, 0.08) 0%,
+//            rgba(white, 0.05) 100%);
+//    border-color: rgba(white, 0.15);
+//
+//    .community-dropdown-arrow {
+//      color: rgba(white, 0.8);
+//    }
+//
+//    &:hover .community-dropdown-arrow {
+//      color: $gradient-start;
+//    }
+//  }
+//
+//  .community-dropdown-menu {
+//    background: linear-gradient(135deg,
+//            rgba(color.mix($background-color, black, 80%), 0.98) 0%,
+//            rgba(color.mix($secondary-color, black, 85%), 0.95) 100%);
+//    border-color: rgba(white, 0.1);
+//
+//    .community-dropdown-item {
+//      .community-dropdown-link {
+//        color: rgba(white, 0.9);
+//
+//        &:hover {
+//          color: $gradient-start;
+//        }
+//      }
+//    }
+//  }
+//}
 
 // Анимация для reduced motion
 @media (prefers-reduced-motion: reduce) {

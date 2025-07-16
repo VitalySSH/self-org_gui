@@ -313,35 +313,35 @@
 }
 
 /* Темная тема (опционально) */
-@media (prefers-color-scheme: dark) {
-  .ai-chat-container {
-    background: #1e293b;
-  }
-
-  .ai-chat-messages {
-    background: #1e293b;
-  }
-
-  .ai-chat-input {
-    background: #334155;
-    border-top-color: #475569;
-  }
-
-  .ai-chat-textarea {
-    background: #475569;
-    border-color: #64748b;
-    color: white;
-  }
-
-  .ai-message-card-ai {
-    background: #334155;
-    color: white;
-  }
-
-  .ai-message-time {
-    color: #94a3b8;
-  }
-}
+//@media (prefers-color-scheme: dark) {
+//  .ai-chat-container {
+//    background: #1e293b;
+//  }
+//
+//  .ai-chat-messages {
+//    background: #1e293b;
+//  }
+//
+//  .ai-chat-input {
+//    background: #334155;
+//    border-top-color: #475569;
+//  }
+//
+//  .ai-chat-textarea {
+//    background: #475569;
+//    border-color: #64748b;
+//    color: white;
+//  }
+//
+//  .ai-message-card-ai {
+//    background: #334155;
+//    color: white;
+//  }
+//
+//  .ai-message-time {
+//    color: #94a3b8;
+//  }
+//}
 
 .form-header {
   display: flex;

@@ -8,7 +8,9 @@
   height: 100%;
   background: transparent;
   font-family: $font-family;
-  overflow-y: hidden;
+  max-width: 1200px; // Максимальная ширина контента
+  margin: 0 auto; // Центрирование
+  padding: 0 20px; // Отступы по бокам
 }
 
 // Общие стили для табов
@@ -92,7 +94,7 @@
       .ant-tabs-tabpane {
         height: 100%;
         overflow-y: auto;
-        overflow-x: hidden;
+        overflow-x: hidden; // Запрещаем горизонтальный скролл
 
         &::-webkit-scrollbar {
           width: 6px;
@@ -113,6 +115,14 @@
         }
       }
     }
+  }
+}
+
+// Специальный класс для табов, которые должны занимать всю ширину
+.workspace-tabs-full-width {
+  .workspace-page {
+    max-width: none;
+    padding: 0;
   }
 }
 
@@ -142,6 +152,228 @@
   .workspace-card-content {
     color: $text-color;
     font-family: $font-family;
+  }
+}
+
+// Базовые стили для списочных страниц
+.workspace-list-page {
+  @extend .workspace-page;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.workspace-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 20px 0;
+  border-bottom: 1px solid rgba($border-color, 0.3);
+  margin-bottom: 20px;
+  flex-shrink: 0;
+
+  .workspace-page-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: $heading-color;
+    margin: 0;
+    font-family: $font-family;
+    line-height: 1.2;
+  }
+
+  .workspace-list-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+}
+
+.workspace-filter-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: $border-radius;
+  border: 1px solid rgba($border-color, 0.6);
+  background: rgba($background-color, 0.8);
+  color: $text-color;
+  font-family: $font-family;
+  font-weight: 500;
+  transition: all $transition-speed ease;
+
+  &:hover {
+    background: rgba($background-color, 0.95);
+    border-color: rgba($primary-color, 0.3);
+    color: $primary-color;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba($card-shadow, 0.1);
+  }
+
+  .workspace-filter-icon {
+    font-size: 16px;
+  }
+
+  .workspace-filter-badge {
+    .ant-badge-count {
+      background: $primary-color;
+      border-color: $primary-color;
+      font-size: 10px;
+      min-width: 16px;
+      height: 16px;
+      line-height: 16px;
+    }
+  }
+}
+
+.workspace-list-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.workspace-list {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  // Кастомный скроллбар
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba($border-color, 0.1);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($text-color, 0.2);
+    border-radius: 3px;
+
+    &:hover {
+      background: rgba($text-color, 0.3);
+    }
+  }
+
+  // Стили для Ant Design List
+  .ant-list-header {
+    padding: 16px 0;
+    border-bottom: 1px solid rgba($border-color, 0.3);
+    background: transparent;
+  }
+
+  .ant-list-footer {
+    padding: 16px 0;
+    border-top: 1px solid rgba($border-color, 0.3);
+    background: transparent;
+  }
+
+  .ant-list-empty {
+    padding: 40px 0;
+
+    .ant-empty {
+      .ant-empty-description {
+        color: color.mix($text-color, white, 30%);
+        font-family: $font-family;
+      }
+    }
+  }
+
+  .ant-list-pagination {
+    margin-top: 20px;
+    text-align: right;
+
+    .ant-pagination {
+      .ant-pagination-total-text {
+        color: color.mix($text-color, white, 20%);
+        font-family: $font-family;
+        font-size: 14px;
+      }
+
+      .ant-pagination-item {
+        border-color: rgba($border-color, 0.6);
+
+        &:hover {
+          border-color: $primary-color;
+        }
+
+        &.ant-pagination-item-active {
+          background: $primary-color;
+          border-color: $primary-color;
+
+          a {
+            color: $background-color;
+          }
+        }
+      }
+
+      .ant-pagination-prev,
+      .ant-pagination-next {
+        .ant-pagination-item-link {
+          border-color: rgba($border-color, 0.6);
+
+          &:hover {
+            border-color: $primary-color;
+            color: $primary-color;
+          }
+        }
+      }
+    }
+  }
+
+  .ant-spin-container {
+    min-height: 200px;
+
+    .ant-spin {
+      .ant-spin-dot {
+        i {
+          background-color: $primary-color;
+        }
+      }
+    }
+  }
+}
+
+.workspace-list-item {
+  padding: 16px 0;
+  border-bottom: 1px solid rgba($border-color, 0.2);
+  background: transparent;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: rgba($primary-color, 0.02);
+  }
+
+  .ant-list-item-meta {
+    margin-bottom: 8px;
+
+    .ant-list-item-meta-title {
+      color: $heading-color;
+      font-family: $font-family;
+      font-weight: 600;
+    }
+
+    .ant-list-item-meta-description {
+      color: color.mix($text-color, white, 20%);
+      font-family: $font-family;
+    }
+  }
+
+  .ant-list-item-action {
+    margin-left: 16px;
+
+    li {
+      padding: 0 4px;
+
+      .ant-btn {
+        border-radius: $border-radius;
+        font-family: $font-family;
+      }
+    }
   }
 }
 
@@ -334,70 +566,70 @@
 }
 
 // Темная тема
-@media (prefers-color-scheme: dark) {
-  .workspace-tabs {
-    .ant-tabs-nav {
-      &::before {
-        border-color: rgba(white, 0.1);
-      }
-
-      .ant-tabs-nav-list {
-        .ant-tabs-tab {
-          .ant-tabs-tab-btn {
-            background: rgba(white, 0.05);
-            color: rgba(white, 0.8);
-          }
-
-          &:hover {
-            .ant-tabs-tab-btn {
-              background: rgba(white, 0.1);
-              border-color: rgba($primary-color, 0.3);
-              color: $primary-color;
-            }
-          }
-
-          &.ant-tabs-tab-active {
-            .ant-tabs-tab-btn {
-              background: $primary-color;
-              color: $background-color;
-            }
-          }
-        }
-      }
-    }
-
-    .ant-tabs-content-holder {
-      .ant-tabs-content {
-        .ant-tabs-tabpane {
-          &::-webkit-scrollbar-track {
-            background: rgba(white, 0.05);
-          }
-
-          &::-webkit-scrollbar-thumb {
-            background: rgba(white, 0.2);
-
-            &:hover {
-              background: rgba(white, 0.3);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .workspace-card {
-    background: rgba(white, 0.05);
-    border-color: rgba(white, 0.1);
-
-    .workspace-card-title {
-      color: rgba(white, 0.9);
-    }
-
-    .workspace-card-content {
-      color: rgba(white, 0.8);
-    }
-  }
-}
+//@media (prefers-color-scheme: dark) {
+//  .workspace-tabs {
+//    .ant-tabs-nav {
+//      &::before {
+//        border-color: rgba(white, 0.1);
+//      }
+//
+//      .ant-tabs-nav-list {
+//        .ant-tabs-tab {
+//          .ant-tabs-tab-btn {
+//            background: rgba(white, 0.05);
+//            color: rgba(white, 0.8);
+//          }
+//
+//          &:hover {
+//            .ant-tabs-tab-btn {
+//              background: rgba(white, 0.1);
+//              border-color: rgba($primary-color, 0.3);
+//              color: $primary-color;
+//            }
+//          }
+//
+//          &.ant-tabs-tab-active {
+//            .ant-tabs-tab-btn {
+//              background: $primary-color;
+//              color: $background-color;
+//            }
+//          }
+//        }
+//      }
+//    }
+//
+//    .ant-tabs-content-holder {
+//      .ant-tabs-content {
+//        .ant-tabs-tabpane {
+//          &::-webkit-scrollbar-track {
+//            background: rgba(white, 0.05);
+//          }
+//
+//          &::-webkit-scrollbar-thumb {
+//            background: rgba(white, 0.2);
+//
+//            &:hover {
+//              background: rgba(white, 0.3);
+//            }
+//          }
+//        }
+//      }
+//    }
+//  }
+//
+//  .workspace-card {
+//    background: rgba(white, 0.05);
+//    border-color: rgba(white, 0.1);
+//
+//    .workspace-card-title {
+//      color: rgba(white, 0.9);
+//    }
+//
+//    .workspace-card-content {
+//      color: rgba(white, 0.8);
+//    }
+//  }
+//}
 
 // Reduced motion
 @media (prefers-reduced-motion: reduce) {

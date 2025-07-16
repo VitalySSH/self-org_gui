@@ -329,50 +329,50 @@
 }
 
 // Поддержка темной темы
-@media (prefers-color-scheme: dark) {
-  .toolbar {
-    background: linear-gradient(135deg,
-            rgba(color.mix($background-color, black, 80%), 0.98) 0%,
-            rgba(color.mix($sider-background-color, black, 85%), 0.95) 100%);
-    border-color: rgba(white, 0.1);
-
-    &::after {
-      background: linear-gradient(180deg,
-              rgba(white, 0.05) 0%,
-              transparent 100%);
-    }
-
-    .toolbar-button {
-      &.toolbar-button-secondary {
-        background: linear-gradient(135deg,
-                rgba(white, 0.08) 0%,
-                rgba(white, 0.05) 100%);
-        color: rgba(white, 0.9);
-        border-color: rgba(white, 0.2);
-
-        &:hover {
-          color: $info-color;
-          background: linear-gradient(135deg,
-                  rgba($info-color, 0.15) 0%,
-                  rgba(white, 0.1) 100%);
-        }
-      }
-    }
-
-    .toolbar-divider {
-      background: linear-gradient(180deg,
-              transparent 0%,
-              rgba(white, 0.2) 20%,
-              rgba(white, 0.3) 50%,
-              rgba(white, 0.2) 80%,
-              transparent 100%);
-    }
-
-    .toolbar-info {
-      color: rgba(white, 0.7);
-    }
-  }
-}
+//@media (prefers-color-scheme: dark) {
+//  .toolbar {
+//    background: linear-gradient(135deg,
+//            rgba(color.mix($background-color, black, 80%), 0.98) 0%,
+//            rgba(color.mix($sider-background-color, black, 85%), 0.95) 100%);
+//    border-color: rgba(white, 0.1);
+//
+//    &::after {
+//      background: linear-gradient(180deg,
+//              rgba(white, 0.05) 0%,
+//              transparent 100%);
+//    }
+//
+//    .toolbar-button {
+//      &.toolbar-button-secondary {
+//        background: linear-gradient(135deg,
+//                rgba(white, 0.08) 0%,
+//                rgba(white, 0.05) 100%);
+//        color: rgba(white, 0.9);
+//        border-color: rgba(white, 0.2);
+//
+//        &:hover {
+//          color: $info-color;
+//          background: linear-gradient(135deg,
+//                  rgba($info-color, 0.15) 0%,
+//                  rgba(white, 0.1) 100%);
+//        }
+//      }
+//    }
+//
+//    .toolbar-divider {
+//      background: linear-gradient(180deg,
+//              transparent 0%,
+//              rgba(white, 0.2) 20%,
+//              rgba(white, 0.3) 50%,
+//              rgba(white, 0.2) 80%,
+//              transparent 100%);
+//    }
+//
+//    .toolbar-info {
+//      color: rgba(white, 0.7);
+//    }
+//  }
+//}
 
 // Анимация для reduced motion
 @media (prefers-reduced-motion: reduce) {

@@ -1,9 +1,9 @@
+
 import { Badge, Button, List } from 'antd';
 import { CommunityCardInterface, FilterValues } from 'src/interfaces';
 import { CommunityCard, CommunityFilterModal } from 'src/components';
 import { useCallback, useEffect, useState } from 'react';
 import { CommunityAOService } from 'src/services';
-import styles from 'src/shared/assets/scss/module/list.module.scss';
 import { FilterOutlined } from '@ant-design/icons';
 
 export function SubCommunities(props: any) {
@@ -55,15 +55,30 @@ export function SubCommunities(props: any) {
     }
   };
 
-  return (
-    <div className="community-work-space">
-      <div className={styles.header}>
-        <div className="section-header">Внутренние сообщества</div>
+  const handleResetFilters = () => {
+    setFilter({});
+    setLoading(true);
+    setShowFilters(false);
+    loadData();
+  };
 
-        <div className={styles.buttons}>
-          <Button type="text" onClick={() => setShowFilters(true)}>
-            <Badge count={Object.keys(filter).length}>
-              <FilterOutlined style={{ fontSize: 20 }} />
+  return (
+    <div className="workspace-list-page">
+      <div className="workspace-list-header">
+        <h2 className="workspace-page-title">Внутренние сообщества</h2>
+
+        <div className="workspace-list-actions">
+          <Button
+            type="text"
+            onClick={() => setShowFilters(true)}
+            className="workspace-filter-button"
+          >
+            <Badge
+              count={Object.keys(filter).length}
+              size="small"
+              className="workspace-filter-badge"
+            >
+              <FilterOutlined className="workspace-filter-icon" />
             </Badge>
             Фильтры
           </Button>
@@ -74,34 +89,35 @@ export function SubCommunities(props: any) {
         visible={showFilters}
         onCancel={() => setShowFilters(false)}
         onApply={handleApplyFilters}
-        onReset={() => {
-          setFilter({});
-          setLoading(true);
-          setShowFilters(false);
-          loadData();
-        }}
+        onReset={handleResetFilters}
       />
 
-      <List
-        itemLayout="vertical"
-        dataSource={dataSource}
-        loading={loading}
-        locale={{ emptyText: 'Нет сообществ' }}
-        pagination={
-          dataSource.length >= 20
-            ? {
+      <div className="workspace-list-content">
+        <List
+          itemLayout="vertical"
+          dataSource={dataSource}
+          loading={loading}
+          locale={{ emptyText: 'Нет сообществ' }}
+          pagination={
+            dataSource.length >= 20
+              ? {
                 position: 'bottom',
                 align: 'end',
+                showSizeChanger: false,
+                showQuickJumper: false,
+                showTotal: (total, range) =>
+                  `${range[0]}-${range[1]} из ${total} сообществ`,
               }
-            : false
-        }
-        className={styles.list}
-        renderItem={(item: CommunityCardInterface) => (
-          <List.Item className={styles.listItem}>
-            <CommunityCard key={item.id} item={item} actions={[]} />
-          </List.Item>
-        )}
-      />
+              : false
+          }
+          className="workspace-list"
+          renderItem={(item: CommunityCardInterface) => (
+            <List.Item className="workspace-list-item">
+              <CommunityCard key={item.id} item={item} actions={[]} />
+            </List.Item>
+          )}
+        />
+      </div>
     </div>
   );
 }

@@ -361,77 +361,77 @@
 }
 
 // Поддержка темной темы
-@media (prefers-color-scheme: dark) {
-  .ant-drawer {
-    .ant-drawer-body,
-    .ant-drawer-content {
-      background: linear-gradient(135deg,
-              color.mix($secondary-color, black, 85%) 0%,
-              color.mix($background-color, black, 90%) 100%);
-    }
-
-    .ant-drawer-header {
-      background: linear-gradient(135deg,
-              rgba(color.mix($background-color, black, 80%), 0.95) 0%,
-              rgba(color.mix($secondary-color, black, 85%), 0.9) 100%);
-      border-color: rgba(white, 0.1);
-    }
-  }
-
-  .right-menu-header {
-    .right-menu-subtitle {
-      color: rgba(white, 0.8);
-    }
-  }
-
-  .right-menu {
-    .ant-menu-item {
-      background: linear-gradient(135deg,
-              rgba(white, 0.08) 0%,
-              rgba(white, 0.05) 100%);
-      border-color: rgba(white, 0.15);
-
-      .right-menu-icon,
-      .ant-menu-title-content {
-        color: rgba(white, 0.85);
-      }
-
-      &:hover {
-        background: linear-gradient(135deg,
-                rgba(white, 0.12) 0%,
-                rgba(white, 0.08) 100%);
-        border-color: rgba($gradient-start, 0.4);
-
-        .right-menu-icon,
-        .ant-menu-title-content {
-          color: $gradient-start;
-        }
-      }
-
-      &.ant-menu-item-selected {
-        background: linear-gradient(135deg,
-                rgba($gradient-start, 0.2) 0%,
-                rgba($gradient-end, 0.15) 100%);
-
-        .right-menu-icon,
-        .ant-menu-title-content {
-          color: $gradient-start;
-        }
-      }
-    }
-
-    .ant-menu-item:first-child {
-      background: linear-gradient(135deg,
-              rgba($success-color, 0.15) 0%,
-              rgba(white, 0.08) 100%);
-
-      .right-menu-icon,
-      .ant-menu-title-content {
-        color: $success-color;
-      }
-    }
-  }
-}
+//@media (prefers-color-scheme: dark) {
+//  .ant-drawer {
+//    .ant-drawer-body,
+//    .ant-drawer-content {
+//      background: linear-gradient(135deg,
+//              color.mix($secondary-color, black, 85%) 0%,
+//              color.mix($background-color, black, 90%) 100%);
+//    }
+//
+//    .ant-drawer-header {
+//      background: linear-gradient(135deg,
+//              rgba(color.mix($background-color, black, 80%), 0.95) 0%,
+//              rgba(color.mix($secondary-color, black, 85%), 0.9) 100%);
+//      border-color: rgba(white, 0.1);
+//    }
+//  }
+//
+//  .right-menu-header {
+//    .right-menu-subtitle {
+//      color: rgba(white, 0.8);
+//    }
+//  }
+//
+//  .right-menu {
+//    .ant-menu-item {
+//      background: linear-gradient(135deg,
+//              rgba(white, 0.08) 0%,
+//              rgba(white, 0.05) 100%);
+//      border-color: rgba(white, 0.15);
+//
+//      .right-menu-icon,
+//      .ant-menu-title-content {
+//        color: rgba(white, 0.85);
+//      }
+//
+//      &:hover {
+//        background: linear-gradient(135deg,
+//                rgba(white, 0.12) 0%,
+//                rgba(white, 0.08) 100%);
+//        border-color: rgba($gradient-start, 0.4);
+//
+//        .right-menu-icon,
+//        .ant-menu-title-content {
+//          color: $gradient-start;
+//        }
+//      }
+//
+//      &.ant-menu-item-selected {
+//        background: linear-gradient(135deg,
+//                rgba($gradient-start, 0.2) 0%,
+//                rgba($gradient-end, 0.15) 100%);
+//
+//        .right-menu-icon,
+//        .ant-menu-title-content {
+//          color: $gradient-start;
+//        }
+//      }
+//    }
+//
+//    .ant-menu-item:first-child {
+//      background: linear-gradient(135deg,
+//              rgba($success-color, 0.15) 0%,
+//              rgba(white, 0.08) 100%);
+//
+//      .right-menu-icon,
+//      .ant-menu-title-content {
+//        color: $success-color;
+//      }
+//    }
+//  }
+//}
 
 // Анимация для reduced motion
 @media (prefers-reduced-motion: reduce) {

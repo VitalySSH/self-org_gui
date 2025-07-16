@@ -252,41 +252,41 @@
 }
 
 /* Темная тема */
-@media (prefers-color-scheme: dark) {
-  .ant-modal.ai-summary-modal .ant-modal-body {
-    background: #1e293b !important;
-  }
-
-  .ai-modal-controls {
-    background: #334155 !important;
-  }
-
-  .ai-modal-control-button {
-    background: #475569 !important;
-    border-color: #64748b !important;
-    color: #e2e8f0 !important;
-  }
-
-  .ai-modal-control-button:hover {
-    background: #374151 !important;
-    border-color: #1890ff !important;
-    color: #1890ff !important;
-  }
-
-  .ai-modal-content {
-    background: #334155 !important;
-  }
-
-  .ai-modal-textarea {
-    background: #334155 !important;
-    color: #e2e8f0 !important;
-  }
-
-  .ai-modal-loading {
-    background: #334155 !important;
-  }
-
-  .ai-modal-loading-text {
-    color: #94a3b8 !important;
-  }
-}
+//@media (prefers-color-scheme: dark) {
+//  .ant-modal.ai-summary-modal .ant-modal-body {
+//    background: #1e293b !important;
+//  }
+//
+//  .ai-modal-controls {
+//    background: #334155 !important;
+//  }
+//
+//  .ai-modal-control-button {
+//    background: #475569 !important;
+//    border-color: #64748b !important;
+//    color: #e2e8f0 !important;
+//  }
+//
+//  .ai-modal-control-button:hover {
+//    background: #374151 !important;
+//    border-color: #1890ff !important;
+//    color: #1890ff !important;
+//  }
+//
+//  .ai-modal-content {
+//    background: #334155 !important;
+//  }
+//
+//  .ai-modal-textarea {
+//    background: #334155 !important;
+//    color: #e2e8f0 !important;
+//  }
+//
+//  .ai-modal-loading {
+//    background: #334155 !important;
+//  }
+//
+//  .ai-modal-loading-text {
+//    color: #94a3b8 !important;
+//  }
+//}

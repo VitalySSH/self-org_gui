@@ -331,23 +331,23 @@
 }
 
 /* Темная тема */
-@media (prefers-color-scheme: dark) {
-  .ai-button-secondary {
-    background: #334155;
-    color: #94a3b8;
-    border-color: #475569;
-  }
-
-  .ai-button-secondary:hover {
-    background: #475569;
-    color: white;
-  }
-
-  .ai-toolbar {
-    background: #334155;
-    border-color: #475569;
-  }
-}
+//@media (prefers-color-scheme: dark) {
+//  .ai-button-secondary {
+//    background: #334155;
+//    color: #94a3b8;
+//    border-color: #475569;
+//  }
+//
+//  .ai-button-secondary:hover {
+//    background: #475569;
+//    color: white;
+//  }
+//
+//  .ai-toolbar {
+//    background: #334155;
+//    border-color: #475569;
+//  }
+//}
 
 /* Специфичные кнопки для различных AI функций */
 .ai-button-chat {
