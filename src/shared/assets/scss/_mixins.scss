@@ -47,7 +47,7 @@
 
   // Состояние наведения
   &:hover {
-    background-color: color.mix($bg-color, white, 8%);
+    background-color: color.mix($bg-color, white, 25%);
     border-color: color.mix($bg-color, black, 30%);
     box-shadow:
             0 4px 8px rgba(0, 0, 0, 0.16),

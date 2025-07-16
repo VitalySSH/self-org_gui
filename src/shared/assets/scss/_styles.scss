@@ -1,10 +1,11 @@
 @use 'sass:color';
 @use 'src/shared/assets/scss/variables' as *;
-@use 'src/shared/assets/scss/antd/antd-custom' as *;
+//@use 'src/shared/assets/scss/antd/antd-custom' as *;
 @use 'src/shared/assets/scss/mixins' as *;
 @use 'src/shared/assets/scss/ui/header' as *;
 @use 'src/shared/assets/scss/ui/toolbar' as *;
 @use 'src/shared/assets/scss/ui/content' as *;
+@use 'src/shared/assets/scss/ui/community_workspace' as *;
 @use 'src/shared/assets/scss/components/sider' as *;
 @use 'src/shared/assets/scss/components/select' as *;
 @use 'src/shared/assets/scss/ui/ai/button' as *;

@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use 'src/shared/assets/scss/mixins' as *;
 @use 'src/shared/assets/scss/variables' as *;
 
@@ -5,19 +6,389 @@
   height: $footer-height;
   position: fixed;
   bottom: 0;
-  width: 100%;
+  left: 300px; // Отступ для развернутого сайдбара
+  right: 0;
   z-index: 99;
-  background-color: $sider-background-color;
-  border-top: 1px solid $border-color;
-  border-left: 1px solid $border-color;
+  background: linear-gradient(135deg,
+          rgba($background-color, 0.98) 0%,
+          rgba($sider-background-color, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba($border-color, 0.6);
+  border-left: 1px solid rgba($border-color, 0.4);
+  //border-top-left-radius: calc($border-radius * 3);
+  box-shadow:
+          0 -8px 32px rgba($card-shadow, 0.12),
+          0 -4px 16px rgba($card-shadow, 0.08),
+          inset 0 1px 0 rgba(white, 0.5);
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 4px 16px 4px 16px;
-  margin-left: 24px;
+  padding: 12px 24px;
+  overflow: hidden;
+  animation: toolbarSlideUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: left $transition-speed ease;
+
+  // Декоративные элементы
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba($gradient-start, 0.4) 20%,
+            rgba($gradient-end, 0.5) 80%,
+            transparent 100%);
+    border-top-left-radius: calc($border-radius * 3);
+  }
+
+  // Тонкий блик сверху
+  &::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 1px;
+    right: 1px;
+    height: 40%;
+    background: linear-gradient(180deg,
+            rgba(white, 0.08) 0%,
+            transparent 100%);
+    border-top-left-radius: calc($border-radius * 3);
+    pointer-events: none;
+  }
 
   .toolbar-button {
-    margin: 0 10px;
-    @include button-variant-primary;
+    position: relative;
+    margin: 0 8px;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: $font-family;
+    border: none;
+    border-radius: calc($border-radius * 1.5);
+    cursor: pointer;
+    transition: all $transition-speed cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    overflow: hidden;
+    min-width: 120px;
+
+    // Анимация блика
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg,
+              transparent,
+              rgba(white, 0.25),
+              transparent);
+      transition: left 0.6s ease;
+    }
+
+    &:hover::before {
+      left: 100%;
+    }
+
+    // Основной стиль (Primary) - используем общие стили
+    &.toolbar-button-primary,
+    &:not([class*="toolbar-button-"]) {
+      @include button-style($heading-color, $background-color);
+      min-width: 120px;
+      padding: 12px 24px;
+      font-size: 15px;
+      border-radius: calc($border-radius * 1.5);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow:
+                0 8px 24px rgba($primary-color, 0.4),
+                inset 0 1px 0 rgba(white, 0.3);
+      }
+
+      &:active {
+        transform: translateY(-1px);
+      }
+    }
+
+    // Вторичный стиль
+    &.toolbar-button-secondary {
+      background: linear-gradient(135deg,
+              rgba($background-color, 0.9) 0%,
+              rgba($secondary-color, 0.8) 100%);
+      color: $text-color;
+      border: 1px solid rgba($border-color, 0.8);
+      box-shadow:
+              0 2px 8px rgba($card-shadow, 0.1),
+              inset 0 1px 0 rgba(white, 0.6);
+
+      &:hover {
+        background: linear-gradient(135deg,
+                rgba($info-color, 0.1) 0%,
+                rgba($background-color, 0.95) 100%);
+        border-color: rgba($info-color, 0.4);
+        color: $info-color;
+        transform: translateY(-2px);
+        box-shadow:
+                0 6px 20px rgba($info-color, 0.15),
+                inset 0 1px 0 rgba(white, 0.4);
+      }
+
+      &:active {
+        transform: translateY(-1px);
+        box-shadow:
+                0 3px 10px rgba($card-shadow, 0.15),
+                inset 0 1px 0 rgba(white, 0.3);
+      }
+
+      &:disabled {
+        background: rgba($background-color, 0.5);
+        color: color.mix($text-color, white, 50%);
+        border-color: rgba($border-color, 0.4);
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+
+        &::before {
+          display: none;
+        }
+      }
+    }
+
+    // Стиль успеха
+    &.toolbar-button-success {
+      @include button-style($success-color, $background-color);
+      min-width: 120px;
+      padding: 12px 24px;
+      font-size: 15px;
+      border-radius: calc($border-radius * 1.5);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow:
+                0 8px 24px rgba($success-color, 0.4),
+                inset 0 1px 0 rgba(white, 0.3);
+      }
+
+      &:active {
+        transform: translateY(-1px);
+      }
+    }
+
+    // Стиль опасности
+    &.toolbar-button-danger {
+      @include button-style($error-color, $background-color);
+      min-width: 120px;
+      padding: 12px 24px;
+      font-size: 15px;
+      border-radius: calc($border-radius * 1.5);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow:
+                0 8px 24px rgba($error-color, 0.4),
+                inset 0 1px 0 rgba(white, 0.3);
+      }
+
+      &:active {
+        transform: translateY(-1px);
+      }
+    }
+
+    // Focus styles
+    &:focus-visible {
+      outline: 2px solid $primary-color;
+      outline-offset: 2px;
+    }
+  }
+
+  // Группа кнопок
+  .toolbar-button-group {
+    display: flex;
+    gap: 8px;
+    margin-left: auto; // Прижимаем к правому краю
+
+    .toolbar-button {
+      margin: 0;
+    }
+  }
+
+  // Разделитель
+  .toolbar-divider {
+    width: 1px;
+    height: 32px;
+    background: linear-gradient(180deg,
+            transparent 0%,
+            rgba($border-color, 0.6) 20%,
+            rgba($border-color, 0.8) 50%,
+            rgba($border-color, 0.6) 80%,
+            transparent 100%);
+    margin: 0 16px;
+  }
+
+  // Информационный текст
+  .toolbar-info {
+    font-size: 14px;
+    color: color.mix($text-color, white, 20%);
+    font-family: $font-family;
+    margin-right: 16px;
+    opacity: 0.8;
+  }
+}
+
+// Анимация появления
+@keyframes toolbarSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Стили для collapsed сайдбара
+.ant-layout-sider-collapsed + .ant-layout .toolbar,
+.sider-bar.ant-layout-sider-collapsed + .ant-layout .toolbar {
+  left: 80px; // Позиция для схлопнутого сайдбара
+}
+
+// Адаптивность
+@media (max-width: $breakpoint-lg) {
+  .toolbar {
+    left: 80px; // Для collapsed сайдбара на планшетах
+    padding: 10px 16px;
+
+    .toolbar-button {
+      padding: 10px 20px;
+      font-size: 14px;
+      min-width: 100px;
+    }
+  }
+}
+
+@media (max-width: $breakpoint-md) {
+  .toolbar {
+    left: 0; // На мобильных сайдбар скрывается
+    padding: 8px 12px;
+    border-top-left-radius: calc($border-radius * 2);
+
+    .toolbar-button {
+      padding: 8px 16px;
+      font-size: 13px;
+      min-width: 80px;
+      margin: 0 4px;
+    }
+
+    .toolbar-divider {
+      margin: 0 8px;
+      height: 28px;
+    }
+
+    .toolbar-info {
+      font-size: 13px;
+      margin-right: 8px;
+    }
+  }
+}
+
+@media (max-width: $breakpoint-sm) {
+  .toolbar {
+    padding: 6px 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: auto;
+    min-height: $footer-height;
+
+    .toolbar-button {
+      padding: 6px 12px;
+      font-size: 12px;
+      min-width: 70px;
+      margin: 2px;
+    }
+
+    .toolbar-button-group {
+      margin-left: 0;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .toolbar-divider {
+      display: none;
+    }
+
+    .toolbar-info {
+      width: 100%;
+      text-align: center;
+      margin: 4px 0;
+    }
+  }
+}
+
+// Поддержка темной темы
+@media (prefers-color-scheme: dark) {
+  .toolbar {
+    background: linear-gradient(135deg,
+            rgba(color.mix($background-color, black, 80%), 0.98) 0%,
+            rgba(color.mix($sider-background-color, black, 85%), 0.95) 100%);
+    border-color: rgba(white, 0.1);
+
+    &::after {
+      background: linear-gradient(180deg,
+              rgba(white, 0.05) 0%,
+              transparent 100%);
+    }
+
+    .toolbar-button {
+      &.toolbar-button-secondary {
+        background: linear-gradient(135deg,
+                rgba(white, 0.08) 0%,
+                rgba(white, 0.05) 100%);
+        color: rgba(white, 0.9);
+        border-color: rgba(white, 0.2);
+
+        &:hover {
+          color: $info-color;
+          background: linear-gradient(135deg,
+                  rgba($info-color, 0.15) 0%,
+                  rgba(white, 0.1) 100%);
+        }
+      }
+    }
+
+    .toolbar-divider {
+      background: linear-gradient(180deg,
+              transparent 0%,
+              rgba(white, 0.2) 20%,
+              rgba(white, 0.3) 50%,
+              rgba(white, 0.2) 80%,
+              transparent 100%);
+    }
+
+    .toolbar-info {
+      color: rgba(white, 0.7);
+    }
+  }
+}
+
+// Анимация для reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .toolbar {
+    animation: none;
+
+    .toolbar-button {
+      transition: none;
+
+      &:hover {
+        transform: none;
+      }
+
+      &::before {
+        display: none;
+      }
+    }
   }
 }

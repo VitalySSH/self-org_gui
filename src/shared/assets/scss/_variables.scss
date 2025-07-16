@@ -30,7 +30,8 @@ $status-warning-text: #9a3412;
 
 // Размеры и радиусы
 $header-height: 64px;
-$footer-height: 64px;
+$footer-height: 56px;
+$content-height: calc(100vh - $header-height);
 $border-radius: 8px;
 $transition-speed: 0.3s;
 
