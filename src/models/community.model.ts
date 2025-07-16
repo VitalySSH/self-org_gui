@@ -9,7 +9,7 @@ import { UserCommunitySettingsModel } from './user-community-settings.model.ts';
 })
 export class CommunityModel extends ApiModel {
   @oneToMany('community_settings')
-  main_settings?: CommunitySettingsModel;
+  main_settings!: CommunitySettingsModel;
 
   @manyToMany('user_community_settings')
   user_settings?: UserCommunitySettingsModel[];

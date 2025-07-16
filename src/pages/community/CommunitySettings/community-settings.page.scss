@@ -48,7 +48,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 400px;
+    min-height: 60vh;
+    width: 100%;
+    position: relative;
 
     .ant-spin {
       .ant-spin-dot {

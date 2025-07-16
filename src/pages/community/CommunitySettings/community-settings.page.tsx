@@ -45,34 +45,27 @@ export function CommunitySettings(props: any) {
         'main_settings.categories',
         'main_settings.responsibilities',
       ]);
+      const s = community.main_settings || {};
+      setIsWorkGroup(Boolean(s.is_workgroup));
+      const initialValues = {
+        name: s.name?.name || '',
+        description: s.description?.value || '',
+        quorum: s.quorum ?? 0,
+        vote: s.vote ?? 0,
+        significant_minority: s.significant_minority ?? 0,
+        decision_delay: s.decision_delay ?? 0,
+        dispute_time_limit: s.dispute_time_limit ?? 0,
+        is_workgroup: Boolean(s.is_workgroup),
+        workgroup: s.workgroup ?? 0,
+        is_secret_ballot: Boolean(s.is_secret_ballot),
+        is_can_offer: Boolean(s.is_can_offer),
+        is_minority_not_participate: Boolean(s.is_minority_not_participate),
+        categories: (s.categories || []).map(c => c.name),
+        responsibilities: (s.responsibilities || []).map(r => r.name),
+        creator: community.creator?.fullname || 'Не указан',
+      };
 
-      const settingsInst = community.main_settings;
-      const categories = (settingsInst?.categories || []).map(
-        (category) => category.name
-      );
-      const responsibilities = (settingsInst?.responsibilities || []).map(
-        (responsibility) => responsibility.name
-      );
-
-      setIsWorkGroup(Boolean(settingsInst?.is_workgroup));
-
-      form.setFieldsValue({
-        name: settingsInst?.name?.name || '',
-        description: settingsInst?.description?.value || '',
-        quorum: settingsInst?.quorum || 0,
-        vote: settingsInst?.vote || 0,
-        significant_minority: settingsInst?.significant_minority || 0,
-        decision_delay: settingsInst?.decision_delay || 0,
-        dispute_time_limit: settingsInst?.dispute_time_limit || 0,
-        is_workgroup: settingsInst?.is_workgroup || false,
-        workgroup: settingsInst?.workgroup || 0,
-        is_secret_ballot: settingsInst?.is_secret_ballot || false,
-        is_can_offer: settingsInst?.is_can_offer || false,
-        is_minority_not_participate: settingsInst?.is_minority_not_participate || false,
-        categories: categories,
-        responsibilities: responsibilities,
-        creator: community?.creator?.fullname || 'Не указан',
-      });
+      form.setFieldsValue(initialValues);
     } catch (error) {
       console.error('Error loading community settings:', error);
       navigate('/no-much-page');
