@@ -1,0 +1,563 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+// Переменные для CommunitySettings
+:root {
+  --community-settings-max-width: 1200px;
+  --community-settings-card-border-radius: 12px;
+  --community-settings-section-gap: 24px;
+  --community-settings-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --community-settings-card-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --community-settings-info-card-bg: rgba(24, 144, 255, 0.05);
+  --community-settings-readonly-bg: #fafafa;
+  --community-settings-readonly-border: #e8e8e8;
+  --community-settings-tag-bg: rgba(204, 0, 0, 0.08);
+  --community-settings-tag-border: rgba(204, 0, 0, 0.2);
+  --community-settings-transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+// Основной контейнер
+.community-settings-container {
+  max-width: var(--community-settings-max-width);
+  margin: 0 auto;
+  padding: 20px;
+
+  .community-info-card {
+    margin-bottom: 24px;
+    background: var(--community-settings-info-card-bg);
+    border: 1px solid rgba(24, 144, 255, 0.2);
+    border-radius: var(--community-settings-card-border-radius);
+
+    .ant-card-body {
+      padding: 16px 20px;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .info-icon {
+        color: $info-color;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+
+    .ant-spin {
+      .ant-spin-dot {
+        .ant-spin-dot-item {
+          background-color: $primary-color;
+        }
+      }
+    }
+  }
+}
+
+// Форма настроек
+.community-settings-form {
+  .ant-form-item {
+    margin-bottom: 20px;
+
+    .ant-form-item-label {
+      padding-bottom: 8px;
+
+      > label {
+        font-weight: 500;
+        color: $heading-color;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+// Секции настроек
+.settings-section {
+  border-radius: var(--community-settings-card-border-radius);
+  box-shadow: var(--community-settings-card-shadow);
+  transition: var(--community-settings-transition);
+  border: 1px solid $border-color;
+
+  &:hover {
+    box-shadow: var(--community-settings-card-hover-shadow);
+  }
+
+  .ant-card-head {
+    background: linear-gradient(135deg, rgba(204, 0, 0, 0.03) 0%, rgba(204, 0, 0, 0.01) 100%);
+    border-bottom: 1px solid rgba(204, 0, 0, 0.1);
+    border-radius: var(--community-settings-card-border-radius) var(--community-settings-card-border-radius) 0 0;
+
+    .ant-card-head-title {
+      color: $heading-color;
+      font-weight: 600;
+      font-size: 16px;
+
+      .anticon {
+        color: $primary-color;
+        margin-right: 8px;
+      }
+    }
+  }
+
+  .ant-card-body {
+    padding: 24px;
+  }
+}
+
+// Стили для полей только для чтения
+.readonly-input {
+  background-color: var(--community-settings-readonly-bg) !important;
+  border: 1px solid var(--community-settings-readonly-border) !important;
+  color: $text-color !important;
+  cursor: default !important;
+
+  &:hover {
+    border-color: var(--community-settings-readonly-border) !important;
+    box-shadow: none !important;
+  }
+
+  &:focus {
+    border-color: var(--community-settings-readonly-border) !important;
+    box-shadow: none !important;
+  }
+}
+
+.readonly-textarea {
+  background-color: var(--community-settings-readonly-bg) !important;
+  border: 1px solid var(--community-settings-readonly-border) !important;
+  color: $text-color !important;
+  cursor: default !important;
+  resize: none !important;
+
+  &:hover {
+    border-color: var(--community-settings-readonly-border) !important;
+    box-shadow: none !important;
+  }
+
+  &:focus {
+    border-color: var(--community-settings-readonly-border) !important;
+    box-shadow: none !important;
+  }
+}
+
+.readonly-select {
+  .ant-select-selector {
+    background-color: var(--community-settings-readonly-bg) !important;
+    border: 1px solid var(--community-settings-readonly-border) !important;
+    cursor: default !important;
+
+    &:hover {
+      border-color: var(--community-settings-readonly-border) !important;
+      box-shadow: none !important;
+    }
+  }
+
+  .ant-select-arrow {
+    display: none !important;
+  }
+}
+
+// Стили для чисел
+.number-display {
+  position: relative;
+
+  .readonly-number {
+    background-color: var(--community-settings-readonly-bg) !important;
+    border: 1px solid var(--community-settings-readonly-border) !important;
+    color: $text-color !important;
+    cursor: default !important;
+    width: 100% !important;
+    max-width: 120px;
+    font-weight: 500;
+    text-align: center;
+
+    &.ant-input-number {
+      .ant-input-number-input {
+        background-color: transparent !important;
+        color: $text-color !important;
+        cursor: default !important;
+        text-align: center;
+      }
+
+      .ant-input-number-handler-wrap {
+        display: none !important;
+      }
+    }
+
+    &:hover {
+      border-color: var(--community-settings-readonly-border) !important;
+      box-shadow: none !important;
+    }
+
+    &:focus {
+      border-color: var(--community-settings-readonly-border) !important;
+      box-shadow: none !important;
+    }
+  }
+}
+
+// Стили для переключателей
+.switch-display {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .readonly-switch {
+    pointer-events: none;
+
+    &.ant-switch {
+      &.ant-switch-checked {
+        background-color: $primary-color !important;
+      }
+
+      &:not(.ant-switch-checked) {
+        background-color: rgba(0, 0, 0, 0.25) !important;
+      }
+    }
+  }
+
+  .switch-label {
+    font-size: 13px;
+    color: $text-color;
+    opacity: 0.8;
+    font-weight: 500;
+  }
+}
+
+// Стили для тегов
+.tags-display {
+  .tags-container {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .category-tag,
+    .responsibility-tag {
+      background-color: var(--community-settings-tag-bg);
+      border: 1px solid var(--community-settings-tag-border);
+      color: $primary-color;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      transition: var(--community-settings-transition);
+
+      &:hover {
+        background-color: rgba(204, 0, 0, 0.12);
+        border-color: rgba(204, 0, 0, 0.3);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(204, 0, 0, 0.1);
+      }
+    }
+
+    .responsibility-tag {
+      background-color: rgba(82, 196, 26, 0.08);
+      border-color: rgba(82, 196, 26, 0.2);
+      color: $success-color;
+
+      &:hover {
+        background-color: rgba(82, 196, 26, 0.12);
+        border-color: rgba(82, 196, 26, 0.3);
+        box-shadow: 0 2px 4px rgba(82, 196, 26, 0.1);
+      }
+    }
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 1200px) {
+  .community-settings-container {
+    max-width: 100%;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .community-settings-container {
+    padding: 12px;
+
+    .community-info-card {
+      .ant-card-body {
+        padding: 12px 16px;
+      }
+    }
+  }
+
+  .settings-section {
+    .ant-card-body {
+      padding: 16px;
+    }
+
+    .ant-card-head {
+      .ant-card-head-title {
+        font-size: 15px;
+      }
+    }
+  }
+
+  .number-display {
+    .readonly-number {
+      max-width: 100px;
+      font-size: 14px;
+    }
+  }
+
+  .switch-display {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+
+    .switch-label {
+      font-size: 12px;
+    }
+  }
+
+  .tags-display {
+    .tags-container {
+      margin-top: 8px;
+      gap: 6px;
+
+      .category-tag,
+      .responsibility-tag {
+        font-size: 11px;
+        padding: 3px 8px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .community-settings-container {
+    padding: 8px;
+  }
+
+  .settings-section {
+    .ant-card-body {
+      padding: 12px;
+    }
+  }
+
+  .community-settings-form {
+    .ant-form-item {
+      margin-bottom: 16px;
+
+      .ant-form-item-label {
+        padding-bottom: 6px;
+
+        > label {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+
+  .readonly-input,
+  .readonly-textarea {
+    background-color: var(--community-settings-readonly-bg) !important;
+    border-color: var(--community-settings-readonly-border) !important;
+    color: #ffffff !important;
+  }
+
+  .readonly-select {
+    .ant-select-selector {
+      background-color: var(--community-settings-readonly-bg) !important;
+      border-color: var(--community-settings-readonly-border) !important;
+      color: #ffffff !important;
+    }
+  }
+
+  .number-display {
+    .readonly-number {
+      background-color: var(--community-settings-readonly-bg) !important;
+      border-color: var(--community-settings-readonly-border) !important;
+      color: #ffffff !important;
+
+      &.ant-input-number {
+        .ant-input-number-input {
+          color: #ffffff !important;
+        }
+      }
+    }
+  }
+
+  .switch-display {
+    .switch-label {
+      color: #cccccc;
+    }
+  }
+
+  .tags-display {
+    .tags-container {
+      .responsibility-tag {
+        background-color: rgba(82, 196, 26, 0.15);
+        border-color: rgba(82, 196, 26, 0.3);
+      }
+    }
+  }
+}
+
+// Стили для печати
+@media print {
+  .community-settings-container {
+    max-width: none;
+    padding: 0;
+
+    .community-info-card {
+      display: none;
+    }
+  }
+
+  .settings-section {
+    box-shadow: none;
+    border: 1px solid #000;
+    margin-bottom: 20px;
+    break-inside: avoid;
+
+    .ant-card-head {
+      background: none;
+      border-bottom: 1px solid #000;
+
+      .ant-card-head-title {
+        color: #000;
+        font-size: 14px;
+      }
+    }
+
+    .ant-card-body {
+      background: none;
+    }
+  }
+
+  .readonly-input,
+  .readonly-textarea,
+  .readonly-select .ant-select-selector {
+    background: none !important;
+    border: 1px solid #000 !important;
+    color: #000 !important;
+  }
+
+  .number-display {
+    .readonly-number {
+      background: none !important;
+      border: 1px solid #000 !important;
+      color: #000 !important;
+
+      &.ant-input-number {
+        .ant-input-number-input {
+          color: #000 !important;
+        }
+      }
+    }
+  }
+
+  .switch-display {
+    .readonly-switch {
+      &.ant-switch {
+        &.ant-switch-checked {
+          background-color: #000 !important;
+        }
+
+        &:not(.ant-switch-checked) {
+          background-color: #ccc !important;
+        }
+      }
+    }
+
+    .switch-label {
+      color: #000;
+    }
+  }
+
+  .tags-display {
+    .tags-container {
+      .category-tag,
+      .responsibility-tag {
+        background: none;
+        border: 1px solid #000;
+        color: #000;
+
+        &:hover {
+          transform: none;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
+
+
+.number-display {
+  .readonly-number {
+    max-width: 80px;
+    font-size: 13px;
+  }
+}
+
+
+// Высококонтрастный режим
+@media (prefers-contrast: more) {
+  .settings-section {
+    border: 2px solid $text-color;
+
+    .ant-card-head {
+      border-bottom: 2px solid $text-color;
+    }
+  }
+
+  .readonly-input,
+  .readonly-textarea,
+  .readonly-select .ant-select-selector {
+    border: 2px solid $text-color !important;
+  }
+
+  .tags-display {
+    .tags-container {
+      .category-tag,
+      .responsibility-tag {
+        border: 2px solid;
+      }
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  :root {
+    --community-settings-readonly-bg: #262626;
+    --community-settings-readonly-border: #434343;
+    --community-settings-info-card-bg: rgba(24, 144, 255, 0.1);
+    --community-settings-tag-bg: rgba(204, 0, 0, 0.15);
+    --community-settings-tag-border: rgba(204, 0, 0, 0.3);
+  }
+
+  .settings-section {
+    background-color: #1f1f1f;
+    border-color: #434343;
+
+    .ant-card-head {
+      background: linear-gradient(135deg, rgba(204, 0, 0, 0.08) 0%, rgba(204, 0, 0, 0.03) 100%);
+      border-bottom-color: rgba(204, 0, 0, 0.2);
+
+      .ant-card-head-title {
+        color: #ffffff;
+      }
+    }
+
+    .ant-card-body {
+      background-color: #1f1f1f;
+    }
+  }
+
+  .readonly-input,
+  .readonly-textarea,
+  .readonly-select .ant-select-selector {
+    border: 2px solid #ffffff !important;
+  }
+}

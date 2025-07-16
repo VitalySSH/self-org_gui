@@ -1,6 +1,6 @@
 @use 'sass:color';
 @use 'src/shared/assets/scss/variables' as *;
-//@use 'src/shared/assets/scss/antd/antd-custom' as *;
+@use 'src/shared/assets/scss/antd/antd_form' as *;
 @use 'src/shared/assets/scss/mixins' as *;
 @use 'src/shared/assets/scss/ui/header' as *;
 @use 'src/shared/assets/scss/ui/toolbar' as *;

@@ -1,0 +1,359 @@
+// Общие стили для форм Antd
+@use 'src/shared/assets/scss/variables' as *;
+
+// Основные переменные для форм
+:root {
+  --form-border-radius: 8px;
+  --form-border-color: #{$border-color};
+  --form-focus-border-color: #{$primary-color};
+  --form-hover-border-color: #b0b0b0;
+  --form-background: #{$background-color};
+  --form-text-color: #{$text-color};
+  --form-placeholder-color: #999999;
+  --form-disabled-background: #f5f5f5;
+  --form-disabled-border-color: #d9d9d9;
+  --form-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --form-focus-shadow: 0 0 0 2px rgba(204, 0, 0, 0.1);
+  --form-transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+// Общие стили для всех форм
+.ant-form {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  .ant-form-item {
+    margin-bottom: 24px;
+
+    .ant-form-item-label {
+      padding-bottom: 8px;
+
+      > label {
+        color: $heading-color;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 1.5;
+
+        &.ant-form-item-required {
+          &::before {
+            color: $error-color;
+            font-size: 14px;
+            margin-right: 4px;
+          }
+        }
+      }
+    }
+
+    .ant-form-item-explain-error {
+      color: $error-color;
+      font-size: 12px;
+      line-height: 1.5;
+      margin-top: 4px;
+    }
+
+    .ant-form-item-explain-success {
+      color: $success-color;
+      font-size: 12px;
+      line-height: 1.5;
+      margin-top: 4px;
+    }
+  }
+}
+
+// Стили для всех input элементов
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-input-number,
+.ant-picker,
+.ant-select-selector {
+  border-radius: var(--form-border-radius);
+  border: 1px solid var(--form-border-color);
+  background-color: var(--form-background);
+  color: var(--form-text-color);
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 8px 12px;
+  transition: var(--form-transition);
+  box-shadow: none;
+
+  &::placeholder {
+    color: var(--form-placeholder-color);
+  }
+
+  &:hover {
+    border-color: var(--form-hover-border-color);
+    box-shadow: var(--form-shadow);
+  }
+
+  &:focus,
+  &.ant-input-focused,
+  &.ant-select-focused .ant-select-selector {
+    border-color: var(--form-focus-border-color);
+    box-shadow: var(--form-focus-shadow);
+    outline: none;
+  }
+
+  &:disabled,
+  &.ant-input-disabled {
+    background-color: var(--form-disabled-background);
+    border-color: var(--form-disabled-border-color);
+    color: rgba(0, 0, 0, 0.25);
+    cursor: not-allowed;
+  }
+}
+
+// Специфичные стили для Select
+.ant-select {
+  font-size: 14px;
+
+  &:not(.ant-select-disabled):hover .ant-select-selector {
+    border-color: var(--form-hover-border-color);
+    box-shadow: var(--form-shadow);
+  }
+
+  &.ant-select-focused .ant-select-selector {
+    border-color: var(--form-focus-border-color);
+    box-shadow: var(--form-focus-shadow);
+  }
+
+  .ant-select-selector {
+    min-height: 40px;
+    padding: 4px 11px;
+
+    .ant-select-selection-search-input {
+      height: 30px;
+      line-height: 30px;
+    }
+
+    .ant-select-selection-placeholder {
+      color: var(--form-placeholder-color);
+      line-height: 30px;
+    }
+
+    .ant-select-selection-item {
+      line-height: 30px;
+      color: var(--form-text-color);
+    }
+  }
+
+  .ant-select-arrow {
+    color: #999;
+    transition: var(--form-transition);
+
+    &:hover {
+      color: var(--form-focus-border-color);
+    }
+  }
+
+  &.ant-select-open .ant-select-arrow {
+    color: var(--form-focus-border-color);
+  }
+
+  // Стили для множественного выбора
+  &.ant-select-multiple {
+    .ant-select-selector {
+      padding: 2px 4px;
+    }
+
+    .ant-select-selection-item {
+      background-color: rgba(204, 0, 0, 0.08);
+      border: 1px solid rgba(204, 0, 0, 0.2);
+      border-radius: 6px;
+      color: $primary-color;
+      font-size: 12px;
+      height: 26px;
+      line-height: 24px;
+      margin: 2px 4px 2px 0;
+      padding: 0 8px;
+
+      .ant-select-selection-item-remove {
+        color: rgba(204, 0, 0, 0.6);
+        font-size: 10px;
+        margin-left: 4px;
+
+        &:hover {
+          color: $primary-color;
+        }
+      }
+    }
+  }
+}
+
+// Стили для dropdown
+.ant-select-dropdown {
+  border-radius: var(--form-border-radius);
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--form-border-color);
+  background-color: var(--form-background);
+
+  .ant-select-item {
+    padding: 8px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--form-text-color);
+    transition: var(--form-transition);
+
+    &:hover {
+      background-color: rgba(204, 0, 0, 0.04);
+    }
+
+    &.ant-select-item-option-selected {
+      background-color: rgba(204, 0, 0, 0.08);
+      color: $primary-color;
+      font-weight: 500;
+    }
+
+    &.ant-select-item-option-active {
+      background-color: rgba(204, 0, 0, 0.06);
+    }
+  }
+
+  .ant-empty {
+    padding: 16px 0;
+
+    .ant-empty-description {
+      color: var(--form-placeholder-color);
+      font-size: 14px;
+    }
+  }
+}
+
+// Стили для TextArea
+.ant-input {
+  &[data-count] {
+    .ant-input {
+      padding-bottom: 20px;
+    }
+  }
+}
+
+// Стили для кнопок в формах
+.ant-btn {
+  border-radius: var(--form-border-radius);
+  font-weight: 500;
+  font-size: 14px;
+  height: 40px;
+  padding: 4px 16px;
+  transition: var(--form-transition);
+
+  &.ant-btn-primary {
+    background-color: $primary-color;
+    border-color: $primary-color;
+    color: white;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+
+    &:hover {
+      background-color: #e60000;
+      border-color: #e60000;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(204, 0, 0, 0.2);
+    }
+
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+    }
+
+    &:disabled {
+      background-color: rgba(204, 0, 0, 0.5);
+      border-color: rgba(204, 0, 0, 0.5);
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  &.ant-btn-default {
+    background-color: var(--form-background);
+    border-color: var(--form-border-color);
+    color: var(--form-text-color);
+
+    &:hover {
+      border-color: var(--form-focus-border-color);
+      color: var(--form-focus-border-color);
+      transform: translateY(-1px);
+      box-shadow: var(--form-shadow);
+    }
+  }
+
+  &.ant-btn-link {
+    color: $primary-color;
+
+    &:hover {
+      color: #e60000;
+    }
+  }
+}
+
+// Стили для спиннера
+.ant-spin {
+  .ant-spin-dot {
+    .ant-spin-dot-item {
+      background-color: $primary-color;
+    }
+  }
+}
+
+// Стили для Divider
+.ant-divider {
+  border-color: var(--form-border-color);
+  margin: 16px 0;
+
+  &.ant-divider-horizontal {
+    &.ant-divider-with-text {
+      color: var(--form-text-color);
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+}
+
+// Адаптивность
+@media (max-width: 768px) {
+  .ant-form {
+    .ant-form-item {
+      margin-bottom: 20px;
+    }
+
+    .ant-form-item-label {
+      padding-bottom: 6px;
+    }
+  }
+
+  .ant-input,
+  .ant-input-affix-wrapper,
+  .ant-input-number,
+  .ant-picker,
+  .ant-select-selector {
+    font-size: 16px; // Предотвращает зум на iOS
+    padding: 10px 12px;
+  }
+
+  .ant-select .ant-select-selector {
+    min-height: 44px;
+
+    .ant-select-selection-search-input,
+    .ant-select-selection-placeholder,
+    .ant-select-selection-item {
+      line-height: 32px;
+    }
+  }
+
+  .ant-btn {
+    height: 44px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ant-form {
+    .ant-form-item {
+      margin-bottom: 16px;
+    }
+  }
+
+  .ant-select-dropdown {
+    .ant-select-item {
+      padding: 12px;
+      font-size: 16px;
+    }
+  }
+}
