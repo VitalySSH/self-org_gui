@@ -30,22 +30,206 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const textAreaRef = useRef<TextAreaRef>(null);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalOptions, setTotalOptions] = useState(0);
   const [uploadedFieldValue, setUploadedFieldValue] = useState(false);
   const [value, setValue] = useState<T | T[] | null>(null);
   const [fieldValue, setFieldValue] = useState<string | string[] | null>(null);
-  const [options, setOptions] = useState<T[]>([]);
+  // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: возвращаем null как в рабочей версии
+  const [options, setOptions] = useState<T[] | null>(null);
   const [newTextValue, setNewTextValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [showMinCharsHint, setShowMinCharsHint] = useState(false);
-  const [dataLoaded, setDataLoaded] = useState(false);
 
   const MIN_SEARCH_CHARS = 3;
 
-  // Простые мемоизированные селекторы
+  // Используем логику из рабочей версии с небольшими улучшениями
+  const fetchOptions = useCallback(
+    (
+      page: number = 1,
+      append: boolean = false,
+      search: string = searchQuery
+    ) => {
+      // Точно такая же проверка как в рабочей версии
+      if (
+        (options || []).length >= totalOptions &&
+        append &&
+        (!search || !props.enableSearch)
+      )
+        return;
+
+      setIsLoading(true);
+      const filters: Filters = [];
+      if (props.enableSearch && search?.length >= MIN_SEARCH_CHARS) {
+        filters.push({
+          field: props.bindLabel,
+          op: 'ilike',
+          val: search,
+        });
+      }
+
+      props
+        .requestOptions({ skip: page, limit: 20 }, filters)
+        .then(({ data, total }) => {
+          setTotalOptions(total);
+          setOptions((prev) => {
+            if (!append || search) return data;
+            return [...(prev || []), ...data];
+          });
+          setCurrentPage(page);
+        })
+        .catch(() => setOptions([]))
+        .finally(() => setIsLoading(false));
+    },
+    [props, searchQuery, options, totalOptions, props.enableSearch]
+  );
+
+  const { run: handleSearch } = useDebounceFn(
+    (value: string) => {
+      if (!props.enableSearch) return;
+
+      setSearchQuery(value);
+      const _isShowMinCharsHint =
+        value?.length > 0 && value?.length < MIN_SEARCH_CHARS;
+      setShowMinCharsHint(_isShowMinCharsHint);
+      if (!_isShowMinCharsHint) fetchOptions(1, false, value);
+    },
+    { wait: 500 }
+  );
+
+  // Точно такая же логика инициализации как в рабочей версии
+  const getInitValue = useCallback(() => {
+    if (fieldValue === null && !uploadedFieldValue) {
+      let _initFieldValue: string | string[] | null = null;
+      if (props.value === undefined) {
+        setValue(null);
+      } else {
+        setValue(props.value);
+      }
+      if (props.multiple) {
+        if (Array.isArray(props.value)) {
+          _initFieldValue = props.value
+            .filter(item => item && typeof item === 'object' && props.bindLabel in item)
+            .map((it) => (it as any)[props.bindLabel]);
+        }
+      } else {
+        if (Array.isArray(props.value)) {
+          if (props.value.length > 0 && props.value[0] && typeof props.value[0] === 'object' && props.bindLabel in props.value[0]) {
+            _initFieldValue = (props.value[0] as any)[props.bindLabel];
+          }
+        } else if (props.value !== undefined && props.value && typeof props.value === 'object' && props.bindLabel in props.value) {
+          _initFieldValue = (props.value as any)[props.bindLabel];
+        }
+      }
+      if (_initFieldValue !== null) setUploadedFieldValue(true);
+      setFieldValue(_initFieldValue);
+    }
+  }, [
+    fieldValue,
+    props.bindLabel,
+    props.multiple,
+    props.value,
+    uploadedFieldValue,
+  ]);
+
+  useEffect(() => {
+    getInitValue();
+  }, [getInitValue]);
+
+  // Точно такая же логика onValueChange как в рабочей версии
+  const onValueChange = (_: string, option: any) => {
+    if (!uploadedFieldValue) {
+      setUploadedFieldValue(true);
+    }
+    let currentValue: T | T[] | null = null;
+    let currentFieldValue: string | string[] | null = null;
+
+    if (Array.isArray(option)) {
+      option.forEach((it) => {
+        if (it.obj) {
+          if (Array.isArray(currentValue)) {
+            currentValue.push(it.obj);
+          } else {
+            currentValue = [];
+            currentValue.push(it.obj);
+          }
+        }
+      });
+      currentFieldValue = (currentValue || []).map((it) => (it as any)[props.bindLabel]);
+    } else {
+      if (option?.obj) {
+        currentValue = option.obj;
+        currentFieldValue = (option.obj as any)[props.bindLabel];
+      }
+    }
+
+    setFieldValue(currentFieldValue);
+    props.onChange(props.formField, currentValue);
+
+    if (searchQuery?.length) {
+      setSearchQuery('');
+      fetchOptions(1, false, '');
+    }
+  };
+
+  const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setNewTextValue(event.target.value);
+  };
+
+  const onTextareaChange = () => {
+    const text = textAreaRef.current?.resizableTextArea?.textArea.value || '';
+    setNewTextValue(text);
+  };
+
+  // Точно такая же логика addOwnValue как в рабочей версии
+  const addOwnValue = (
+    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>
+  ) => {
+    e.preventDefault();
+    const currentValues: string[] = [];
+    if (Array.isArray(value)) {
+      const _currentValues = value
+        .filter(item => item && typeof item === 'object' && props.bindLabel in item)
+        .map((it: any) => it[props.bindLabel]);
+      currentValues.push(..._currentValues);
+    } else if (value !== null && value && typeof value === 'object' && props.bindLabel in value) {
+      currentValues.push((value as any)[props.bindLabel]);
+    }
+
+    if (props.fieldService && newTextValue.trim() && !currentValues.includes(newTextValue.trim())) {
+      const newObj = props.fieldService.createRecord();
+      (newObj as any)[props.bindLabel] = newTextValue.trim();
+      const currentOptions = options || [];
+
+      if (props.saveOwnValue) {
+        props.fieldService
+          .save(newObj)
+          .then((resp) => {
+            setOptions([...currentOptions, resp]);
+          })
+          .catch((error) => {
+            console.error('Ошибка создания нового значения в селекторе:', error);
+            setOptions([]);
+          });
+      } else {
+        setOptions([...currentOptions, newObj]);
+      }
+    }
+    setNewTextValue('');
+  };
+
+  // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: точно такая же логика как в рабочей версии
+  const onDropdownVisibleChange = (open: boolean) => {
+    setIsDropdownOpen(open);
+    if (open && !options) {
+      fetchOptions(1);
+    }
+  };
+
+  // Мемоизированные опции как в новом дизайне
   const selectOptions = useMemo(() => {
-    return options.map((item: T) => {
+    return (options || []).map((item: T) => {
       const labelValue = item && typeof item === 'object' && props.bindLabel in item
         ? (item as any)[props.bindLabel]
         : '';
@@ -59,204 +243,19 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     });
   }, [options, props.bindLabel]);
 
-  const hasMoreOptions = useMemo(() => {
-    return options.length < totalOptions && searchQuery.length >= MIN_SEARCH_CHARS;
-  }, [options.length, totalOptions, searchQuery.length]);
-
-  // Простая функция загрузки без сложных зависимостей
-  const loadOptions = async (page: number = 1, append: boolean = false, search: string = '') => {
-    setIsLoading(true);
-
-    try {
-      const filters: Filters = [];
-      if (props.enableSearch && search?.length >= MIN_SEARCH_CHARS) {
-        filters.push({
-          field: props.bindLabel,
-          op: 'ilike',
-          val: search,
-        });
-      }
-
-      const response = await props.requestOptions(
-        { skip: page, limit: 20 },
-        filters
-      );
-
-      const { data, total } = response;
-      setTotalOptions(total);
-      setCurrentPage(page);
-      setDataLoaded(true);
-
-      setOptions(prev => {
-        if (!append || search) {
-          return data || [];
-        }
-        return [...prev, ...(data || [])];
-      });
-
-    } catch (error) {
-      console.error('Error fetching options:', error);
-      setOptions([]);
-      setDataLoaded(true);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Дебаунсированный поиск
-  const { run: handleSearch } = useDebounceFn(
-    (value: string) => {
-      if (!props.enableSearch) return;
-
-      setSearchQuery(value);
-      const showHint = value?.length > 0 && value?.length < MIN_SEARCH_CHARS;
-      setShowMinCharsHint(showHint);
-
-      if (!showHint) {
-        loadOptions(1, false, value);
-      }
-    },
-    { wait: 500 }
-  );
-
-  // Инициализация значений
-  const initializeValue = useCallback(() => {
-    if (fieldValue !== null || uploadedFieldValue) return;
-
-    let initFieldValue: string | string[] | null = null;
-
-    if (props.value === undefined) {
-      setValue(null);
-    } else {
-      setValue(props.value);
-
-      if (props.multiple) {
-        if (Array.isArray(props.value)) {
-          initFieldValue = props.value
-            .filter(item => item && typeof item === 'object' && props.bindLabel in item)
-            .map((item) => (item as any)[props.bindLabel]);
-        }
-      } else {
-        if (Array.isArray(props.value)) {
-          if (props.value.length > 0 && props.value[0] && typeof props.value[0] === 'object' && props.bindLabel in props.value[0]) {
-            initFieldValue = (props.value[0] as any)[props.bindLabel];
-          }
-        } else if (props.value && typeof props.value === 'object' && props.bindLabel in props.value) {
-          initFieldValue = (props.value as any)[props.bindLabel];
-        }
-      }
-    }
-
-    if (initFieldValue !== null) {
-      setUploadedFieldValue(true);
-    }
-    setFieldValue(initFieldValue);
-  }, [fieldValue, props.bindLabel, props.multiple, props.value, uploadedFieldValue]);
-
-  useEffect(() => {
-    initializeValue();
-  }, [initializeValue]);
-
-  // Обработка изменения значения
-  const onValueChange = useCallback((_: string, option: any) => {
-    if (!uploadedFieldValue) {
-      setUploadedFieldValue(true);
-    }
-
-    let currentValue: T | T[] | null = null;
-    let currentFieldValue: string | string[] | null = null;
-
-    if (Array.isArray(option)) {
-      const validOptions = option.filter(it => it?.obj);
-      if (validOptions.length > 0) {
-        currentValue = validOptions.map(it => it.obj);
-        currentFieldValue = validOptions.map(it =>
-          it.obj && typeof it.obj === 'object' && props.bindLabel in it.obj
-            ? (it.obj as any)[props.bindLabel]
-            : ''
-        );
-      }
-    } else {
-      if (option?.obj) {
-        currentValue = option.obj;
-        currentFieldValue = option.obj && typeof option.obj === 'object' && props.bindLabel in option.obj
-          ? (option.obj as any)[props.bindLabel]
-          : '';
-      }
-    }
-
-    setFieldValue(currentFieldValue);
-    props.onChange(props.formField, currentValue);
-
-    // Очищаем поиск после выбора
-    if (searchQuery?.length) {
-      setSearchQuery('');
-      loadOptions(1, false, '');
-    }
-  }, [uploadedFieldValue, props, searchQuery]);
-
-  // Обработчики для добавления собственного значения
-  const onInputChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    setNewTextValue(event.target.value);
-  }, []);
-
-  const onTextareaChange = useCallback(() => {
-    const text = textAreaRef.current?.resizableTextArea?.textArea.value || '';
-    setNewTextValue(text);
-  }, []);
-
-  const addOwnValue = useCallback((e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!newTextValue.trim() || !props.fieldService) return;
-
-    const currentValues: string[] = [];
-    if (Array.isArray(value)) {
-      const _currentValues = value
-        .filter(item => item && typeof item === 'object' && props.bindLabel in item)
-        .map((item: any) => item[props.bindLabel]);
-      currentValues.push(..._currentValues);
-    } else if (value && typeof value === 'object' && props.bindLabel in value) {
-      currentValues.push((value as any)[props.bindLabel]);
-    }
-
-    if (!currentValues.includes(newTextValue.trim())) {
-      const newObj = props.fieldService.createRecord();
-      (newObj as any)[props.bindLabel] = newTextValue.trim();
-
-      if (props.saveOwnValue) {
-        props.fieldService
-          .save(newObj)
-          .then((resp) => {
-            setOptions(prev => [...prev, resp]);
-          })
-          .catch((error) => {
-            console.error('Ошибка создания нового значения в селекторе:', error);
-          });
-      } else {
-        setOptions(prev => [...prev, newObj]);
-      }
-    }
-    setNewTextValue('');
-  }, [newTextValue, props.fieldService, props.bindLabel, props.saveOwnValue, value]);
-
-  // Обработка открытия/закрытия выпадающего списка
-  const onDropdownVisibleChange = useCallback((open: boolean) => {
-    if (open && !dataLoaded) {
-      loadOptions(1, false, '');
-    }
-  }, [dataLoaded]);
-
-  // Кнопка "Загрузить ещё" - показываем только если есть ещё данные
-  const renderLoadMoreButton = useCallback(() => {
-    if (!hasMoreOptions || options.length === 0) return null;
+  // Логика кнопки "Загрузить ещё" из рабочей версии
+  const renderLoadMoreButton = () => {
+    if (
+      (options || []).length >= totalOptions ||
+      searchQuery.length < MIN_SEARCH_CHARS
+    )
+      return null;
 
     return (
       <div style={{ padding: '8px 12px', borderTop: '1px solid #f0f0f0' }}>
         <Button
           type="link"
-          onClick={() => loadOptions(currentPage + 1, true, searchQuery)}
+          onClick={() => fetchOptions(currentPage + 1, true)}
           loading={isLoading}
           style={{ width: '100%', padding: 0 }}
           size="small"
@@ -265,12 +264,11 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         </Button>
       </div>
     );
-  }, [hasMoreOptions, options.length, currentPage, isLoading, searchQuery]);
+  };
 
-  // Рендер контента выпадающего списка
-  const renderDropdownContent = useCallback((menu: React.ReactNode) => {
-    // Спиннер при первой загрузке
-    if (isLoading && !dataLoaded) {
+  // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: точно такая же логика renderDropdownContent как в рабочей версии
+  const renderDropdownContent = (menu: React.ReactNode) => {
+    if (isDropdownOpen && isLoading) {
       return (
         <div className="custom-select-loading">
           <Spin size="large" />
@@ -278,32 +276,23 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
       );
     }
 
-    const showAddOwnSection = props.addOwnValue;
-    const showEmptyMessage = options.length === 0 && dataLoaded && !isLoading && !showAddOwnSection;
-
     return (
       <div className="custom-select-dropdown-content">
-        <div className="custom-select-menu">
+        <div className="custom-select-menu" style={{ maxHeight: 300, overflowY: 'auto' }}>
           {props.enableSearch && showMinCharsHint ? (
             <Empty
               image={Empty.PRESENTED_IMAGE_SIMPLE}
               description={`Введите минимум ${MIN_SEARCH_CHARS} символа для поиска`}
               style={{ padding: '20px 0' }}
             />
-          ) : showEmptyMessage ? (
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description={searchQuery ? 'Ничего не найдено' : 'Значения не найдены'}
-              style={{ padding: '20px 0' }}
-            />
           ) : (
-            menu
+            <>
+              {menu}
+              {renderLoadMoreButton()}
+            </>
           )}
         </div>
-
-        {renderLoadMoreButton()}
-
-        {showAddOwnSection && (
+        {props.addOwnValue && (
           <>
             <Divider style={{ margin: '8px 0' }} />
             <div className="add-own-value-container">
@@ -344,26 +333,10 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         )}
       </div>
     );
-  }, [
-    isLoading,
-    dataLoaded,
-    options.length,
-    searchQuery,
-    props.enableSearch,
-    props.addOwnValue,
-    props.ownFieldTextarea,
-    props.ownValuePlaceholder,
-    props.ownValueMaxLength,
-    showMinCharsHint,
-    renderLoadMoreButton,
-    onTextareaChange,
-    onInputChange,
-    newTextValue,
-    addOwnValue,
-  ]);
+  };
 
   const emptyRender = useCallback(() => {
-    if (isLoading && !dataLoaded) return null;
+    if (isLoading && !options) return null;
     return (
       <Empty
         image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -371,7 +344,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         style={{ padding: '20px 0' }}
       />
     );
-  }, [isLoading, dataLoaded, searchQuery]);
+  }, [isLoading, options, searchQuery]);
 
   return (
     <ConfigProvider renderEmpty={emptyRender}>
@@ -387,11 +360,11 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         value={fieldValue}
         mode={props.multiple ? 'multiple' : undefined}
         options={selectOptions}
-        loading={isLoading && !dataLoaded}
+        loading={isLoading && !options}
         placeholder={props.label}
         allowClear={true}
         style={{ width: '100%' }}
-        popupClassName={`custom-select-dropdown ${props.addOwnValue ? 'has-add-section' : ''}`}
+        popupClassName="custom-select-dropdown"
         notFoundContent={isLoading ? <Spin size="small" /> : null}
       />
     </ConfigProvider>
