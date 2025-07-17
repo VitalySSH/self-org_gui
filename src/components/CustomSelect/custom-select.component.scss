@@ -1,6 +1,5 @@
 @use 'src/shared/assets/scss/variables' as *;
 
-// Переменные для CustomSelect
 :root {
   --custom-select-border-radius: 8px;
   --custom-select-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
@@ -11,32 +10,25 @@
   --custom-select-transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
-// Основной dropdown для CustomSelect
 .ant-select-dropdown.custom-select-dropdown {
   border-radius: var(--custom-select-border-radius);
   box-shadow: var(--custom-select-shadow);
   border: 1px solid var(--custom-select-border-color);
   background-color: var(--custom-select-background);
   padding: 4px 0;
-  // Убираем overflow: hidden который может скрывать контент
-  overflow: visible;
-  // Убеждаемся что dropdown виден
-  z-index: 1050;
+  overflow: hidden;
 
   .custom-select-dropdown-content {
-    display: block; // Меняем с flex на block для лучшей совместимости
-    // Увеличиваем максимальную высоту
-    max-height: 60vh;
-    min-height: 80px; // Минимальная высота чтобы dropdown не схлопывался
+    display: flex;
+    flex-direction: column;
+    max-height: 400px;
   }
 
   .custom-select-menu {
-    // Убираем flex: 1 и min-height: 0 которые могут вызывать проблемы
-    max-height: 300px; // Фиксированная максимальная высота для прокрутки
+    flex: 1;
     overflow-y: auto;
-    overflow-x: hidden;
+    min-height: 0;
 
-    // Кастомный скроллбар
     &::-webkit-scrollbar {
       width: 6px;
     }
@@ -64,7 +56,6 @@
     min-height: 100px;
   }
 
-  // Стили для элементов списка
   .ant-select-item {
     padding: 12px 16px;
     margin: 2px 6px;
@@ -112,17 +103,11 @@
     }
   }
 
-  // Контейнер для добавления собственного значения
   .add-own-value-container {
     padding: 12px 16px;
     background-color: #fafafa;
     border-top: 1px solid $border-color;
     margin-top: 4px;
-    // Убеждаемся что секция добавления всегда видна
-    position: relative;
-    z-index: 1;
-    // Убираем flex-shrink чтобы секция не сжималась
-    flex-shrink: 0;
 
     .ant-input,
     .ant-input-textarea {
@@ -187,7 +172,6 @@
     }
   }
 
-  // Стили для кнопки "Загрузить ещё"
   .ant-btn-link {
     color: $primary-color;
     padding: 8px 0;
@@ -224,7 +208,6 @@
     }
   }
 
-  // Стили для Divider
   .ant-divider {
     margin: 8px 0;
     border-color: $border-color;
@@ -238,35 +221,6 @@
       }
     }
   }
-
-  // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Убеждаемся что dropdown остается открытым
-  &.ant-slide-up-enter,
-  &.ant-slide-up-enter-active,
-  &.ant-slide-up-leave,
-  &.ant-slide-up-leave-active {
-    pointer-events: auto !important;
-  }
-
-  // Убеждаемся что контент виден при пустых options
-  &:empty::after {
-    content: '';
-    display: block;
-    height: 1px;
-  }
-}
-
-// ДОПОЛНИТЕЛЬНОЕ ИСПРАВЛЕНИЕ: Принудительно показываем dropdown с добавлением
-.ant-select-dropdown.custom-select-dropdown:has(.add-own-value-container) {
-  display: block !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-}
-
-// Альтернативное решение для браузеров без поддержки :has()
-.ant-select-dropdown.custom-select-dropdown[data-has-add-section="true"] {
-  display: block !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
 }
 
 // Адаптивные стили
@@ -343,7 +297,6 @@
   }
 }
 
-// Стили для темной темы (если используется)
 .dark-theme {
   :root {
     --custom-select-background: #1f1f1f;

@@ -36,7 +36,6 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const [uploadedFieldValue, setUploadedFieldValue] = useState(false);
   const [value, setValue] = useState<T | T[] | null>(null);
   const [fieldValue, setFieldValue] = useState<string | string[] | null>(null);
-  // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: возвращаем null как в рабочей версии
   const [options, setOptions] = useState<T[] | null>(null);
   const [newTextValue, setNewTextValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -44,7 +43,6 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
 
   const MIN_SEARCH_CHARS = 3;
 
-  // Используем логику из рабочей версии с небольшими улучшениями
   const fetchOptions = useCallback(
     (
       page: number = 1,
@@ -98,7 +96,6 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     { wait: 500 }
   );
 
-  // Точно такая же логика инициализации как в рабочей версии
   const getInitValue = useCallback(() => {
     if (fieldValue === null && !uploadedFieldValue) {
       let _initFieldValue: string | string[] | null = null;
@@ -137,7 +134,6 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     getInitValue();
   }, [getInitValue]);
 
-  // Точно такая же логика onValueChange как в рабочей версии
   const onValueChange = (_: string, option: any) => {
     if (!uploadedFieldValue) {
       setUploadedFieldValue(true);
@@ -182,7 +178,6 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     setNewTextValue(text);
   };
 
-  // Точно такая же логика addOwnValue как в рабочей версии
   const addOwnValue = (
     e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>
   ) => {
@@ -219,7 +214,6 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     setNewTextValue('');
   };
 
-  // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: точно такая же логика как в рабочей версии
   const onDropdownVisibleChange = (open: boolean) => {
     setIsDropdownOpen(open);
     if (open && !options) {
@@ -227,7 +221,6 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     }
   };
 
-  // Мемоизированные опции как в новом дизайне
   const selectOptions = useMemo(() => {
     return (options || []).map((item: T) => {
       const labelValue = item && typeof item === 'object' && props.bindLabel in item
@@ -243,7 +236,6 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     });
   }, [options, props.bindLabel]);
 
-  // Логика кнопки "Загрузить ещё" из рабочей версии
   const renderLoadMoreButton = () => {
     if (
       (options || []).length >= totalOptions ||
@@ -266,7 +258,6 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     );
   };
 
-  // КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: точно такая же логика renderDropdownContent как в рабочей версии
   const renderDropdownContent = (menu: React.ReactNode) => {
     if (isDropdownOpen && isLoading) {
       return (
@@ -365,7 +356,6 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         allowClear={true}
         style={{ width: '100%' }}
         popupClassName="custom-select-dropdown"
-        notFoundContent={isLoading ? <Spin size="small" /> : null}
       />
     </ConfigProvider>
   );
