@@ -1,4 +1,6 @@
+@use 'sass:color';
 @use 'src/shared/assets/scss/variables' as *;
+@use 'src/shared/assets/scss/mixins' as *;
 
 :root {
   --custom-select-border-radius: 8px;
@@ -11,167 +13,98 @@
 }
 
 .ant-select-dropdown.custom-select-dropdown {
-  border-radius: var(--custom-select-border-radius);
-  box-shadow: var(--custom-select-shadow);
-  border: 1px solid var(--custom-select-border-color);
-  background-color: var(--custom-select-background);
-  padding: 4px 0;
-  overflow: hidden;
+  padding: 8px 0;
 
   .custom-select-dropdown-content {
-    display: flex;
-    flex-direction: column;
-    max-height: 400px;
+    // Минимальная структура без сложных ограничений
   }
 
   .custom-select-menu {
-    flex: 1;
-    overflow-y: auto;
-    min-height: 0;
-
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 3px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: #c1c1c1;
-      border-radius: 3px;
-
-      &:hover {
-        background: #a8a8a8;
-      }
-    }
+    // Минимальные стили для меню
   }
 
   .custom-select-loading {
     display: flex;
     justify-content: center;
-    align-items: center;
-    padding: 32px 0;
-    min-height: 100px;
+    padding: 20px 0;
   }
 
   .ant-select-item {
     padding: 12px 16px;
+    font-size: 14px;
+    line-height: 1.5715;
     margin: 2px 6px;
     border-radius: 6px;
-    font-size: 14px;
-    line-height: 1.5;
-    color: $text-color;
-    transition: var(--custom-select-transition);
-    cursor: pointer;
-    border: 1px solid transparent;
+    transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
 
     &:hover {
-      background-color: rgba(204, 0, 0, 0.04);
-      border-color: rgba(204, 0, 0, 0.1);
+      background-color: rgba($primary-color, 0.04);
     }
 
     &.ant-select-item-option-selected {
-      background-color: rgba(204, 0, 0, 0.08);
-      border-color: rgba(204, 0, 0, 0.2);
+      background-color: rgba($primary-color, 0.08);
       color: $primary-color;
       font-weight: 500;
-
-      &::after {
-        content: '✓';
-        float: right;
-        color: $primary-color;
-        font-weight: bold;
-        margin-left: 8px;
-      }
     }
 
     &.ant-select-item-option-active {
-      background-color: rgba(204, 0, 0, 0.06);
-      border-color: rgba(204, 0, 0, 0.15);
-    }
-
-    &.ant-select-item-option-disabled {
-      color: rgba(0, 0, 0, 0.25);
-      cursor: not-allowed;
-
-      &:hover {
-        background-color: transparent;
-        border-color: transparent;
-      }
+      background-color: rgba($primary-color, 0.06);
     }
   }
 
+  // ИСПРАВЛЕНИЕ: Компактная секция добавления с общими стилями
   .add-own-value-container {
     padding: 12px 16px;
-    background-color: #fafafa;
+    background-color: $secondary-color;
     border-top: 1px solid $border-color;
     margin-top: 4px;
-
-    .ant-input,
-    .ant-input-textarea {
-      border-radius: 6px;
-      border: 1px solid var(--custom-select-border-color);
-      transition: var(--custom-select-transition);
-      font-size: 14px;
-
-      &:hover {
-        border-color: var(--custom-select-hover-border);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
-      }
-
-      &:focus {
-        border-color: var(--custom-select-focus-border);
-        box-shadow: 0 0 0 2px rgba(204, 0, 0, 0.1);
-      }
-    }
-
-    .ant-btn {
-      border-radius: 6px;
-      font-weight: 500;
-      transition: var(--custom-select-transition);
-      height: 32px;
-      font-size: 13px;
-
-      &.ant-btn-primary {
-        background-color: $primary-color;
-        border-color: $primary-color;
-        color: white;
-        box-shadow: 0 2px 4px rgba(204, 0, 0, 0.2);
-
-        &:hover:not(:disabled) {
-          background-color: #e60000;
-          border-color: #e60000;
-          transform: translateY(-1px);
-          box-shadow: 0 4px 8px rgba(204, 0, 0, 0.3);
-        }
-
-        &:active {
-          transform: translateY(0);
-          box-shadow: 0 2px 4px rgba(204, 0, 0, 0.2);
-        }
-
-        &:disabled {
-          background-color: rgba(204, 0, 0, 0.5);
-          border-color: rgba(204, 0, 0, 0.5);
-          transform: none;
-          box-shadow: none;
-          cursor: not-allowed;
-        }
-
-        .anticon {
-          color: white;
-          font-size: 12px;
-        }
-      }
-    }
 
     .ant-space {
       width: 100%;
     }
+
+    .ant-input,
+    .ant-input-textarea {
+      width: 100%;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      font-size: 14px;
+      border: 1px solid $border-color;
+      transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+      &:hover {
+        border-color: #b0b0b0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+      }
+
+      &:focus {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
+      }
+    }
+
+    // ИСПРАВЛЕНИЕ: Кнопка с общими стилями приложения
+    .ant-btn,
+    .custom-add-button {
+      @include button-style($heading-color, $background-color);
+      @include button-size-small;
+
+      // ИСПРАВЛЕНИЕ: Компактное расположение - НЕ на всю ширину
+      width: auto;
+      min-width: 80px;
+      align-self: flex-start;
+      font-size: 12px;
+      height: 28px;
+      padding: 4px 12px;
+
+      .anticon {
+        color: $background-color;
+        font-size: 10px;
+      }
+    }
   }
 
+  // Стили для кнопки "Загрузить ещё" с цветами приложения
   .ant-btn-link {
     color: $primary-color;
     padding: 8px 0;
@@ -179,24 +112,26 @@
     font-size: 13px;
     border: none;
     background: none;
-    transition: var(--custom-select-transition);
+    transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
 
     &:hover {
-      color: #e60000;
-      background-color: rgba(204, 0, 0, 0.04);
+      color: color.mix(white, $primary-color, 10%);
+      background-color: rgba($primary-color, 0.04);
     }
 
     &:active {
-      color: #cc0000;
+      color: color.mix(white, $primary-color, 15%);
     }
 
     &:disabled {
-      color: rgba(204, 0, 0, 0.5);
+      color: rgba($primary-color, 0.5);
     }
   }
 
   // Стили для Empty состояния
   .ant-empty {
+    padding: 16px 0;
+
     .ant-empty-description {
       color: #999999;
       font-size: 14px;
@@ -208,6 +143,7 @@
     }
   }
 
+  // Стили для Divider
   .ant-divider {
     margin: 8px 0;
     border-color: $border-color;
@@ -221,57 +157,44 @@
       }
     }
   }
-}
 
-// Адаптивные стили
-@media (max-width: 768px) {
-  .ant-select-dropdown.custom-select-dropdown {
+  @media (max-width: 768px) {
     width: 100% !important;
-    min-width: 280px !important;
-    max-width: calc(100vw - 32px) !important;
+    min-width: 200px !important;
 
-    .custom-select-dropdown-content {
-      max-height: 50vh;
+    .add-own-value-container {
+      padding: 12px;
+
+      .ant-input,
+      .ant-input-textarea {
+        font-size: 16px; // Предотвращает зум на iOS
+        padding: 10px 12px;
+      }
+
+      .ant-btn {
+        height: 32px;
+        font-size: 13px;
+        min-width: 90px;
+        padding: 6px 14px;
+      }
     }
 
     .ant-select-item {
       padding: 14px 16px;
       font-size: 16px; // Предотвращает зум на iOS
     }
+  }
+
+  @media (max-width: 480px) {
+    min-width: 180px !important;
 
     .add-own-value-container {
-      padding: 16px;
-
-      .ant-input,
-      .ant-input-textarea {
-        font-size: 16px; // Предотвращает зум на iOS
-        padding: 12px;
-      }
-
-      .ant-btn {
-        height: 40px;
-        font-size: 16px;
-      }
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .ant-select-dropdown.custom-select-dropdown {
-    min-width: 260px !important;
-    max-width: calc(100vw - 16px) !important;
-
-    .custom-select-dropdown-content {
-      max-height: 45vh;
+      padding: 10px 12px;
     }
 
     .ant-select-item {
       padding: 16px 12px;
       margin: 2px 4px;
-    }
-
-    .add-own-value-container {
-      padding: 12px;
     }
   }
 }

@@ -241,7 +241,6 @@ export function MyCommunitySettings(props: any) {
     const formData = form.getFieldsValue();
     const newIsWorkGroup = Boolean(formData.is_workgroup);
 
-    // Обновляем состояние только если оно изменилось
     if (isWorkGroup !== newIsWorkGroup) {
       setIsWorkGroup(newIsWorkGroup);
     }
@@ -259,7 +258,6 @@ export function MyCommunitySettings(props: any) {
     setDisabled(!isValid);
   };
 
-  // Добавляем отдельный обработчик изменения конкретно для is_workgroup
   const handleWorkGroupChange = (checked: boolean) => {
     setIsWorkGroup(checked);
     form.setFieldValue('is_workgroup', checked);

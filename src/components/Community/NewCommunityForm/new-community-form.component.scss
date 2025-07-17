@@ -1,0 +1,756 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+// Переменные для NewCommunityForm
+:root {
+  --new-form-card-border-radius: 12px;
+  --new-form-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --new-form-card-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --new-form-section-gap: 24px;
+  --new-form-transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  --new-form-voting-bg: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 215, 0, 0.02) 100%);
+}
+
+// Основной контейнер формы
+.new-community-form {
+  width: 100%;
+
+  .new-community-form-content {
+    .ant-form-item {
+      margin-bottom: 20px;
+
+      .ant-form-item-label {
+        padding-bottom: 8px;
+
+        > label {
+          font-weight: 500;
+          color: $heading-color;
+          font-size: 14px;
+          line-height: 1.5;
+
+          .anticon {
+            color: $info-color;
+            margin-left: 4px;
+            cursor: help;
+            transition: var(--new-form-transition);
+
+            &:hover {
+              color: $primary-color;
+            }
+          }
+        }
+      }
+
+      .ant-form-item-explain-error {
+        font-size: 12px;
+        line-height: 1.4;
+        margin-top: 4px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .new-community-form {
+    .form-section {
+      .ant-card-body {
+        padding: 12px;
+      }
+
+      .ant-card-head {
+        padding: 12px 16px;
+
+        .ant-card-head-title {
+          font-size: 14px;
+        }
+      }
+    }
+
+    .new-community-form-content {
+      .ant-form-item {
+        margin-bottom: 12px;
+
+        .ant-form-item-label {
+          padding-bottom: 4px;
+
+          > label {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+
+    .ant-input-number {
+      max-width: 100px;
+
+      .ant-input-number-input {
+        font-size: 13px;
+      }
+
+      &.ant-input-number-group-wrapper {
+        .ant-input-number-group-addon {
+          font-size: 11px;
+          padding: 0 6px;
+        }
+      }
+    }
+
+    .ant-alert {
+      .ant-alert-message {
+        font-size: 13px;
+      }
+
+      .ant-alert-description {
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+// Модальное окно
+.ant-modal {
+  .new-community-form {
+    // Уменьшаем отступы для модального окна
+    .form-section {
+      .ant-card-body {
+        padding: 20px;
+      }
+    }
+
+    // Компактный режим для модального окна
+    &.modal-compact {
+      .form-section {
+        margin-bottom: 16px;
+
+        .ant-card-body {
+          padding: 16px;
+        }
+
+        .ant-card-head {
+          .ant-card-head-title {
+            font-size: 15px;
+          }
+        }
+      }
+
+      .new-community-form-content {
+        .ant-form-item {
+          margin-bottom: 16px;
+        }
+      }
+    }
+  }
+}
+
+// Высококонтрастный режим
+@media (prefers-contrast: more) {
+  .form-section {
+    border: 2px solid $text-color;
+
+    .ant-card-head {
+      border-bottom: 2px solid $text-color;
+    }
+  }
+
+  .ant-input,
+  .ant-input-affix-wrapper,
+  .ant-input-number {
+    border: 2px solid $text-color;
+
+    &:focus,
+    &.ant-input-focused,
+    &.ant-input-number-focused {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.2);
+    }
+  }
+
+  .switch-container {
+    .ant-switch {
+      border: 2px solid $text-color;
+
+      &.ant-switch-checked {
+        border-color: $primary-color;
+      }
+    }
+  }
+
+  .categories-list {
+    .category-item {
+      .remove-category-btn {
+        border: 2px solid $error-color;
+      }
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  :root {
+    --new-form-voting-bg: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+  }
+
+  .new-community-form {
+    .form-section {
+      background-color: #1f1f1f;
+      border-color: #434343;
+
+      .ant-card-head {
+        background: linear-gradient(135deg, rgba(204, 0, 0, 0.08) 0%, rgba(204, 0, 0, 0.03) 100%);
+        border-bottom-color: rgba(204, 0, 0, 0.2);
+
+        .ant-card-head-title {
+          color: #ffffff;
+        }
+      }
+
+      .ant-card-body {
+        background-color: #1f1f1f;
+      }
+
+      &.voting-section {
+        .ant-card-head {
+          background: var(--new-form-voting-bg);
+          border-bottom-color: rgba(255, 215, 0, 0.3);
+        }
+      }
+    }
+
+    .new-community-form-content {
+      .ant-form-item-label {
+        > label {
+          color: #ffffff;
+        }
+      }
+    }
+  }
+
+  .ant-input,
+  .ant-input-affix-wrapper {
+    background-color: #262626;
+    border-color: #434343;
+    color: #ffffff;
+
+    &::placeholder {
+      color: #888888;
+    }
+
+    &:hover {
+      border-color: #666666;
+    }
+
+    &:focus,
+    &.ant-input-focused {
+      border-color: $primary-color;
+      background-color: #262626;
+    }
+  }
+
+  .ant-input-number {
+    background-color: #262626;
+    border-color: #434343;
+    color: #ffffff;
+
+    .ant-input-number-input {
+      background-color: transparent;
+      color: #ffffff;
+    }
+
+    &:hover {
+      border-color: #666666;
+    }
+
+    &:focus,
+    &.ant-input-number-focused {
+      border-color: $primary-color;
+      background-color: #262626;
+    }
+
+    &.ant-input-number-group-wrapper {
+      .ant-input-number-group-addon {
+        background-color: #2a2a2a;
+        border-color: #434343;
+        color: #cccccc;
+      }
+    }
+  }
+
+  .switch-container {
+    .switch-description {
+      color: #cccccc;
+    }
+  }
+
+  .ant-alert {
+    &.ant-alert-info {
+      background-color: rgba(24, 144, 255, 0.1);
+      border-color: rgba(24, 144, 255, 0.3);
+
+      .ant-alert-message {
+        color: #ffffff;
+      }
+
+      .ant-alert-description {
+        color: #cccccc;
+      }
+    }
+  }
+
+  .categories-list {
+    .category-item {
+      .remove-category-btn {
+        background: rgba(255, 77, 79, 0.1);
+        border-color: rgba(255, 77, 79, 0.3);
+
+        &:hover {
+          background: rgba(255, 77, 79, 0.15);
+          border-color: rgba(255, 77, 79, 0.5);
+        }
+      }
+    }
+
+    .ant-btn-dashed {
+      background: rgba(204, 0, 0, 0.05);
+      border-color: rgba(204, 0, 0, 0.3);
+      color: $primary-color;
+
+      &:hover {
+        background: rgba(204, 0, 0, 0.1);
+        border-color: rgba(204, 0, 0, 0.5);
+      }
+    }
+  }
+}
+
+// Стили для печати
+@media print {
+  .new-community-form {
+    .form-section {
+      box-shadow: none;
+      border: 1px solid #000;
+      margin-bottom: 20px;
+      break-inside: avoid;
+
+      .ant-card-head {
+        background: none;
+        border-bottom: 1px solid #000;
+
+        .ant-card-head-title {
+          color: #000;
+          font-size: 14px;
+        }
+      }
+
+      .ant-card-body {
+        background: none;
+      }
+    }
+
+    .ant-input,
+    .ant-input-affix-wrapper,
+    .ant-input-number {
+      background: none;
+      border: 1px solid #000;
+      color: #000;
+
+      .ant-input-number-input {
+        color: #000;
+      }
+    }
+
+    .switch-container {
+      .ant-switch {
+        &.ant-switch-checked {
+          background-color: #000;
+        }
+
+        &:not(.ant-switch-checked) {
+          background-color: #ccc;
+        }
+      }
+
+      .switch-description {
+        color: #000;
+      }
+    }
+
+    .ant-alert {
+      background: none !important;
+      border: 1px solid #000 !important;
+
+      .ant-alert-message,
+      .ant-alert-description {
+        color: #000 !important;
+      }
+    }
+
+    .categories-list {
+      .category-item {
+        .remove-category-btn {
+          background: none;
+          border: 1px solid #000;
+          color: #000;
+        }
+      }
+
+      .ant-btn-dashed {
+        background: none;
+        border: 1px dashed #000;
+        color: #000;
+      }
+    }
+  }
+}
+
+// Специальные стили для использования в разных контекстах
+.new-community-form {
+  // Класс для использования в модальном окне
+  &.in-modal {
+    .form-section {
+      .ant-card-body {
+        padding: 20px;
+      }
+    }
+
+    .new-community-form-content {
+      .ant-form-item {
+        margin-bottom: 16px;
+      }
+    }
+  }
+
+  // Класс для использования в полной странице
+  &.in-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+
+    .form-section {
+      .ant-card-body {
+        padding: 24px;
+      }
+    }
+  }
+
+  // Компактный режим
+  &.compact {
+    .form-section {
+      .ant-card-body {
+        padding: 16px;
+      }
+
+      .ant-card-head {
+        .ant-card-head-title {
+          font-size: 15px;
+        }
+      }
+    }
+
+    .new-community-form-content {
+      .ant-form-item {
+        margin-bottom: 16px;
+      }
+    }
+  }
+}
+
+// Секции формы
+.form-section {
+  border-radius: var(--new-form-card-border-radius);
+  box-shadow: var(--new-form-card-shadow);
+  transition: var(--new-form-transition);
+  border: 1px solid $border-color;
+
+  &:hover {
+    box-shadow: var(--new-form-card-hover-shadow);
+  }
+
+  .ant-card-head {
+    background: linear-gradient(135deg, rgba(204, 0, 0, 0.03) 0%, rgba(204, 0, 0, 0.01) 100%);
+    border-bottom: 1px solid rgba(204, 0, 0, 0.1);
+    border-radius: var(--new-form-card-border-radius) var(--new-form-card-border-radius) 0 0;
+
+    .ant-card-head-title {
+      color: $heading-color;
+      font-weight: 600;
+      font-size: 16px;
+
+      .anticon {
+        color: $primary-color;
+        margin-right: 8px;
+      }
+    }
+  }
+
+  .ant-card-body {
+    padding: 24px;
+  }
+
+  // Специальная секция для голосования
+  &.voting-section {
+    .ant-card-head {
+      background: var(--new-form-voting-bg);
+      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+    }
+  }
+}
+
+// Стили для Input и TextArea
+.ant-input,
+.ant-input-affix-wrapper {
+  border-radius: 6px;
+  transition: var(--new-form-transition);
+
+  &:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  }
+
+  &:focus,
+  &.ant-input-focused {
+    box-shadow: 0 0 0 2px rgba(204, 0, 0, 0.1);
+  }
+}
+
+.ant-input {
+  &[data-count] {
+    position: relative;
+
+    + .ant-input-data-count {
+      position: absolute;
+      bottom: -20px;
+      right: 0;
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.45);
+    }
+  }
+}
+
+// Стили для InputNumber
+.ant-input-number {
+  border-radius: 6px;
+  transition: var(--new-form-transition);
+
+  &:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  }
+
+  &:focus,
+  &.ant-input-number-focused {
+    box-shadow: 0 0 0 2px rgba(204, 0, 0, 0.1);
+  }
+
+  .ant-input-number-input {
+    text-align: center;
+    font-weight: 500;
+  }
+
+  // Стили для addon
+  &.ant-input-number-group-wrapper {
+    .ant-input-number-group-addon {
+      background-color: #fafafa;
+      border-color: $border-color;
+      color: $text-color;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 0 8px;
+      border-radius: 0 6px 6px 0;
+    }
+  }
+}
+
+// Контейнер для переключателей
+.switch-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+
+  .ant-switch {
+    background-color: rgba(0, 0, 0, 0.25);
+    transition: var(--new-form-transition);
+
+    &:hover:not(.ant-switch-disabled) {
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    &.ant-switch-checked {
+      background-color: $primary-color;
+
+      &:hover:not(.ant-switch-disabled) {
+        background-color: #e60000;
+      }
+    }
+  }
+
+  .switch-description {
+    font-size: 12px;
+    color: $text-color;
+    opacity: 0.7;
+    font-style: italic;
+  }
+}
+
+// Стили для Alert
+.ant-alert {
+  border-radius: 8px;
+
+  &.ant-alert-info {
+    background-color: rgba(24, 144, 255, 0.05);
+    border: 1px solid rgba(24, 144, 255, 0.2);
+
+    .ant-alert-icon {
+      color: $info-color;
+    }
+
+    .ant-alert-message {
+      color: $heading-color;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .ant-alert-description {
+      color: $text-color;
+      opacity: 0.8;
+      font-size: 13px;
+    }
+  }
+}
+
+// Стили для списка категорий
+.categories-list {
+  .category-item {
+    margin-bottom: 12px;
+
+    .ant-space-compact {
+      display: flex;
+      align-items: flex-start;
+
+      .ant-form-item {
+        flex: 1;
+        margin-right: 8px;
+      }
+
+      .remove-category-btn {
+        color: $error-color;
+        border: 1px solid rgba(255, 77, 79, 0.2);
+        background: rgba(255, 77, 79, 0.05);
+        border-radius: 6px;
+        height: 32px;
+        width: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--new-form-transition);
+
+        &:hover {
+          color: #ff4d4f;
+          border-color: rgba(255, 77, 79, 0.4);
+          background: rgba(255, 77, 79, 0.1);
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(255, 77, 79, 0.2);
+        }
+
+        .anticon {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .ant-btn-dashed {
+    border-color: rgba(204, 0, 0, 0.3);
+    color: $primary-color;
+    background: rgba(204, 0, 0, 0.02);
+    transition: var(--new-form-transition);
+
+    &:hover {
+      border-color: rgba(204, 0, 0, 0.5);
+      color: #e60000;
+      background: rgba(204, 0, 0, 0.05);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(204, 0, 0, 0.1);
+    }
+
+    .anticon {
+      color: inherit;
+    }
+  }
+}
+
+// Стили для Tooltip
+.ant-tooltip {
+  .ant-tooltip-inner {
+    background-color: rgba(0, 0, 0, 0.85);
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.4;
+    max-width: 300px;
+    padding: 8px 12px;
+  }
+
+  .ant-tooltip-arrow {
+    &::before {
+      background-color: rgba(0, 0, 0, 0.85);
+    }
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 768px) {
+  .new-community-form {
+    .form-section {
+      .ant-card-body {
+        padding: 16px;
+      }
+
+      .ant-card-head {
+        .ant-card-head-title {
+          font-size: 15px;
+        }
+      }
+    }
+
+    .new-community-form-content {
+      .ant-form-item {
+        margin-bottom: 16px;
+
+        .ant-form-item-label {
+          padding-bottom: 6px;
+
+          > label {
+            font-size: 13px;
+          }
+        }
+      }
+    }
+
+    .ant-input-number {
+      width: 100% !important;
+      max-width: 120px;
+
+      .ant-input-number-input {
+        font-size: 14px;
+      }
+    }
+
+    .switch-container {
+      .switch-description {
+        font-size: 11px;
+      }
+    }
+
+    .categories-list {
+      .category-item {
+        .ant-space-compact {
+          .remove-category-btn {
+            height: 28px;
+            width: 28px;
+
+            .anticon {
+              font-size: 12px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -11,6 +11,7 @@ import { CrudDataSourceService } from 'src/services';
 import { CommunitySelectProps } from 'src/interfaces';
 import { NewCommunityForm } from 'src/components';
 import './community-select.component.scss';
+import { PlusOutlined } from '@ant-design/icons';
 
 interface CommunityOption {
   value: string;
@@ -244,9 +245,11 @@ export function CommunitySelect(props: CommunitySelectProps) {
           <div className="community-select-add-button">
             <Button
               type="primary"
+              icon={<PlusOutlined />}
               onClick={handleClick}
-              block
               size="small"
+              className="custom-add-button"
+              style={{ width: 'auto', minWidth: '80px' }}
             >
               Добавить сообщество
             </Button>
@@ -260,7 +263,7 @@ export function CommunitySelect(props: CommunitySelectProps) {
   const customStyles = useMemo(() => ({
     control: (provided: any, state: any) => ({
       ...provided,
-      borderRadius: '8px',
+      borderRadius: '6px',
       border: `1px solid ${state.isFocused ? '#cc0000' : '#e0e0e0'}`,
       boxShadow: state.isFocused ? '0 0 0 2px rgba(204, 0, 0, 0.1)' : 'none',
       '&:hover': {
@@ -273,33 +276,40 @@ export function CommunitySelect(props: CommunitySelectProps) {
     }),
     placeholder: (provided: any) => ({
       ...provided,
-      color: '#999999',
+      color: '#bfbfbf',
       fontSize: '14px',
+    }),
+    singleValue: (provided: any) => ({
+      ...provided,
+      color: '#333333',
+      fontSize: '14px',
+      fontWeight: '400',
     }),
     multiValue: (provided: any) => ({
       ...provided,
       backgroundColor: 'rgba(204, 0, 0, 0.08)',
       border: '1px solid rgba(204, 0, 0, 0.2)',
-      borderRadius: '6px',
+      borderRadius: '4px',
     }),
     multiValueLabel: (provided: any) => ({
       ...provided,
       color: '#cc0000',
       fontSize: '12px',
+      fontWeight: '400',
       padding: '2px 6px',
     }),
     multiValueRemove: (provided: any) => ({
       ...provided,
-      color: 'rgba(204, 0, 0, 0.6)',
+      color: 'rgba(204, 0, 0, 0.5)',
       '&:hover': {
         backgroundColor: 'rgba(204, 0, 0, 0.2)',
         color: '#cc0000',
       },
-      borderRadius: '0 4px 4px 0',
+      borderRadius: '0 3px 3px 0',
     }),
     menu: (provided: any) => ({
       ...provided,
-      borderRadius: '8px',
+      borderRadius: '6px',
       boxShadow: '0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)',
       border: '1px solid #e0e0e0',
       overflow: 'hidden',
@@ -312,6 +322,7 @@ export function CommunitySelect(props: CommunitySelectProps) {
           ? 'rgba(204, 0, 0, 0.04)'
           : 'white',
       color: state.isSelected ? '#cc0000' : '#333333',
+      fontWeight: state.isSelected ? '500' : '400',
       padding: '12px 16px',
       cursor: 'pointer',
       fontSize: '14px',
@@ -395,7 +406,12 @@ export function CommunitySelect(props: CommunitySelectProps) {
         centered
         destroyOnClose
       >
-        <NewCommunityForm form={form} setDisabledButton={setDisabled} />
+        <div className="new-community-form in-modal">
+          <NewCommunityForm
+            form={form}
+            setDisabledButton={setDisabled}
+          />
+        </div>
       </Modal>
     </div>
   );

@@ -3,18 +3,22 @@
 
 // Основные переменные для форм
 :root {
-  --form-border-radius: 8px;
-  --form-border-color: #{$border-color};
-  --form-focus-border-color: #{$primary-color};
+  --form-border-radius: 6px;
+  --form-border-color: #e0e0e0;
+  --form-focus-border-color: #cc0000;
   --form-hover-border-color: #b0b0b0;
-  --form-background: #{$background-color};
-  --form-text-color: #{$text-color};
-  --form-placeholder-color: #999999;
+  --form-background: #ffffff;
+  --form-text-color: #333333;
+  --form-placeholder-color: #bfbfbf;
   --form-disabled-background: #f5f5f5;
   --form-disabled-border-color: #d9d9d9;
   --form-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   --form-focus-shadow: 0 0 0 2px rgba(204, 0, 0, 0.1);
   --form-transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+  --form-hover-bg: rgba(204, 0, 0, 0.04);
+  --form-selected-bg: rgba(204, 0, 0, 0.08);
+  --form-selected-color: #cc0000;
+  --form-active-bg: rgba(204, 0, 0, 0.06);
 }
 
 // Общие стили для всех форм
@@ -158,9 +162,9 @@
       background-color: rgba(204, 0, 0, 0.08);
       border: 1px solid rgba(204, 0, 0, 0.2);
       border-radius: 6px;
-      color: $primary-color;
-      font-size: 12px;
-      height: 26px;
+      //color: $primary-color;
+      font-size: 14px;
+      height: 36px;
       line-height: 24px;
       margin: 2px 4px 2px 0;
       padding: 0 8px;

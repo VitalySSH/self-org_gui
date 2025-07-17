@@ -52,7 +52,9 @@ export function NewCommunity() {
       <div className="form-container">
         {contextHolder}
         <div className="form-header">Новое сообщество</div>
-        <NewCommunityForm form={form} setDisabledButton={setDisabled} />
+        <div className="new-community-form in-page">
+          <NewCommunityForm form={form} setDisabledButton={setDisabled} />
+        </div>
       </div>
       <div className="toolbar">
         <Button

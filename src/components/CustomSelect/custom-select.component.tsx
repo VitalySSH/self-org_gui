@@ -49,7 +49,6 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
       append: boolean = false,
       search: string = searchQuery
     ) => {
-      // Точно такая же проверка как в рабочей версии
       if (
         (options || []).length >= totalOptions &&
         append &&
@@ -259,7 +258,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   };
 
   const renderDropdownContent = (menu: React.ReactNode) => {
-    if (isDropdownOpen && isLoading) {
+    if (isDropdownOpen && isLoading && !options) {
       return (
         <div className="custom-select-loading">
           <Spin size="large" />
@@ -314,7 +313,8 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
                   onClick={addOwnValue}
                   disabled={!newTextValue.trim()}
                   size="small"
-                  block
+                  className="custom-add-button"
+                  style={{ width: 'auto', minWidth: '80px' }}
                 >
                   Добавить
                 </Button>
