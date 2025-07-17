@@ -146,8 +146,7 @@ export function CommunitySelect(props: CommunitySelectProps) {
       props.onChange(newValues);
       setIsModalVisible(false);
 
-      // Не сбрасываем форму для удобства пользователя
-      // form.resetFields();
+      form.resetFields();
     } catch (error) {
       console.error('Error adding community settings:', error);
     }
@@ -155,20 +154,28 @@ export function CommunitySelect(props: CommunitySelectProps) {
 
   // Обработчик открытия модального окна
   const handleClick = useCallback(() => {
-    // Предзаполнение формы значениями родительских настроек
-    form.setFieldsValue({
-      quorum: props.parentSettings?.quorum || 50,
-      vote: props.parentSettings?.vote || 50,
-      significant_minority: props.parentSettings?.significant_minority || 25,
-      decision_delay: props.parentSettings?.decision_delay || 0,
-      dispute_time_limit: props.parentSettings?.dispute_time_limit || 0,
-      is_secret_ballot: props.parentSettings?.is_secret_ballot || false,
-      is_can_offer: props.parentSettings?.is_can_offer || false,
-      is_minority_not_participate: props.parentSettings?.is_minority_not_participate || false,
-      is_default_add_member: props.parentSettings?.is_default_add_member || false,
-      is_not_delegate: props.parentSettings?.is_not_delegate || false,
-    });
     setIsModalVisible(true);
+  }, []);
+
+  // Обработчик события после открытия модального окна
+  const handleAfterOpenChange = useCallback((open: boolean) => {
+    if (open) {
+      // Устанавливаем значения формы только после открытия модального окна
+      setTimeout(() => {
+        form.setFieldsValue({
+          quorum: props.parentSettings?.quorum || 50,
+          vote: props.parentSettings?.vote || 50,
+          significant_minority: props.parentSettings?.significant_minority || 25,
+          decision_delay: props.parentSettings?.decision_delay || 0,
+          dispute_time_limit: props.parentSettings?.dispute_time_limit || 0,
+          is_secret_ballot: props.parentSettings?.is_secret_ballot || false,
+          is_can_offer: props.parentSettings?.is_can_offer || false,
+          is_minority_not_participate: props.parentSettings?.is_minority_not_participate || false,
+          is_default_add_member: props.parentSettings?.is_default_add_member || false,
+          is_not_delegate: props.parentSettings?.is_not_delegate || false,
+        });
+      }, 0);
+    }
   }, [form, props.parentSettings]);
 
   // Получение опций
@@ -375,6 +382,7 @@ export function CommunitySelect(props: CommunitySelectProps) {
         title="Новое внутреннее сообщество"
         open={isModalVisible}
         onCancel={() => setIsModalVisible(false)}
+        afterOpenChange={handleAfterOpenChange}
         footer={[
           <Button
             key="cancel"

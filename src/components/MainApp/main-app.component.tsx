@@ -36,7 +36,7 @@ export function MainApp() {
       <SiderBar isCommunityWS={false} isNotAuthorized={!authData.user} />
       <Layout>
         <Header className="header">{icons}</Header>
-        <Content className="content">
+        <Content>
           {location.pathname === '/' && <AboutPage />}
           <Routes>
             <Route

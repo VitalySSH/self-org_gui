@@ -1,32 +1,384 @@
-.letter-container {
-  margin-top: 12px;
+@use 'src/shared/assets/scss/variables' as *;
 
-  .letter-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    align-items: baseline;
+// Переменные для CoverLetter
+:root {
+  --cover-letter-border-radius: 8px;
+  --cover-letter-bg: rgba(24, 144, 255, 0.02);
+  --cover-letter-border: rgba(24, 144, 255, 0.1);
+  --cover-letter-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cover-letter {
+  border: 1px solid var(--cover-letter-border);
+  border-radius: var(--cover-letter-border-radius);
+  background: var(--cover-letter-bg);
+  padding: 12px;
+  transition: var(--cover-letter-transition);
+
+  &:hover {
+    border-color: rgba(24, 144, 255, 0.2);
+    background: rgba(24, 144, 255, 0.04);
   }
 
-  .letter-text {
-    color: #666;
-    line-height: 1.5;
-    word-break: break-word;
+  // Размеры
+  &.cover-letter-small {
+    padding: 8px;
+    font-size: 12px;
+
+    .letter-header {
+      margin-bottom: 6px;
+
+      .letter-icon {
+        font-size: 12px;
+      }
+
+      .letter-label {
+        font-size: 11px;
+      }
+    }
+
+    .letter-text {
+      font-size: 12px;
+      line-height: 1.4;
+    }
   }
 
-  .expand-button {
-    margin-top: 4px;
-    color: #1890ff;
-    cursor: pointer;
+  &.cover-letter-default {
+    padding: 12px;
+    font-size: 13px;
+
+    .letter-header {
+      margin-bottom: 8px;
+
+      .letter-icon {
+        font-size: 14px;
+      }
+
+      .letter-label {
+        font-size: 12px;
+      }
+    }
+
+    .letter-text {
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  }
+
+  &.cover-letter-large {
+    padding: 16px;
     font-size: 14px;
+
+    .letter-header {
+      margin-bottom: 10px;
+
+      .letter-icon {
+        font-size: 16px;
+      }
+
+      .letter-label {
+        font-size: 13px;
+      }
+    }
+
+    .letter-text {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  }
+
+  // Заголовок письма
+  .letter-header {
     display: flex;
     align-items: center;
-    gap: 4px;
-    justify-content: center;
-    width: 100%;
+    gap: 6px;
+    margin-bottom: 8px;
 
+    .letter-icon {
+      color: $info-color;
+      flex-shrink: 0;
+    }
+
+    .letter-label {
+      font-weight: 500;
+      color: $heading-color;
+      margin: 0;
+    }
+  }
+
+  // Контент письма
+  .letter-content {
+    .letter-text {
+      color: $text-color;
+      line-height: 1.5;
+      word-break: break-word;
+      display: block;
+      margin: 0;
+
+      &.collapsed {
+        // Плавное обрезание текста без резкого обрыва
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          width: 30px;
+          height: 1.2em;
+          background: linear-gradient(to right, transparent, var(--cover-letter-bg));
+          pointer-events: none;
+        }
+      }
+
+      &.expanded {
+        // Анимация для развернутого состояния
+        animation: expandText 0.3s ease-out;
+      }
+    }
+  }
+
+  // Действия
+  .letter-actions {
+    margin-top: 8px;
+    display: flex;
+    justify-content: center;
+
+    .expand-button {
+      color: $info-color;
+      font-size: 12px;
+      height: auto;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: var(--cover-letter-transition);
+
+      &:hover {
+        background: rgba($info-color, 0.1);
+        color: $info-color;
+      }
+
+      .anticon {
+        font-size: 10px;
+      }
+    }
+  }
+
+  // Пустое состояние
+  &.cover-letter-empty {
+    border-style: dashed;
+    border-color: rgba($border-color, 0.5);
+    background: rgba($background-color, 0.5);
+    text-align: center;
+    padding: 16px 12px;
+
+    .letter-icon {
+      color: rgba($text-color, 0.4);
+      margin-bottom: 4px;
+      display: block;
+      font-size: 16px;
+    }
+
+    .ant-typography {
+      color: rgba($text-color, 0.5);
+      font-size: 13px;
+      margin: 0;
+    }
+  }
+}
+
+// Анимации
+@keyframes expandText {
+  from {
+    opacity: 0.7;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 768px) {
+  .cover-letter {
+    &.cover-letter-default {
+      padding: 10px;
+      font-size: 12px;
+
+      .letter-header {
+        margin-bottom: 6px;
+
+        .letter-icon {
+          font-size: 13px;
+        }
+
+        .letter-label {
+          font-size: 11px;
+        }
+      }
+
+      .letter-text {
+        font-size: 12px;
+        line-height: 1.4;
+      }
+    }
+
+    &.cover-letter-large {
+      padding: 12px;
+      font-size: 13px;
+
+      .letter-header {
+        margin-bottom: 8px;
+
+        .letter-icon {
+          font-size: 14px;
+        }
+
+        .letter-label {
+          font-size: 12px;
+        }
+      }
+
+      .letter-text {
+        font-size: 13px;
+        line-height: 1.5;
+      }
+    }
+
+    .letter-actions {
+      margin-top: 6px;
+
+      .expand-button {
+        font-size: 11px;
+        padding: 3px 6px;
+
+        .anticon {
+          font-size: 9px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .cover-letter {
+    &.cover-letter-default,
+    &.cover-letter-large {
+      padding: 8px;
+
+      .letter-header {
+        margin-bottom: 6px;
+        gap: 4px;
+
+        .letter-icon {
+          font-size: 12px;
+        }
+
+        .letter-label {
+          font-size: 10px;
+        }
+      }
+
+      .letter-text {
+        font-size: 11px;
+        line-height: 1.4;
+      }
+    }
+
+    .letter-actions {
+      margin-top: 4px;
+
+      .expand-button {
+        font-size: 10px;
+        padding: 2px 4px;
+
+        span:not(.anticon) {
+          display: none;
+        }
+
+        .anticon {
+          margin: 0;
+          font-size: 8px;
+        }
+      }
+    }
+
+    &.cover-letter-empty {
+      padding: 12px 8px;
+
+      .letter-icon {
+        font-size: 14px;
+      }
+
+      .ant-typography {
+        font-size: 11px;
+      }
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  :root {
+    --cover-letter-bg: rgba(24, 144, 255, 0.05);
+    --cover-letter-border: rgba(24, 144, 255, 0.2);
+  }
+
+  .cover-letter {
     &:hover {
-      text-decoration: underline;
+      background: rgba(24, 144, 255, 0.08);
+      border-color: rgba(24, 144, 255, 0.3);
+    }
+
+    .letter-header {
+      .letter-label {
+        color: #ffffff;
+      }
+    }
+
+    .letter-content {
+      .letter-text {
+        color: #cccccc;
+
+        &.collapsed::after {
+          background: linear-gradient(to right, transparent, rgba(24, 144, 255, 0.05));
+        }
+      }
+    }
+
+    &.cover-letter-empty {
+      background: rgba(#ffffff, 0.02);
+      border-color: rgba(#ffffff, 0.1);
+
+      .letter-icon {
+        color: rgba(#ffffff, 0.3);
+      }
+
+      .ant-typography {
+        color: rgba(#ffffff, 0.4);
+      }
+    }
+  }
+}
+
+// Высококонтрастный режим
+@media (prefers-contrast: more) {
+  .cover-letter {
+    border: 2px solid $info-color;
+
+    &.cover-letter-empty {
+      border: 2px dashed $text-color;
+    }
+
+    .letter-actions {
+      .expand-button {
+        border: 1px solid $info-color;
+
+        &:hover {
+          border-color: $info-color;
+          background: rgba($info-color, 0.15);
+        }
+      }
     }
   }
 }

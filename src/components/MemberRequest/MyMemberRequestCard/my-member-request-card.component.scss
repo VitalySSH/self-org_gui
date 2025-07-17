@@ -1,72 +1,570 @@
 @use 'src/shared/assets/scss/variables' as *;
 
+// Переменные для переработанной карточки
+:root {
+  --card-border-radius: 12px;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --card-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --card-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --header-bg: linear-gradient(135deg, rgba(24, 144, 255, 0.02) 0%, rgba(24, 144, 255, 0.01) 100%);
+  --section-spacing: 14px;
+  --action-button-height: 32px;
+}
+
+.member-request-card-wrapper {
+  width: 100%;
+  transition: var(--card-transition);
+
+  &.expanded {
+    .member-request-card {
+      .card-body {
+        .section-content {
+          max-height: none;
+          overflow: visible;
+        }
+      }
+    }
+  }
+}
+
 .member-request-card {
-  display: flex;
-  flex-direction: column;
-  border-radius: $border-radius;
+  border-radius: var(--card-border-radius);
   border: 1px solid $border-color;
   background-color: $background-color;
-  transition: box-shadow $transition-speed;
+  transition: var(--card-transition);
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
 
   &:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--card-hover-shadow);
+    transform: translateY(-2px);
+    border-color: rgba($primary-color, 0.3);
   }
 
   .ant-card-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 250px;
+    padding: 4px !important;
   }
 
-  .ant-card-meta-title {
-    font-size: 18px;
-    color: $heading-color;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
+  // Заголовок карточки
+  .card-header {
+    background: var(--header-bg);
+    border-bottom: 1px solid rgba($border-color, 0.5);
+    padding: 16px 20px;
 
-  .ant-card-meta-description {
-    font-size: 14px;
-    color: $text-color;
-    font-family: 'Noto Sans', sans-serif;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    flex-grow: 1;
-  }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
 
-  .ant-card-actions {
-    background: #fafafa;
-    border-top: 1px solid $border-color;
-    padding: 12px 0;
+      .title-section {
+        flex: 1;
+        min-width: 0;
 
-    > li {
-      margin: 0;
-      padding: 0 8px;
-      text-align: center;
+        .community-title {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 12px;
 
-      .ant-btn {
-        width: 100%;
-        border-radius: 4px;
-        transition: all 0.2s;
+          .community-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: $heading-color;
+            line-height: 1.3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+          }
 
-        &:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-tag {
+          font-size: 13px;
+          font-weight: 500;
+          border-radius: 8px;
+          padding: 4px 12px;
+          border: none;
+
+          .anticon {
+            margin-right: 6px;
+            font-size: 12px;
+          }
+        }
+      }
+
+      .actions-section {
+        flex-shrink: 0;
+        display: flex;
+        align-items: flex-start;
+
+        .ant-space {
+          .ant-space-item {
+            .ant-btn {
+              height: var(--action-button-height);
+              border-radius: 6px;
+              font-weight: 500;
+              font-size: 12px;
+              min-width: 100px;
+              padding: 0 12px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 4px;
+              transition: var(--card-transition);
+              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+              &:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+              }
+
+              &:active {
+                transform: translateY(0);
+              }
+
+              .anticon {
+                font-size: 12px;
+              }
+
+              // Кнопка подсообществ
+              &.subcommunities-button {
+                color: $primary-color;
+                border: 1px solid rgba($primary-color, 0.3);
+                background: rgba($primary-color, 0.05);
+
+                &:hover {
+                  background: rgba($primary-color, 0.1);
+                  border-color: rgba($primary-color, 0.5);
+                  color: $primary-color;
+                }
+              }
+
+              // Основные кнопки действий
+              &.ant-btn-primary {
+                background: $primary-color;
+                border-color: $primary-color;
+                color: white;
+
+                &:hover {
+                  background: #e60000;
+                  border-color: #e60000;
+                  color: white;
+                }
+              }
+
+              &.ant-btn-danger {
+                &:hover {
+                  background: #ff7875;
+                  border-color: #ff7875;
+                }
+              }
+
+              &.ant-btn-default {
+                background: white;
+                border: 1px solid $border-color;
+                color: $text-color;
+
+                &:hover {
+                  background: rgba($info-color, 0.05);
+                  border-color: $info-color;
+                  color: $info-color;
+                }
+              }
+            }
+
+            // Badge на кнопке подсообществ
+            .ant-badge {
+              .ant-badge-count {
+                background: $primary-color;
+                color: white;
+                font-weight: 600;
+                font-size: 10px;
+                min-width: 16px;
+                height: 16px;
+                line-height: 14px;
+                border-radius: 8px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+              }
+            }
+          }
         }
       }
     }
   }
 
-  .card-content {
-    flex-grow: 1;
-    margin-top: 20px;
-    font-size: 14px;
+  // Тело карточки
+  .card-body {
+    padding: 20px;
+
+    .info-section {
+      margin-bottom: var(--section-spacing);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+
+        .section-icon {
+          color: $primary-color;
+          font-size: 14px;
+          flex-shrink: 0;
+        }
+
+        .section-title {
+          font-size: 13px;
+          font-weight: 600;
+          color: $heading-color;
+        }
+      }
+
+      .section-content {
+        margin-left: 20px;
+        color: $text-color;
+        line-height: 1.5;
+        font-size: 13px;
+
+        &.date-content {
+          font-weight: 500;
+          color: $heading-color;
+        }
+
+        &.ant-typography {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .content-divider {
+      margin: 16px 0;
+      border-color: rgba($border-color, 0.6);
+    }
+
+    .expand-section {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 12px;
+      padding-top: 8px;
+      border-top: 1px solid rgba($border-color, 0.3);
+
+      .expand-button {
+        color: $info-color;
+        font-size: 12px;
+        font-weight: 500;
+        height: 28px;
+        padding: 0 12px;
+        border-radius: 4px;
+        transition: var(--card-transition);
+
+        &:hover {
+          background: rgba($info-color, 0.1);
+          color: $info-color;
+          transform: translateY(-1px);
+        }
+
+        .anticon {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 768px) {
+  .member-request-card {
+    .card-header {
+      padding: 16px 20px;
+
+      .header-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+
+        .title-section {
+          .community-title {
+            .community-name {
+              font-size: 15px;
+            }
+          }
+
+          .status-tag {
+            font-size: 11px;
+            padding: 2px 8px;
+          }
+        }
+
+        .actions-section {
+          .ant-space {
+            width: 100%;
+
+            .ant-space-item {
+              flex: 1;
+
+              .ant-btn {
+                width: 100%;
+                min-width: auto;
+                font-size: 11px;
+                height: 30px;
+                padding: 0 8px;
+
+                .anticon {
+                  font-size: 11px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .card-body {
+      padding: 16px;
+
+      .info-section {
+        margin-bottom: 12px;
+
+        .section-header {
+          .section-icon {
+            font-size: 12px;
+          }
+
+          .section-title {
+            font-size: 12px;
+          }
+        }
+
+        .section-content {
+          margin-left: 16px;
+          font-size: 12px;
+        }
+      }
+
+      .expand-section {
+        .expand-button {
+          font-size: 11px;
+          height: 26px;
+          padding: 0 10px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .member-request-card {
+    .card-header {
+      padding: 12px 16px;
+
+      .header-content {
+        .title-section {
+          .community-title {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+
+            .community-name {
+              font-size: 15px;
+              white-space: normal;
+              overflow: visible;
+              text-overflow: unset;
+              -webkit-line-clamp: 2;
+              -webkit-box-orient: vertical;
+              display: -webkit-box;
+            }
+
+          }
+        }
+
+        .actions-section {
+          .ant-space {
+            .ant-space-item {
+              .ant-btn {
+                span:not(.anticon) {
+                  display: none;
+                }
+
+                .anticon {
+                  margin: 0;
+                }
+
+                &.subcommunities-button {
+                  min-width: 36px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .card-body {
+      padding: 14px;
+
+      .info-section {
+        margin-bottom: 10px;
+
+        .section-header {
+          .section-title {
+            font-size: 11px;
+          }
+
+          .section-icon {
+            font-size: 11px;
+          }
+        }
+
+        .section-content {
+          margin-left: 14px;
+          font-size: 11px;
+        }
+      }
+
+      .content-divider {
+        margin: 12px 0;
+      }
+
+      .expand-section {
+        margin-top: 8px;
+        padding-top: 6px;
+
+        .expand-button {
+          height: 24px;
+          font-size: 10px;
+
+          span:not(.anticon) {
+            display: none;
+          }
+
+          .anticon {
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Высококонтрастный режим
+@media (prefers-contrast: more) {
+  .member-request-card {
+    border: 2px solid $text-color;
+
+    .card-header {
+      border-bottom: 2px solid $text-color;
+    }
+
+    .card-body {
+      .info-section {
+        .section-header {
+          .section-icon {
+            background: $text-color;
+            color: $background-color;
+            border-radius: 50%;
+            padding: 2px;
+          }
+        }
+      }
+
+      .expand-section {
+        border-top: 2px solid $text-color;
+
+        .expand-button {
+          border: 1px solid $text-color;
+        }
+      }
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  :root {
+    --header-bg: linear-gradient(135deg, rgba(24, 144, 255, 0.08) 0%, rgba(24, 144, 255, 0.03) 100%);
+  }
+
+  .member-request-card {
+    background-color: #1f1f1f;
+    border-color: #434343;
+
+    .card-header {
+      .header-content {
+        .title-section {
+          .community-title {
+            .community-name {
+              color: #ffffff;
+            }
+          }
+        }
+
+        .actions-section {
+          .ant-space {
+            .ant-space-item {
+              .ant-btn {
+                &.subcommunities-button {
+                  background: rgba($primary-color, 0.1);
+                  border-color: rgba($primary-color, 0.3);
+
+                  &:hover {
+                    background: rgba($primary-color, 0.15);
+                    border-color: rgba($primary-color, 0.5);
+                  }
+                }
+
+                &.ant-btn-default {
+                  background: #2a2a2a;
+                  border-color: #434343;
+                  color: #cccccc;
+
+                  &:hover {
+                    background: rgba($info-color, 0.1);
+                    border-color: rgba($info-color, 0.3);
+                    color: $info-color;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .card-body {
+      .info-section {
+        .section-header {
+          .section-title {
+            color: #ffffff;
+          }
+        }
+
+        .section-content {
+          color: #cccccc;
+
+          &.date-content {
+            color: #ffffff;
+          }
+        }
+      }
+
+      .content-divider {
+        border-color: rgba(#ffffff, 0.1);
+      }
+
+      .expand-section {
+        border-top-color: rgba(#ffffff, 0.1);
+
+        .expand-button {
+          &:hover {
+            background: rgba($info-color, 0.15);
+          }
+        }
+      }
+    }
   }
 }

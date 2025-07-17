@@ -23,7 +23,7 @@ import {
   UserOutlined,
   TagOutlined,
 } from '@ant-design/icons';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { CrudDataSourceService, UserSettingsAoService } from 'src/services';
 import {
   CategoryModel,
@@ -78,6 +78,8 @@ export function MyCommunitySettings(props: any) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isWorkGroup, setIsWorkGroup] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const isUpdatingRef = useRef(false);
 
   const communityId = props?.communityId;
   const nameService = new CrudDataSourceService(CommunityNameModel);
@@ -229,15 +231,37 @@ export function MyCommunitySettings(props: any) {
     getUserCommunitySettings();
   }, [getUserCommunitySettings]);
 
-  const onCustomSelectChange = (fieldName: string, value: any) => {
-    form.setFieldValue(fieldName, value);
-  };
+  const onCustomSelectChange = useCallback((fieldName: string, value: any) => {
+    // Проверяем, не находимся ли мы уже в процессе обновления
+    if (isUpdatingRef.current) return;
 
-  const onCommunitySelectChange = (value: any) => {
-    form.setFieldValue('sub_communities_settings', value);
-  };
+    // Используем requestIdleCallback для разрыва цикла или setTimeout как fallback
+    if (typeof requestIdleCallback !== 'undefined') {
+      requestIdleCallback(() => {
+        if (!isUpdatingRef.current) {
+          isUpdatingRef.current = true;
+          form.setFieldValue(fieldName, value);
+          // Сброс флага через короткий таймаут
+          setTimeout(() => {
+            isUpdatingRef.current = false;
+          }, 10);
+        }
+      });
+    } else {
+      setTimeout(() => {
+        if (!isUpdatingRef.current) {
+          isUpdatingRef.current = true;
+          form.setFieldValue(fieldName, value);
+          // Сброс флага через короткий таймаут
+          setTimeout(() => {
+            isUpdatingRef.current = false;
+          }, 10);
+        }
+      }, 0);
+    }
+  }, [form]);
 
-  const handleFormChange = () => {
+  const handleFormChange = useCallback(() => {
     const formData = form.getFieldsValue();
     const newIsWorkGroup = Boolean(formData.is_workgroup);
 
@@ -256,23 +280,47 @@ export function MyCommunitySettings(props: any) {
       (!formData.is_workgroup || (formData.is_workgroup && formData.workgroup));
 
     setDisabled(!isValid);
-  };
+  }, [form, isWorkGroup]);
 
-  const handleWorkGroupChange = (checked: boolean) => {
+  const handleWorkGroupChange = useCallback((checked: boolean) => {
     setIsWorkGroup(checked);
-    form.setFieldValue('is_workgroup', checked);
-  };
 
-  // Добавляем useEffect для отслеживания изменения is_workgroup в форме
+    // Проверяем, не находимся ли мы уже в процессе обновления
+    if (isUpdatingRef.current) return;
+
+    if (typeof requestIdleCallback !== 'undefined') {
+      requestIdleCallback(() => {
+        if (!isUpdatingRef.current) {
+          isUpdatingRef.current = true;
+          form.setFieldValue('is_workgroup', checked);
+          // Сброс флага через короткий таймаут
+          setTimeout(() => {
+            isUpdatingRef.current = false;
+          }, 10);
+        }
+      });
+    } else {
+      setTimeout(() => {
+        if (!isUpdatingRef.current) {
+          isUpdatingRef.current = true;
+          form.setFieldValue('is_workgroup', checked);
+          // Сброс флага через короткий таймаут
+          setTimeout(() => {
+            isUpdatingRef.current = false;
+          }, 10);
+        }
+      }, 0);
+    }
+  }, [form]);
+
   useEffect(() => {
     if (!isLoading) {
-      // Даем время форме обновиться после загрузки
       const timer = setTimeout(() => {
         handleFormChange();
       }, 100);
       return () => clearTimeout(timer);
     }
-  }, [isLoading]);
+  }, [isLoading, handleFormChange]);
 
   const onFinish = async () => {
     setButtonLoading(true);
@@ -800,6 +848,47 @@ export function MyCommunitySettings(props: any) {
       </Row>
     </Card>
   );
+
+  const onCommunitySelectChange = useCallback((value: any) => {
+    // Проверяем, не находимся ли мы уже в процессе обновления
+    if (isUpdatingRef.current) return;
+
+    // Проверяем, изменилось ли значение
+    const currentValue = form.getFieldValue('sub_communities_settings');
+
+    // Простое сравнение по количеству элементов и их id
+    const isEqual =
+      currentValue?.length === value?.length &&
+      currentValue?.every((item: any, index: number) =>
+        item?.id === value[index]?.id
+      );
+
+    if (isEqual) return;
+
+    if (typeof requestIdleCallback !== 'undefined') {
+      requestIdleCallback(() => {
+        if (!isUpdatingRef.current) {
+          isUpdatingRef.current = true;
+          form.setFieldValue('sub_communities_settings', value);
+          // Сброс флага через короткий таймаут
+          setTimeout(() => {
+            isUpdatingRef.current = false;
+          }, 10);
+        }
+      });
+    } else {
+      setTimeout(() => {
+        if (!isUpdatingRef.current) {
+          isUpdatingRef.current = true;
+          form.setFieldValue('sub_communities_settings', value);
+          // Сброс флага через короткий таймаут
+          setTimeout(() => {
+            isUpdatingRef.current = false;
+          }, 10);
+        }
+      }, 0);
+    }
+  }, [form]);
 
   // Внутренние сообщества
   const renderSubCommunities = () => (

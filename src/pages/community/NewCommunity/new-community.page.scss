@@ -1,0 +1,483 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+// Переменные для NewCommunity страницы
+:root {
+  --new-community-max-width: 1200px;
+  --new-community-header-height: 200px;
+  --new-community-footer-height: 120px;
+  --new-community-gradient: linear-gradient(135deg, rgba(204, 0, 0, 0.08) 0%, rgba(204, 0, 0, 0.02) 100%);
+  --new-community-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --new-community-transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+// Основная страница
+.new-community-page {
+  min-height: 100vh;
+  max-width: var(--new-community-max-width);
+  display: flex;
+  flex-direction: column;
+  margin: 24px auto;
+  padding-bottom: 60px;
+
+  // Заголовок страницы
+  .page-header {
+    background: var(--new-community-gradient);
+    border: 1px solid rgba(204, 0, 0, 0.1);
+    border-radius: 12px;
+    margin: 0 20px;
+    padding: 24px;
+
+    .header-content {
+      max-width: var(--new-community-max-width);
+      padding: 0 20px;
+
+      .header-main {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 24px;
+
+        .header-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 64px;
+          height: 64px;
+          background: rgba(204, 0, 0, 0.1);
+          border-radius: 16px;
+          border: 2px solid rgba(204, 0, 0, 0.2);
+
+          .anticon {
+            font-size: 28px;
+            color: $primary-color;
+          }
+        }
+
+        .header-text {
+          flex: 1;
+
+          .page-title {
+            color: $heading-color;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 32px;
+            line-height: 1.2;
+
+            &.ant-typography {
+              margin-bottom: 8px;
+            }
+          }
+
+          .page-subtitle {
+            font-size: 16px;
+            color: $text-color;
+            opacity: 0.8;
+            line-height: 1.4;
+          }
+        }
+      }
+
+      .header-steps {
+        .ant-steps {
+          .ant-steps-item {
+            .ant-steps-item-icon {
+              background: rgba(204, 0, 0, 0.1);
+              border-color: rgba(204, 0, 0, 0.3);
+
+              .anticon {
+                color: $primary-color;
+              }
+            }
+
+            &.ant-steps-item-active {
+              .ant-steps-item-icon {
+                background: $primary-color;
+                border-color: $primary-color;
+
+                .anticon {
+                  color: white;
+                }
+              }
+            }
+
+            .ant-steps-item-title {
+              color: $heading-color;
+              font-weight: 500;
+            }
+
+            .ant-steps-item-description {
+              color: $text-color;
+              opacity: 0.7;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Основной контент
+  .page-content {
+    flex: 1;
+    padding: 32px 0;
+
+    .content-container {
+      max-width: var(--new-community-max-width);
+      margin: 0 auto;
+      padding: 0 20px;
+
+      .info-card {
+        margin-bottom: 32px;
+        border-radius: 12px;
+        box-shadow: var(--new-community-card-shadow);
+        background: rgba(24, 144, 255, 0.02);
+        border: 1px solid rgba(24, 144, 255, 0.1);
+
+        .ant-card-body {
+          padding: 20px;
+        }
+
+        .info-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+
+          .info-icon {
+            color: $info-color;
+            font-size: 16px;
+            flex-shrink: 0;
+          }
+
+          .ant-typography {
+            margin: 0;
+            line-height: 1.4;
+          }
+        }
+      }
+
+      .form-container {
+        .new-community-form {
+          // Стили уже определены в new-community-form.component.scss
+        }
+      }
+    }
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 768px) {
+  :root {
+    --new-community-header-height: 160px;
+    --new-community-footer-height: 140px;
+  }
+
+  .new-community-page {
+    .page-header {
+      padding: 24px 0;
+
+      .header-content {
+        padding: 0 12px;
+
+        .header-main {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 16px;
+          margin-bottom: 20px;
+
+          .header-icon {
+            width: 56px;
+            height: 56px;
+
+            .anticon {
+              font-size: 24px;
+            }
+          }
+
+          .header-text {
+            text-align: center;
+            width: 100%;
+
+            .page-title {
+              font-size: 24px;
+            }
+
+            .page-subtitle {
+              font-size: 14px;
+            }
+          }
+        }
+
+        .header-steps {
+          .ant-steps {
+            .ant-steps-item {
+              .ant-steps-item-title {
+                font-size: 13px;
+              }
+
+              .ant-steps-item-description {
+                font-size: 12px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .page-content {
+      padding: 24px 0;
+
+      .content-container {
+        padding: 0 12px;
+
+        .info-card {
+          margin-bottom: 24px;
+
+          .ant-card-body {
+            padding: 16px;
+          }
+
+          .info-item {
+            gap: 8px;
+
+            .info-icon {
+              font-size: 14px;
+            }
+
+            .ant-typography {
+              font-size: 13px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .new-community-page {
+    .page-header {
+      padding: 20px 0;
+
+      .header-content {
+        padding: 0 8px;
+
+        .header-main {
+          .header-icon {
+            width: 48px;
+            height: 48px;
+
+            .anticon {
+              font-size: 20px;
+            }
+          }
+
+          .header-text {
+            .page-title {
+              font-size: 20px;
+            }
+
+            .page-subtitle {
+              font-size: 13px;
+            }
+          }
+        }
+      }
+    }
+
+    .page-content {
+      padding: 20px 0;
+
+      .content-container {
+        padding: 0 8px;
+
+        .info-card {
+          margin-bottom: 20px;
+
+          .ant-card-body {
+            padding: 12px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Высококонтрастный режим
+@media (prefers-contrast: more) {
+  .new-community-page {
+    .page-header {
+      border-bottom: 2px solid $text-color;
+
+      .header-content {
+        .header-main {
+          .header-icon {
+            border: 2px solid $primary-color;
+          }
+        }
+      }
+    }
+
+    .page-content {
+      .content-container {
+        .info-card {
+          border: 2px solid $info-color;
+        }
+      }
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  :root {
+    --new-community-gradient: linear-gradient(135deg, rgba(204, 0, 0, 0.15) 0%, rgba(204, 0, 0, 0.05) 100%);
+  }
+
+  .new-community-page {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+
+    .page-header {
+      .header-content {
+        .header-main {
+          .header-icon {
+            background: rgba(204, 0, 0, 0.2);
+            border-color: rgba(204, 0, 0, 0.4);
+          }
+
+          .header-text {
+            .page-title {
+              color: #ffffff;
+            }
+
+            .page-subtitle {
+              color: #cccccc;
+            }
+          }
+        }
+
+        .header-steps {
+          .ant-steps {
+            .ant-steps-item {
+              .ant-steps-item-title {
+                color: #ffffff;
+              }
+
+              .ant-steps-item-description {
+                color: #cccccc;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .page-content {
+      .content-container {
+        .info-card {
+          background: rgba(24, 144, 255, 0.05);
+          border-color: rgba(24, 144, 255, 0.2);
+
+          .info-item {
+            .ant-typography {
+              color: #ffffff;
+
+              &.ant-typography-secondary {
+                color: #cccccc;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Стили для печати
+@media print {
+  .new-community-page {
+    min-height: auto;
+    background: white;
+
+    .page-header {
+      background: none;
+      border-bottom: 2px solid #000;
+
+      .header-content {
+        .header-main {
+          .header-icon {
+            background: none;
+            border: 2px solid #000;
+
+            .anticon {
+              color: #000;
+            }
+          }
+
+          .header-text {
+            .page-title {
+              color: #000;
+            }
+
+            .page-subtitle {
+              color: #666;
+            }
+          }
+        }
+
+        .header-steps {
+          display: none;
+        }
+      }
+    }
+
+    .page-content {
+      .content-container {
+        .info-card {
+          background: none;
+          border: 1px solid #000;
+          box-shadow: none;
+
+          .info-item {
+            .info-icon {
+              color: #000;
+            }
+
+            .ant-typography {
+              color: #000;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Анимации
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.new-community-page {
+  .page-header {
+    animation: slideInUp 0.6s ease-out;
+  }
+
+  .page-content {
+    animation: fadeIn 0.8s ease-out 0.2s both;
+  }
+}

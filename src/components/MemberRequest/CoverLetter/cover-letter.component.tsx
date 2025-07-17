@@ -1,44 +1,64 @@
 import './cover-letter.component.scss';
-import { DownOutlined, UpOutlined } from '@ant-design/icons';
+import { DownOutlined, UpOutlined, FileTextOutlined } from '@ant-design/icons';
 import { useState } from 'react';
+import { Button, Typography } from 'antd';
 
-export function CoverLetter(props: any) {
+const { Text } = Typography;
+
+interface CoverLetterProps {
+  letter: string;
+  maxLength?: number;
+  showIcon?: boolean;
+  size?: 'small' | 'default' | 'large';
+}
+
+export function CoverLetter({
+  letter,
+  maxLength = 150,
+  showIcon = true,
+  size = 'default'
+}: CoverLetterProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const MAX_REASON_LENGTH = 100;
 
-  if (!props.letter) return null;
-
-  const shouldTruncate = props.letter.length > MAX_REASON_LENGTH;
-  const displayText =
-    isExpanded || !shouldTruncate
-      ? props.letter
-      : `${props.letter.substring(0, MAX_REASON_LENGTH)}...`;
+  const shouldTruncate = letter.length > maxLength;
+  const displayText = isExpanded || !shouldTruncate
+    ? letter
+    : `${letter.substring(0, maxLength)}...`;
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
 
   return (
-    <div className="letter-container">
+    <div className={`cover-letter cover-letter-${size}`}>
+      {showIcon && (
+        <div className="letter-header">
+          <FileTextOutlined className="letter-icon" />
+          <Text type="secondary" className="letter-label">
+            Сопроводительное письмо:
+          </Text>
+        </div>
+      )}
+
       <div className="letter-content">
-        <strong>Сопроводительное письмо:</strong>
-        <span
+        <Text
           className={`letter-text ${isExpanded ? 'expanded' : 'collapsed'}`}
         >
           {displayText}
-        </span>
+        </Text>
       </div>
+
       {shouldTruncate && (
-        <div className="expand-button" onClick={toggleExpand}>
-          {isExpanded ? (
-            <>
-              <UpOutlined /> Свернуть текст
-            </>
-          ) : (
-            <>
-              <DownOutlined /> Раскрыть текст
-            </>
-          )}
+        <div className="letter-actions">
+          <Button
+            type="text"
+            size="small"
+            icon={isExpanded ? <UpOutlined /> : <DownOutlined />}
+            onClick={toggleExpand}
+            className="expand-button"
+          >
+            {isExpanded ? 'Свернуть' : 'Показать полностью'}
+          </Button>
         </div>
       )}
     </div>

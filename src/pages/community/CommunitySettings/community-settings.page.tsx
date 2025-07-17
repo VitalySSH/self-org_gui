@@ -74,7 +74,7 @@ export function CommunitySettings(props: any) {
     } finally {
       setSettingsLoading(false);
     }
-  }, [communityId, communityService, form, navigate]);
+  }, []);
 
   useEffect(() => {
     getCommunitySettings();

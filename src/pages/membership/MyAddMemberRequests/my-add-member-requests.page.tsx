@@ -1,12 +1,17 @@
-import { Layout, List, Typography, Empty, Breadcrumb } from 'antd';
+import { Typography, Empty, Breadcrumb, Card, Space, Spin } from 'antd';
 import { MyMemberRequestCardItem } from 'src/interfaces';
 import { RequestMemberAoService } from 'src/services';
 import { useCallback, useEffect, useState } from 'react';
-import styles from 'src/shared/assets/scss/module/list.module.scss';
 import './my-add-member-requests.page.scss';
 import { MyMemberRequestCard } from 'src/components';
+import {
+  HomeOutlined,
+  TeamOutlined,
+  UserAddOutlined,
+  ArrowLeftOutlined
+} from '@ant-design/icons';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 type NavigationState = {
   currentLevel: number;
@@ -22,33 +27,32 @@ export function MyAddMemberRequests() {
     breadcrumbs: [],
     currentData: [],
   });
-  // const [showFilters, setShowFilters] = useState(false);
 
   const loadData = useCallback(async () => {
-    if (loading) {
-      try {
-        const requestMemberAoService = new RequestMemberAoService();
-        const resp = await requestMemberAoService.myList();
+    if (!loading) return;
 
-        setDataSource(resp.data);
-        setNavState({
-          currentLevel: 1,
-          breadcrumbs: [],
-          currentData: resp.data,
-        });
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
+    try {
+      const requestMemberAoService = new RequestMemberAoService();
+      const resp = await requestMemberAoService.myList();
+
+      setDataSource(resp.data);
+      setNavState({
+        currentLevel: 1,
+        breadcrumbs: [],
+        currentData: resp.data,
+      });
+    } catch (error) {
+      console.error('Error loading member requests:', error);
+    } finally {
+      setLoading(false);
     }
   }, [loading]);
 
   useEffect(() => {
-    loadData().then();
+    loadData();
   }, [loadData]);
 
-  const handleShowSubcommunities = (item: MyMemberRequestCardItem) => {
+  const handleShowSubcommunities = useCallback((item: MyMemberRequestCardItem) => {
     if (!item.children || item.children.length === 0) return;
 
     setNavState((prev) => ({
@@ -59,18 +63,21 @@ export function MyAddMemberRequests() {
       ],
       currentData: item.children || [],
     }));
-  };
+  }, []);
 
-  const handleGoBack = () => {
+  const handleGoBack = useCallback(() => {
     setNavState({
       currentLevel: 1,
       breadcrumbs: [],
       currentData: dataSource,
     });
-  };
+  }, [dataSource]);
 
-  const handleBreadcrumbClick = (index: number) => {
-    if (index === 0) return handleGoBack();
+  const handleBreadcrumbClick = useCallback((index: number) => {
+    if (index === 0) {
+      handleGoBack();
+      return;
+    }
 
     const newBreadcrumbs = navState.breadcrumbs.slice(0, index);
     const parentItem = newBreadcrumbs[newBreadcrumbs.length - 1];
@@ -94,69 +101,178 @@ export function MyAddMemberRequests() {
       breadcrumbs: newBreadcrumbs,
       currentData: findData(dataSource, parentItem.id),
     });
+  }, [navState.breadcrumbs, dataSource]);
+
+  const renderHeader = () => (
+    <div className="page-header">
+      <div className="header-content">
+        <div className="header-main">
+          <div className="header-icon">
+            <UserAddOutlined />
+          </div>
+          <div className="header-text">
+            <Title level={1} className="page-title">
+              Мои заявки на вступление
+            </Title>
+            <Text type="secondary" className="page-subtitle">
+              Управляйте заявками на вступление в сообщества
+            </Text>
+          </div>
+        </div>
+
+        {navState.currentLevel > 1 && (
+          <div className="header-navigation">
+            <Space>
+              <ArrowLeftOutlined
+                className="back-icon"
+                onClick={handleGoBack}
+                title="Вернуться к корню"
+              />
+              <Text type="secondary">
+                Уровень {navState.currentLevel} из {navState.breadcrumbs.length + 1}
+              </Text>
+            </Space>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  const renderBreadcrumbs = () => {
+    if (navState.currentLevel <= 1) return null;
+
+    const breadcrumbItems = [
+      {
+        title: (
+          <span
+            className="breadcrumb-item root-item"
+            onClick={handleGoBack}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                handleGoBack();
+              }
+            }}
+          >
+            <HomeOutlined className="breadcrumb-icon" />
+            <span>Все заявки</span>
+          </span>
+        ),
+        key: 'root',
+      },
+      ...navState.breadcrumbs.map((crumb, index) => ({
+        title: (
+          <span
+            className="breadcrumb-item"
+            onClick={() => handleBreadcrumbClick(index + 1)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                handleBreadcrumbClick(index + 1);
+              }
+            }}
+          >
+            <TeamOutlined className="breadcrumb-icon" />
+            <span>{crumb.name}</span>
+          </span>
+        ),
+        key: crumb.id,
+      })),
+    ];
+
+    return (
+      <Card className="breadcrumb-card" size="small">
+        <Breadcrumb
+          items={breadcrumbItems}
+          className="custom-breadcrumbs"
+          separator=">"
+        />
+      </Card>
+    );
+  };
+
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="loading-container">
+          <Spin size="large" />
+          <Text type="secondary" style={{ marginTop: 16 }}>
+            Загрузка заявок...
+          </Text>
+        </div>
+      );
+    }
+
+    if (!navState.currentData.length) {
+      return (
+        <Card className="empty-state-card">
+          <Empty
+            description={
+              navState.currentLevel > 1
+                ? "В этом сообществе нет подсообществ с заявками"
+                : "У вас нет заявок на вступление в сообщества"
+            }
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+          />
+        </Card>
+      );
+    }
+
+    return (
+      <div className="requests-list">
+        {navState.currentData.map((item) => (
+          <MyMemberRequestCard
+            key={item.key}
+            item={item}
+            setLoading={setLoading}
+            onShowSubCommunities={handleShowSubcommunities}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  const renderStats = () => {
+    if (loading || !dataSource.length) return null;
+
+    const totalRequests = navState.currentData.length;
+    const hasSubcommunities = navState.currentData.some(item => item.children?.length);
+    const withSubcommunitiesCount = navState.currentData.filter(item => item.children?.length).length;
+
+    return (
+      <Card className="stats-card" size="small">
+        <Space split={<span className="stats-divider">•</span>}>
+          <Text type="secondary">
+            Заявок: <Text strong>{totalRequests}</Text>
+          </Text>
+          {hasSubcommunities && (
+            <Text type="secondary">
+              С подсообществами: <Text strong>{withSubcommunitiesCount}</Text>
+            </Text>
+          )}
+          {navState.currentLevel > 1 && (
+            <Text type="secondary">
+              Уровень: <Text strong>{navState.currentLevel}</Text>
+            </Text>
+          )}
+        </Space>
+      </Card>
+    );
   };
 
   return (
-    <Layout className={styles.container}>
-      <div className={styles.header}>
-        <Title level={3} className={styles.title}>
-          Мои заявки на вступление в сообщества
-        </Title>
-        {/*{navState.currentLevel === 1 && (*/}
-        {/*  <div className={styles.buttons}>*/}
-        {/*    <Button type="text" onClick={() => setShowFilters(true)}>*/}
-        {/*      <Badge count={0} offset={[5, 0]}>*/}
-        {/*        <FilterOutlined style={{ fontSize: 20 }} />*/}
-        {/*      </Badge>*/}
-        {/*      Фильтры*/}
-        {/*    </Button>*/}
-        {/*  </div>*/}
-        {/*)}*/}
-      </div>
+    <div className="my-add-member-requests-page">
+      {renderHeader()}
 
-      <div
-        className="content-wrapper"
-        style={{
-          maxWidth: 800,
-          margin: '0 auto',
-          padding: '0 16px',
-          width: '100%',
-        }}
-      >
-        {navState.currentLevel > 1 && (
-          <Breadcrumb
-            items={navState.breadcrumbs.map((crumb, index) => ({
-              title: (
-                <span
-                  className="breadcrumb-item"
-                  onClick={() => handleBreadcrumbClick(index)}
-                >
-                  {crumb.name}
-                </span>
-              ),
-              key: crumb.id,
-            }))}
-            className="custom-breadcrumbs"
-          />
-        )}
-
-        <List
-          itemLayout="vertical"
-          dataSource={navState.currentData}
-          loading={loading}
-          locale={{ emptyText: <Empty description="Заявки не найдены" /> }}
-          className={styles.list}
-          renderItem={(item) => (
-            <List.Item className={styles.listItem}>
-              <MyMemberRequestCard
-                item={item}
-                setLoading={setLoading}
-                onShowSubCommunities={handleShowSubcommunities}
-              />
-            </List.Item>
-          )}
-        />
+      <div className="page-content">
+        <div className="content-container">
+          {renderBreadcrumbs()}
+          {renderStats()}
+          {renderContent()}
+        </div>
       </div>
-    </Layout>
+    </div>
   );
 }

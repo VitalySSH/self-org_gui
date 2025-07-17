@@ -15,7 +15,6 @@ import {
   Typography,
 } from 'antd';
 import { useAuth } from 'src/hooks';
-import './auth-header-icons.component.scss';
 import { useState, useCallback } from 'react';
 import TextArea from 'antd/lib/input/TextArea';
 import {
@@ -89,7 +88,7 @@ export function AuthHeaderIcons() {
   const userDisplayName = authData.user?.fullname || 'Пользователь';
 
   return (
-    <Flex className="auth-header-icons">
+    <Flex className="header-icons auth-header-icons">
       <Space size="middle" className="user-info-section">
         <div className="avatar-container">
           <Avatar

@@ -1,65 +1,614 @@
 @use 'src/shared/assets/scss/variables' as *;
 
-.custom-breadcrumbs {
-  border-radius: 8px;
-  width: 100%;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+// Переменные для страницы заявок
+:root {
+  --requests-page-max-width: 1200px;
+  --requests-header-bg: linear-gradient(135deg, rgba(204, 0, 0, 0.05) 0%, rgba(204, 0, 0, 0.02) 100%);
+  --requests-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --requests-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --requests-grid-gap: 24px;
+  --requests-breadcrumb-bg: rgba(24, 144, 255, 0.02);
+  --requests-stats-bg: rgba(82, 196, 26, 0.02);
+}
 
-  .ant-breadcrumb-separator {
-    margin: 0 8px;
-    color: rgba(0, 0, 0, 0.45);
-  }
+// Основная страница
+.my-add-member-requests-page {
+  min-height: 100vh;
+  max-width: var(--requests-page-max-width);
+  margin: 24px auto;
+  padding-bottom: 20px;
 
-  .breadcrumb-item {
-    font-size: 15px;
-    color: #1890ff;
-    cursor: pointer;
-    transition: color 0.2s;
-    display: inline-block;
-    //max-width: 200px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  // Заголовок страницы
+  .page-header {
+    background: var(--requests-header-bg);
+    border: 1px solid rgba(204, 0, 0, 0.1);
+    border-radius: 12px;
+    margin: 0 20px;
+    padding: 24px;
 
-    &:hover {
-      color: $primary-color;
-      text-decoration: underline;
+    .header-content {
+      max-width: var(--requests-page-max-width);
+      margin: 0 auto;
+      padding: 0 20px;
+
+      .header-main {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 16px;
+
+        .header-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 64px;
+          height: 64px;
+          background: rgba(204, 0, 0, 0.1);
+          border-radius: 16px;
+          border: 2px solid rgba(204, 0, 0, 0.2);
+
+          .anticon {
+            font-size: 28px;
+            color: $primary-color;
+          }
+        }
+
+        .header-text {
+          flex: 1;
+
+          .page-title {
+            color: $heading-color;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 28px;
+            line-height: 1.2;
+
+            &.ant-typography {
+              margin-bottom: 8px;
+            }
+          }
+
+          .page-subtitle {
+            font-size: 16px;
+            color: $text-color;
+            opacity: 0.8;
+            line-height: 1.4;
+          }
+        }
+      }
+
+      .header-navigation {
+        .back-icon {
+          color: $primary-color;
+          font-size: 16px;
+          cursor: pointer;
+          padding: 4px;
+          border-radius: 4px;
+          transition: var(--requests-transition);
+
+          &:hover {
+            background: rgba($primary-color, 0.1);
+            transform: translateX(-2px);
+          }
+        }
+      }
     }
   }
 
-  @media (max-width: $breakpoint-md) {
-    padding: 8px 12px;
-    border-radius: 6px;
-    overflow-x: auto;
-    white-space: nowrap;
-    display: flex;
+  // Основной контент
+  .page-content {
+    padding: 32px 0;
 
-    &::-webkit-scrollbar {
-      height: 4px;
-      background: transparent;
+    .content-container {
+      max-width: var(--requests-page-max-width);
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
     }
+  }
+}
 
-    &::-webkit-scrollbar-thumb {
-      background: #d9d9d9;
-      border-radius: 2px;
-    }
+// Карточка хлебных крошек
+.breadcrumb-card {
+  border-radius: 12px;
+  border: 1px solid rgba(24, 144, 255, 0.2);
+  background: var(--requests-breadcrumb-bg);
+  box-shadow: var(--requests-card-shadow);
 
-    .breadcrumb-item {
-      max-width: 120px;
-      font-size: 13px;
-    }
+  .ant-card-body {
+    padding: 16px 20px;
+  }
+
+  .custom-breadcrumbs {
+    margin: 0;
 
     .ant-breadcrumb-separator {
-      margin: 0 6px;
-      flex-shrink: 0;
+      margin: 0 12px;
+      color: rgba($primary-color, 0.4);
+      font-weight: bold;
+    }
+
+    .breadcrumb-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: $primary-color;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: var(--requests-transition);
+      font-weight: 500;
+
+      &:hover {
+        background: rgba($primary-color, 0.1);
+        color: #e60000;
+        transform: translateY(-1px);
+      }
+
+      &.root-item {
+        color: $info-color;
+
+        &:hover {
+          background: rgba($info-color, 0.1);
+          color: #1890ff;
+        }
+      }
+
+      .breadcrumb-icon {
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+// Карточка статистики
+.stats-card {
+  border-radius: 12px;
+  border: 1px solid rgba(82, 196, 26, 0.2);
+  background: var(--requests-stats-bg);
+  box-shadow: var(--requests-card-shadow);
+
+  .ant-card-body {
+    padding: 12px 20px;
+  }
+
+  .stats-divider {
+    color: rgba($text-color, 0.3);
+    margin: 0 12px;
+  }
+
+  .ant-typography {
+    font-size: 14px;
+    margin: 0;
+
+    &.ant-typography-strong {
+      color: $success-color;
+    }
+  }
+}
+
+// Контейнер загрузки
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+
+  .ant-spin {
+    .ant-spin-dot {
+      .ant-spin-dot-item {
+        background-color: $primary-color;
+      }
+    }
+  }
+}
+
+// Карточка пустого состояния
+.empty-state-card {
+  border-radius: 12px;
+  border: 1px dashed $border-color;
+  background: rgba($background-color, 0.5);
+  box-shadow: var(--requests-card-shadow);
+
+  .ant-card-body {
+    padding: 48px 24px;
+    text-align: center;
+  }
+
+  .ant-empty {
+    .ant-empty-description {
+      color: $text-color;
+      font-size: 16px;
+      opacity: 0.7;
+    }
+  }
+}
+
+// Список заявок - построчное расположение
+.requests-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 1s ease-out 0.4s both;
+
+  // Каждая карточка занимает всю ширину строки
+  .member-request-card-wrapper {
+    width: 100%;
+    animation: slideInUp 0.6s ease-out both;
+
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{0.5 + ($i * 0.1)}s;
+      }
+    }
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 1200px) {
+  .my-add-member-requests-page {
+    .page-header,
+    .page-content {
+      .header-content,
+      .content-container {
+        padding: 0 16px;
+      }
     }
   }
 
-  @media (max-width: $breakpoint-xs) {
-    .breadcrumb-item {
-      max-width: 80px;
+  .requests-list {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --requests-grid-gap: 16px;
+  }
+
+  .my-add-member-requests-page {
+    .page-header {
+      padding: 24px 0;
+
+      .header-content {
+        padding: 0 12px;
+
+        .header-main {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 16px;
+          margin-bottom: 12px;
+
+          .header-icon {
+            width: 56px;
+            height: 56px;
+
+            .anticon {
+              font-size: 24px;
+            }
+          }
+
+          .header-text {
+            text-align: center;
+            width: 100%;
+
+            .page-title {
+              font-size: 24px;
+            }
+
+            .page-subtitle {
+              font-size: 14px;
+            }
+          }
+        }
+      }
     }
+
+    .page-content {
+      padding: 24px 0;
+
+      .content-container {
+        padding: 0 12px;
+        gap: 16px;
+      }
+    }
+  }
+
+  .breadcrumb-card {
+    .ant-card-body {
+      padding: 12px 16px;
+    }
+
+    .custom-breadcrumbs {
+      .ant-breadcrumb-separator {
+        margin: 0 8px;
+      }
+
+      .breadcrumb-item {
+        font-size: 13px;
+        padding: 3px 6px;
+
+        .breadcrumb-icon {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+
+  .stats-card {
+    .ant-card-body {
+      padding: 10px 16px;
+    }
+
+    .stats-divider {
+      margin: 0 8px;
+    }
+
+    .ant-typography {
+      font-size: 13px;
+    }
+  }
+
+  .requests-list {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .my-add-member-requests-page {
+    .page-header {
+      padding: 20px 0;
+
+      .header-content {
+        padding: 0 8px;
+
+        .header-main {
+          .header-icon {
+            width: 48px;
+            height: 48px;
+
+            .anticon {
+              font-size: 20px;
+            }
+          }
+
+          .header-text {
+            .page-title {
+              font-size: 20px;
+            }
+
+            .page-subtitle {
+              font-size: 13px;
+            }
+          }
+        }
+      }
+    }
+
+    .page-content {
+      padding: 20px 0;
+
+      .content-container {
+        padding: 0 8px;
+        gap: 12px;
+      }
+    }
+  }
+
+  .breadcrumb-card {
+    .ant-card-body {
+      padding: 8px 12px;
+    }
+
+    .custom-breadcrumbs {
+      .breadcrumb-item {
+        font-size: 12px;
+        gap: 4px;
+
+        span:not(.anticon) {
+          display: none;
+        }
+
+        .breadcrumb-icon {
+          margin: 0;
+        }
+      }
+
+      &::after {
+        content: attr(title);
+        display: block;
+        font-size: 10px;
+        color: rgba($text-color, 0.6);
+        margin-top: 4px;
+      }
+    }
+  }
+
+  .stats-card {
+    .ant-card-body {
+      padding: 8px 12px;
+    }
+  }
+
+  .empty-state-card {
+    .ant-card-body {
+      padding: 32px 16px;
+    }
+
+    .ant-empty {
+      .ant-empty-description {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .requests-list {
+    gap: 8px;
+  }
+}
+
+// Высококонтрастный режим
+@media (prefers-contrast: more) {
+  .my-add-member-requests-page {
+    .page-header {
+      border-bottom: 2px solid $text-color;
+    }
+  }
+
+  .breadcrumb-card,
+  .stats-card,
+  .empty-state-card {
+    border: 2px solid $text-color;
+  }
+
+  .breadcrumb-card {
+    .custom-breadcrumbs {
+      .breadcrumb-item {
+        border: 1px solid transparent;
+
+        &:hover {
+          border-color: $primary-color;
+        }
+      }
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  :root {
+    --requests-header-bg: linear-gradient(135deg, rgba(204, 0, 0, 0.1) 0%, rgba(204, 0, 0, 0.05) 100%);
+    --requests-breadcrumb-bg: rgba(24, 144, 255, 0.05);
+    --requests-stats-bg: rgba(82, 196, 26, 0.05);
+  }
+
+  .my-add-member-requests-page {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+
+    .page-header {
+      .header-content {
+        .header-main {
+          .header-icon {
+            background: rgba(204, 0, 0, 0.2);
+            border-color: rgba(204, 0, 0, 0.4);
+          }
+
+          .header-text {
+            .page-title {
+              color: #ffffff;
+            }
+
+            .page-subtitle {
+              color: #cccccc;
+            }
+          }
+        }
+
+        .header-navigation {
+          .back-icon {
+            &:hover {
+              background: rgba($primary-color, 0.15);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .breadcrumb-card,
+  .stats-card,
+  .empty-state-card {
+    background-color: #1f1f1f;
+    border-color: #434343;
+  }
+
+  .breadcrumb-card {
+    background: rgba(24, 144, 255, 0.05);
+    border-color: rgba(24, 144, 255, 0.2);
+
+    .custom-breadcrumbs {
+      .breadcrumb-item {
+        &:hover {
+          background: rgba($primary-color, 0.15);
+        }
+
+        &.root-item:hover {
+          background: rgba($info-color, 0.15);
+        }
+      }
+    }
+  }
+
+  .stats-card {
+    background: rgba(82, 196, 26, 0.05);
+    border-color: rgba(82, 196, 26, 0.2);
+
+    .stats-divider {
+      color: rgba(#ffffff, 0.3);
+    }
+
+    .ant-typography {
+      color: #ffffff;
+
+      &.ant-typography-secondary {
+        color: #cccccc;
+      }
+    }
+  }
+
+  .empty-state-card {
+    background: rgba(#ffffff, 0.02);
+    border-color: #434343;
+
+    .ant-empty {
+      .ant-empty-description {
+        color: #cccccc;
+      }
+    }
+  }
+}
+
+// Анимации
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Анимации для элементов страницы
+.my-add-member-requests-page {
+  .page-header {
+    animation: slideInUp 0.6s ease-out;
+  }
+
+  .breadcrumb-card {
+    animation: fadeIn 0.8s ease-out 0.2s both;
+  }
+
+  .stats-card {
+    animation: fadeIn 0.8s ease-out 0.3s both;
+  }
+
+  .empty-state-card,
+  .loading-container {
+    animation: fadeIn 0.8s ease-out 0.4s both;
   }
 }
