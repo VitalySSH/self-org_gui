@@ -1,0 +1,7 @@
+@use 'src/shared/assets/scss/ui/form-page-common' as common;
+@use 'src/shared/assets/scss/variables' as *;
+
+// Применяем общие стили для форм с красным тематическим цветом
+.new-delegate-page {
+  @include common.form-page-base($primary-color);
+}

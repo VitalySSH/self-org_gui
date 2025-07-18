@@ -142,6 +142,7 @@
   .ant-select-arrow {
     color: #999;
     transition: var(--form-transition);
+    margin-top: 0 !important;
 
     &:hover {
       color: var(--form-focus-border-color);

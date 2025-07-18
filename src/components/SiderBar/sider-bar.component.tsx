@@ -1,4 +1,5 @@
-import { Button, Flex, Image, Layout, Menu, Tooltip } from 'antd';
+import { useEffect, useState } from 'react';
+import { Button, Flex, Image, Layout, Menu, Tooltip, Card, Typography } from 'antd';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -16,24 +17,18 @@ import {
   CrownOutlined,
   ApiOutlined,
   TrophyOutlined,
+  GlobalOutlined,
+  UserOutlined,
   HomeOutlined,
 } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import { SiderBarInterface } from 'src/interfaces';
 import { AuthCard } from 'src/components';
 import { MenuItem } from 'src/shared/types.ts';
 import { SubCommunitiesLabel } from 'src/consts';
 
 const { Sider } = Layout;
-
-const communitiesMenuItems: MenuItem[] = [
-  {
-    key: 'communities',
-    icon: <HomeOutlined />,
-    label: 'Все',
-  }
-];
+const { Text } = Typography;
 
 const userGuideMenuItems: MenuItem[] = [
   {
@@ -131,17 +126,13 @@ export function SiderBar(props: SiderBarInterface) {
   const navigate = useNavigate();
 
   const [collapsed, setCollapsed] = useState(false);
-
   const [logoPath, setLogoPath] = useState('/utu_logo.png');
-
-  const [communitiesMenuKeys, setCommunitiesMenuKeys] = useState<string[]>([]);
-
+  const [communitiesActive, setCommunitiesActive] = useState(false);
   const [userGuideMenuKeys, setUserGuideMenuKeys] = useState<string[]>([]);
-
   const [communityWSMenuKeys, setCommunityWSMenuKeys] = useState<string[]>([]);
 
   const cleanKeys = () => {
-    setCommunitiesMenuKeys([]);
+    setCommunitiesActive(false);
     setUserGuideMenuKeys([]);
     setCommunityWSMenuKeys([]);
   };
@@ -151,12 +142,20 @@ export function SiderBar(props: SiderBarInterface) {
     navigate('/');
   };
 
+  const onClickCommunities = () => {
+    cleanKeys();
+    setCommunitiesActive(true);
+    navigate('/communities');
+  };
+
   useEffect(() => {
     if (props.isBlocked) navigate('/no-much-page');
+
     if (location.pathname === '/') {
       cleanKeys();
     } else {
       const pathname = location.pathname.split('/');
+
       if (props.isCommunityWS) {
         if (pathname.length > 3) {
           setCommunityWSMenuKeys([pathname[3]]);
@@ -165,29 +164,86 @@ export function SiderBar(props: SiderBarInterface) {
           navigate('summary');
         }
       } else {
-        if (pathname.length >= 1) {
-          cleanKeys();
-          const currentKey = pathname[1];
-          if (props.isNotAuthorized) {
+        cleanKeys();
+        const currentKey = pathname[1];
+
+        // Проверяем, находимся ли мы на странице сообществ
+        if (currentKey === 'communities') {
+          setCommunitiesActive(true);
+        } else if (props.isNotAuthorized) {
+          setUserGuideMenuKeys([currentKey]);
+        } else {
+          const isFindUserGuide = userGuideMenuItems.find(
+            (it) => it?.key === currentKey
+          );
+          if (isFindUserGuide) {
             setUserGuideMenuKeys([currentKey]);
-          } else {
-            const isFindUserGuide = userGuideMenuItems.find(
-              (it) => it?.key === currentKey
-            );
-            if (isFindUserGuide) {
-              setUserGuideMenuKeys([currentKey]);
-            }
-            const isFindCommunities = communitiesMenuItems.find(
-              (it) => it?.key === currentKey
-            );
-            if (isFindCommunities) {
-              setCommunitiesMenuKeys([currentKey]);
-            }
           }
         }
       }
     }
   }, [location.pathname, navigate, props.isCommunityWS, props.isNotAuthorized]);
+
+  // Компонент навигации к сообществам
+  const renderCommunitiesNavigation = () => {
+    if (collapsed) {
+      return (
+        <Tooltip title="Сообщества" placement="right">
+          <div
+            className={`communities-nav-collapsed ${communitiesActive ? 'active' : ''}`}
+            onClick={onClickCommunities}
+          >
+            <div className="communities-icon-wrapper">
+              <GlobalOutlined className="communities-main-icon" />
+              <UserOutlined className="communities-sub-icon" />
+            </div>
+          </div>
+        </Tooltip>
+      );
+    }
+
+    return (
+      <div className="communities-navigation">
+        <Card
+          className={`communities-nav-card ${communitiesActive ? 'active' : ''}`}
+          onClick={onClickCommunities}
+          hoverable
+          size="small"
+        >
+          <div className="communities-nav-content">
+            <div className="communities-icons">
+              <GlobalOutlined className="communities-main-icon" />
+              <UserOutlined className="communities-sub-icon" />
+            </div>
+            <div className="communities-text">
+              <Text className="communities-title">Сообщества</Text>
+            </div>
+            <HomeOutlined className="communities-arrow" />
+          </div>
+        </Card>
+      </div>
+    );
+  };
+
+  // Компонент для неавторизованных пользователей
+  const renderUnauthorizedContent = () => (
+    <div className="sider-unauthorized">
+      <div className="auth-welcome">
+        <div className="welcome-icon">
+          <TeamOutlined />
+        </div>
+        <div className="welcome-text">
+          <Text className="welcome-title">Добро пожаловать!</Text>
+          <Text className="welcome-subtitle" type="secondary">
+            Войдите для доступа к сообществам
+          </Text>
+        </div>
+      </div>
+      <div className="sider-auth-container">
+        <AuthCard />
+      </div>
+    </div>
+  );
 
   return (
     <Sider
@@ -208,7 +264,7 @@ export function SiderBar(props: SiderBarInterface) {
     >
       <Flex align="center" justify="center" className="sider-logo">
         <Image
-          height={40}
+          height={collapsed ? 32 : 40}
           preview={false}
           src={logoPath}
           onClick={onClickImage}
@@ -217,69 +273,57 @@ export function SiderBar(props: SiderBarInterface) {
         />
       </Flex>
 
-      {!props.isCommunityWS && !props.isNotAuthorized && (
+      {props.isNotAuthorized ? (
+        !collapsed && renderUnauthorizedContent()
+      ) : (
         <>
-          {!collapsed && <div className="menu-header">Сообщества</div>}
-          {collapsed && (
-            <Tooltip title="Сообщества" placement="right">
-              <ApartmentOutlined className="menu-header-icon" />
-            </Tooltip>
-          )}
-          <Menu
-            mode="inline"
-            items={communitiesMenuItems}
-            onClick={(item) => {
-              setCommunitiesMenuKeys([item.key]);
-              navigate(item.key);
-            }}
-            selectedKeys={communitiesMenuKeys}
-            className="sider-menu"
-          />
-          {!collapsed && (
-            <div className="menu-header">Руководство пользователя</div>
-          )}
-          {collapsed && (
-            <Tooltip title="Руководство пользователя" placement="right">
-              <BookOutlined className="menu-header-icon" />
-            </Tooltip>
-          )}
-          <Menu
-            mode="inline"
-            items={userGuideMenuItems}
-            onClick={() => {
-              // setUserGuideMenuKeys([item.key]);
-              // navigate(item.key);
-            }}
-            selectedKeys={userGuideMenuKeys}
-            className="sider-menu sider-menu-disabled"
-          />
-        </>
-      )}
-      {props.isCommunityWS && (
-        <>
-          {!collapsed && <div className="menu-header">Сообщество</div>}
-          {collapsed && (
-            <Tooltip title="Сообщество" placement="right">
-              <ApartmentOutlined className="menu-header-icon" />
-            </Tooltip>
-          )}
-          <Menu
-            mode="inline"
-            items={communityWSMenuItems}
-            onClick={(item) => {
-              setCommunityWSMenuKeys([item.key]);
-              navigate(item.key);
-            }}
-            selectedKeys={communityWSMenuKeys}
-            className="sider-menu"
-          />
-        </>
-      )}
+          {!props.isCommunityWS && (
+            <>
+              {/* Навигация к сообществам */}
+              {renderCommunitiesNavigation()}
 
-      {!collapsed && props.isNotAuthorized && (
-        <div className="sider-auth-container">
-          <AuthCard />
-        </div>
+              {/* Руководство пользователя */}
+              {!collapsed && <div className="menu-header">Руководство пользователя</div>}
+              {collapsed && (
+                <Tooltip title="Руководство пользователя" placement="right">
+                  <BookOutlined className="menu-header-icon" />
+                </Tooltip>
+              )}
+              <Menu
+                mode="inline"
+                items={userGuideMenuItems}
+                onClick={() => {
+                  // setUserGuideMenuKeys([item.key]);
+                  // navigate(item.key);
+                }}
+                selectedKeys={userGuideMenuKeys}
+                className="sider-menu sider-menu-disabled"
+              />
+            </>
+          )}
+
+          {props.isCommunityWS && (
+            <>
+              {renderCommunitiesNavigation()}
+              {!collapsed && <div className="menu-header">Сообщество</div>}
+              {collapsed && (
+                <Tooltip title="Сообщество" placement="right">
+                  <ApartmentOutlined className="menu-header-icon" />
+                </Tooltip>
+              )}
+              <Menu
+                mode="inline"
+                items={communityWSMenuItems}
+                onClick={(item) => {
+                  setCommunityWSMenuKeys([item.key]);
+                  navigate(item.key);
+                }}
+                selectedKeys={communityWSMenuKeys}
+                className="sider-menu"
+              />
+            </>
+          )}
+        </>
       )}
 
       <Button
@@ -301,6 +345,7 @@ export function SiderBar(props: SiderBarInterface) {
         }}
         className="trigger-btn"
       />
+
       {!collapsed && (
         <Flex align="center" justify="center" className="sider-footer">
           <div className="sider-copyright">

@@ -1,0 +1,930 @@
+@use 'sass:color';
+@use 'src/shared/assets/scss/variables' as *;
+
+// Переменные для страницы правил
+:root {
+  --rules-max-width: 1200px;
+  --rules-header-bg: linear-gradient(135deg, rgba(114, 46, 209, 0.05) 0%, rgba(114, 46, 209, 0.02) 100%);
+  --rules-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --rules-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --rules-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --rules-grid-gap: 20px;
+  --rules-stats-bg: rgba(114, 46, 209, 0.02);
+}
+
+// Основная страница правил
+.rules-page {
+  min-height: 100vh;
+  max-width: var(--rules-max-width);
+  margin: 24px auto;
+  padding-bottom: 20px;
+
+  // Заголовок страницы
+  .page-header {
+    background: var(--rules-header-bg);
+    border: 1px solid rgba(114, 46, 209, 0.1);
+    border-radius: 12px;
+    margin: 0 20px;
+    padding: 24px;
+
+    .header-content {
+      max-width: var(--rules-max-width);
+      margin: 0 auto;
+      padding: 0 20px;
+
+      .header-main {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 20px;
+
+        .header-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 64px;
+          height: 64px;
+          background: rgba(114, 46, 209, 0.1);
+          border-radius: 16px;
+          border: 2px solid rgba(114, 46, 209, 0.2);
+
+          .anticon {
+            font-size: 28px;
+            color: #722ed1;
+          }
+        }
+
+        .header-text {
+          flex: 1;
+
+          .page-title {
+            color: $heading-color;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 28px;
+            line-height: 1.2;
+
+            &.ant-typography {
+              margin-bottom: 8px;
+            }
+          }
+
+          .page-subtitle {
+            font-size: 16px;
+            color: $text-color;
+            opacity: 0.8;
+            line-height: 1.4;
+          }
+        }
+      }
+
+      .header-actions {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        .ant-space {
+          .action-button,
+          .filter-button {
+            transition: var(--rules-transition);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 13px;
+            height: 36px;
+
+            &:hover {
+              transform: translateY(-1px);
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            &.action-button {
+              border-color: rgba($success-color, 0.3);
+              color: $success-color;
+
+              &:hover {
+                border-color: $success-color;
+                color: $success-color;
+              }
+            }
+
+            &.filter-button {
+              border-color: rgba($info-color, 0.3);
+
+              &:hover {
+                border-color: $info-color;
+                color: $info-color;
+              }
+            }
+
+            .ant-badge {
+              .ant-badge-count {
+                font-weight: 600;
+                font-size: 10px;
+                min-width: 14px;
+                height: 14px;
+                line-height: 12px;
+                border-radius: 7px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Основной контент
+  .page-content {
+    padding: 32px 0;
+
+    .content-container {
+      max-width: var(--rules-max-width);
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+  }
+}
+
+// Карточка статистики
+.stats-card {
+  border-radius: 12px;
+  border: 1px solid rgba(114, 46, 209, 0.2);
+  background: var(--rules-stats-bg);
+  box-shadow: var(--rules-card-shadow);
+
+  .ant-card-body {
+    padding: 16px 20px;
+  }
+
+  .stats-divider {
+    color: rgba($text-color, 0.3);
+    margin: 0 12px;
+  }
+
+  .ant-typography {
+    font-size: 14px;
+    margin: 0;
+
+    &.ant-typography-strong {
+      font-weight: 600;
+    }
+
+    // Цветные акценты для разных статусов
+    strong {
+      &[style*="color: #722ed1"] {
+        background: rgba(114, 46, 209, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      &[style*="color: #52c41a"] {
+        background: rgba(82, 196, 26, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      &[style*="color: #1890ff"] {
+        background: rgba(24, 144, 255, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      &[style*="color: #fa8c16"] {
+        background: rgba(250, 140, 22, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+    }
+  }
+
+  .ant-space {
+    &.ant-space-wrap {
+      .ant-space-item {
+        margin-bottom: 4px;
+      }
+    }
+  }
+}
+
+// Контейнер загрузки
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+
+  .ant-spin {
+    .ant-spin-dot {
+      .ant-spin-dot-item {
+        background-color: #722ed1;
+      }
+    }
+  }
+}
+
+// Карточка пустого состояния
+.empty-state-card {
+  border-radius: 12px;
+  border: 1px dashed $border-color;
+  background: rgba($background-color, 0.5);
+  box-shadow: var(--rules-card-shadow);
+
+  .ant-card-body {
+    padding: 48px 24px;
+    text-align: center;
+  }
+
+  .ant-empty {
+    .ant-empty-description {
+      color: $text-color;
+      font-size: 16px;
+      opacity: 0.7;
+      margin-bottom: 16px;
+    }
+
+    .ant-btn {
+      border-radius: 6px;
+      font-weight: 500;
+      transition: var(--rules-transition);
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+    }
+  }
+}
+
+// Список правил
+.rules-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 1s ease-out 0.4s both;
+
+  .rule-row-wrapper {
+    width: 100%;
+    animation: slideInUp 0.6s ease-out both;
+
+    // Стили для карточки правила
+    .ant-list-item {
+      border: none;
+      padding: 0;
+      margin-bottom: 0;
+
+      .rule-card {
+        transition: var(--rules-transition);
+        box-shadow: var(--rules-card-shadow);
+        border-radius: 12px;
+        border: 1px solid rgba($border-color, 0.6);
+        cursor: pointer;
+        overflow: hidden;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: var(--rules-hover-shadow);
+          border-color: rgba(#722ed1, 0.3);
+        }
+
+        .ant-card-body {
+          padding: 24px;
+          background: linear-gradient(135deg, $background-color 0%, rgba($secondary-color, 0.5) 100%);
+
+          .rule-info {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+
+            .rule-header {
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
+              gap: 16px;
+
+              .rule-main {
+                flex: 1;
+
+                .rule-title {
+                  font-size: 18px;
+                  font-weight: 600;
+                  color: $heading-color;
+                  margin-bottom: 8px;
+                  line-height: 1.3;
+                }
+
+                .rule-description {
+                  font-size: 14px;
+                  color: rgba($text-color, 0.8);
+                  line-height: 1.5;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 2;
+                  -webkit-box-orient: vertical;
+                  overflow: hidden;
+                }
+              }
+
+              .rule-status {
+                flex-shrink: 0;
+
+                .status-badge {
+                  padding: 4px 12px;
+                  border-radius: 16px;
+                  font-size: 12px;
+                  font-weight: 600;
+                  text-transform: uppercase;
+                  letter-spacing: 0.5px;
+
+                  &.active {
+                    background: rgba($success-color, 0.1);
+                    color: $success-color;
+                    border: 1px solid rgba($success-color, 0.3);
+                  }
+
+                  &.draft {
+                    background: rgba($accent-yellow, 0.1);
+                    color: #d4911e;
+                    border: 1px solid rgba($accent-yellow, 0.3);
+                  }
+
+                  &.inactive {
+                    background: rgba($text-color, 0.1);
+                    color: $text-color;
+                    border: 1px solid rgba($text-color, 0.3);
+                  }
+                }
+              }
+            }
+
+            .rule-meta {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding-top: 12px;
+              border-top: 1px solid rgba($border-color, 0.5);
+
+              .rule-details {
+                display: flex;
+                gap: 20px;
+                flex: 1;
+
+                .meta-item {
+                  display: flex;
+                  align-items: center;
+                  gap: 6px;
+                  font-size: 12px;
+                  color: rgba($text-color, 0.6);
+
+                  .meta-icon {
+                    font-size: 14px;
+                    color: #722ed1;
+                  }
+
+                  .meta-value {
+                    font-weight: 500;
+                  }
+                }
+              }
+
+              .rule-tracker {
+                font-family: 'JetBrains Mono', 'Consolas', monospace;
+                font-size: 11px;
+                padding: 2px 6px;
+                background: rgba(#722ed1, 0.1);
+                color: #722ed1;
+                border-radius: 4px;
+                border: 1px solid rgba(#722ed1, 0.2);
+              }
+            }
+          }
+        }
+
+        // Hover эффект для карточки
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: linear-gradient(90deg, #722ed1 0%, color.mix(black, #722ed1, 10%) 100%);
+          transform: scaleX(0);
+          transition: transform 0.3s ease;
+        }
+
+        &:hover::before {
+          transform: scaleX(1);
+        }
+      }
+    }
+  }
+}
+
+// Пагинация
+.rules-pagination {
+  margin-top: 32px;
+  text-align: center;
+
+  .ant-pagination {
+    .ant-pagination-item {
+      border-radius: 6px;
+      border-color: $border-color;
+
+      &:hover {
+        border-color: #722ed1;
+      }
+
+      &.ant-pagination-item-active {
+        background: #722ed1;
+        border-color: #722ed1;
+
+        a {
+          color: white;
+        }
+      }
+    }
+
+    .ant-pagination-prev,
+    .ant-pagination-next {
+      border-radius: 6px;
+
+      &:hover {
+        border-color: #722ed1;
+        color: #722ed1;
+      }
+    }
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 1400px) {
+  .rules-page {
+    .page-header,
+    .page-content {
+      .header-content,
+      .content-container {
+        max-width: 1200px;
+        padding: 0 16px;
+      }
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  :root {
+    --rules-grid-gap: 16px;
+  }
+
+  .rules-list {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .rules-page {
+    .page-header {
+      padding: 24px 0;
+
+      .header-content {
+        padding: 0 12px;
+
+        .header-main {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 16px;
+          margin-bottom: 16px;
+
+          .header-icon {
+            width: 56px;
+            height: 56px;
+
+            .anticon {
+              font-size: 24px;
+            }
+          }
+
+          .header-text {
+            text-align: center;
+            width: 100%;
+
+            .page-title {
+              font-size: 24px;
+            }
+
+            .page-subtitle {
+              font-size: 14px;
+            }
+          }
+        }
+
+        .header-actions {
+          width: 100%;
+          justify-content: center;
+
+          .ant-space {
+            width: 100%;
+            justify-content: center;
+
+            .action-button,
+            .filter-button {
+              flex: 1;
+              max-width: 150px;
+            }
+          }
+        }
+      }
+    }
+
+    .page-content {
+      padding: 24px 0;
+
+      .content-container {
+        padding: 0 12px;
+        gap: 16px;
+      }
+    }
+  }
+
+  .stats-card {
+    .ant-card-body {
+      padding: 12px 16px;
+    }
+
+    .stats-divider {
+      margin: 0 8px;
+    }
+
+    .ant-typography {
+      font-size: 13px;
+    }
+  }
+
+  .rules-list {
+    gap: 12px;
+
+    .rule-row-wrapper {
+      .rule-card {
+        .ant-card-body {
+          padding: 20px;
+
+          .rule-info {
+            gap: 12px;
+
+            .rule-header {
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 12px;
+
+              .rule-main {
+                .rule-title {
+                  font-size: 16px;
+                }
+              }
+            }
+
+            .rule-meta {
+              .rule-details {
+                gap: 12px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .rules-page {
+    .page-header {
+      padding: 20px 0;
+
+      .header-content {
+        padding: 0 8px;
+
+        .header-main {
+          .header-icon {
+            width: 48px;
+            height: 48px;
+
+            .anticon {
+              font-size: 20px;
+            }
+          }
+
+          .header-text {
+            .page-title {
+              font-size: 20px;
+            }
+
+            .page-subtitle {
+              font-size: 13px;
+            }
+          }
+        }
+
+        .header-actions {
+          .ant-space {
+            .action-button,
+            .filter-button {
+              span:not(.ant-badge):not(.anticon) {
+                display: none;
+              }
+
+              .anticon {
+                margin: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .page-content {
+      padding: 20px 0;
+
+      .content-container {
+        padding: 0 8px;
+        gap: 12px;
+      }
+    }
+  }
+
+  .stats-card {
+    .ant-card-body {
+      padding: 10px 12px;
+    }
+
+    .ant-space {
+      &.ant-space-wrap {
+        .ant-space-item {
+          margin-bottom: 8px;
+          width: 100%;
+
+          .ant-typography {
+            font-size: 12px;
+            display: block;
+            text-align: center;
+            padding: 6px 8px;
+            background: rgba($background-color, 0.8);
+            border-radius: 6px;
+            border: 1px solid rgba($border-color, 0.3);
+
+            strong {
+              margin-left: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .empty-state-card {
+    .ant-card-body {
+      padding: 32px 16px;
+    }
+
+    .ant-empty {
+      .ant-empty-description {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .rules-list {
+    gap: 8px;
+
+    .rule-row-wrapper {
+      .rule-card {
+        .ant-card-body {
+          padding: 16px;
+
+          .rule-info {
+            gap: 10px;
+
+            .rule-header {
+              gap: 8px;
+
+              .rule-main {
+                .rule-title {
+                  font-size: 15px;
+                }
+
+                .rule-description {
+                  font-size: 13px;
+                }
+              }
+            }
+
+            .rule-meta {
+              flex-direction: column;
+              align-items: flex-start;
+              gap: 8px;
+
+              .rule-details {
+                gap: 8px;
+                flex-wrap: wrap;
+              }
+
+              .rule-tracker {
+                align-self: flex-end;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  :root {
+    --rules-header-bg: linear-gradient(135deg, rgba(114, 46, 209, 0.1) 0%, rgba(114, 46, 209, 0.05) 100%);
+    --rules-stats-bg: rgba(114, 46, 209, 0.05);
+  }
+
+  .rules-page {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+
+    .page-header {
+      .header-content {
+        .header-main {
+          .header-icon {
+            background: rgba(114, 46, 209, 0.2);
+            border-color: rgba(114, 46, 209, 0.4);
+          }
+
+          .header-text {
+            .page-title {
+              color: #ffffff;
+            }
+
+            .page-subtitle {
+              color: #cccccc;
+            }
+          }
+        }
+
+        .header-actions {
+          .ant-space {
+            .action-button,
+            .filter-button {
+              background: #2a2a2a;
+              border-color: #434343;
+              color: #cccccc;
+
+              &.action-button {
+                &:hover {
+                  background: rgba(#52c41a, 0.1);
+                  border-color: rgba(#52c41a, 0.4);
+                  color: #52c41a;
+                }
+              }
+
+              &.filter-button {
+                &:hover {
+                  background: rgba(#1890ff, 0.1);
+                  border-color: rgba(#1890ff, 0.4);
+                  color: #1890ff;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .stats-card {
+    background: rgba(114, 46, 209, 0.05);
+    border-color: rgba(114, 46, 209, 0.2);
+
+    .stats-divider {
+      color: rgba(#ffffff, 0.3);
+    }
+
+    .ant-typography {
+      color: #ffffff;
+
+      &.ant-typography-secondary {
+        color: #cccccc;
+      }
+
+      strong {
+        color: inherit;
+        background: rgba(#ffffff, 0.1);
+      }
+    }
+  }
+
+  .empty-state-card {
+    background: rgba(#ffffff, 0.02);
+    border-color: #434343;
+
+    .ant-empty {
+      .ant-empty-description {
+        color: #cccccc;
+      }
+    }
+  }
+
+  .rules-list {
+    .rule-row-wrapper {
+      .rule-card {
+        background-color: #1f1f1f;
+        border-color: #434343;
+
+        .ant-card-body {
+          background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
+
+          .rule-info {
+            .rule-header {
+              .rule-main {
+                .rule-title {
+                  color: #ffffff;
+                }
+
+                .rule-description {
+                  color: rgba(#ffffff, 0.8);
+                }
+              }
+            }
+
+            .rule-meta {
+              border-top-color: rgba(#ffffff, 0.1);
+
+              .rule-details {
+                .meta-item {
+                  color: rgba(#ffffff, 0.6);
+
+                  .meta-icon {
+                    color: #722ed1;
+                  }
+                }
+              }
+
+              .rule-tracker {
+                background: rgba(#722ed1, 0.2);
+                color: #722ed1;
+                border-color: rgba(#722ed1, 0.3);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Анимации
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Анимации для элементов страницы
+.rules-page {
+  .page-header {
+    animation: slideInUp 0.6s ease-out;
+  }
+
+  .stats-card {
+    animation: fadeIn 0.8s ease-out 0.2s both;
+  }
+
+  .empty-state-card,
+  .loading-container {
+    animation: fadeIn 0.8s ease-out 0.4s both;
+  }
+}
+
+// Staggered animation для карточек правил
+.rules-list {
+  .rule-row-wrapper {
+    @for $i from 1 through 20 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{0.1 + ($i * 0.05)}s;
+      }
+    }
+  }
+}

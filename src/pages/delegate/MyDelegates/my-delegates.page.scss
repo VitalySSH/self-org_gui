@@ -1,0 +1,872 @@
+@use 'sass:color';
+@use 'src/shared/assets/scss/variables' as *;
+
+// Переменные для страницы делегатов
+:root {
+  --my-delegates-max-width: 1200px;
+  --my-delegates-header-bg: linear-gradient(135deg, rgba(204, 0, 0, 0.05) 0%, rgba(204, 0, 0, 0.02) 100%);
+  --my-delegates-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --my-delegates-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --my-delegates-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --my-delegates-grid-gap: 20px;
+  --my-delegates-stats-bg: rgba(204, 0, 0, 0.02);
+  --my-delegates-add-button-bg: rgba(82, 196, 26, 0.02);
+}
+
+// Основная страница делегатов
+.my-delegates-page {
+  min-height: 100vh;
+  max-width: var(--my-delegates-max-width);
+  margin: 24px auto;
+  padding-bottom: 20px;
+
+  // Заголовок страницы
+  .page-header {
+    background: var(--my-delegates-header-bg);
+    border: 1px solid rgba(204, 0, 0, 0.1);
+    border-radius: 12px;
+    margin: 0 20px;
+    padding: 24px;
+
+    .header-content {
+      max-width: var(--my-delegates-max-width);
+      margin: 0 auto;
+      padding: 0 20px;
+
+      .header-main {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 20px;
+
+        .header-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 64px;
+          height: 64px;
+          background: rgba(204, 0, 0, 0.1);
+          border-radius: 16px;
+          border: 2px solid rgba(204, 0, 0, 0.2);
+
+          .anticon {
+            font-size: 28px;
+            color: $primary-color;
+          }
+        }
+
+        .header-text {
+          flex: 1;
+
+          .page-title {
+            color: $heading-color;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 28px;
+            line-height: 1.2;
+
+            &.ant-typography {
+              margin-bottom: 8px;
+            }
+          }
+
+          .page-subtitle {
+            font-size: 16px;
+            color: $text-color;
+            opacity: 0.8;
+            line-height: 1.4;
+          }
+        }
+      }
+
+      .header-actions {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        .ant-space {
+          .action-button,
+          .filter-button {
+            transition: var(--my-delegates-transition);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 13px;
+            height: 36px;
+
+            &:hover {
+              transform: translateY(-1px);
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            &.action-button {
+              border-color: rgba($success-color, 0.3);
+              color: $success-color;
+
+              &:hover {
+                border-color: $success-color;
+                color: $success-color;
+              }
+            }
+
+            &.filter-button {
+              border-color: rgba($info-color, 0.3);
+
+              &:hover {
+                border-color: $info-color;
+                color: $info-color;
+              }
+            }
+
+            .ant-badge {
+              .ant-badge-count {
+                font-weight: 600;
+                font-size: 10px;
+                min-width: 14px;
+                height: 14px;
+                line-height: 12px;
+                border-radius: 7px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Основной контент
+  .page-content {
+    padding: 32px 0;
+
+    .content-container {
+      max-width: var(--my-delegates-max-width);
+      margin: 0 auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+  }
+}
+
+// Карточка статистики
+.stats-card {
+  border-radius: 12px;
+  border: 1px solid rgba(204, 0, 0, 0.2);
+  background: var(--my-delegates-stats-bg);
+  box-shadow: var(--my-delegates-card-shadow);
+
+  .ant-card-body {
+    padding: 16px 20px;
+  }
+
+  .stats-divider {
+    color: rgba($text-color, 0.3);
+    margin: 0 12px;
+  }
+
+  .ant-typography {
+    font-size: 14px;
+    margin: 0;
+
+    &.ant-typography-strong {
+      font-weight: 600;
+    }
+
+    // Цветные акценты для разных статусов
+    strong {
+      &[style*="color: #cc0000"] {
+        background: rgba(204, 0, 0, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      &[style*="color: #52c41a"] {
+        background: rgba(82, 196, 26, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      &[style*="color: #1890ff"] {
+        background: rgba(24, 144, 255, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+    }
+  }
+
+  .ant-space {
+    &.ant-space-wrap {
+      .ant-space-item {
+        margin-bottom: 4px;
+      }
+    }
+  }
+}
+
+// Контейнер загрузки
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+
+  .ant-spin {
+    .ant-spin-dot {
+      .ant-spin-dot-item {
+        background-color: $primary-color;
+      }
+    }
+  }
+}
+
+// Карточка пустого состояния
+.empty-state-card {
+  border-radius: 12px;
+  border: 1px dashed $border-color;
+  background: rgba($background-color, 0.5);
+  box-shadow: var(--my-delegates-card-shadow);
+
+  .ant-card-body {
+    padding: 48px 24px;
+    text-align: center;
+  }
+
+  .ant-empty {
+    .ant-empty-description {
+      color: $text-color;
+      font-size: 16px;
+      opacity: 0.7;
+      margin-bottom: 16px;
+    }
+
+    .ant-btn {
+      border-radius: 6px;
+      font-weight: 500;
+      transition: var(--my-delegates-transition);
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+    }
+  }
+}
+
+// Список делегатов
+.delegates-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 1s ease-out 0.4s both;
+
+  .delegate-row-wrapper {
+    width: 100%;
+    animation: slideInUp 0.6s ease-out both;
+
+    // Стили для карточки делегата
+    .ant-list-item {
+      border: none;
+      padding: 0;
+      margin-bottom: 0;
+
+      .delegate-card {
+        transition: var(--my-delegates-transition);
+        box-shadow: var(--my-delegates-card-shadow);
+        border-radius: 12px;
+        border: 1px solid rgba($border-color, 0.6);
+        cursor: pointer;
+        overflow: hidden;
+        margin-bottom: 24px;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: var(--my-delegates-hover-shadow);
+          border-color: rgba($primary-color, 0.3);
+        }
+
+        .ant-card-body {
+          padding: 24px;
+          background: linear-gradient(135deg, $background-color 0%, rgba($secondary-color, 0.5) 100%);
+
+          .delegate-info {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+
+            .info-row {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+
+              .info-icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 36px;
+                height: 36px;
+                border-radius: 8px;
+                background: rgba($primary-color, 0.1);
+                color: $primary-color;
+                font-size: 16px;
+                flex-shrink: 0;
+              }
+
+              .info-content {
+                flex: 1;
+
+                .info-label {
+                  font-size: 12px;
+                  color: rgba($text-color, 0.6);
+                  text-transform: uppercase;
+                  font-weight: 600;
+                  letter-spacing: 0.5px;
+                  margin-bottom: 4px;
+                }
+
+                .info-value {
+                  font-size: 16px;
+                  color: $text-color;
+                  font-weight: 500;
+                  line-height: 1.3;
+                }
+              }
+            }
+          }
+        }
+
+        // Hover эффект для карточки
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: linear-gradient(90deg, $primary-color 0%, color.mix(black, $primary-color, 10%) 100%);
+          transform: scaleX(0);
+          transition: transform 0.3s ease;
+        }
+
+        &:hover::before {
+          transform: scaleX(1);
+        }
+      }
+    }
+  }
+}
+
+// Пагинация
+.delegates-pagination {
+  margin-top: 32px;
+  text-align: center;
+
+  .ant-pagination {
+    .ant-pagination-item {
+      border-radius: 6px;
+      border-color: $border-color;
+
+      &:hover {
+        border-color: $primary-color;
+      }
+
+      &.ant-pagination-item-active {
+        background: $primary-color;
+        border-color: $primary-color;
+
+        a {
+          color: white;
+        }
+      }
+    }
+
+    .ant-pagination-prev,
+    .ant-pagination-next {
+      border-radius: 6px;
+
+      &:hover {
+        border-color: $primary-color;
+        color: $primary-color;
+      }
+    }
+
+    .ant-pagination-jump-prev,
+    .ant-pagination-jump-next {
+      border-radius: 6px;
+    }
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 1400px) {
+  .my-delegates-page {
+    .page-header,
+    .page-content {
+      .header-content,
+      .content-container {
+        max-width: 1200px;
+        padding: 0 16px;
+      }
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  :root {
+    --my-delegates-grid-gap: 16px;
+  }
+
+  .delegates-list {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .my-delegates-page {
+    .page-header {
+      padding: 24px 0;
+
+      .header-content {
+        padding: 0 12px;
+
+        .header-main {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 16px;
+          margin-bottom: 16px;
+
+          .header-icon {
+            width: 56px;
+            height: 56px;
+
+            .anticon {
+              font-size: 24px;
+            }
+          }
+
+          .header-text {
+            text-align: center;
+            width: 100%;
+
+            .page-title {
+              font-size: 24px;
+            }
+
+            .page-subtitle {
+              font-size: 14px;
+            }
+          }
+        }
+
+        .header-actions {
+          width: 100%;
+          justify-content: center;
+
+          .ant-space {
+            width: 100%;
+            justify-content: center;
+
+            .action-button,
+            .filter-button {
+              flex: 1;
+              max-width: 150px;
+            }
+          }
+        }
+      }
+    }
+
+    .page-content {
+      padding: 24px 0;
+
+      .content-container {
+        padding: 0 12px;
+        gap: 16px;
+      }
+    }
+  }
+
+  .stats-card {
+    .ant-card-body {
+      padding: 12px 16px;
+    }
+
+    .stats-divider {
+      margin: 0 8px;
+    }
+
+    .ant-typography {
+      font-size: 13px;
+    }
+
+    .ant-space {
+      &.ant-space-wrap {
+        .ant-space-item {
+          margin-bottom: 6px;
+        }
+      }
+    }
+  }
+
+  .delegates-list {
+    gap: 12px;
+
+    .delegate-row-wrapper {
+      .delegate-card {
+        .ant-card-body {
+          padding: 20px;
+
+          .delegate-info {
+            gap: 12px;
+
+            .info-row {
+              .info-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+              }
+
+              .info-content {
+                .info-value {
+                  font-size: 15px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .my-delegates-page {
+    .page-header {
+      padding: 20px 0;
+
+      .header-content {
+        padding: 0 8px;
+
+        .header-main {
+          .header-icon {
+            width: 48px;
+            height: 48px;
+
+            .anticon {
+              font-size: 20px;
+            }
+          }
+
+          .header-text {
+            .page-title {
+              font-size: 20px;
+            }
+
+            .page-subtitle {
+              font-size: 13px;
+            }
+          }
+        }
+
+        .header-actions {
+          .ant-space {
+            .action-button,
+            .filter-button {
+              span:not(.ant-badge):not(.anticon) {
+                display: none;
+              }
+
+              .anticon {
+                margin: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .page-content {
+      padding: 20px 0;
+
+      .content-container {
+        padding: 0 8px;
+        gap: 12px;
+      }
+    }
+  }
+
+  .stats-card {
+    .ant-card-body {
+      padding: 10px 12px;
+    }
+
+    .ant-space {
+      &.ant-space-wrap {
+        .ant-space-item {
+          margin-bottom: 8px;
+          width: 100%;
+
+          .ant-typography {
+            font-size: 12px;
+            display: block;
+            text-align: center;
+            padding: 6px 8px;
+            background: rgba($background-color, 0.8);
+            border-radius: 6px;
+            border: 1px solid rgba($border-color, 0.3);
+
+            strong {
+              margin-left: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .empty-state-card {
+    .ant-card-body {
+      padding: 32px 16px;
+    }
+
+    .ant-empty {
+      .ant-empty-description {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .delegates-list {
+    gap: 8px;
+
+    .delegate-row-wrapper {
+      .delegate-card {
+        .ant-card-body {
+          padding: 16px;
+
+          .delegate-info {
+            gap: 10px;
+
+            .info-row {
+              .info-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+              }
+
+              .info-content {
+                .info-label {
+                  font-size: 11px;
+                }
+
+                .info-value {
+                  font-size: 14px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Высококонтрастный режим
+@media (prefers-contrast: more) {
+  .my-delegates-page {
+    .page-header {
+      border-bottom: 2px solid $text-color;
+    }
+  }
+
+  .delegates-list {
+    .delegate-row-wrapper {
+      .delegate-card {
+        border: 2px solid $text-color;
+      }
+    }
+  }
+
+  .stats-card {
+    .ant-typography {
+      strong {
+        border: 1px solid currentColor;
+      }
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  :root {
+    --my-delegates-header-bg: linear-gradient(135deg, rgba(204, 0, 0, 0.1) 0%, rgba(204, 0, 0, 0.05) 100%);
+    --my-delegates-stats-bg: rgba(204, 0, 0, 0.05);
+  }
+
+  .my-delegates-page {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+
+    .page-header {
+      .header-content {
+        .header-main {
+          .header-icon {
+            background: rgba(204, 0, 0, 0.2);
+            border-color: rgba(204, 0, 0, 0.4);
+          }
+
+          .header-text {
+            .page-title {
+              color: #ffffff;
+            }
+
+            .page-subtitle {
+              color: #cccccc;
+            }
+          }
+        }
+
+        .header-actions {
+          .ant-space {
+            .action-button,
+            .filter-button {
+              background: #2a2a2a;
+              border-color: #434343;
+              color: #cccccc;
+
+              &.action-button {
+                &:hover {
+                  background: rgba(#52c41a, 0.1);
+                  border-color: rgba(#52c41a, 0.4);
+                  color: #52c41a;
+                }
+              }
+
+              &.filter-button {
+                &:hover {
+                  background: rgba(#1890ff, 0.1);
+                  border-color: rgba(#1890ff, 0.4);
+                  color: #1890ff;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .stats-card {
+    background: rgba(204, 0, 0, 0.05);
+    border-color: rgba(204, 0, 0, 0.2);
+
+    .stats-divider {
+      color: rgba(#ffffff, 0.3);
+    }
+
+    .ant-typography {
+      color: #ffffff;
+
+      &.ant-typography-secondary {
+        color: #cccccc;
+      }
+
+      strong {
+        color: inherit;
+        background: rgba(#ffffff, 0.1);
+      }
+    }
+  }
+
+  .empty-state-card {
+    background: rgba(#ffffff, 0.02);
+    border-color: #434343;
+
+    .ant-empty {
+      .ant-empty-description {
+        color: #cccccc;
+      }
+    }
+  }
+
+  .delegates-list {
+    .delegate-row-wrapper {
+      .delegate-card {
+        background-color: #1f1f1f;
+        border-color: #434343;
+
+        .ant-card-body {
+          background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
+
+          .delegate-info {
+            .info-row {
+              .info-icon {
+                background: rgba(204, 0, 0, 0.2);
+                color: $primary-color;
+              }
+
+              .info-content {
+                .info-label {
+                  color: rgba(#ffffff, 0.6);
+                }
+
+                .info-value {
+                  color: #ffffff;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Анимации
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Анимации для элементов страницы
+.my-delegates-page {
+  .page-header {
+    animation: slideInUp 0.6s ease-out;
+  }
+
+  .stats-card {
+    animation: fadeIn 0.8s ease-out 0.2s both;
+  }
+
+  .empty-state-card,
+  .loading-container {
+    animation: fadeIn 0.8s ease-out 0.4s both;
+  }
+}
+
+// Staggered animation для карточек делегатов
+.delegates-list {
+  .delegate-row-wrapper {
+    @for $i from 1 through 20 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{0.1 + ($i * 0.05)}s;
+      }
+    }
+  }
+}

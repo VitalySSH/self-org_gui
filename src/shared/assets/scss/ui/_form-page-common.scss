@@ -1,0 +1,413 @@
+@use 'sass:color';
+@use 'src/shared/assets/scss/variables' as *;
+
+// Переменные для форм
+:root {
+  --form-max-width: 1000px;
+  --form-border-radius: 8px;
+  --form-transition: all 0.2s ease;
+}
+
+// Миксин для базовых стилей форм
+@mixin form-page-base($theme-color) {
+  min-height: 100vh;
+  background: linear-gradient(135deg, rgba($theme-color, 0.02) 0%, rgba($theme-color, 0.01) 100%);
+  padding: 24px;
+
+  .form-page-container {
+    max-width: var(--form-max-width);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  // Заголовок формы
+  .form-header-card {
+    background: linear-gradient(135deg, rgba($theme-color, 0.05) 0%, rgba($theme-color, 0.02) 100%);
+    border: 1px solid rgba($theme-color, 0.1);
+    border-radius: var(--form-border-radius);
+    padding: 32px;
+    text-align: center;
+    animation: slideInDown 0.4s ease-out;
+
+    .form-header-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
+      background: rgba($theme-color, 0.1);
+      border-radius: 50%;
+      margin-bottom: 16px;
+      border: 2px solid rgba($theme-color, 0.2);
+
+      .anticon {
+        font-size: 24px;
+        color: $theme-color;
+      }
+    }
+
+    .form-header-title {
+      color: $heading-color;
+      font-weight: 700;
+      font-size: 24px;
+      margin-bottom: 8px;
+
+      &.ant-typography {
+        margin-bottom: 8px;
+      }
+    }
+
+    .form-header-subtitle {
+      color: rgba($text-color, 0.7);
+      font-size: 14px;
+      line-height: 1.4;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+  }
+
+  // Основная карточка формы
+  .form-main-card {
+    background: $background-color;
+    border-radius: var(--form-border-radius);
+    border: 1px solid $border-color;
+    padding: 32px;
+    animation: slideInUp 0.4s ease-out 0.1s both;
+
+    // Простые стили для всех полей формы
+    //.ant-form-item {
+    //  margin-bottom: 24px;
+    //
+    //  .ant-form-item-label > label {
+    //    font-weight: 600;
+    //    color: $text-color;
+    //    font-size: 14px;
+    //
+    //    .anticon {
+    //      color: rgba($text-color, 0.6);
+    //      margin-left: 4px;
+    //    }
+    //  }
+    //}
+
+    // Убираем все лишние стили с полей
+    //.ant-input,
+    //.ant-input-affix-wrapper,
+    //.ant-input[type="text"],
+    //.ant-input[type="password"],
+    //textarea.ant-input {
+    //  border: 1px solid $border-color;
+    //  border-radius: 6px;
+    //  box-shadow: none;
+    //  outline: none;
+    //  transition: var(--form-transition);
+    //
+    //  &:hover {
+    //    border-color: $info-color;
+    //  }
+    //
+    //  &:focus,
+    //  &:focus-within {
+    //    border-color: $info-color;
+    //    box-shadow: 0 0 0 2px rgba($info-color, 0.1);
+    //  }
+    //}
+
+    // Select стили
+    //.ant-select {
+    //  .ant-select-selector {
+    //    border: 1px solid $border-color;
+    //    border-radius: 6px;
+    //    box-shadow: none;
+    //    outline: none;
+    //    transition: var(--form-transition);
+    //  }
+    //
+    //  &:hover .ant-select-selector {
+    //    border-color: $info-color;
+    //  }
+    //
+    //  &.ant-select-focused .ant-select-selector {
+    //    border-color: $info-color;
+    //    box-shadow: 0 0 0 2px rgba($info-color, 0.1);
+    //  }
+    //
+    //  &.ant-select-disabled .ant-select-selector {
+    //    background: rgba($background-color, 0.5);
+    //    border-color: rgba($border-color, 0.5);
+    //  }
+    //}
+  }
+
+  // Панель инструментов
+  .form-toolbar-card {
+    background: $background-color;
+    border-radius: var(--form-border-radius);
+    border: 1px solid $border-color;
+    padding: 20px 32px;
+    animation: slideInUp 0.4s ease-out 0.2s both;
+
+    .toolbar-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+
+      .toolbar-actions {
+        display: flex;
+        gap: 12px;
+
+        .toolbar-button {
+          height: 40px;
+          padding: 0 24px;
+          border-radius: 6px;
+          font-weight: 600;
+          transition: var(--form-transition);
+
+          &.ant-btn-primary {
+            background: linear-gradient(135deg, $theme-color 0%, color.mix($theme-color, black, 90%) 100%);
+            border: none;
+
+            &:hover:not(:disabled) {
+              background: linear-gradient(135deg, color.mix($theme-color, white, 95%) 0%, $theme-color 100%);
+              transform: translateY(-1px);
+            }
+
+            &:disabled {
+              opacity: 0.6;
+            }
+          }
+
+          &.ant-btn-default {
+            border-color: $border-color;
+            color: $text-color;
+
+            &:hover {
+              border-color: $info-color;
+              color: $info-color;
+              transform: translateY(-1px);
+            }
+          }
+        }
+      }
+
+      .toolbar-info {
+        font-size: 12px;
+        color: rgba($text-color, 0.6);
+        font-style: italic;
+      }
+    }
+  }
+
+  // Карточка загрузки
+  .form-loading-card {
+    background: $background-color;
+    border-radius: var(--form-border-radius);
+    border: 1px solid $border-color;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+
+    .loading-text {
+      color: rgba($text-color, 0.7);
+      font-size: 14px;
+    }
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 768px) {
+  .form-page-container {
+    padding: 0 12px;
+    gap: 16px;
+  }
+
+  .form-header-card {
+    padding: 24px 20px;
+
+    .form-header-icon {
+      width: 48px;
+      height: 48px;
+
+      .anticon {
+        font-size: 20px;
+      }
+    }
+
+    .form-header-title {
+      font-size: 20px;
+    }
+
+    .form-header-subtitle {
+      font-size: 13px;
+    }
+  }
+
+  .form-main-card {
+    padding: 24px 20px;
+
+    .ant-form-item {
+      margin-bottom: 20px;
+    }
+  }
+
+  .form-toolbar-card {
+    padding: 16px 20px;
+
+    .toolbar-content {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+
+      .toolbar-actions {
+        width: 100%;
+        justify-content: center;
+
+        .toolbar-button {
+          flex: 1;
+          max-width: 140px;
+        }
+      }
+
+      .toolbar-info {
+        text-align: center;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .form-page-container {
+    padding: 0 8px;
+    gap: 12px;
+  }
+
+  .form-header-card {
+    padding: 20px 16px;
+  }
+
+  .form-main-card {
+    padding: 20px 16px;
+  }
+
+  .form-toolbar-card {
+    padding: 12px 16px;
+
+    .toolbar-content {
+      .toolbar-actions {
+        flex-direction: column;
+
+        .toolbar-button {
+          max-width: none;
+        }
+      }
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  .form-header-card,
+  .form-main-card,
+  .form-toolbar-card,
+  .form-loading-card {
+    background-color: #1f1f1f;
+    border-color: #434343;
+  }
+
+  .form-header-card {
+    .form-header-title {
+      color: #ffffff;
+    }
+
+    .form-header-subtitle {
+      color: rgba(#ffffff, 0.7);
+    }
+  }
+
+  .form-main-card {
+    .ant-form-item {
+      .ant-form-item-label > label {
+        color: #ffffff;
+
+        .anticon {
+          color: rgba(#ffffff, 0.6);
+        }
+      }
+    }
+
+    .ant-input,
+    .ant-input-affix-wrapper,
+    textarea.ant-input {
+      background: #2a2a2a;
+      border-color: #434343;
+      color: #ffffff;
+
+      &::placeholder {
+        color: rgba(#ffffff, 0.5);
+      }
+    }
+
+    .ant-select {
+      .ant-select-selector {
+        background: #2a2a2a;
+        border-color: #434343;
+        color: #ffffff;
+
+        .ant-select-selection-placeholder {
+          color: rgba(#ffffff, 0.5);
+        }
+      }
+    }
+  }
+
+  .form-toolbar-card {
+    .toolbar-content {
+      .toolbar-button {
+        &.ant-btn-default {
+          background: #2a2a2a;
+          border-color: #434343;
+          color: #ffffff;
+        }
+      }
+
+      .toolbar-info {
+        color: rgba(#ffffff, 0.6);
+      }
+    }
+  }
+
+  .form-loading-card {
+    .loading-text {
+      color: rgba(#ffffff, 0.7);
+    }
+  }
+}
+
+// Анимации
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -2,10 +2,12 @@ import {
   Badge,
   Button,
   Card,
-  Layout,
   List,
   Pagination,
   Typography,
+  Space,
+  Spin,
+  Empty,
 } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { SetStateAction, useCallback, useEffect, useState } from 'react';
@@ -18,10 +20,19 @@ import { Filters } from 'src/shared/types.ts';
 import { CrudDataSourceService } from 'src/services';
 import { CategoryModel, DelegateSettingsModel } from 'src/models';
 import { useAuth } from 'src/hooks';
-import styles from 'src/shared/assets/scss/module/list.module.scss';
-import { FilterOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import {
+  FilterOutlined,
+  PlusCircleOutlined,
+  UserOutlined,
+  TeamOutlined,
+  TagOutlined,
+  SearchOutlined
+} from '@ant-design/icons';
 import { DelegateFilterModal } from 'src/components';
 import { CategorySelectedCode, SystemCategoryCode } from 'src/consts';
+import './my-delegates.page.scss';
+
+const { Title, Text } = Typography;
 
 export function MyDelegates(props: any) {
   const maxPageSize = 20;
@@ -149,66 +160,229 @@ export function MyDelegates(props: any) {
     }
   };
 
-  return (
-    <Layout className={styles.container}>
-      <div className={styles.header}>
-        <Typography.Title level={3} className={styles.title}>
-          Мои советники
-        </Typography.Title>
+  const handleResetFilters = () => {
+    setFilters(getBaseFilters());
+    setCurrentPage(1);
+    setLoading(true);
+    setShowFilters(false);
+  };
 
-        <div className={styles.buttons}>
-          {(categoryIds || []).length < (categoryCount || 0) && (
-            <Button type="text" onClick={addNewDelegate}>
-              <PlusCircleOutlined style={{ fontSize: 20 }} />
-              Добавить советника
+  const renderHeader = () => (
+    <div className="page-header">
+      <div className="header-content">
+        <div className="header-main">
+          <div className="header-icon">
+            <TeamOutlined />
+          </div>
+          <div className="header-text">
+            <Title level={1} className="page-title">
+              Мои советники
+            </Title>
+            <Text type="secondary" className="page-subtitle">
+              Управление доверенными советниками и их полномочиями
+            </Text>
+          </div>
+        </div>
+
+        <div className="header-actions">
+          <Space size="small">
+            {(categoryIds || []).length < (categoryCount || 0) && (
+              <Button
+                type="default"
+                icon={<PlusCircleOutlined />}
+                onClick={addNewDelegate}
+                className="action-button"
+                style={{
+                  borderRadius: '6px',
+                  fontWeight: 500,
+                  fontSize: '13px',
+                  height: '36px',
+                }}
+              >
+                Добавить советника
+              </Button>
+            )}
+
+            <Button
+              type="default"
+              icon={<FilterOutlined />}
+              onClick={() => setShowFilters(true)}
+              className="filter-button"
+              style={{
+                borderRadius: '6px',
+                fontWeight: 500,
+                fontSize: '13px',
+                height: '36px',
+              }}
+            >
+              <Badge
+                count={filters.length - 2}
+                size="small"
+                offset={[8, -2]}
+                style={{
+                  backgroundColor: (filters.length - 2) > 0 ? '#52c41a' : '#999',
+                  fontSize: '10px',
+                }}
+              >
+                <span style={{ marginLeft: (filters.length - 2) > 0 ? '12px' : '0' }}>
+                  Фильтры
+                </span>
+              </Badge>
             </Button>
+          </Space>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderStats = () => {
+    if (loading) return null;
+
+    const activeFiltersCount = filters.length - 2;
+    const hasFilters = activeFiltersCount > 0;
+    const totalDelegates = total;
+    const availableSlots = (categoryCount || 0) - (categoryIds || []).length;
+
+    return (
+      <Card className="stats-card" size="small">
+        <Space split={<span className="stats-divider">•</span>} wrap>
+          <Text type="secondary">
+            Всего советников: <Text strong>{totalDelegates}</Text>
+          </Text>
+          {hasFilters && (
+            <Text type="secondary">
+              Найдено: <Text strong style={{ color: '#cc0000' }}>{dataSource.length}</Text>
+            </Text>
           )}
-          <Button type="text" onClick={() => setShowFilters(true)}>
-            <Badge count={filters.length - 2}>
-              <FilterOutlined style={{ fontSize: 20 }} />
-            </Badge>
-            Фильтры
-          </Button>
+          {availableSlots > 0 && (
+            <Text type="secondary">
+              Доступно слотов: <Text strong style={{ color: '#52c41a' }}>{availableSlots}</Text>
+            </Text>
+          )}
+          {hasFilters && (
+            <Text type="secondary">
+              Фильтров: <Text strong style={{ color: '#1890ff' }}>{activeFiltersCount}</Text>
+            </Text>
+          )}
+        </Space>
+      </Card>
+    );
+  };
+
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="loading-container">
+          <Spin size="large" />
+          <Text type="secondary" style={{ marginTop: 16 }}>
+            Загрузка советников...
+          </Text>
+        </div>
+      );
+    }
+
+    if (!dataSource.length) {
+      const isFiltered = filters.length > 2;
+      const availableSlots = (categoryCount || 0) - (categoryIds || []).length;
+
+      return (
+        <Card className="empty-state-card">
+          <Empty
+            description={
+              isFiltered
+                ? "По заданным фильтрам советники не найдены"
+                : "У вас пока нет назначенных советников"
+            }
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            style={{ padding: '20px 0' }}
+          >
+            {isFiltered ? (
+              <Button
+                type="primary"
+                icon={<SearchOutlined />}
+                onClick={handleResetFilters}
+                style={{ marginTop: '16px' }}
+              >
+                Сбросить фильтры
+              </Button>
+            ) : (
+              availableSlots > 0 && (
+                <Button
+                  type="primary"
+                  icon={<PlusCircleOutlined />}
+                  onClick={addNewDelegate}
+                  style={{ marginTop: '16px' }}
+                >
+                  Добавить первого советника
+                </Button>
+              )
+            )}
+          </Empty>
+        </Card>
+      );
+    }
+
+    return (
+      <div className="delegates-list">
+        <List
+          itemLayout="vertical"
+          dataSource={dataSource}
+          pagination={false}
+          renderItem={(item: DelegateCardInterface, index) => (
+            <div
+              key={item.id}
+              className="delegate-row-wrapper"
+              style={{
+                animationDelay: `${0.1 + (index * 0.05)}s`
+              }}
+            >
+              <List.Item>
+                <Card
+                  onClick={() => navigate(item.id)}
+                  className="delegate-card"
+                  hoverable
+                >
+                  <div className="delegate-info">
+                    <div className="info-row">
+                      <div className="info-icon">
+                        <TagOutlined />
+                      </div>
+                      <div className="info-content">
+                        <div className="info-label">Категория</div>
+                        <div className="info-value">{item.category}</div>
+                      </div>
+                    </div>
+                    <div className="info-row">
+                      <div className="info-icon">
+                        <UserOutlined />
+                      </div>
+                      <div className="info-content">
+                        <div className="info-label">Доверенный советник</div>
+                        <div className="info-value">{item.userFullName}</div>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </List.Item>
+            </div>
+          )}
+        />
+      </div>
+    );
+  };
+
+  return (
+    <div className="my-delegates-page">
+      {renderHeader()}
+
+      <div className="page-content">
+        <div className="content-container">
+          {renderStats()}
+          {renderContent()}
         </div>
       </div>
 
-      <DelegateFilterModal
-        communityId={props.communityId}
-        visible={showFilters}
-        onCancel={() => setShowFilters(false)}
-        onApply={handleApplyFilters}
-        onReset={() => {
-          setFilters(getBaseFilters());
-          setCurrentPage(1);
-          setLoading(true);
-          setShowFilters(false);
-        }}
-      />
-
-      <List
-        itemLayout="vertical"
-        dataSource={dataSource}
-        loading={loading}
-        locale={{ emptyText: 'Не найдено ни одного советника' }}
-        pagination={false}
-        className={styles.list}
-        renderItem={(item: DelegateCardInterface) => (
-          <List.Item className={styles.listItem}>
-            <Card
-              onClick={() => navigate(item.id)}
-              className={styles.delegateCard}
-            >
-              <div>
-                <strong>Категория:</strong> {item.category}
-              </div>
-              <div style={{ marginTop: 10 }}>
-                <strong>Доверенный советник:</strong> {item.userFullName}
-              </div>
-            </Card>
-          </List.Item>
-        )}
-      />
-      {total > pageSize && (
+      {total > pageSize && !loading && (
         <Pagination
           current={currentPage}
           pageSize={pageSize}
@@ -218,9 +392,17 @@ export function MyDelegates(props: any) {
           pageSizeOptions={['10', '20', '50', '100']}
           defaultPageSize={maxPageSize}
           showTotal={(total, range) => `${range[0]}-${range[1]} из ${total}`}
-          className={styles.pagination}
+          className="delegates-pagination"
         />
       )}
-    </Layout>
+
+      <DelegateFilterModal
+        communityId={props.communityId}
+        visible={showFilters}
+        onCancel={() => setShowFilters(false)}
+        onApply={handleApplyFilters}
+        onReset={handleResetFilters}
+      />
+    </div>
   );
 }

@@ -1,47 +1,140 @@
+@use 'src/shared/assets/scss/ui/form-page-common' as common;
 @use 'src/shared/assets/scss/variables' as *;
 
-.delegate-detail-card {
-  width: 100%;
-  margin: 20px auto;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: $background-color;
-}
 
-.initiative-description {
-  font-size: 16px;
-  color: #333;
-  line-height: 1.6;
-  margin-bottom: 16px;
-}
+// Применяем общие стили для форм с красным тематическим цветом
+.delegate-detail-page {
+  @include common.form-page-base($primary-color);
 
-.initiative-question {
-  font-size: 16px;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 16px;
-}
+  // Специфичные стили для информационной карточки
+  .form-info-card {
+    border: 1px solid rgba(24, 144, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    animation: slideInUp 0.6s ease-out 0.3s both;
 
-.loading-spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-}
+    .ant-card-body {
+      padding: 24px;
+    }
 
-@media (max-width: $breakpoint-sm) {
-  .initiative-card {
-    margin: 10px;
-    padding: 15px;
+    .info-content {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+
+      .info-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: rgba(24, 144, 255, 0.1);
+        border-radius: 50%;
+        flex-shrink: 0;
+        margin-top: 4px;
+
+        .anticon {
+          font-size: 18px;
+          color: $info-color;
+        }
+      }
+
+      .info-text {
+        flex: 1;
+
+        .info-title {
+          color: $heading-color;
+          font-weight: 600;
+          font-size: 16px;
+          margin-bottom: 8px;
+          line-height: 1.3;
+
+          &.ant-typography {
+            margin-bottom: 8px;
+          }
+        }
+
+        .info-description {
+          color: rgba($text-color, 0.8);
+          font-size: 14px;
+          line-height: 1.5;
+        }
+      }
+    }
   }
 
-  .initiative-description {
-    font-size: 13px;
+  // Адаптивные стили для информационной карточки
+  @media (max-width: 768px) {
+    .form-info-card {
+      .ant-card-body {
+        padding: 20px;
+      }
+
+      .info-content {
+        gap: 12px;
+
+        .info-icon {
+          width: 36px;
+          height: 36px;
+
+          .anticon {
+            font-size: 16px;
+          }
+        }
+
+        .info-text {
+          .info-title {
+            font-size: 15px;
+          }
+
+          .info-description {
+            font-size: 13px;
+          }
+        }
+      }
+    }
   }
 
-  .initiative-question {
-    font-size: 14px;
+  @media (max-width: 480px) {
+    .form-info-card {
+      .ant-card-body {
+        padding: 16px;
+      }
+
+      .info-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 12px;
+
+        .info-icon {
+          margin-top: 0;
+        }
+      }
+    }
+  }
+
+  // Темная тема для информационной карточки
+  .dark-theme & {
+    .form-info-card {
+      background: rgba(24, 144, 255, 0.05);
+      border-color: rgba(24, 144, 255, 0.2);
+
+      .info-content {
+        .info-icon {
+          background: rgba(24, 144, 255, 0.2);
+        }
+
+        .info-text {
+          .info-title {
+            color: #ffffff;
+          }
+
+          .info-description {
+            color: rgba(#ffffff, 0.8);
+          }
+        }
+      }
+    }
   }
 }

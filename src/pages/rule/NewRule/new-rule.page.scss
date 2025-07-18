@@ -1,0 +1,184 @@
+@use 'sass:color';
+@use 'src/shared/assets/scss/ui/form-page-common' as common;
+@use 'src/shared/assets/scss/variables' as *;
+
+.new-rule-page {
+  @include common.form-page-base(#722ed1);
+
+  // AI кнопка в заголовке
+  .form-header-card {
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+
+      .ai-button {
+        background: linear-gradient(135deg, #722ed1 0%, color.mix(#722ed1, black, 90%) 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        border-radius: 6px;
+        height: 36px;
+        padding: 0 16px;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: linear-gradient(135deg, color.mix(#722ed1, white, 95%) 0%, #722ed1 100%);
+          transform: translateY(-1px);
+        }
+
+        .anticon {
+          color: white;
+        }
+      }
+    }
+  }
+
+  // Секция дополнительных опций
+  .extra-options-section {
+    background: linear-gradient(135deg, rgba(24, 144, 255, 0.05) 0%, rgba(24, 144, 255, 0.02) 100%);
+    border: 1px solid rgba(24, 144, 255, 0.1);
+    border-radius: 8px;
+    padding: 24px;
+    margin-top: 16px;
+
+    .section-title {
+      color: $info-color;
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .anticon {
+        font-size: 18px;
+      }
+    }
+
+    // Варианты ответов - растягиваем по всей ширине
+    .form-list-input {
+      .ant-space {
+        display: flex;
+        //width: 100%;
+        width: 600px;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 12px;
+
+        .ant-form-item {
+          flex: 1;
+          margin-bottom: 0;
+        }
+
+        .anticon {
+          color: $error-color;
+          font-size: 16px;
+          cursor: pointer;
+          margin-top: 8px;
+          flex-shrink: 0;
+          transition: all 0.2s ease;
+
+          &:hover {
+            color: color.mix($error-color, black, 90%);
+            transform: scale(1.1);
+          }
+        }
+      }
+
+      .ant-btn {
+        border-radius: 6px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        width: 100%;
+
+        &:hover {
+          transform: translateY(-1px);
+        }
+      }
+    }
+  }
+
+  // Switch компоненты
+  .ant-switch {
+    border-radius: 12px;
+    border: none;
+
+    &.ant-switch-checked {
+      background: #722ed1;
+    }
+  }
+
+  // TextArea
+  textarea.ant-input {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  // Мобильная адаптация
+  @media (max-width: 768px) {
+    .extra-options-section {
+      padding: 20px 16px;
+
+      .section-title {
+        font-size: 15px;
+      }
+
+      .form-list-input {
+        .ant-space {
+          flex-direction: column;
+          align-items: stretch;
+
+          .anticon {
+            align-self: flex-end;
+            margin-top: 4px;
+          }
+        }
+      }
+    }
+
+    .form-header-card {
+      .header-actions {
+        width: 100%;
+        justify-content: center;
+
+        .ai-button {
+          flex: 1;
+          max-width: 200px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .extra-options-section {
+      padding: 16px;
+      margin-top: 12px;
+
+      .section-title {
+        font-size: 14px;
+        margin-bottom: 12px;
+      }
+    }
+  }
+
+  // Темная тема
+  .dark-theme & {
+    .extra-options-section {
+      background: rgba(24, 144, 255, 0.05);
+      border-color: rgba(24, 144, 255, 0.2);
+
+      .section-title {
+        color: $info-color;
+      }
+    }
+
+    .ant-switch {
+      background: rgba(#434343, 0.8);
+
+      &.ant-switch-checked {
+        background: #722ed1;
+      }
+    }
+  }
+}

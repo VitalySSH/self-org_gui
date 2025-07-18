@@ -1,17 +1,22 @@
-import './delegate-detail.page.scss';
-import { Button, Form, message, Select, Spin, Tooltip } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
+import { Button, Card, Form, message, Select, Spin, Tooltip, Typography } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
+import { QuestionCircleOutlined, EditOutlined, SaveOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { AuthApiClientService, CrudDataSourceService } from 'src/services';
 import { DelegateSettingsModel } from 'src/models';
 import { CustomSelect } from 'src/components';
 import { Pagination } from 'src/interfaces';
 import { CategoryLabel, DelegateLabel } from 'src/consts';
-import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Filters } from 'src/shared/types.ts';
+import './delegate-detail.page.scss';
 
-export function DelegateDetail(props: any) {
-  const communityId = props.communityId;
+const { Title, Text } = Typography;
+
+interface DelegateDetailProps {
+  communityId: string;
+}
+
+export function DelegateDetail(props: DelegateDetailProps) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
@@ -22,26 +27,21 @@ export function DelegateDetail(props: any) {
   const [buttonLoading, setButtonLoading] = useState(false);
 
   const authApiClientService = new AuthApiClientService();
-
   const [form] = Form.useForm();
 
   const successInfo = (content: string) => {
-    messageApi
-      .open({
-        type: 'success',
-        content: content,
-      })
-      .then();
+    messageApi.open({
+      type: 'success',
+      content: content,
+    });
   };
 
   const errorInfo = useCallback(
     (content: string) => {
-      messageApi
-        .open({
-          type: 'error',
-          content: content,
-        })
-        .then();
+      messageApi.open({
+        type: 'error',
+        content: content,
+      });
     },
     [messageApi]
   );
@@ -65,7 +65,7 @@ export function DelegateDetail(props: any) {
           setLoading(false);
         });
     }
-  }, [delegate, id, errorInfo]);
+  }, [delegate, id, errorInfo, form]);
 
   useEffect(() => {
     fetchDelegateSettings();
@@ -73,6 +73,7 @@ export function DelegateDetail(props: any) {
 
   const onCustomSelectChange = (fieldName: string, value: any) => {
     form.setFieldValue(fieldName, value);
+    handleFormChange();
   };
 
   const handleFormChange = () => {
@@ -82,7 +83,7 @@ export function DelegateDetail(props: any) {
   const fetchUsers = async (pagination?: Pagination, filters?: Filters) => {
     const newFilters: Filters = filters || [];
     return authApiClientService.communityListUsers(
-      communityId,
+      props.communityId,
       newFilters,
       undefined,
       pagination,
@@ -96,110 +97,185 @@ export function DelegateDetail(props: any) {
   };
 
   const onFinish = async () => {
-    setButtonLoading(true);
-    const updatedDelegate = delegate;
-    if (updatedDelegate) {
+    try {
+      setButtonLoading(true);
+      const updatedDelegate = delegate;
+
+      if (!updatedDelegate) {
+        errorInfo('Настройки советника не найдены');
+        return;
+      }
+
       const delegateService = new CrudDataSourceService(DelegateSettingsModel);
       updatedDelegate.delegate = form.getFieldValue('delegate');
-      delegateService.save(updatedDelegate).then(() => {
-        successInfo('Советник успешно изменён');
-        setButtonLoading(false);
-        onCancel();
-      });
-    } else {
-      errorInfo('Советник не выбран');
+
+      await delegateService.save(updatedDelegate);
+      successInfo('Советник успешно изменён');
+      navigate(-1);
+    } catch (error) {
+      errorInfo(`Ошибка при сохранении: ${error}`);
+    } finally {
       setButtonLoading(false);
     }
   };
 
+  // Состояние загрузки
   if (loading) {
     return (
-      <div className="form-container">
-        <div className="loading-spinner" aria-live="polite" aria-busy="true">
-          <Spin size="large" />
+      <div className="delegate-detail-page">
+        <div className="form-page-container">
+          <Card className="form-loading-card" variant="borderless">
+            <Spin size="large" />
+            <Text className="loading-text">Загрузка настроек советника...</Text>
+          </Card>
         </div>
       </div>
     );
   }
 
+  // Если данные не найдены
   if (!delegate) {
-    return null;
+    return (
+      <div className="delegate-detail-page">
+        <div className="form-page-container">
+          <Card className="form-loading-card" variant="borderless">
+            <Text className="loading-text">Настройки советника не найдены</Text>
+            <Button
+              type="primary"
+              onClick={onCancel}
+              style={{ marginTop: 16 }}
+            >
+              Вернуться назад
+            </Button>
+          </Card>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <>
+    <div className="delegate-detail-page">
       {contextHolder}
-      <div className="form-container">
-        <div className="form-header">Замена советника</div>
-        <Form
-          form={form}
-          name="delegate-settings-detail"
-          onFieldsChange={handleFormChange}
-        >
-          <Form.Item
-            name="category"
-            label={
-              <span>
-                {CategoryLabel}&nbsp;
-                <Tooltip title="Категорию, для которой хотите поменять советника.">
-                  <QuestionCircleOutlined />
-                </Tooltip>
-              </span>
-            }
-            labelCol={{ span: 24 }}
+
+      <div className="form-page-container">
+        {/* Заголовок */}
+        <Card className="form-header-card" variant="borderless">
+          <div className="form-header-icon">
+            <EditOutlined />
+          </div>
+          <Title level={2} className="form-header-title">
+            Замена советника
+          </Title>
+          <Text className="form-header-subtitle">
+            Измените назначенного советника для выбранной категории. Новый советник будет представлять ваши интересы в дальнейших голосованиях
+          </Text>
+        </Card>
+
+        {/* Основная форма */}
+        <Card className="form-main-card" variant="borderless">
+          <Form
+            form={form}
+            name="delegate-settings-detail"
+            layout="vertical"
+            onFieldsChange={handleFormChange}
           >
-            <Select suffixIcon={null} open={false} removeIcon={null}></Select>
-          </Form.Item>
-          <Form.Item
-            name="delegate"
-            label={
-              <span>
-                {DelegateLabel}&nbsp;
-                <Tooltip title="Выберите советника, голос которого станет вашим голосом в голосованиях в указанной выше категории.">
-                  <QuestionCircleOutlined />
-                </Tooltip>
-              </span>
-            }
-            labelCol={{ span: 24 }}
-            rules={[
-              {
-                required: true,
-                message: 'Пожалуйста, выберите советника',
-              },
-            ]}
-            hasFeedback
-          >
-            <CustomSelect
-              requestOptions={fetchUsers}
-              onChange={onCustomSelectChange}
-              value={delegate?.delegate}
-              formField="delegate"
-              bindLabel="fullname"
-              enableSearch={true}
-            />
-          </Form.Item>
-        </Form>
+            <Form.Item
+              name="category"
+              label={
+                <span>
+                  {CategoryLabel}
+                  <Tooltip title="Категория, для которой назначен советник. Изменить категорию нельзя.">
+                    <QuestionCircleOutlined style={{ marginLeft: 4 }} />
+                  </Tooltip>
+                </span>
+              }
+            >
+              <Select
+                suffixIcon={null}
+                open={false}
+                removeIcon={null}
+                disabled
+                placeholder="Категория загружается..."
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="delegate"
+              label={
+                <span>
+                  {DelegateLabel}
+                  <Tooltip title="Выберите нового советника, который будет представлять ваши интересы в голосованиях по указанной категории.">
+                    <QuestionCircleOutlined style={{ marginLeft: 4 }} />
+                  </Tooltip>
+                </span>
+              }
+              rules={[
+                {
+                  required: true,
+                  message: 'Пожалуйста, выберите советника',
+                },
+              ]}
+              hasFeedback
+            >
+              <CustomSelect
+                requestOptions={fetchUsers}
+                onChange={onCustomSelectChange}
+                value={delegate?.delegate}
+                formField="delegate"
+                bindLabel="fullname"
+                enableSearch={true}
+                label="Выберите нового советника..."
+              />
+            </Form.Item>
+          </Form>
+        </Card>
+
+        {/* Информационная карточка */}
+        <Card className="form-info-card" variant="borderless">
+          <div className="info-content">
+            <div className="info-icon">
+              <QuestionCircleOutlined />
+            </div>
+            <div className="info-text">
+              <Title level={5} className="info-title">Важная информация</Title>
+              <Text className="info-description">
+                При смене советника все будущие голосования по данной категории будут автоматически
+                учитывать голос нового советника вместо предыдущего. Уже завершенные голосования
+                не изменятся.
+              </Text>
+            </div>
+          </div>
+        </Card>
+
+        {/* Панель инструментов */}
+        <Card className="form-toolbar-card" variant="borderless">
+          <div className="toolbar-content">
+            <div className="toolbar-info">
+              Последнее изменение: {delegate.updated_at ? new Date(delegate.updated_at).toLocaleDateString('ru-RU') : 'неизвестно'}
+            </div>
+            <div className="toolbar-actions">
+              <Button
+                type="default"
+                icon={<ArrowLeftOutlined />}
+                onClick={onCancel}
+                className="toolbar-button"
+              >
+                Отмена
+              </Button>
+              <Button
+                type="primary"
+                icon={<SaveOutlined />}
+                loading={buttonLoading}
+                onClick={onFinish}
+                disabled={disabled}
+                className="toolbar-button"
+              >
+                Сохранить изменения
+              </Button>
+            </div>
+          </div>
+        </Card>
       </div>
-      <div className="toolbar">
-        <Button
-          type="primary"
-          htmlType="submit"
-          loading={buttonLoading}
-          onClick={onFinish}
-          disabled={disabled}
-          className="toolbar-button"
-        >
-          Сохранить
-        </Button>
-        <Button
-          type="primary"
-          htmlType="button"
-          onClick={onCancel}
-          className="toolbar-button"
-        >
-          Назад
-        </Button>
-      </div>
-    </>
+    </div>
   );
 }
