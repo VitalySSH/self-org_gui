@@ -1,0 +1,495 @@
+@use 'sass:color';
+@use 'src/shared/assets/scss/variables' as *;
+
+.ai-opinion-container {
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  background: linear-gradient(135deg, $secondary-color 0%, rgba($sider-background-color, 0.6) 100%);
+  border: 1px solid $border-color;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px $card-shadow;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 6px 32px $hover-shadow;
+    border-color: rgba($gradient-start, 0.3);
+  }
+}
+
+/* Заголовок */
+.ai-opinion-header {
+  background: linear-gradient(135deg, $gradient-start 0%, $gradient-end 100%);
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  }
+
+  .ai-opinion-title {
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .anticon {
+      font-size: 18px;
+    }
+  }
+
+  .ai-opinion-back-button {
+    color: white !important;
+    border: 2px solid rgba(255, 255, 255, 0.3) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 10px !important;
+    padding: 6px 12px !important;
+    height: auto !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    transition: all 0.3s ease !important;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2) !important;
+      border-color: rgba(255, 255, 255, 0.5) !important;
+      transform: translateY(-1px) !important;
+    }
+  }
+}
+
+/* Область сообщений */
+.ai-opinion-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  background: transparent;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba($border-color, 0.3);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($gradient-start, 0.6);
+    border-radius: 3px;
+    transition: background 0.3s ease;
+
+    &:hover {
+      background: $gradient-start;
+    }
+  }
+}
+
+/* Сообщения */
+.ai-message {
+  display: flex;
+  margin-bottom: 20px;
+  animation: fadeInUp 0.4s ease-out;
+
+  &.ai-message-ai {
+    justify-content: flex-start;
+  }
+
+  &.ai-message-user {
+    justify-content: flex-end;
+
+    .ai-message-avatar {
+      order: 2;
+      margin-right: 0;
+      margin-left: 10px;
+    }
+
+    .ai-message-content {
+      align-items: flex-end;
+    }
+  }
+
+  .ai-message-avatar {
+    flex-shrink: 0;
+    margin-right: 10px;
+
+    .ant-avatar {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      border: 2px solid white;
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  .ai-message-content {
+    max-width: 75%;
+    display: flex;
+    flex-direction: column;
+
+    .ai-message-card {
+      border: none;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      position: relative;
+
+      &:hover {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        transform: translateY(-1px);
+      }
+
+      &.ai-message-card-ai {
+        background: rgba($background-color, 0.95);
+        border-top-left-radius: 6px;
+        border-left: 4px solid $gradient-start;
+
+        .ant-card-body {
+          color: $text-color;
+        }
+      }
+
+      &.ai-message-card-user {
+        background: linear-gradient(135deg, $info-color 0%, color.mix($info-color, $gradient-end, 80%) 100%);
+        color: white;
+        border-top-right-radius: 6px;
+
+        .ant-card-body {
+          color: white;
+        }
+      }
+
+      .ant-card-body {
+        padding: 12px 16px;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+    }
+
+    .ai-message-time {
+      font-size: 11px;
+      color: rgba($text-color, 0.5);
+      margin-top: 4px;
+      padding: 0 10px;
+      font-weight: 400;
+    }
+  }
+}
+
+/* Индикатор печати */
+.ai-typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 0;
+
+  span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: $gradient-start;
+    animation: typing 1.4s infinite ease-in-out;
+  }
+
+  span:nth-child(1) {
+    animation-delay: -0.32s;
+  }
+
+  span:nth-child(2) {
+    animation-delay: -0.16s;
+  }
+}
+
+/* Область ввода */
+.ai-opinion-input {
+  background: rgba($background-color, 0.9);
+  border-top: 1px solid $border-color;
+  padding: 20px 24px;
+  backdrop-filter: blur(10px);
+
+  .ai-opinion-input-wrapper {
+    display: flex;
+    gap: 12px;
+
+    .ai-opinion-textarea {
+      flex: 1;
+      border-radius: 16px;
+      border: 2px solid $border-color;
+      background: $background-color;
+      transition: all 0.3s ease;
+      resize: none;
+      font-size: 15px;
+      padding: 12px 16px;
+
+      &:focus {
+        border-color: $gradient-start;
+        box-shadow: 0 0 0 3px rgba($gradient-start, 0.1);
+      }
+
+      &::placeholder {
+        color: rgba($text-color, 0.5);
+        font-style: italic;
+      }
+    }
+
+    .ai-opinion-send-button {
+      border-radius: 16px;
+      height: 44px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: $success-color;
+      border: none;
+      color: white;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba($success-color, 0.3);
+
+      &:hover {
+        background: color.mix($success-color, black, 90%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba($success-color, 0.4);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        transform: none;
+        box-shadow: none;
+        background: rgba($text-color, 0.3);
+      }
+
+      .anticon {
+        font-size: 16px;
+      }
+    }
+  }
+
+  .ai-opinion-complete {
+    text-align: center;
+
+    .ai-opinion-complete-button {
+      background: linear-gradient(135deg, $success-color 0%, color.mix($success-color, black, 90%) 100%);
+      border: none;
+      border-radius: 16px;
+      height: 52px;
+      padding: 0 32px;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      box-shadow: 0 4px 16px rgba($success-color, 0.3);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba($success-color, 0.4);
+      }
+
+      .anticon {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+/* Анимации */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes typing {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Адаптивные стили */
+@media (max-width: 768px) {
+  .ai-opinion-container {
+    height: 450px;
+  }
+
+  .ai-opinion-header {
+    padding: 14px 16px;
+
+    .ai-opinion-title {
+      font-size: 15px;
+    }
+
+    .ai-opinion-back-button {
+      padding: 5px 10px !important;
+      font-size: 13px !important;
+    }
+  }
+
+  .ai-opinion-messages {
+    padding: 16px;
+  }
+
+  .ai-message {
+    margin-bottom: 16px;
+
+    .ai-message-content {
+      max-width: 85%;
+
+      .ai-message-card {
+        .ant-card-body {
+          padding: 10px 12px;
+          font-size: 13px;
+        }
+      }
+    }
+
+    .ai-message-avatar {
+      .ant-avatar {
+        width: 32px;
+        height: 32px;
+      }
+    }
+  }
+
+  .ai-opinion-input {
+    padding: 16px 20px;
+
+    .ai-opinion-input-wrapper {
+      gap: 10px;
+
+      .ai-opinion-textarea {
+        font-size: 16px; /* Предотвращает зум на iOS */
+        padding: 10px 14px;
+      }
+
+      .ai-opinion-send-button {
+        height: 40px;
+        padding: 0 16px;
+        font-size: 14px;
+      }
+    }
+
+    .ai-opinion-complete {
+      .ai-opinion-complete-button {
+        height: 48px;
+        font-size: 15px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .ai-opinion-container {
+    height: 400px;
+  }
+
+  .ai-opinion-messages {
+    padding: 12px;
+  }
+
+  .ai-message {
+    .ai-message-content {
+      max-width: 90%;
+    }
+  }
+
+  .ai-opinion-input {
+    padding: 12px;
+  }
+
+  .ai-message-card {
+    border-radius: 12px;
+
+    &.ai-message-card-ai {
+      border-top-left-radius: 4px;
+    }
+
+    &.ai-message-card-user {
+      border-top-right-radius: 4px;
+    }
+  }
+}
+
+/* Темная тема */
+.dark-theme {
+  .ai-opinion-container {
+    background: linear-gradient(135deg, #1a1a1a 0%, rgba(#2a2a2a, 0.8) 100%);
+    border-color: #434343;
+  }
+
+  .ai-opinion-messages {
+    &::-webkit-scrollbar-track {
+      background: rgba(#434343, 0.3);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba($gradient-start, 0.8);
+    }
+  }
+
+  .ai-message {
+    .ai-message-content {
+      .ai-message-card {
+        &.ai-message-card-ai {
+          background: rgba(#2a2a2a, 0.95);
+          border-left-color: $gradient-start;
+
+          .ant-card-body {
+            color: #ffffff;
+          }
+        }
+      }
+
+      .ai-message-time {
+        color: rgba(#ffffff, 0.5);
+      }
+    }
+  }
+
+  .ai-opinion-input {
+    background: rgba(#2a2a2a, 0.9);
+    border-top-color: #434343;
+
+    .ai-opinion-input-wrapper {
+      .ai-opinion-textarea {
+        background: #2a2a2a;
+        border-color: #434343;
+        color: #ffffff;
+
+        &:focus {
+          border-color: $gradient-start;
+        }
+
+        &::placeholder {
+          color: rgba(#ffffff, 0.5);
+        }
+      }
+    }
+  }
+}

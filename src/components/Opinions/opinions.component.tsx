@@ -9,8 +9,9 @@ import {
   EditOutlined,
   DeleteOutlined,
   RobotOutlined,
+  BulbOutlined,
 } from '@ant-design/icons';
-import { AISummaryOpinions } from 'src/components';
+import { AIOpinionAssistant, AISummaryOpinions } from 'src/components';
 import './opinions.component.scss';
 
 export function Opinions(props: OpinionsProps) {
@@ -30,6 +31,7 @@ export function Opinions(props: OpinionsProps) {
   const [isSummaryModalVisible, setSummaryModalVisible] = useState(false);
   const [searchMyOpinion, setSearchMyOpinion] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [isAIMode, setIsAIMode] = useState(false);
 
   const opinionService = useMemo(
     () => new CrudDataSourceService(OpinionModel),
@@ -184,6 +186,19 @@ export function Opinions(props: OpinionsProps) {
     setLoading(true);
   };
 
+  const handleToggleAIMode = () => {
+    setIsAIMode(true);
+  };
+
+  const handleAIComplete = (generatedOpinion: string) => {
+    setNewOpinion(generatedOpinion);
+    setIsAIMode(false);
+  };
+
+  const handleAICancel = () => {
+    setIsAIMode(false);
+  };
+
   return (
     <div className="comments-section">
       {contextHolder}
@@ -218,16 +233,38 @@ export function Opinions(props: OpinionsProps) {
       </div>
 
       {!isMyOpinion && (
-        <div className="add-comment-section">
-          <TextArea
-            rows={4}
-            value={newOpinion}
-            onChange={(e) => setNewOpinion(e.target.value)}
-            placeholder="Обязательно оставьте своё аргументированное мнение, это поможет сообществу принять наилучшее решение из возможных..."
-          />
-          <Button type="primary" onClick={handleAddComment}>
-            Отправить
-          </Button>
+        <div className={`add-comment-section ${isAIMode ? 'ai-mode' : ''}`}>
+          {isAIMode ? (
+            <AIOpinionAssistant
+              onComplete={handleAIComplete}
+              onCancel={handleAICancel}
+            />
+          ) : (
+            <>
+              <div className="input-mode-toggle">
+                <div className="mode-info">
+                  Поделитесь своим мнением
+                </div>
+                <Button
+                  type="default"
+                  icon={<BulbOutlined />}
+                  onClick={handleToggleAIMode}
+                  className="ai-mode-button"
+                >
+                  ИИ-помощник
+                </Button>
+              </div>
+              <TextArea
+                rows={4}
+                value={newOpinion}
+                onChange={(e) => setNewOpinion(e.target.value)}
+                placeholder="Обязательно оставьте своё аргументированное мнение, это поможет сообществу принять наилучшее решение из возможных..."
+              />
+              <Button type="primary" onClick={handleAddComment}>
+                Отправить
+              </Button>
+            </>
+          )}
         </div>
       )}
 
@@ -248,19 +285,19 @@ export function Opinions(props: OpinionsProps) {
               opinion.creator?.id === authData.user?.id &&
               editingOpinionId !== opinion.id
                 ? [
-                    <EditOutlined
-                      key="edit"
-                      onClick={() => {
-                        setEditingOpinionId(opinion.id);
-                        setEditedText(opinion.text || '');
-                      }}
-                    />,
-                    <DeleteOutlined
-                      key="delete"
-                      onClick={() => handleDeleteOpinion(opinion.id)}
-                      className="delete-icon"
-                    />,
-                  ]
+                  <EditOutlined
+                    key="edit"
+                    onClick={() => {
+                      setEditingOpinionId(opinion.id);
+                      setEditedText(opinion.text || '');
+                    }}
+                  />,
+                  <DeleteOutlined
+                    key="delete"
+                    onClick={() => handleDeleteOpinion(opinion.id)}
+                    className="delete-icon"
+                  />,
+                ]
                 : []
             }
           >
