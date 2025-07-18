@@ -1,12 +1,15 @@
-import './voting-results.page.scss';
-import { Button, Form, Progress, Select, Tooltip, Space, Flex } from 'antd';
-import { VotingResultsProps } from 'src/interfaces';
+import { useState } from 'react';
+import { Button, Form, Progress, Select, Tooltip } from 'antd';
 import {
   InfoCircleOutlined,
   RobotOutlined,
+  BarChartOutlined,
+  QuestionCircleOutlined,
+  ExclamationCircleOutlined,
 } from '@ant-design/icons';
-import { useState } from 'react';
+import { VotingResultsProps } from 'src/interfaces';
 import { AiCompromise } from 'src/components';
+import './voting-results.page.scss';
 
 export function VotingResults(props: VotingResultsProps) {
   const [isAIModalVisible, setAIModalVisible] = useState(false);
@@ -17,27 +20,92 @@ export function VotingResults(props: VotingResultsProps) {
 
   return (
     <>
+      {/* Основные результаты голосования */}
       <div className="voting-results">
-        <Progress
-          percent={props.yesPercent}
-          status="active"
-          format={() => `Да: ${props.yesPercent}%`}
-        />
-        <Progress
-          percent={props.noPercent}
-          status="active"
-          format={() => `Нет: ${props.noPercent}%`}
-        />
-        <Progress
-          percent={props.abstainPercent}
-          status="active"
-          format={() => `Воздержалось: ${props.abstainPercent}%`}
-        />
+        <div className="results-title">
+          <BarChartOutlined />
+          Результаты голосования
+        </div>
+
+        <div className="voting-progress">
+          <div className="progress-item">
+            <div className="progress-header">
+              <div className="progress-label yes-label">
+                <div className="progress-icon"></div>
+                Да
+              </div>
+              <div className="progress-percentage">{props.yesPercent}%</div>
+            </div>
+            <Progress
+              percent={100}
+              status="active"
+              showInfo={false}
+              className="yes-progress"
+              size={['', 8]}
+              style={{
+                width: `${props.yesPercent}%`,
+                minWidth: '2%',
+                transition: 'width 0.8s ease'
+              }}
+            />
+          </div>
+
+          <div className="progress-item">
+            <div className="progress-header">
+              <div className="progress-label no-label">
+                <div className="progress-icon"></div>
+                Нет
+              </div>
+              <div className="progress-percentage">{props.noPercent}%</div>
+            </div>
+            <Progress
+              percent={100}
+              status="active"
+              showInfo={false}
+              className="no-progress"
+              size={['', 8]}
+              style={{
+                width: `${props.noPercent}%`,
+                minWidth: '2%',
+                transition: 'width 0.8s ease'
+              }}
+            />
+          </div>
+
+          <div className="progress-item">
+            <div className="progress-header">
+              <div className="progress-label abstain-label">
+                <div className="progress-icon"></div>
+                Воздержалось
+              </div>
+              <div className="progress-percentage">{props.abstainPercent}%</div>
+            </div>
+            <Progress
+              percent={100}
+              status="active"
+              showInfo={false}
+              className="abstain-progress"
+              size={['', 8]}
+              style={{
+                width: `${props.abstainPercent}%`,
+                minWidth: '2%',
+                transition: 'width 0.8s ease'
+              }}
+            />
+          </div>
+        </div>
       </div>
 
+      {/* Дополнительный вопрос */}
       {props.extraQuestion && (props.selectedOptions || []).length > 0 && (
-        <div>
-          <i className="extra-question">{props.extraQuestion}</i>
+        <div className="extra-question-section">
+          <div className="extra-question-title">
+            <QuestionCircleOutlined />
+            Дополнительные параметры
+          </div>
+          <div className="extra-question-text">
+            {props.extraQuestion}
+          </div>
           <Form.Item>
             <Select
               mode="multiple"
@@ -45,14 +113,22 @@ export function VotingResults(props: VotingResultsProps) {
               suffixIcon={null}
               open={false}
               removeIcon={null}
+              placeholder="Выбранные варианты"
             />
           </Form.Item>
         </div>
       )}
 
+      {/* Последствия несоблюдения правила */}
       {props.resource === 'rule' && (props.noncompliance || []).length > 0 && (
-        <div>
-          <p className="extra-question">Последствия несоблюдения правила:</p>
+        <div className="extra-question-section">
+          <div className="extra-question-title">
+            <ExclamationCircleOutlined />
+            Последствия несоблюдения
+          </div>
+          <div className="extra-question-text">
+            Последствия несоблюдения правила:
+          </div>
           <Form.Item>
             <Select
               mode="multiple"
@@ -60,63 +136,69 @@ export function VotingResults(props: VotingResultsProps) {
               suffixIcon={null}
               open={false}
               removeIcon={null}
+              placeholder="Установленные последствия"
             />
           </Form.Item>
         </div>
       )}
 
+      {/* Секция мнения меньшинства */}
       {((props.minorityOptions || []).length > 0 ||
         (props.minorityNoncompliance || []).length > 0) && (
         <div className="minority-section">
-          <Flex
-            justify="space-between"
-            align="center"
-            className="minority-header"
-          >
-            <Space size={8} align="center">
-              <Tooltip title="Эти варианты набрали значительное количество голосов и требуют поиска копромисса, учитывающего мнения общественно-значемого меньшинства">
-                <InfoCircleOutlined className="icon" />
+          <div className="minority-header">
+            <div className="minority-info">
+              <Tooltip title="Эти варианты набрали значительное количество голосов и требуют поиска компромисса, учитывающего мнения общественно-значимого меньшинства">
+                <InfoCircleOutlined className="minority-icon" />
               </Tooltip>
               <span className="minority-text">Важные мнения меньшинства</span>
-            </Space>
+            </div>
             <Button
               type="primary"
-              icon={<RobotOutlined style={{ color: 'white' }} />}
+              icon={<RobotOutlined />}
               onClick={handleCompromise}
-              className="ai-button-primary"
+              className="ai-compromise-button"
             >
               ИИ поиск компромиссов
             </Button>
-          </Flex>
+          </div>
 
-          <div className="minority-form_field">
+          <div className="minority-content">
             {(props.minorityOptions || []).length > 0 && (
-              <Form.Item label="Варианты голосования">
-                <Select
-                  mode="multiple"
-                  value={props.minorityOptions}
-                  suffixIcon={null}
-                  open={false}
-                  removeIcon={null}
-                />
-              </Form.Item>
-            )}
-            {props.resource === 'rule' &&
-              (props.minorityNoncompliance || []).length > 0 && (
-                <Form.Item label="Последствия несоблюдения правила">
+              <div className="minority-form-field">
+                <Form.Item label="Варианты голосования">
                   <Select
                     mode="multiple"
-                    value={props.minorityNoncompliance}
+                    value={props.minorityOptions}
                     suffixIcon={null}
                     open={false}
                     removeIcon={null}
+                    placeholder="Альтернативные варианты"
                   />
                 </Form.Item>
+              </div>
+            )}
+
+            {props.resource === 'rule' &&
+              (props.minorityNoncompliance || []).length > 0 && (
+                <div className="minority-form-field">
+                  <Form.Item label="Последствия несоблюдения правила">
+                    <Select
+                      mode="multiple"
+                      value={props.minorityNoncompliance}
+                      suffixIcon={null}
+                      open={false}
+                      removeIcon={null}
+                      placeholder="Альтернативные последствия"
+                    />
+                  </Form.Item>
+                </div>
               )}
           </div>
         </div>
       )}
 
+      {/* AI модальное окно */}
       <AiCompromise
         visible={isAIModalVisible}
         onClose={() => setAIModalVisible(false)}

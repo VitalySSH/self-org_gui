@@ -1,64 +1,704 @@
+@use 'sass:color';
 @use 'src/shared/assets/scss/variables' as *;
 
+// Основной контейнер голосования пользователя
 .user-voting {
-  margin-top: 24px;
-  margin-bottom: 24px;
-  background-color: $sider-background-color;
-  border-radius: 4px;
-  padding: 1px 12px 12px 12px;
+  background: linear-gradient(135deg, $secondary-color 0%, rgba($sider-background-color, 0.6) 100%);
+  border: 1px solid $border-color;
+  border-radius: 16px;
+  padding: 32px;
+  margin: 24px 0;
+  position: relative;
+  box-shadow: 0 2px 8px $card-shadow;
+  transition: all 0.3s ease;
 
+
+
+  &:hover {
+    box-shadow: 0 4px 16px $hover-shadow;
+    border-color: rgba($gradient-start, 0.3);
+    transform: translateY(-2px);
+  }
+
+  // Заголовок секции голосования
   .voting-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    gap: 16px;
 
-    .delegate-tag {
-      margin-left: auto;
-      font-size: 12px;
-      padding: 2px 8px;
-      border-radius: 12px;
-    }
-  }
+    .voting-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: $heading-color;
+      font-weight: 600;
+      font-size: 18px;
+      margin: 0;
+      line-height: 1.2;
 
-  .question {
-    font-size: 16px;
-    font-weight: 500;
-    color: #333;
-    margin-bottom: 16px;
-  }
-
-  .ant-checkbox-wrapper {
-    margin-right: 16px;
-  }
-}
-
-.additional-question {
-  margin-top: 12px;
-}
-
-.additional-question .ant-select {
-  width: 100%;
-}
-
-.noncompliance {
-  .ant-form-item {
-    display: block;
-    margin-top: 18px;
-
-    .ant-form-item-label {
-      display: block;
-      text-align: left;
-
-      label {
-        font-weight: 500;
-        color: $text-color;
-        font-size: 16px;
+      .voting-icon {
+        font-size: 20px;
+        padding: 8px;
+        background: linear-gradient(135deg, rgba($gradient-start, 0.1) 0%, rgba($gradient-end, 0.1) 100%);
+        border-radius: 8px;
+        color: $gradient-start;
       }
     }
 
-    .ant-form-item-control {
-      width: 100%;
+    .voting-tags {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+
+      .delegate-tag {
+        background: rgba($success-color, 0.08);
+        border: 1px solid rgba($success-color, 0.2);
+        color: $success-color;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 4px 12px;
+        border-radius: 20px;
+        text-transform: none;
+        letter-spacing: 0;
+
+        &.default-tag {
+          background: rgba($accent-yellow, 0.1);
+          border-color: rgba($accent-yellow, 0.3);
+          color: color.mix($accent-yellow, $text-color, 70%);
+        }
+      }
+
+      .info-tooltip {
+        color: rgba($text-color, 0.6);
+        font-size: 16px;
+        cursor: help;
+        transition: all 0.2s ease;
+        padding: 4px;
+
+        &:hover {
+          color: $primary-color;
+          transform: scale(1.1);
+        }
+      }
+    }
+  }
+
+  // Вопрос для голосования
+  .voting-question {
+    font-size: 16px;
+    font-weight: 400;
+    font-style: italic;
+    color: $text-color;
+    margin-bottom: 24px;
+    line-height: 1.5;
+    padding: 20px;
+    background: rgba($background-color, 0.8);
+    border-radius: 12px;
+    border-left: 4px solid $gradient-start;
+    backdrop-filter: blur(10px);
+  }
+
+  // Варианты голосования
+  .voting-options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 24px;
+
+    .vote-option {
+      &.yes-option {
+        .ant-checkbox-wrapper {
+          font-weight: 600;
+          font-size: 14px;
+          padding: 12px 24px;
+          border-radius: 25px;
+          transition: all 0.3s ease;
+          border: 2px solid rgba($success-color, 0.3);
+          background: rgba($success-color, 0.05);
+          cursor: pointer;
+          min-width: 100px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+          color: $success-color;
+
+          &:hover {
+            background: rgba($success-color, 0.1);
+            border-color: $success-color;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba($success-color, 0.2);
+          }
+
+          &.checked {
+            background: $success-color;
+            border-color: $success-color;
+            color: white;
+            box-shadow: 0 4px 16px rgba($success-color, 0.3);
+            transform: scale(1.05);
+
+            .ant-checkbox {
+              .ant-checkbox-inner {
+                background-color: white;
+                border-color: white;
+
+                &::after {
+                  border-color: $success-color;
+                }
+              }
+            }
+          }
+
+          .ant-checkbox {
+            .ant-checkbox-inner {
+              border-radius: 50%;
+              border-width: 2px;
+              transition: all 0.3s ease;
+              width: 16px;
+              height: 16px;
+              border-color: $success-color;
+
+              &:hover {
+                border-color: $success-color;
+              }
+            }
+
+            &.ant-checkbox-checked {
+              .ant-checkbox-inner {
+                background-color: $success-color;
+                border-color: $success-color;
+
+                &::after {
+                  border-color: white;
+                  border-width: 2px;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      &.no-option {
+        .ant-checkbox-wrapper {
+          font-weight: 600;
+          font-size: 14px;
+          padding: 12px 24px;
+          border-radius: 25px;
+          transition: all 0.3s ease;
+          border: 2px solid rgba($error-color, 0.3);
+          background: rgba($error-color, 0.05);
+          cursor: pointer;
+          min-width: 100px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+          color: $error-color;
+
+          &:hover {
+            background: rgba($error-color, 0.1);
+            border-color: $error-color;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba($error-color, 0.2);
+          }
+
+          &.checked {
+            background: $error-color;
+            border-color: $error-color;
+            color: white;
+            box-shadow: 0 4px 16px rgba($error-color, 0.3);
+            transform: scale(1.05);
+
+            .ant-checkbox {
+              .ant-checkbox-inner {
+                background-color: white;
+                border-color: white;
+
+                &::after {
+                  border-color: $error-color;
+                }
+              }
+            }
+          }
+
+          .ant-checkbox {
+            .ant-checkbox-inner {
+              border-radius: 50%;
+              border-width: 2px;
+              transition: all 0.3s ease;
+              width: 16px;
+              height: 16px;
+              border-color: $error-color;
+
+              &:hover {
+                border-color: $error-color;
+              }
+            }
+
+            &.ant-checkbox-checked {
+              .ant-checkbox-inner {
+                background-color: $error-color;
+                border-color: $error-color;
+
+                &::after {
+                  border-color: white;
+                  border-width: 2px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Дополнительный вопрос
+  .additional-question {
+    background: rgba($background-color, 0.9);
+    border: 1px solid rgba($info-color, 0.15);
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 24px;
+    backdrop-filter: blur(10px);
+
+    .additional-question-title {
+      font-size: 15px;
+      font-weight: 500;
+      font-style: italic;
+      color: $text-color;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .ant-select {
+      .ant-select-selector {
+        border: 1px solid $border-color;
+        border-radius: 8px;
+        background: $background-color;
+        min-height: 44px;
+        padding: 8px 12px;
+
+        &:hover {
+          border-color: $info-color;
+        }
+
+        .ant-select-selection-item {
+          background: rgba($info-color, 0.08);
+          border: 1px solid rgba($info-color, 0.2);
+          border-radius: 6px;
+          color: $info-color;
+          font-weight: 500;
+          padding: 4px 8px;
+          margin: 2px;
+        }
+      }
+
+      &.ant-select-focused .ant-select-selector {
+        border-color: $info-color;
+        box-shadow: 0 0 0 3px rgba($info-color, 0.1);
+      }
+    }
+  }
+
+  // Заголовок секции последствий
+  .noncompliance-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: $error-color;
+    margin: 24px 0 16px 0;
+
+    .anticon {
+      font-size: 16px;
+    }
+  }
+
+  // Последствия несоблюдения
+  .noncompliance-section {
+    background: rgba($background-color, 0.9);
+    border: 1px solid rgba($error-color, 0.15);
+    border-radius: 12px;
+    padding: 24px;
+    backdrop-filter: blur(10px);
+
+    .ant-form-item {
+      margin-bottom: 0;
+
+      .ant-form-item-label {
+        display: none; // Скрываем label, так как заголовок теперь отдельно
+      }
+
+      .ant-select {
+        .ant-select-selector {
+          border: 1px solid rgba($error-color, 0.2);
+          border-radius: 8px;
+          background: $background-color;
+          min-height: 44px;
+          padding: 8px 12px;
+
+          &:hover {
+            border-color: $error-color;
+          }
+
+          .ant-select-selection-item {
+            background: rgba($error-color, 0.08);
+            border: 1px solid rgba($error-color, 0.2);
+            border-radius: 6px;
+            color: $error-color;
+            font-weight: 500;
+            padding: 4px 8px;
+            margin: 2px;
+          }
+        }
+
+        &.ant-select-focused .ant-select-selector {
+          border-color: $error-color;
+          box-shadow: 0 0 0 3px rgba($error-color, 0.1);
+        }
+      }
+    }
+  }
+
+  // Подсказка о множественном выборе
+  .multiple-choice-hint {
+    color: rgba($text-color, 0.6);
+    cursor: help;
+    transition: all 0.2s ease;
+    padding: 4px;
+
+    &:hover {
+      color: $error-color;
+      transform: scale(1.1);
+    }
+  }
+}
+
+// Стили для Popover подсказки
+.ant-popover {
+  .ant-popover-content {
+    .ant-popover-inner {
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      border: 1px solid $border-color;
+
+      .ant-popover-inner-content {
+        padding: 20px;
+
+        p {
+          margin-bottom: 12px;
+          line-height: 1.5;
+          color: $text-color;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          strong {
+            color: $heading-color;
+            font-weight: 600;
+          }
+        }
+
+        ul {
+          margin: 12px 0;
+          padding-left: 20px;
+
+          li {
+            margin-bottom: 6px;
+            color: rgba($text-color, 0.8);
+            line-height: 1.4;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 768px) {
+  .user-voting {
+    padding: 24px 20px;
+    margin: 16px 0;
+
+    .voting-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+
+      .voting-title {
+        font-size: 16px;
+
+        .voting-icon {
+          font-size: 18px;
+          padding: 6px;
+        }
+      }
+
+      .voting-tags {
+        align-self: stretch;
+        justify-content: flex-start;
+      }
+    }
+
+    .voting-question {
+      font-size: 15px;
+      padding: 16px;
+    }
+
+    .voting-options {
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+
+      .vote-option {
+        &.yes-option,
+        &.no-option {
+          .ant-checkbox-wrapper {
+            padding: 10px 20px;
+            min-width: 80px;
+          }
+        }
+      }
+    }
+
+    .additional-question,
+    .noncompliance-section {
+      padding: 20px 16px;
+
+      .additional-question-title {
+        font-size: 14px;
+      }
+    }
+
+    .noncompliance-title {
+      font-size: 14px;
+      margin: 20px 0 12px 0;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .user-voting {
+    padding: 20px 16px;
+
+    .voting-header {
+      .voting-title {
+        font-size: 15px;
+      }
+
+      .voting-tags {
+        .delegate-tag {
+          font-size: 11px;
+          padding: 3px 8px;
+        }
+      }
+    }
+
+    .voting-question {
+      font-size: 14px;
+      padding: 14px;
+    }
+
+    .voting-options {
+      .vote-option {
+        &.yes-option,
+        &.no-option {
+          .ant-checkbox-wrapper {
+            font-size: 13px;
+            padding: 8px 16px;
+            min-width: 70px;
+          }
+        }
+      }
+    }
+
+    .additional-question,
+    .noncompliance-section {
+      padding: 16px 12px;
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  .user-voting {
+    background: linear-gradient(135deg, #1a1a1a 0%, rgba(#2a2a2a, 0.8) 100%);
+    border-color: #434343;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    &::before {
+      display: none;
+    }
+
+    &:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      border-color: rgba($gradient-start, 0.5);
+    }
+
+    .voting-header {
+      .voting-title {
+        color: #ffffff;
+
+        .voting-icon {
+          background: linear-gradient(135deg, rgba($gradient-start, 0.2) 0%, rgba($gradient-end, 0.2) 100%);
+          color: $gradient-start;
+        }
+      }
+
+      .voting-tags {
+        .delegate-tag {
+          background: rgba($success-color, 0.15);
+          border-color: rgba($success-color, 0.3);
+          color: $success-color;
+
+          &.default-tag {
+            background: rgba($accent-yellow, 0.15);
+            border-color: rgba($accent-yellow, 0.3);
+            color: color.mix($accent-yellow, white, 80%);
+          }
+        }
+
+        .info-tooltip {
+          color: rgba(#ffffff, 0.6);
+
+          &:hover {
+            color: $primary-color;
+          }
+        }
+      }
+    }
+
+    .voting-question {
+      background: rgba(#2a2a2a, 0.9);
+      color: rgba(#ffffff, 0.9);
+      border-left-color: $gradient-start;
+      backdrop-filter: blur(10px);
+    }
+
+    .voting-options {
+      .vote-option {
+        &.yes-option {
+          .ant-checkbox-wrapper {
+            background: rgba($success-color, 0.08);
+            border-color: rgba($success-color, 0.4);
+
+            &:hover {
+              background: rgba($success-color, 0.15);
+              border-color: $success-color;
+            }
+
+            &.checked {
+              background: $success-color;
+              border-color: $success-color;
+              color: white;
+            }
+          }
+        }
+
+        &.no-option {
+          .ant-checkbox-wrapper {
+            background: rgba($error-color, 0.08);
+            border-color: rgba($error-color, 0.4);
+
+            &:hover {
+              background: rgba($error-color, 0.15);
+              border-color: $error-color;
+            }
+
+            &.checked {
+              background: $error-color;
+              border-color: $error-color;
+              color: white;
+            }
+          }
+        }
+      }
+    }
+
+    .additional-question {
+      background: rgba(#2a2a2a, 0.9);
+      border-color: rgba($info-color, 0.2);
+      backdrop-filter: blur(10px);
+
+      .additional-question-title {
+        color: rgba(#ffffff, 0.9);
+      }
+
+      .ant-select {
+        .ant-select-selector {
+          background: #2a2a2a;
+          border-color: #434343;
+          color: #ffffff;
+
+          .ant-select-selection-item {
+            background: rgba($info-color, 0.15);
+            border-color: rgba($info-color, 0.3);
+            color: $info-color;
+          }
+        }
+      }
+    }
+
+    .noncompliance-title {
+      color: $error-color;
+    }
+
+    .noncompliance-section {
+      background: rgba(#2a2a2a, 0.9);
+      border-color: rgba($error-color, 0.2);
+      backdrop-filter: blur(10px);
+
+      .ant-select {
+        .ant-select-selector {
+          background: #2a2a2a;
+          border-color: #434343;
+          color: #ffffff;
+
+          .ant-select-selection-item {
+            background: rgba($error-color, 0.15);
+            border-color: rgba($error-color, 0.3);
+            color: $error-color;
+          }
+        }
+      }
+    }
+
+    .multiple-choice-hint {
+      color: rgba(#ffffff, 0.6);
+
+      &:hover {
+        color: $error-color;
+      }
+    }
+  }
+
+  .ant-popover {
+    .ant-popover-content {
+      .ant-popover-inner {
+        background: #2a2a2a;
+        border: 1px solid #434343;
+
+        .ant-popover-inner-content {
+          p {
+            color: #ffffff;
+
+            strong {
+              color: #ffffff;
+            }
+          }
+
+          ul {
+            li {
+              color: rgba(#ffffff, 0.8);
+            }
+          }
+        }
+      }
     }
   }
 }

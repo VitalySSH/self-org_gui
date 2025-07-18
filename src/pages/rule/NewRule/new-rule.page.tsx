@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Card, Form, Input, message, Space, Switch, Tooltip, Typography } from 'antd';
+import { Button, Card, Form, Input, message, Switch, Tooltip, Typography } from 'antd';
 import {
   MinusCircleOutlined,
   PlusOutlined,
@@ -221,50 +221,47 @@ export function NewRule(props: NewRuleProps) {
 
       <Form.List name="extra_options">
         {(fields, { add, remove }) => (
-          <div className="form-list-input">
-            <div style={{ marginBottom: 16 }}>
-              <Text strong>Варианты ответов:</Text>
-            </div>
+          <div style={{ width: '100%' }}>
+            <Text strong style={{ display: 'block', marginBottom: 16 }}>Варианты ответов:</Text>
+
             {fields.map(({ key, name, ...restField }) => (
-              <Space
+              <div
                 key={key}
                 style={{
                   display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
                   marginBottom: 12,
-                  width: '100%',
+                  width: '100%'
                 }}
-                align="baseline"
               >
                 <Form.Item
                   {...restField}
                   name={[name, 'name']}
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Пожалуйста, укажите дополнительный параметр для голосования',
-                    },
-                  ]}
-                  hasFeedback
+                  rules={[{ required: true, message: 'Пожалуйста, укажите дополнительный параметр для голосования' }]}
                   style={{ flex: 1, marginBottom: 0 }}
                 >
-                  <Input placeholder="Введите вариант ответа..." style={{ width: '100%' }} />
+                  <Input
+                    placeholder="Введите вариант ответа..."
+                    style={{ width: '100%' }}
+                  />
                 </Form.Item>
+
                 <MinusCircleOutlined
                   onClick={() => remove(name)}
-                  style={{ color: '#ff4d4f', fontSize: 16 }}
+                  style={{ color: '#ff4d4f', fontSize: 16, flexShrink: 0 }}
                 />
-              </Space>
+              </div>
             ))}
-            <Form.Item style={{ marginBottom: 0 }}>
-              <Button
-                type="dashed"
-                onClick={() => add()}
-                icon={<PlusOutlined />}
-                style={{ width: '100%' }}
-              >
-                Добавить вариант ответа
-              </Button>
-            </Form.Item>
+
+            <Button
+              type="dashed"
+              onClick={() => add()}
+              icon={<PlusOutlined />}
+              block
+            >
+              Добавить вариант ответа
+            </Button>
           </div>
         )}
       </Form.List>

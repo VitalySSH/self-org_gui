@@ -76,69 +76,45 @@
     padding: 32px;
     animation: slideInUp 0.4s ease-out 0.1s both;
 
-    // Простые стили для всех полей формы
-    //.ant-form-item {
-    //  margin-bottom: 24px;
-    //
-    //  .ant-form-item-label > label {
-    //    font-weight: 600;
-    //    color: $text-color;
-    //    font-size: 14px;
-    //
-    //    .anticon {
-    //      color: rgba($text-color, 0.6);
-    //      margin-left: 4px;
-    //    }
-    //  }
-    //}
+    .ant-form-item {
+      margin-bottom: 24px;
 
-    // Убираем все лишние стили с полей
-    //.ant-input,
-    //.ant-input-affix-wrapper,
-    //.ant-input[type="text"],
-    //.ant-input[type="password"],
-    //textarea.ant-input {
-    //  border: 1px solid $border-color;
-    //  border-radius: 6px;
-    //  box-shadow: none;
-    //  outline: none;
-    //  transition: var(--form-transition);
-    //
-    //  &:hover {
-    //    border-color: $info-color;
-    //  }
-    //
-    //  &:focus,
-    //  &:focus-within {
-    //    border-color: $info-color;
-    //    box-shadow: 0 0 0 2px rgba($info-color, 0.1);
-    //  }
-    //}
+      .ant-form-item-label > label {
+        font-weight: 600;
+        color: $text-color;
+        font-size: 14px;
+
+        .anticon {
+          color: rgba($text-color, 0.6);
+          margin-left: 4px;
+        }
+      }
+    }
 
     // Select стили
-    //.ant-select {
-    //  .ant-select-selector {
-    //    border: 1px solid $border-color;
-    //    border-radius: 6px;
-    //    box-shadow: none;
-    //    outline: none;
-    //    transition: var(--form-transition);
-    //  }
-    //
-    //  &:hover .ant-select-selector {
-    //    border-color: $info-color;
-    //  }
-    //
-    //  &.ant-select-focused .ant-select-selector {
-    //    border-color: $info-color;
-    //    box-shadow: 0 0 0 2px rgba($info-color, 0.1);
-    //  }
-    //
-    //  &.ant-select-disabled .ant-select-selector {
-    //    background: rgba($background-color, 0.5);
-    //    border-color: rgba($border-color, 0.5);
-    //  }
-    //}
+    .ant-select {
+      .ant-select-selector {
+        border: 1px solid $border-color;
+        border-radius: 6px;
+        box-shadow: none;
+        outline: none;
+        transition: var(--form-transition);
+      }
+
+      &:hover .ant-select-selector {
+        border-color: $info-color;
+      }
+
+      &.ant-select-focused .ant-select-selector {
+        border-color: $info-color;
+        box-shadow: 0 0 0 2px rgba($info-color, 0.1);
+      }
+
+      &.ant-select-disabled .ant-select-selector {
+        background: rgba($background-color, 0.5);
+        border-color: rgba($border-color, 0.5);
+      }
+    }
   }
 
   // Панель инструментов

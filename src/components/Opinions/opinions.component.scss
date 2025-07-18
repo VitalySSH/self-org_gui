@@ -1,91 +1,741 @@
+@use 'sass:color';
 @use 'src/shared/assets/scss/variables' as *;
 
 .comments-section {
-  margin-top: 20px;
+  margin-top: 24px;
 
   .header-section {
-    margin-bottom: 16px;
+    margin-bottom: 24px;
 
     .header-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
+      padding: 24px;
+      background: linear-gradient(135deg, $secondary-color 0%, rgba($sider-background-color, 0.6) 100%);
+      border: 1px solid $border-color;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px $card-shadow;
+      transition: all 0.3s ease;
+
+      &:hover {
+        box-shadow: 0 4px 16px $hover-shadow;
+        border-color: rgba($gradient-start, 0.3);
+        transform: translateY(-1px);
+      }
+
+      h3 {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0;
+        font-size: 18px;
+        font-weight: 600;
+        color: $heading-color;
+
+        .ant-badge {
+          .ant-badge-count {
+            background: $gradient-start;
+            border-color: $gradient-start;
+            box-shadow: 0 2px 8px rgba($gradient-start, 0.3);
+          }
+        }
+      }
+
+      .ai-button-primary {
+        background: linear-gradient(135deg, $gradient-start 0%, $gradient-end 100%);
+        border: none;
+        border-radius: 12px;
+        padding: 8px 20px;
+        height: auto;
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba($gradient-start, 0.3);
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 16px rgba($gradient-start, 0.4);
+        }
+
+        .anticon {
+          font-size: 16px;
+        }
+      }
     }
 
     .filter-section {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 0;
-      border-bottom: 1px solid $border-color;
+      gap: 12px;
+      padding: 16px 20px;
+      background: rgba($background-color, 0.9);
+      border: 1px solid $border-color;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
 
       .ant-checkbox-wrapper {
         font-size: 14px;
+        font-weight: 500;
+        color: $text-color;
+
+        .ant-checkbox {
+          .ant-checkbox-inner {
+            border-radius: 6px;
+            border-width: 2px;
+            transition: all 0.3s ease;
+
+            &:hover {
+              border-color: $gradient-start;
+            }
+          }
+
+          &.ant-checkbox-checked {
+            .ant-checkbox-inner {
+              background-color: $gradient-start;
+              border-color: $gradient-start;
+
+              &::after {
+                border-color: white;
+                border-width: 2px;
+              }
+            }
+          }
+        }
+      }
+
+      .ant-spin {
+        .ant-spin-dot {
+          .ant-spin-dot-item {
+            background-color: $gradient-start;
+          }
+        }
       }
     }
   }
 
   .add-comment-section {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    padding: 24px;
+    background: linear-gradient(135deg, rgba($success-color, 0.02) 0%, rgba($success-color, 0.01) 100%);
+    border: 1px solid rgba($success-color, 0.15);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: rgba($success-color, 0.3);
+      box-shadow: 0 2px 12px rgba($success-color, 0.1);
+    }
+
+    .ant-input {
+      border-radius: 12px;
+      border: 2px solid $border-color;
+      padding: 12px 16px;
+      font-size: 15px;
+      line-height: 1.5;
+      transition: all 0.3s ease;
+      resize: vertical;
+      min-height: 120px;
+
+      &:focus,
+      &:hover {
+        border-color: $success-color;
+        box-shadow: 0 0 0 3px rgba($success-color, 0.1);
+      }
+
+      &::placeholder {
+        color: rgba($text-color, 0.5);
+        font-style: italic;
+      }
+    }
 
     .ant-btn {
-      margin-top: 10px;
+      margin-top: 16px;
+      background: $success-color;
+      border-color: $success-color;
+      border-radius: 12px;
+      padding: 8px 24px;
+      height: auto;
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba($success-color, 0.3);
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: color.mix($success-color, black, 90%);
+        border-color: color.mix($success-color, black, 90%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba($success-color, 0.4);
+      }
     }
   }
 
   .notice {
-    padding: 16px;
-    background-color: rgba($primary-color, 0.05);
-    border-radius: 4px;
-    margin-bottom: 16px;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba($accent-yellow, 0.1) 0%, rgba($accent-yellow, 0.05) 100%);
+    border: 1px solid rgba($accent-yellow, 0.3);
+    border-radius: 12px;
+    margin-bottom: 20px;
     text-align: center;
+    color: color.mix($accent-yellow, $text-color, 70%);
+    font-weight: 500;
+    font-style: italic;
   }
 
-  .ant-list-item {
-    padding: 12px 0;
-    border-bottom: 1px solid $border-color;
-    transition: background-color 0.3s;
-
-    &.user-comment {
-      background-color: rgba($primary-color, 0.05);
-      border-radius: 4px;
-      padding: 12px;
-    }
-
-    .edit-section {
-      width: 100%;
-
-      .edit-actions {
-        margin-top: 10px;
-        display: flex;
-        gap: 8px;
-      }
-    }
-
-    .ant-list-item-meta {
-      width: 100%;
-    }
-
-    .anticon {
-      font-size: 16px;
-      color: $text-color;
-      transition: color 0.3s;
-      padding: 4px;
-      cursor: pointer;
+  .ant-list {
+    .ant-list-item {
+      padding: 20px;
+      border: 1px solid $border-color;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      background: $background-color;
+      transition: all 0.3s ease;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 
       &:hover {
-        color: $primary-color;
+        box-shadow: 0 4px 12px $hover-shadow;
+        border-color: rgba($gradient-start, 0.2);
+        transform: translateY(-1px);
       }
 
-      &.delete-icon:hover {
-        color: $error-color;
+      &.user-comment {
+        background: linear-gradient(135deg, rgba($info-color, 0.05) 0%, rgba($info-color, 0.02) 100%);
+        border-color: rgba($info-color, 0.2);
+        position: relative;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 4px;
+          height: 100%;
+          background: $info-color;
+          border-radius: 2px 0 0 2px;
+        }
+
+        &:hover {
+          border-color: $info-color;
+          box-shadow: 0 4px 16px rgba($info-color, 0.15);
+        }
       }
+
+      .edit-section {
+        width: 100%;
+
+        .ant-input {
+          border-radius: 8px;
+          border: 2px solid $border-color;
+          padding: 12px;
+          font-size: 14px;
+          line-height: 1.5;
+          transition: all 0.3s ease;
+          resize: vertical;
+          min-height: 100px;
+
+          &:focus,
+          &:hover {
+            border-color: $info-color;
+            box-shadow: 0 0 0 3px rgba($info-color, 0.1);
+          }
+        }
+
+        .edit-actions {
+          margin-top: 12px;
+          display: flex;
+          gap: 12px;
+
+          .ant-btn {
+            border-radius: 8px;
+            padding: 6px 16px;
+            height: auto;
+            font-weight: 500;
+            transition: all 0.3s ease;
+
+            &.ant-btn-primary {
+              background: $info-color;
+              border-color: $info-color;
+              box-shadow: 0 2px 6px rgba($info-color, 0.3);
+
+              &:hover {
+                background: color.mix($info-color, black, 90%);
+                border-color: color.mix($info-color, black, 90%);
+                transform: translateY(-1px);
+                box-shadow: 0 3px 12px rgba($info-color, 0.4);
+              }
+            }
+
+            &:not(.ant-btn-primary) {
+              border: 2px solid $border-color;
+              color: $text-color;
+
+              &:hover {
+                border-color: rgba($text-color, 0.4);
+                color: $text-color;
+                transform: translateY(-1px);
+              }
+            }
+          }
+        }
+      }
+
+      .ant-list-item-meta {
+        width: 100%;
+
+        .ant-list-item-meta-title {
+          font-size: 15px;
+          font-weight: 600;
+          color: $heading-color;
+          margin-bottom: 8px;
+        }
+
+        .ant-list-item-meta-description {
+          font-size: 14px;
+          line-height: 1.6;
+          color: $text-color;
+        }
+      }
+
+      .ant-list-item-action {
+        margin-left: 16px;
+
+        .ant-list-item-action-split {
+          display: none;
+        }
+
+        .anticon {
+          font-size: 16px;
+          color: rgba($text-color, 0.6);
+          transition: all 0.3s ease;
+          padding: 8px;
+          border-radius: 8px;
+          cursor: pointer;
+
+          &:hover {
+            color: $info-color;
+            background: rgba($info-color, 0.1);
+            transform: scale(1.1);
+          }
+
+          &.delete-icon:hover {
+            color: $error-color;
+            background: rgba($error-color, 0.1);
+          }
+        }
+      }
+    }
+
+    .ant-list-empty-text {
+      padding: 40px;
+      color: rgba($text-color, 0.5);
+      font-style: italic;
     }
   }
 
   .ant-pagination {
-    margin-top: 20px;
+    margin-top: 32px;
     text-align: center;
+    padding: 20px;
+    background: rgba($background-color, 0.8);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+
+    .ant-pagination-item {
+      border-radius: 8px;
+      border: 2px solid $border-color;
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: $gradient-start;
+        transform: translateY(-1px);
+      }
+
+      &.ant-pagination-item-active {
+        background: $gradient-start;
+        border-color: $gradient-start;
+
+        a {
+          color: white;
+        }
+      }
+    }
+
+    .ant-pagination-prev,
+    .ant-pagination-next {
+      border-radius: 8px;
+      border: 2px solid $border-color;
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: $gradient-start;
+        transform: translateY(-1px);
+
+        .anticon {
+          color: $gradient-start;
+        }
+      }
+    }
+
+    .ant-pagination-options {
+      .ant-select {
+        .ant-select-selector {
+          border-radius: 8px;
+          border: 2px solid $border-color;
+
+          &:hover {
+            border-color: $gradient-start;
+          }
+        }
+
+        &.ant-select-focused .ant-select-selector {
+          border-color: $gradient-start;
+          box-shadow: 0 0 0 3px rgba($gradient-start, 0.1);
+        }
+      }
+    }
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 768px) {
+  .comments-section {
+    .header-section {
+      .header-top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+        padding: 20px;
+
+        h3 {
+          font-size: 16px;
+          justify-content: center;
+        }
+
+        .ai-button-primary {
+          align-self: center;
+          padding: 8px 16px;
+        }
+      }
+
+      .filter-section {
+        padding: 12px 16px;
+
+        .ant-checkbox-wrapper {
+          font-size: 13px;
+        }
+      }
+    }
+
+    .add-comment-section {
+      padding: 20px 16px;
+
+      .ant-input {
+        padding: 10px 12px;
+        font-size: 14px;
+        min-height: 100px;
+      }
+
+      .ant-btn {
+        width: 100%;
+        margin-top: 12px;
+      }
+    }
+
+    .ant-list {
+      .ant-list-item {
+        padding: 16px;
+
+        .ant-list-item-meta {
+          .ant-list-item-meta-title {
+            font-size: 14px;
+          }
+
+          .ant-list-item-meta-description {
+            font-size: 13px;
+          }
+        }
+
+        .edit-section {
+          .ant-input {
+            font-size: 13px;
+            min-height: 80px;
+          }
+
+          .edit-actions {
+            flex-direction: column;
+            gap: 8px;
+
+            .ant-btn {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+
+    .ant-pagination {
+      padding: 16px 12px;
+
+      .ant-pagination-options {
+        margin-top: 12px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .comments-section {
+    margin-top: 16px;
+
+    .header-section {
+      margin-bottom: 16px;
+
+      .header-top {
+        padding: 16px 12px;
+
+        h3 {
+          font-size: 15px;
+        }
+
+        .ai-button-primary {
+          font-size: 13px;
+          padding: 6px 12px;
+        }
+      }
+
+      .filter-section {
+        padding: 10px 12px;
+      }
+    }
+
+    .add-comment-section {
+      padding: 16px 12px;
+
+      .ant-input {
+        font-size: 13px;
+        min-height: 90px;
+      }
+    }
+
+    .ant-list {
+      .ant-list-item {
+        padding: 12px;
+        margin-bottom: 12px;
+      }
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  .comments-section {
+    .header-section {
+      .header-top {
+        background: linear-gradient(135deg, #1a1a1a 0%, rgba(#2a2a2a, 0.8) 100%);
+        border-color: #434343;
+
+        &:hover {
+          border-color: rgba($gradient-start, 0.5);
+        }
+
+        h3 {
+          color: #ffffff;
+
+          .ant-badge {
+            .ant-badge-count {
+              background: $gradient-start;
+            }
+          }
+        }
+      }
+
+      .filter-section {
+        background: rgba(#2a2a2a, 0.9);
+        border-color: #434343;
+        backdrop-filter: blur(10px);
+
+        .ant-checkbox-wrapper {
+          color: #ffffff;
+
+          .ant-checkbox {
+            .ant-checkbox-inner {
+              background: #2a2a2a;
+              border-color: #434343;
+
+              &:hover {
+                border-color: $gradient-start;
+              }
+            }
+
+            &.ant-checkbox-checked {
+              .ant-checkbox-inner {
+                background-color: $gradient-start;
+                border-color: $gradient-start;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .add-comment-section {
+      background: linear-gradient(135deg, rgba($success-color, 0.05) 0%, rgba($success-color, 0.02) 100%);
+      border-color: rgba($success-color, 0.2);
+
+      .ant-input {
+        background: #2a2a2a;
+        border-color: #434343;
+        color: #ffffff;
+
+        &:focus,
+        &:hover {
+          border-color: $success-color;
+        }
+
+        &::placeholder {
+          color: rgba(#ffffff, 0.5);
+        }
+      }
+    }
+
+    .notice {
+      background: linear-gradient(135deg, rgba($accent-yellow, 0.15) 0%, rgba($accent-yellow, 0.08) 100%);
+      border-color: rgba($accent-yellow, 0.4);
+      color: color.mix($accent-yellow, white, 80%);
+    }
+
+    .ant-list {
+      .ant-list-item {
+        background: #1a1a1a;
+        border-color: #434343;
+
+        &:hover {
+          border-color: rgba($gradient-start, 0.4);
+        }
+
+        &.user-comment {
+          background: linear-gradient(135deg, rgba($info-color, 0.08) 0%, rgba($info-color, 0.04) 100%);
+          border-color: rgba($info-color, 0.3);
+
+          &::before {
+            background: $info-color;
+          }
+
+          &:hover {
+            border-color: $info-color;
+          }
+        }
+
+        .edit-section {
+          .ant-input {
+            background: #2a2a2a;
+            border-color: #434343;
+            color: #ffffff;
+
+            &:focus,
+            &:hover {
+              border-color: $info-color;
+            }
+          }
+
+          .edit-actions {
+            .ant-btn {
+              &:not(.ant-btn-primary) {
+                background: #2a2a2a;
+                border-color: #434343;
+                color: #ffffff;
+
+                &:hover {
+                  border-color: rgba(#ffffff, 0.4);
+                }
+              }
+            }
+          }
+        }
+
+        .ant-list-item-meta {
+          .ant-list-item-meta-title {
+            color: #ffffff;
+          }
+
+          .ant-list-item-meta-description {
+            color: rgba(#ffffff, 0.8);
+          }
+        }
+
+        .ant-list-item-action {
+          .anticon {
+            color: rgba(#ffffff, 0.6);
+
+            &:hover {
+              color: $info-color;
+              background: rgba($info-color, 0.15);
+            }
+
+            &.delete-icon:hover {
+              color: $error-color;
+              background: rgba($error-color, 0.15);
+            }
+          }
+        }
+      }
+
+      .ant-list-empty-text {
+        color: rgba(#ffffff, 0.5);
+      }
+    }
+
+    .ant-pagination {
+      background: rgba(#2a2a2a, 0.9);
+
+      .ant-pagination-item {
+        background: #2a2a2a;
+        border-color: #434343;
+
+        a {
+          color: #ffffff;
+        }
+
+        &:hover {
+          border-color: $gradient-start;
+        }
+
+        &.ant-pagination-item-active {
+          background: $gradient-start;
+          border-color: $gradient-start;
+        }
+      }
+
+      .ant-pagination-prev,
+      .ant-pagination-next {
+        background: #2a2a2a;
+        border-color: #434343;
+
+        .anticon {
+          color: #ffffff;
+        }
+
+        &:hover {
+          border-color: $gradient-start;
+
+          .anticon {
+            color: $gradient-start;
+          }
+        }
+      }
+
+      .ant-pagination-options {
+        .ant-select {
+          .ant-select-selector {
+            background: #2a2a2a;
+            border-color: #434343;
+            color: #ffffff;
+
+            &:hover {
+              border-color: $gradient-start;
+            }
+          }
+        }
+      }
+    }
   }
 }

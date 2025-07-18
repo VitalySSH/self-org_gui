@@ -1,12 +1,17 @@
-import './user-voting.page.scss';
-import { Pagination, UserVotingProps } from 'src/interfaces';
 import { useState } from 'react';
 import { Checkbox, Tag, Form, Tooltip, Popover } from 'antd';
+import {
+  QuestionCircleOutlined,
+  InfoCircleFilled,
+  UserOutlined,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
+import { Pagination, UserVotingProps } from 'src/interfaces';
 import { CustomSelect } from 'src/components';
 import { CrudDataSourceService } from 'src/services';
 import { NoncomplianceModel, VotingOptionModel } from 'src/models';
 import { Filters } from 'src/shared/types.ts';
-import { QuestionCircleOutlined, InfoCircleFilled } from '@ant-design/icons';
+import './user-voting.page.scss';
 
 export function UserVoting(props: UserVotingProps) {
   const [userVote, setUserVote] = useState<boolean | undefined | null>(
@@ -44,7 +49,6 @@ export function UserVoting(props: UserVotingProps) {
       op: 'equals',
       val: props.communityId,
     });
-
     return filters;
   };
 
@@ -99,51 +103,72 @@ export function UserVoting(props: UserVotingProps) {
       trigger="hover"
       placement="right"
     >
-      <InfoCircleFilled style={{ fontSize: 16 }} />
+      <InfoCircleFilled className="multiple-choice-hint" />
     </Popover>
   );
 
   return (
     <div className="user-voting">
+      {/* Заголовок секции */}
       <div className="voting-header">
-        <h3>Ваш голос:</h3>
-        {props.isDelegateVote && (
-          <Tag className="delegate-tag" color="default">
-            Голос советника
-          </Tag>
-        )}
-        {props.isVoteByDefault && (
-          <>
-            <Tag className="delegate-tag" color="default">
-              Голос по умолчанию
+        <h3 className="voting-title">
+          <UserOutlined className="voting-icon" />
+          Ваш голос
+        </h3>
+        <div className="voting-tags">
+          {props.isDelegateVote && (
+            <Tag className="delegate-tag">
+              Голос советника
             </Tag>
-            <Tooltip title="Голос был сформирован автоматически, на основе текущего состояния голосования, в момент вашего вступления в сообщество.">
-              <QuestionCircleOutlined />
-            </Tooltip>
-          </>
-        )}
-      </div>
-      <i className="question">{props.question}</i>
-      <div style={{ marginTop: 4 }}>
-        <Checkbox
-          checked={userVote === true}
-          onChange={() => handleVote(true)}
-          aria-label="Да"
-        >
-          Да
-        </Checkbox>
-        <Checkbox
-          checked={userVote === false}
-          onChange={() => handleVote(false)}
-          aria-label="Нет"
-        >
-          Нет
-        </Checkbox>
+          )}
+          {props.isVoteByDefault && (
+            <>
+              <Tag className="delegate-tag default-tag">
+                Голос по умолчанию
+              </Tag>
+              <Tooltip title="Голос был сформирован автоматически, на основе текущего состояния голосования, в момент вашего вступления в сообщество.">
+                <QuestionCircleOutlined className="info-tooltip" />
+              </Tooltip>
+            </>
+          )}
+        </div>
       </div>
 
+      {/* Вопрос для голосования */}
+      <div className="voting-question">
+        {props.question}
+      </div>
+
+      {/* Варианты голосования */}
+      <div className="voting-options">
+        <div className="vote-option yes-option">
+          <Checkbox
+            checked={userVote === true}
+            onChange={() => handleVote(true)}
+            aria-label="Да"
+            className={userVote === true ? 'checked' : ''}
+          >
+            Да
+          </Checkbox>
+        </div>
+        <div className="vote-option no-option">
+          <Checkbox
+            checked={userVote === false}
+            onChange={() => handleVote(false)}
+            aria-label="Нет"
+            className={userVote === false ? 'checked' : ''}
+          >
+            Нет
+          </Checkbox>
+        </div>
+      </div>
+
+      {/* Дополнительный вопрос */}
       {userVote && props.isOptions && (
         <div className="additional-question">
-          <i>{props.extraQuestion}</i>
+          <div className="additional-question-title">
+            {props.extraQuestion}
+          </div>
           <CustomSelect
             fieldService={votingOptionService}
             requestOptions={getVotingOptions}
@@ -161,34 +186,33 @@ export function UserVoting(props: UserVotingProps) {
         </div>
       )}
 
+      {/* Последствия несоблюдения правила */}
       {props.resource === 'rule' && userVote && (
-        <div className="noncompliance">
-          <Form.Item
-            label={
-              <>
-                Последствия несоблюдения правила&nbsp;
-                <MultipleChoiceHint />
-              </>
-            }
-            required
-            style={{ marginBottom: 8 }}
-          >
-            <CustomSelect
-              fieldService={noncomplianceService}
-              requestOptions={getNoncompliance}
-              multiple={true}
-              enableSearch={true}
-              label="Выберите последствия"
-              onChange={props.onSelectChange}
-              value={props.noncompliance}
-              formField="noncompliance"
-              bindLabel="name"
-              addOwnValue={true}
-              ownValuePlaceholder="Введите свой вариант"
-              ownValueMaxLength={140}
-            />
-          </Form.Item>
-        </div>
+        <>
+          <div className="noncompliance-title">
+            <ExclamationCircleOutlined />
+            Последствия несоблюдения правила
+            <MultipleChoiceHint />
+          </div>
+          <div className="noncompliance-section">
+            <Form.Item>
+              <CustomSelect
+                fieldService={noncomplianceService}
+                requestOptions={getNoncompliance}
+                multiple={true}
+                enableSearch={true}
+                label="Выберите последствия"
+                onChange={props.onSelectChange}
+                value={props.noncompliance}
+                formField="noncompliance"
+                bindLabel="name"
+                addOwnValue={true}
+                ownValuePlaceholder="Введите свой вариант"
+                ownValueMaxLength={140}
+              />
+            </Form.Item>
+          </div>
+        </>
       )}
     </div>
   );

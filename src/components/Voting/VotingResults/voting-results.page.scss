@@ -1,25 +1,185 @@
+@use 'sass:color';
 @use 'src/shared/assets/scss/variables' as *;
 
+// Основной контейнер результатов голосования
 .voting-results {
-  margin-top: 12px;
-  margin-bottom: 20px;
+  background: $background-color;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 20px 0;
+  border: 1px solid $border-color;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 
-  .ant-progress {
-    .ant-progress-inner {
-      max-width: 560px;
+  .results-title {
+    color: $heading-color;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .anticon {
+      color: $info-color;
+      font-size: 20px;
+    }
+  }
+
+  // Прогресс бары для голосования
+  .voting-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .progress-item {
+      .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+
+        .progress-label {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-weight: 600;
+          font-size: 14px;
+
+          .progress-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+          }
+
+          &.yes-label {
+            color: $success-color;
+            .progress-icon {
+              background: $success-color;
+            }
+          }
+
+          &.no-label {
+            color: $error-color;
+            .progress-icon {
+              background: $error-color;
+            }
+          }
+
+          &.abstain-label {
+            color: rgba($text-color, 0.7);
+            .progress-icon {
+              background: rgba($text-color, 0.6);
+            }
+          }
+        }
+
+        .progress-percentage {
+          font-weight: 700;
+          font-size: 16px;
+          color: $heading-color;
+          min-width: 50px;
+          text-align: right;
+        }
+      }
+
+      .ant-progress {
+        .ant-progress-inner {
+          max-width: 100%;
+          background: rgba($border-color, 0.2);
+          border-radius: 8px;
+          height: 8px;
+        }
+
+        .ant-progress-bg {
+          border-radius: 8px;
+          transition: all 0.3s ease;
+        }
+
+        // Все прогресс-бары на 100% ширины
+        &.yes-progress .ant-progress-bg {
+          background: linear-gradient(90deg, $success-color 0%, color.mix($success-color, white, 85%) 100%);
+        }
+
+        &.no-progress .ant-progress-bg {
+          background: linear-gradient(90deg, $error-color 0%, color.mix($error-color, white, 85%) 100%);
+        }
+
+        &.abstain-progress .ant-progress-bg {
+          background: linear-gradient(90deg, rgba($text-color, 0.6) 0%, rgba($text-color, 0.3) 100%);
+        }
+
+        // Убираем стандартный текст процентов
+        .ant-progress-text {
+          display: none;
+        }
+      }
     }
   }
 }
 
+// Секция дополнительного вопроса
+.extra-question-section {
+  background: linear-gradient(135deg, rgba($info-color, 0.05) 0%, rgba($info-color, 0.02) 100%);
+  border: 1px solid rgba($info-color, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 16px 0;
+
+  .extra-question-title {
+    color: $info-color;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .anticon {
+      font-size: 18px;
+    }
+  }
+
+  .extra-question-text {
+    font-size: 14px;
+    font-style: italic;
+    color: rgba($text-color, 0.8);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .ant-form-item {
+    margin-bottom: 0;
+
+    .ant-select {
+      .ant-select-selector {
+        border: 1px solid rgba($info-color, 0.3);
+        border-radius: 8px;
+        background: rgba($info-color, 0.02);
+
+        .ant-select-selection-item {
+          background: rgba($info-color, 0.1);
+          border: 1px solid rgba($info-color, 0.3);
+          border-radius: 6px;
+          color: $info-color;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
+
+// Секция мнения меньшинства
 .minority-section {
-  margin-top: 24px;
-  padding: 16px;
-  border-radius: 8px;
-  background-color: color-mix(in srgb, $status-warning-bg 30%, transparent);
-  border: 1px solid $status-warning-text;
+  background: linear-gradient(135deg, rgba($accent-yellow, 0.08) 0%, rgba($accent-yellow, 0.03) 100%);
+  border: 1px solid rgba($accent-yellow, 0.3);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 20px 0;
   position: relative;
   overflow: hidden;
 
+  // Левая цветная полоска
   &::before {
     content: '';
     position: absolute;
@@ -27,75 +187,315 @@
     left: 0;
     width: 4px;
     height: 100%;
-    background-color: $status-warning-text;
+    background: linear-gradient(180deg, $accent-yellow 0%, color.mix($accent-yellow, black, 80%) 100%);
+    border-radius: 0 2px 2px 0;
   }
 
   .minority-header {
-    width: 100%;
-    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 16px;
 
-    .minority-text {
-      font-size: 14px;
-      font-weight: 600;
-      color: $status-warning-text;
-    }
+    .minority-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
 
-    .icon {
-      color: $status-warning-text;
-      font-size: 24px;
-    }
-  }
+      .minority-icon {
+        color: $accent-yellow;
+        font-size: 20px;
+        padding: 8px;
+        background: rgba($accent-yellow, 0.1);
+        border-radius: 50%;
+        border: 2px solid rgba($accent-yellow, 0.3);
+      }
 
-  .ant-form-item-label label {
-    color: $status-warning-text !important;
-    font-weight: 600 !important;
-  }
-
-  .ant-btn-primary {
-    background-color: $status-warning-text;
-    border-color: $status-warning-text;
-
-    &:hover {
-      background-color: color-mix(in srgb, $status-warning-text 90%, black);
-      border-color: color-mix(in srgb, $status-warning-text 90%, black);
-    }
-  }
-}
-
-.extra-question {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 16px;
-  display: block;
-}
-
-.minority-form_field {
-  .ant-form-item {
-    display: block;
-    margin-top: 18px;
-
-    .ant-form-item-label {
-      display: block;
-      text-align: left;
-
-      label {
-        font-weight: 500;
-        color: $text-color;
-        font-size: 14px;
+      .minority-text {
+        font-size: 16px;
+        font-weight: 700;
+        color: color.mix($accent-yellow, black, 70%);
       }
     }
 
-    .ant-form-item-control {
-      width: 100%;
+    .ai-compromise-button {
+      background: linear-gradient(135deg, $accent-yellow 0%, color.mix($accent-yellow, black, 85%) 100%);
+      border: none;
+      color: white;
+      font-weight: 600;
+      border-radius: 8px;
+      height: 36px;
+      padding: 0 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba($accent-yellow, 0.3);
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba($accent-yellow, 0.4);
+        background: linear-gradient(135deg, color.mix($accent-yellow, white, 90%) 0%, $accent-yellow 100%);
+      }
+
+      .anticon {
+        color: white;
+      }
+    }
+  }
+
+  .minority-content {
+    .minority-form-field {
+      margin-bottom: 16px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .ant-form-item {
+        margin-bottom: 0;
+
+        .ant-form-item-label {
+          padding-bottom: 8px;
+
+          label {
+            color: color.mix($accent-yellow, black, 70%);
+            font-weight: 600;
+            font-size: 14px;
+          }
+        }
+
+        .ant-select {
+          .ant-select-selector {
+            border: 1px solid rgba($accent-yellow, 0.3);
+            border-radius: 8px;
+            background: rgba($accent-yellow, 0.02);
+
+            .ant-select-selection-item {
+              background: rgba($accent-yellow, 0.15);
+              border: 1px solid rgba($accent-yellow, 0.4);
+              border-radius: 6px;
+              color: color.mix($accent-yellow, black, 70%);
+              font-weight: 500;
+            }
+          }
+        }
+      }
     }
   }
 }
 
-@media (max-width: $breakpoint-md) {
-  .minority-header {
-    flex-direction: column;
-    gap: 12px;
-    align-items: flex-start;
+// Адаптивные стили
+@media (max-width: 768px) {
+  .voting-results {
+    padding: 20px 16px;
+    margin: 16px 0;
+
+    .results-title {
+      font-size: 16px;
+    }
+
+    .voting-progress {
+      gap: 16px;
+
+      .progress-item {
+        .progress-header {
+          .progress-label {
+            font-size: 13px;
+
+            .progress-icon {
+              width: 10px;
+              height: 10px;
+            }
+          }
+
+          .progress-percentage {
+            font-size: 15px;
+            min-width: 45px;
+          }
+        }
+
+        .ant-progress {
+          .ant-progress-inner {
+            height: 6px;
+          }
+        }
+      }
+    }
+  }
+
+  .extra-question-section {
+    padding: 16px;
+
+    .extra-question-title {
+      font-size: 15px;
+    }
+
+    .extra-question-text {
+      font-size: 13px;
+    }
+  }
+
+  .minority-section {
+    padding: 20px 16px;
+
+    .minority-header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+
+      .minority-info {
+        justify-content: center;
+      }
+
+      .ai-compromise-button {
+        width: 100%;
+      }
+    }
+
+    .minority-content {
+      .minority-form-field {
+        .ant-form-item {
+          .ant-form-item-label {
+            label {
+              font-size: 13px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .voting-results {
+    padding: 16px 12px;
+
+    .results-title {
+      font-size: 15px;
+    }
+  }
+
+  .extra-question-section {
+    padding: 12px;
+
+    .extra-question-title {
+      font-size: 14px;
+    }
+  }
+
+  .minority-section {
+    padding: 16px 12px;
+
+    .minority-header {
+      .minority-info {
+        .minority-icon {
+          font-size: 18px;
+          padding: 6px;
+        }
+
+        .minority-text {
+          font-size: 15px;
+        }
+      }
+
+      .ai-compromise-button {
+        height: 32px;
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  .voting-results {
+    background-color: #1f1f1f;
+    border-color: #434343;
+
+    .results-title {
+      color: #ffffff;
+    }
+
+    .voting-progress {
+      .progress-item {
+        .ant-progress {
+          .ant-progress-inner {
+            background: rgba(#434343, 0.5);
+          }
+
+          .progress-percentage {
+            color: #ffffff;
+          }
+        }
+      }
+    }
+  }
+
+  .extra-question-section {
+    background: rgba($info-color, 0.05);
+    border-color: rgba($info-color, 0.2);
+
+    .extra-question-title {
+      color: $info-color;
+    }
+
+    .extra-question-text {
+      color: rgba(#ffffff, 0.8);
+    }
+
+    .ant-select {
+      .ant-select-selector {
+        background: rgba($info-color, 0.05);
+        border-color: rgba($info-color, 0.3);
+
+        .ant-select-selection-item {
+          background: rgba($info-color, 0.2);
+          border-color: rgba($info-color, 0.4);
+          color: $info-color;
+        }
+      }
+    }
+  }
+
+  .minority-section {
+    background: rgba($accent-yellow, 0.05);
+    border-color: rgba($accent-yellow, 0.2);
+
+    .minority-header {
+      .minority-info {
+        .minority-icon {
+          background: rgba($accent-yellow, 0.2);
+          border-color: rgba($accent-yellow, 0.4);
+        }
+
+        .minority-text {
+          color: color.mix($accent-yellow, white, 80%);
+        }
+      }
+    }
+
+    .minority-content {
+      .minority-form-field {
+        .ant-form-item {
+          .ant-form-item-label {
+            label {
+              color: color.mix($accent-yellow, white, 80%);
+            }
+          }
+
+          .ant-select {
+            .ant-select-selector {
+              background: rgba($accent-yellow, 0.05);
+              border-color: rgba($accent-yellow, 0.3);
+
+              .ant-select-selection-item {
+                background: rgba($accent-yellow, 0.2);
+                border-color: rgba($accent-yellow, 0.4);
+                color: color.mix($accent-yellow, white, 80%);
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
