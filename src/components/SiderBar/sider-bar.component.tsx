@@ -17,7 +17,6 @@ import {
   ApiOutlined,
   TrophyOutlined,
   HomeOutlined,
-  UserOutlined,
 } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -33,12 +32,7 @@ const communitiesMenuItems: MenuItem[] = [
     key: 'communities',
     icon: <HomeOutlined />,
     label: 'Все',
-  },
-  {
-    key: 'my-communities',
-    icon: <UserOutlined />,
-    label: 'Мои',
-  },
+  }
 ];
 
 const userGuideMenuItems: MenuItem[] = [

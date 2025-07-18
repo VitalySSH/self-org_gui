@@ -52,7 +52,7 @@ export function CommunityWorkSpace() {
           name: resp.name,
           menuItems: resp.parent_data.map((it) => {
             return {
-              key: `/my-communities/${it.id}`,
+              key: `/communities/${it.id}`,
               label: it.name,
             };
           }),
@@ -159,48 +159,48 @@ export function CommunityWorkSpace() {
             <Routes>
               <Route
                 path="summary"
-                element={<CommunitySummary communityId={id} />}
+                element={<CommunitySummary communityId={id || ''} />}
               />
               <Route
                 path="sub-communities"
-                element={<SubCommunities communityId={id} />}
+                element={<SubCommunities communityId={id || ''} />}
               />
               <Route
                 path="my-settings"
-                element={<MyCommunitySettings communityId={id} />}
+                element={<MyCommunitySettings communityId={id || ''} />}
               />
               <Route
                 path="my-delegates"
-                element={<MyDelegates communityId={id} />}
+                element={<MyDelegates communityId={id || ''} />}
               />
               <Route
                 path="my-delegates/new"
-                element={<NewDelegate communityId={id} />}
+                element={<NewDelegate communityId={id || ''} />}
               />
               <Route
                 path="my-delegates/:id/*"
-                element={<DelegateDetail communityId={id} />}
+                element={<DelegateDetail communityId={id || ''} />}
               />
-              <Route path="rules" element={<Rules communityId={id} />} />
-              <Route path="rules/new" element={<NewRule communityId={id} />} />
+              <Route path="rules" element={<Rules communityId={id || ''} />} />
+              <Route path="rules/new" element={<NewRule communityId={id || ''} />} />
               <Route path="rules/:id/*" element={<RuleDetail />} />
               <Route
                 path="initiatives"
-                element={<Initiatives communityId={id} />}
+                element={<Initiatives communityId={id || ''} />}
               />
               <Route
                 path="initiatives/new"
-                element={<NewInitiative communityId={id} />}
+                element={<NewInitiative communityId={id || ''} />}
               />
               <Route path="initiatives/:id/*" element={<InitiativeDetail />} />
               <Route
                 path="challenges"
-                element={<Challenges communityId={id} />}
+                element={<Challenges communityId={id || ''} />}
               />
-              <Route path="disputes" element={<Disputes communityId={id} />} />
+              <Route path="disputes" element={<Disputes communityId={id || ''} />} />
               <Route
                 path="add-member"
-                element={<AddMemberRequestsForMe communityId={id} />}
+                element={<AddMemberRequestsForMe communityId={id || ''} />}
               />
             </Routes>
           </div>

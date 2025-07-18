@@ -157,7 +157,7 @@ export function CommunityCard({ item, actions }: CommunityCardProps) {
 
   const getOnClick = () => {
     if (item.isMyCommunity && !item.isBlocked) {
-      return () => navigate(`/my-communities/${item.id}`);
+      return () => navigate(`/communities/${item.id}`);
     }
     return undefined;
   };

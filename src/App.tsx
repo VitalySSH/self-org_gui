@@ -15,7 +15,7 @@ function App() {
         <Route path="/sign-up" element={<SignUp />} />
 
         <Route
-          path="my-communities/:id/*"
+          path="communities/:id/*"
           element={
             <ProtectedRoute>
               <CommunityWorkSpace />

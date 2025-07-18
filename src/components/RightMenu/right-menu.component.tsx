@@ -5,7 +5,6 @@ import {
   PlusCircleOutlined,
   UserAddOutlined,
   HomeOutlined,
-  UserOutlined,
   // MoonOutlined,
   // SunOutlined,
 } from '@ant-design/icons';
@@ -37,16 +36,10 @@ const items: MenuItem[] = [
     <PlusCircleOutlined className="right-menu-icon" />
   ),
   getItem(
-    'Все сообщества',
+    'Сообщества',
     'communities',
     'right-menu-item',
     <HomeOutlined className="right-menu-icon" />
-  ),
-  getItem(
-    'Мои сообщества',
-    'my-communities',
-    'right-menu-item',
-    <UserOutlined className="right-menu-icon" />
   ),
   getItem(
     'Мои заявки на вступление',
@@ -62,10 +55,10 @@ export function RightMenu(props: any) {
 
   return (
     <div className="right-menu-container">
-      <div className="right-menu-header">
-        <h3 className="right-menu-title">Навигация</h3>
-        <p className="right-menu-subtitle">Личный кабинет</p>
-      </div>
+      {/*<div className="right-menu-header">*/}
+      {/*  <h3 className="right-menu-title">Навигация</h3>*/}
+      {/*  <p className="right-menu-subtitle">Личный кабинет</p>*/}
+      {/*</div>*/}
 
       <Menu
         mode="inline"

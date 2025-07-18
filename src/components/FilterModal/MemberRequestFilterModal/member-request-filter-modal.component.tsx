@@ -9,7 +9,8 @@ import {
   AbstainedCode,
   VotedCode,
   VotedByDefaultCode,
-  CommunityMemberCode, MemberExcludedCode,
+  CommunityMemberCode,
+  MemberExcludedCode,
 } from 'src/consts';
 import dayjs from 'dayjs';
 

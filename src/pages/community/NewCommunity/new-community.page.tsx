@@ -53,9 +53,8 @@ export function NewCommunity() {
 
       successInfo('Сообщество успешно создано!');
 
-      // Небольшая задержка для показа сообщения об успехе
       setTimeout(() => {
-        navigate('/my-communities', { preventScrollReset: true });
+        navigate('/communities', { preventScrollReset: true });
       }, 1000);
 
     } catch (error) {

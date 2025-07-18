@@ -248,7 +248,7 @@ export function AuthHeaderIcons() {
       </Modal>
 
       <Drawer
-        title="Меню"
+        title="Личный кабинет"
         placement="right"
         width={350}
         open={drawerOpen}

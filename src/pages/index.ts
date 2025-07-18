@@ -1,4 +1,5 @@
 export * from './community/MyCommunities/my-communities.page';
+export * from './community/Communities/communities.page';
 export * from './community/AllCommunities/all-communities.page';
 export * from './community/NewCommunity/new-community.page';
 export * from './community/CommunitySettings/community-settings.page';

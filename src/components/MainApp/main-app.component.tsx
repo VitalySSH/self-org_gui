@@ -6,9 +6,8 @@ import { useAuth } from 'src/hooks';
 import { AuthHeaderIcons } from 'src/components';
 import {
   AboutPage,
-  AllCommunities,
+  Communities,
   MyAddMemberRequests,
-  MyCommunities,
   NewCommunity,
   UserGuideChallenges,
   UserGuideDisputes,
@@ -43,15 +42,7 @@ export function MainApp() {
               path="/communities"
               element={
                 <ProtectedRoute>
-                  <AllCommunities />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/my-communities"
-              element={
-                <ProtectedRoute>
-                  <MyCommunities />
+                  <Communities />
                 </ProtectedRoute>
               }
             />
