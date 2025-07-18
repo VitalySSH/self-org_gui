@@ -1,0 +1,422 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+// Переменные для Popconfirm
+:root {
+  --popconfirm-border-radius: 12px;
+  --popconfirm-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --popconfirm-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --popconfirm-bg: rgba(255, 255, 255, 0.98);
+  --popconfirm-backdrop: rgba(0, 0, 0, 0.02);
+}
+
+// Основной контейнер Popconfirm
+.ant-popover {
+  z-index: 1060;
+
+  // Стрелка
+  .ant-popover-arrow {
+    &::before,
+    &::after {
+      border-radius: 2px;
+      transition: var(--popconfirm-transition);
+    }
+
+    &::before {
+      background: var(--popconfirm-bg);
+      border: 1px solid rgba($border-color, 0.8);
+    }
+
+    &::after {
+      background: var(--popconfirm-bg);
+    }
+  }
+
+  // Тело всплывающего окна
+  .ant-popover-inner {
+    border-radius: var(--popconfirm-border-radius);
+    box-shadow: var(--popconfirm-shadow);
+    border: 1px solid rgba($border-color, 0.6);
+    background: var(--popconfirm-bg);
+    backdrop-filter: blur(8px);
+    overflow: hidden;
+    transition: var(--popconfirm-transition);
+
+    // Анимация появления
+    animation: popconfirmFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  // Контент Popconfirm
+  .ant-popover-inner-content {
+    padding: 0;
+  }
+
+  // Специфичные стили для Popconfirm
+  &.ant-popover-placement-top,
+  &.ant-popover-placement-topLeft,
+  &.ant-popover-placement-topRight {
+    .ant-popover-arrow {
+      &::before {
+        border-top-color: rgba($border-color, 0.8);
+        border-left-color: transparent;
+        border-right-color: transparent;
+      }
+    }
+  }
+
+  &.ant-popover-placement-bottom,
+  &.ant-popover-placement-bottomLeft,
+  &.ant-popover-placement-bottomRight {
+    .ant-popover-arrow {
+      &::before {
+        border-bottom-color: rgba($border-color, 0.8);
+        border-left-color: transparent;
+        border-right-color: transparent;
+      }
+    }
+  }
+}
+
+// Контент Popconfirm
+.ant-popconfirm {
+  max-width: 320px;
+
+  // Заголовок и описание
+  .ant-popconfirm-message {
+    padding: 20px 20px 16px 20px;
+    position: relative;
+
+    .ant-popconfirm-message-icon {
+      margin-right: 12px;
+      margin-top: 2px;
+      font-size: 18px;
+
+      .anticon {
+        color: $primary-color;
+        transition: var(--popconfirm-transition);
+
+        &.anticon-question-circle {
+          color: $info-color;
+        }
+
+        &.anticon-exclamation-circle {
+          color: #faad14;
+        }
+
+        &.anticon-close-circle {
+          color: $error-color;
+        }
+
+        &.anticon-check-circle {
+          color: $success-color;
+        }
+      }
+    }
+
+    .ant-popconfirm-message-title {
+      color: $heading-color;
+      font-weight: 600;
+      font-size: 15px;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+
+    .ant-popconfirm-description {
+      color: $text-color;
+      font-size: 13px;
+      line-height: 1.5;
+      margin: 0;
+      opacity: 0.9;
+    }
+  }
+
+  // Кнопки действий
+  .ant-popconfirm-buttons {
+    padding: 0 20px 20px 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+
+    .ant-btn {
+      min-width: 70px;
+      height: 32px;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 13px;
+      transition: var(--popconfirm-transition);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+      }
+
+      // Кнопка отмены
+      &.ant-btn-default {
+        background: rgba($border-color, 0.1);
+        border-color: rgba($border-color, 0.8);
+        color: $text-color;
+
+        &:hover {
+          background: rgba($info-color, 0.05);
+          border-color: $info-color;
+          color: $info-color;
+        }
+      }
+
+      // Кнопка подтверждения (опасная)
+      &.ant-btn-primary.ant-btn-dangerous,
+      &.ant-btn-danger {
+        background: $error-color;
+        border-color: $error-color;
+
+        &:hover {
+          background: #ff7875;
+          border-color: #ff7875;
+        }
+      }
+
+      // Кнопка подтверждения (обычная)
+      &.ant-btn-primary:not(.ant-btn-dangerous) {
+        background: $primary-color;
+        border-color: $primary-color;
+
+        &:hover {
+          background: #e60000;
+          border-color: #e60000;
+        }
+      }
+    }
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 768px) {
+  .ant-popconfirm {
+    max-width: 280px;
+
+    .ant-popconfirm-message {
+      padding: 16px 16px 12px 16px;
+
+      .ant-popconfirm-message-icon {
+        margin-right: 10px;
+        font-size: 16px;
+      }
+
+      .ant-popconfirm-message-title {
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
+
+      .ant-popconfirm-description {
+        font-size: 12px;
+      }
+    }
+
+    .ant-popconfirm-buttons {
+      padding: 0 16px 16px 16px;
+      gap: 6px;
+
+      .ant-btn {
+        min-width: 60px;
+        height: 30px;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .ant-popconfirm {
+    max-width: 240px;
+
+    .ant-popconfirm-message {
+      padding: 12px 12px 8px 12px;
+
+      .ant-popconfirm-message-icon {
+        margin-right: 8px;
+        font-size: 14px;
+      }
+
+      .ant-popconfirm-message-title {
+        font-size: 13px;
+        margin-bottom: 4px;
+      }
+
+      .ant-popconfirm-description {
+        font-size: 11px;
+      }
+    }
+
+    .ant-popconfirm-buttons {
+      padding: 0 12px 12px 12px;
+      flex-direction: column;
+      gap: 4px;
+
+      .ant-btn {
+        width: 100%;
+        min-width: auto;
+        height: 28px;
+        font-size: 11px;
+      }
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  :root {
+    --popconfirm-bg: rgba(31, 31, 31, 0.98);
+    --popconfirm-backdrop: rgba(255, 255, 255, 0.02);
+  }
+
+  .ant-popover {
+    .ant-popover-arrow {
+      &::before {
+        background: var(--popconfirm-bg);
+        border-color: rgba(#ffffff, 0.15);
+      }
+
+      &::after {
+        background: var(--popconfirm-bg);
+      }
+    }
+
+    .ant-popover-inner {
+      background: var(--popconfirm-bg);
+      border-color: rgba(#ffffff, 0.15);
+    }
+  }
+
+  .ant-popconfirm {
+    .ant-popconfirm-message {
+      .ant-popconfirm-message-title {
+        color: #ffffff;
+      }
+
+      .ant-popconfirm-description {
+        color: #cccccc;
+      }
+    }
+
+    .ant-popconfirm-buttons {
+      .ant-btn {
+        &.ant-btn-default {
+          background: rgba(#ffffff, 0.1);
+          border-color: rgba(#ffffff, 0.2);
+          color: #cccccc;
+
+          &:hover {
+            background: rgba($info-color, 0.15);
+            border-color: rgba($info-color, 0.4);
+            color: $info-color;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Высококонтрастный режим
+@media (prefers-contrast: more) {
+  .ant-popover {
+    .ant-popover-inner {
+      border: 2px solid $text-color;
+    }
+
+    .ant-popover-arrow {
+      &::before {
+        border-width: 2px;
+        border-color: $text-color;
+      }
+    }
+  }
+
+  .ant-popconfirm {
+    .ant-popconfirm-message {
+      .ant-popconfirm-message-icon {
+        .anticon {
+          filter: contrast(1.2);
+        }
+      }
+    }
+
+    .ant-popconfirm-buttons {
+      .ant-btn {
+        border-width: 2px;
+        font-weight: 600;
+
+        &:focus {
+          box-shadow: 0 0 0 3px rgba($primary-color, 0.4);
+        }
+      }
+    }
+  }
+}
+
+// Анимации
+@keyframes popconfirmFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+// Дополнительные стили для разных типов
+.ant-popconfirm {
+  // Для удаления/опасных действий
+  &.danger-popconfirm {
+    .ant-popconfirm-message {
+      .ant-popconfirm-message-icon {
+        .anticon {
+          color: $error-color;
+        }
+      }
+    }
+  }
+
+  // Для информационных действий
+  &.info-popconfirm {
+    .ant-popconfirm-message {
+      .ant-popconfirm-message-icon {
+        .anticon {
+          color: $info-color;
+        }
+      }
+    }
+  }
+
+  // Для предупреждений
+  &.warning-popconfirm {
+    .ant-popconfirm-message {
+      .ant-popconfirm-message-icon {
+        .anticon {
+          color: #faad14;
+        }
+      }
+    }
+  }
+
+  // Для успешных действий
+  &.success-popconfirm {
+    .ant-popconfirm-message {
+      .ant-popconfirm-message-icon {
+        .anticon {
+          color: $success-color;
+        }
+      }
+    }
+  }
+}

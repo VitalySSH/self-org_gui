@@ -1,37 +1,42 @@
-import { Button, message } from 'antd';
 import { useState } from 'react';
+import { Button, message } from 'antd';
+import { UserAddOutlined } from '@ant-design/icons';
 import { RequestMemberAoService } from 'src/services';
 import { useNavigate } from 'react-router-dom';
 
-export function MemberRequestJoinButton(props: any) {
-  const item = props.item;
+interface MemberRequestJoinButtonProps {
+  item: {
+    key: string;
+    communityId: string;
+  };
+  // setLoading: (loading: boolean) => void;
+}
+
+export function MemberRequestJoinButton({
+  item,
+}: MemberRequestJoinButtonProps) {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
-
   const [buttonLoading, setButtonLoading] = useState(false);
 
   const errorInfo = (content: string) => {
-    messageApi
-      .open({
-        type: 'error',
-        content: content,
-      })
-      .then();
+    messageApi.open({
+      type: 'error',
+      content: content,
+    });
   };
 
-  const join = () => {
-    setButtonLoading(true);
-    const requestMemberAOService = new RequestMemberAoService();
-    requestMemberAOService
-      .addNewMember(item.key)
-      .then(() => {
-        setButtonLoading(false);
-        navigate(`/my-communities/${item.communityId}`);
-      })
-      .catch((error) => {
-        setButtonLoading(false);
-        errorInfo(`Ошибка вступления в сообщество: ${error}`);
-      });
+  const join = async () => {
+    try {
+      setButtonLoading(true);
+      const requestMemberAOService = new RequestMemberAoService();
+      await requestMemberAOService.addNewMember(item.key);
+      navigate(`/my-communities/${item.communityId}`);
+    } catch (error) {
+      errorInfo(`Ошибка вступления в сообщество: ${error}`);
+    } finally {
+      setButtonLoading(false);
+    }
   };
 
   return (
@@ -43,7 +48,17 @@ export function MemberRequestJoinButton(props: any) {
         loading={buttonLoading}
         disabled={buttonLoading}
         onClick={join}
-        style={{ width: '90%', maxWidth: 164 }}
+        icon={<UserAddOutlined />}
+        className="join-button"
+        style={{
+          borderRadius: '6px',
+          fontWeight: 500,
+          fontSize: '12px',
+          height: '32px',
+          minWidth: '100px',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        }}
       >
         Вступить
       </Button>

@@ -1,43 +1,62 @@
-
-import { Badge, Button, List } from 'antd';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  Badge,
+  Button,
+  Empty,
+  Card,
+  Space,
+  Typography,
+  Spin,
+} from 'antd';
+import {
+  FilterOutlined,
+  ApartmentOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
 import { CommunityCardInterface, FilterValues } from 'src/interfaces';
 import { CommunityCard, CommunityFilterModal } from 'src/components';
-import { useCallback, useEffect, useState } from 'react';
 import { CommunityAOService } from 'src/services';
-import { FilterOutlined } from '@ant-design/icons';
+import './sub-communities.page.scss';
 
-export function SubCommunities(props: any) {
-  const communityId = props?.communityId;
+const { Title, Text } = Typography;
 
+interface SubCommunitiesProps {
+  communityId: string;
+}
+
+export function SubCommunities({ communityId }: SubCommunitiesProps) {
   const [loading, setLoading] = useState(true);
-  const [dataSource, setDataSource] = useState([] as CommunityCardInterface[]);
-  const [filter, setFilter] = useState<{ title?: string; content?: string }>(
-    {}
-  );
+  const [dataSource, setDataSource] = useState<CommunityCardInterface[]>([]);
+  const [allCommunities, setAllCommunities] = useState<CommunityCardInterface[]>([]);
+  const [filter, setFilter] = useState<{ title?: string; content?: string }>({});
   const [showFilters, setShowFilters] = useState(false);
 
-  const loadData = useCallback(() => {
-    if (loading) {
-      const communityService = new CommunityAOService();
-      communityService
-        .getSubCommunities(communityId)
-        .then((items) => {
-          const data = items.filter((it) => {
-            const isTitle =
-              !filter.title || it.title.toLowerCase().includes(filter.title);
-            const isContent =
-              !filter.content ||
-              it.title.toLowerCase().includes(filter.content);
+  const loadData = useCallback(async () => {
+    if (!loading || !communityId) return;
 
-            return isTitle && isContent;
-          });
-          setDataSource(data);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+    try {
+      const communityService = new CommunityAOService();
+      const items = await communityService.getSubCommunities(communityId);
+      setAllCommunities(items);
+      applyFilters(items, filter);
+    } catch (error) {
+      console.error('Error loading sub-communities:', error);
+    } finally {
+      setLoading(false);
     }
   }, [communityId, loading, filter]);
+
+  const applyFilters = (communities: CommunityCardInterface[], currentFilter: { title?: string; content?: string }) => {
+    const filteredData = communities.filter((item) => {
+      const titleMatch = !currentFilter.title ||
+        item.title.toLowerCase().includes(currentFilter.title.toLowerCase());
+      const contentMatch = !currentFilter.content ||
+        item.title.toLowerCase().includes(currentFilter.content.toLowerCase());
+
+      return titleMatch && contentMatch;
+    });
+    setDataSource(filteredData);
+  };
 
   useEffect(() => {
     loadData();
@@ -45,43 +64,172 @@ export function SubCommunities(props: any) {
 
   const handleApplyFilters = (values: FilterValues) => {
     const newFilter: { title?: string; content?: string } = {};
-    if (values.title) newFilter['title'] = values.title.toLowerCase();
-    if (values.content) newFilter['content'] = values.content.toLowerCase();
-    if (Object.keys(newFilter).length) {
-      setFilter(newFilter);
-      setLoading(true);
-      setShowFilters(false);
-      loadData();
-    }
+    if (values.title) newFilter.title = values.title;
+    if (values.content) newFilter.content = values.content;
+
+    setFilter(newFilter);
+    applyFilters(allCommunities, newFilter);
+    setShowFilters(false);
   };
 
   const handleResetFilters = () => {
     setFilter({});
-    setLoading(true);
+    applyFilters(allCommunities, {});
     setShowFilters(false);
-    loadData();
   };
 
-  return (
-    <div className="workspace-list-page">
-      <div className="workspace-list-header">
-        <h2 className="workspace-page-title">Внутренние сообщества</h2>
+  const renderHeader = () => (
+    <div className="page-header">
+      <div className="header-content">
+        <div className="header-main">
+          <div className="header-icon">
+            <ApartmentOutlined />
+          </div>
+          <div className="header-text">
+            <Title level={1} className="page-title">
+              Внутренние сообщества
+            </Title>
+            <Text type="secondary" className="page-subtitle">
+              Подсообщества и дочерние структуры
+            </Text>
+          </div>
+        </div>
 
-        <div className="workspace-list-actions">
+        <div className="header-actions">
           <Button
-            type="text"
+            type="default"
+            icon={<FilterOutlined />}
             onClick={() => setShowFilters(true)}
-            className="workspace-filter-button"
+            className="filter-button"
+            style={{
+              borderRadius: '6px',
+              fontWeight: 500,
+              fontSize: '13px',
+              height: '36px',
+              padding: '0 16px'
+            }}
           >
             <Badge
               count={Object.keys(filter).length}
               size="small"
-              className="workspace-filter-badge"
+              offset={[8, -2]}
+              style={{
+                backgroundColor: Object.keys(filter).length > 0 ? '#fa8c16' : '#999',
+                fontSize: '10px'
+              }}
             >
-              <FilterOutlined className="workspace-filter-icon" />
+              <span style={{ marginLeft: Object.keys(filter).length > 0 ? '12px' : '0' }}>
+                Фильтры
+              </span>
             </Badge>
-            Фильтры
           </Button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderStats = () => {
+    if (loading) return null;
+
+    const activeFiltersCount = Object.keys(filter).length;
+    const hasFilters = activeFiltersCount > 0;
+    const totalCommunities = allCommunities.length;
+    const filteredCommunities = dataSource.length;
+
+    return (
+      <Card className="stats-card" size="small">
+        <Space split={<span className="stats-divider">•</span>} wrap>
+          <Text type="secondary">
+            Всего: <Text strong>{totalCommunities}</Text>
+          </Text>
+          {hasFilters && (
+            <Text type="secondary">
+              Найдено: <Text strong style={{ color: '#fa8c16' }}>{filteredCommunities}</Text>
+            </Text>
+          )}
+          {hasFilters && (
+            <Text type="secondary">
+              Фильтров: <Text strong style={{ color: '#fa8c16' }}>{activeFiltersCount}</Text>
+            </Text>
+          )}
+          {!hasFilters && totalCommunities > 0 && (
+            <Text type="secondary">
+              Активных: <Text strong style={{ color: '#52c41a' }}>{totalCommunities}</Text>
+            </Text>
+          )}
+        </Space>
+      </Card>
+    );
+  };
+
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="loading-container">
+          <Spin size="large" />
+          <Text type="secondary" style={{ marginTop: 16 }}>
+            Загрузка сообществ...
+          </Text>
+        </div>
+      );
+    }
+
+    if (!dataSource.length) {
+      const isFiltered = Object.keys(filter).length > 0;
+      return (
+        <Card className="empty-state-card">
+          <Empty
+            description={
+              isFiltered
+                ? "По заданным фильтрам сообщества не найдены"
+                : "В данном сообществе нет внутренних подсообществ"
+            }
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            style={{ padding: '20px 0' }}
+          >
+            {isFiltered && (
+              <Button
+                type="primary"
+                icon={<SearchOutlined />}
+                onClick={handleResetFilters}
+                style={{ marginTop: '16px' }}
+              >
+                Сбросить фильтры
+              </Button>
+            )}
+          </Empty>
+        </Card>
+      );
+    }
+
+    return (
+      <div className="communities-list">
+        {dataSource.map((item, index) => (
+          <div
+            key={item.id}
+            className="community-row-wrapper"
+            style={{
+              animationDelay: `${0.1 + (index * 0.05)}s`
+            }}
+          >
+            <CommunityCard
+              item={item}
+              actions={[]}
+            />
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div className="sub-communities-page">
+      {renderHeader()}
+
+      <div className="page-content">
+        <div className="content-container">
+          {renderStats()}
+          {renderContent()}
         </div>
       </div>
 
@@ -91,33 +239,6 @@ export function SubCommunities(props: any) {
         onApply={handleApplyFilters}
         onReset={handleResetFilters}
       />
-
-      <div className="workspace-list-content">
-        <List
-          itemLayout="vertical"
-          dataSource={dataSource}
-          loading={loading}
-          locale={{ emptyText: 'Нет сообществ' }}
-          pagination={
-            dataSource.length >= 20
-              ? {
-                position: 'bottom',
-                align: 'end',
-                showSizeChanger: false,
-                showQuickJumper: false,
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} из ${total} сообществ`,
-              }
-              : false
-          }
-          className="workspace-list"
-          renderItem={(item: CommunityCardInterface) => (
-            <List.Item className="workspace-list-item">
-              <CommunityCard key={item.id} item={item} actions={[]} />
-            </List.Item>
-          )}
-        />
-      </div>
     </div>
   );
 }

@@ -1,0 +1,507 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+// Переменные для статистики параметров
+:root {
+  --statistics-border-radius: 12px;
+  --statistics-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --statistics-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --statistics-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --statistics-header-bg: linear-gradient(135deg, rgba(24, 144, 255, 0.02) 0%, rgba(24, 144, 255, 0.01) 100%);
+}
+
+// Основной контейнер статистики параметров
+.parameter-statistics {
+  width: 100%;
+
+  // Заголовок статистики
+  .statistics-header {
+    .ant-card-body {
+      .ant-typography {
+        &.ant-typography-h5 {
+          color: $heading-color;
+          margin-bottom: 4px;
+        }
+      }
+    }
+  }
+
+  // Контент статистики
+  .statistics-content {
+    .statistics-collapse {
+      .ant-collapse-item {
+        border: none;
+        margin-bottom: 8px;
+        border-radius: 8px;
+        overflow: hidden;
+        background: rgba($background-color, 0.8);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: var(--statistics-transition);
+
+        &:hover {
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+          transform: translateY(-1px);
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        // Заголовок секции
+        .ant-collapse-header {
+          padding: 12px 16px;
+          background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+          border: none;
+          transition: var(--statistics-transition);
+
+          &:hover {
+            background: linear-gradient(135deg, rgba($primary-color, 0.02) 0%, rgba($primary-color, 0.01) 100%);
+          }
+
+          .ant-collapse-header-text {
+            width: 100%;
+          }
+
+          .ant-collapse-expand-icon {
+            color: $primary-color;
+            font-size: 12px;
+            transition: var(--statistics-transition);
+
+            &:hover {
+              color: #e60000;
+            }
+          }
+        }
+
+        // Активное состояние
+        &.ant-collapse-item-active {
+          .ant-collapse-header {
+            background: linear-gradient(135deg, rgba($primary-color, 0.05) 0%, rgba($primary-color, 0.02) 100%);
+            border-bottom: 1px solid rgba($primary-color, 0.1);
+          }
+        }
+
+        // Контент секции
+        .ant-collapse-content {
+          border: none;
+          background: $background-color;
+
+          .ant-collapse-content-box {
+            padding: 16px;
+          }
+        }
+      }
+    }
+  }
+
+  // Загрузочное состояние
+  .parameter-statistics-loading {
+    .ant-spin {
+      .ant-spin-dot {
+        .ant-spin-dot-item {
+          background-color: $primary-color;
+        }
+      }
+    }
+  }
+}
+
+// Компонент настроек статистики
+.settings-statistics {
+  width: 100%;
+
+  // Пустое состояние
+  .settings-statistics-empty {
+    padding: 20px 0;
+    text-align: center;
+
+    .ant-empty {
+      .ant-empty-description {
+        color: $text-color;
+        font-size: 13px;
+        opacity: 0.7;
+      }
+    }
+  }
+
+  // Карточки статистики
+  .statistics-card {
+    transition: var(--statistics-transition);
+    cursor: default;
+
+    &:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+      transform: translateY(-1px);
+      border-color: rgba($primary-color, 0.2) !important;
+    }
+
+    .ant-card-body {
+      .ant-progress {
+        .ant-progress-bg {
+          transition: var(--statistics-transition);
+        }
+      }
+    }
+  }
+
+  // Итоговая статистика
+  .statistics-summary {
+    animation: fadeInUp 0.5s ease-out 0.2s both;
+  }
+
+  // Список статистики
+  .ant-list {
+    .ant-list-item {
+      padding: 8px 0;
+      border: none;
+
+      &:last-child {
+        padding-bottom: 0;
+      }
+    }
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 768px) {
+  .parameter-statistics {
+    .statistics-header {
+      margin-bottom: 12px;
+
+      .ant-card-body {
+        padding: 12px 16px;
+
+        .ant-space {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+
+          .anticon {
+            font-size: 18px;
+          }
+
+          .ant-typography-h5 {
+            font-size: 16px;
+          }
+
+          .ant-typography {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+
+    .statistics-content {
+      .ant-card-body {
+        padding: 16px;
+      }
+
+      .statistics-collapse {
+        .ant-collapse-item {
+          margin-bottom: 6px;
+
+          .ant-collapse-header {
+            padding: 10px 12px;
+
+            .ant-space {
+              .anticon {
+                font-size: 14px;
+              }
+
+              span {
+                font-size: 13px;
+              }
+            }
+          }
+
+          .ant-collapse-content {
+            .ant-collapse-content-box {
+              padding: 12px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .settings-statistics {
+    .statistics-card {
+      .ant-card-body {
+        padding: 10px 12px;
+
+        .ant-space {
+          .anticon {
+            font-size: 12px;
+          }
+
+          span {
+            font-size: 12px;
+          }
+        }
+
+        .ant-progress {
+          .ant-progress-inner {
+            height: 4px;
+          }
+        }
+      }
+    }
+
+    .statistics-summary {
+      padding: 10px;
+      margin-top: 10px;
+
+      .ant-space {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+
+        span {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .parameter-statistics {
+    .statistics-header {
+      .ant-card-body {
+        padding: 10px 12px;
+
+        .ant-space {
+          .anticon {
+            font-size: 16px;
+          }
+
+          .ant-typography-h5 {
+            font-size: 15px;
+          }
+
+          .ant-typography {
+            font-size: 11px;
+          }
+        }
+      }
+    }
+
+    .statistics-content {
+      .ant-card-body {
+        padding: 12px;
+      }
+
+      .statistics-collapse {
+        .ant-collapse-item {
+          .ant-collapse-header {
+            padding: 8px 10px;
+
+            .ant-space {
+              gap: 4px;
+
+              .anticon {
+                font-size: 12px;
+                margin-right: 4px;
+              }
+
+              span {
+                font-size: 12px;
+              }
+            }
+
+            // Счетчик элементов
+            span:last-child {
+              font-size: 10px;
+              padding: 1px 6px;
+              min-width: 20px;
+            }
+          }
+
+          .ant-collapse-content {
+            .ant-collapse-content-box {
+              padding: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .settings-statistics {
+    .statistics-card {
+      .ant-card-body {
+        padding: 8px 10px;
+
+        .ant-space {
+          gap: 2px;
+
+          .anticon {
+            font-size: 11px;
+          }
+
+          span {
+            font-size: 11px;
+          }
+        }
+
+        .ant-progress {
+          margin-top: 4px;
+        }
+      }
+    }
+
+    .statistics-summary {
+      padding: 8px;
+      margin-top: 8px;
+
+      .ant-space {
+        span {
+          font-size: 10px;
+        }
+      }
+    }
+  }
+}
+
+// Высококонтрастный режим
+@media (prefers-contrast: more) {
+  .parameter-statistics {
+    .statistics-header,
+    .statistics-content {
+      border: 2px solid $text-color;
+    }
+
+    .statistics-collapse {
+      .ant-collapse-item {
+        border: 1px solid $text-color;
+
+        .ant-collapse-header {
+          border-bottom: 1px solid $text-color;
+        }
+      }
+    }
+  }
+
+  .settings-statistics {
+    .statistics-card {
+      border: 2px solid $text-color !important;
+    }
+
+    .statistics-summary {
+      border: 2px solid $text-color;
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  :root {
+    --statistics-header-bg: linear-gradient(135deg, rgba(24, 144, 255, 0.08) 0%, rgba(24, 144, 255, 0.03) 100%);
+  }
+
+  .parameter-statistics {
+    .statistics-header,
+    .statistics-content {
+      background-color: #1f1f1f;
+      border-color: #434343;
+    }
+
+    .statistics-header {
+      .ant-card-body {
+        .ant-typography-h5 {
+          color: #ffffff;
+        }
+
+        .ant-typography {
+          color: #cccccc;
+        }
+      }
+    }
+
+    .statistics-collapse {
+      .ant-collapse-item {
+        background: rgba(#ffffff, 0.02);
+        border-color: #434343;
+
+        .ant-collapse-header {
+          background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+          color: #ffffff;
+
+          &:hover {
+            background: linear-gradient(135deg, rgba($primary-color, 0.1) 0%, rgba($primary-color, 0.05) 100%);
+          }
+        }
+
+        &.ant-collapse-item-active {
+          .ant-collapse-header {
+            background: linear-gradient(135deg, rgba($primary-color, 0.15) 0%, rgba($primary-color, 0.08) 100%);
+            border-bottom-color: rgba($primary-color, 0.3);
+          }
+        }
+
+        .ant-collapse-content {
+          background: #1f1f1f;
+          color: #cccccc;
+        }
+      }
+    }
+  }
+
+  .settings-statistics {
+    .statistics-card {
+      background-color: #1f1f1f !important;
+      border-color: #434343 !important;
+
+      .ant-card-body {
+        color: #cccccc;
+
+        span {
+          color: #cccccc;
+        }
+
+        .ant-progress {
+          .ant-progress-bg {
+            background: rgba(#ffffff, 0.1);
+          }
+        }
+      }
+
+      &:hover {
+        border-color: rgba($primary-color, 0.4) !important;
+      }
+    }
+
+    .statistics-summary {
+      background: rgba(24, 144, 255, 0.1);
+      border-color: rgba(24, 144, 255, 0.2);
+      color: #cccccc;
+
+      span {
+        color: #cccccc;
+
+        strong {
+          color: #ffffff;
+        }
+      }
+    }
+
+    .settings-statistics-empty {
+      .ant-empty {
+        .ant-empty-description {
+          color: #cccccc;
+        }
+      }
+    }
+  }
+}
+
+// Анимации
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,286 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+// Общие стили для всех кнопок в приложении
+.ant-btn {
+  // Основные стили кнопок
+  &.join-button,
+  &.remove-button,
+  &.dispute-button,
+  &.vote-button,
+  &.votes-button,
+  &.subcommunities-button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+    }
+
+    .anticon {
+      transition: transform 0.2s ease;
+    }
+
+    &:hover:not(:disabled) .anticon {
+      transform: scale(1.1);
+    }
+  }
+
+  // Кнопка вступления
+  &.join-button {
+    background: $primary-color;
+    border-color: $primary-color;
+
+    &:hover:not(:disabled) {
+      background: #e60000;
+      border-color: #e60000;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+    }
+  }
+
+  // Кнопка удаления/покидания
+  &.remove-button {
+    &:hover:not(:disabled) {
+      background: #ff7875;
+      border-color: #ff7875;
+    }
+  }
+
+  // Кнопка оспаривания
+  &.dispute-button {
+    background: rgba($error-color, 0.05);
+    border-color: rgba($error-color, 0.3);
+    color: $error-color;
+
+    &:hover:not(:disabled) {
+      background: rgba($error-color, 0.1);
+      border-color: rgba($error-color, 0.5);
+      color: $error-color;
+    }
+
+    &:disabled {
+      background: rgba($border-color, 0.3);
+      border-color: $border-color;
+      color: rgba($text-color, 0.5);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+
+      &:hover {
+        transform: none;
+        box-shadow: none;
+      }
+    }
+  }
+
+  // Кнопка голосования
+  &.vote-button {
+    background: rgba($info-color, 0.05);
+    border-color: rgba($info-color, 0.2);
+    color: $info-color;
+
+    &:hover:not(:disabled) {
+      background: rgba($info-color, 0.1);
+      border-color: rgba($info-color, 0.4);
+      color: $info-color;
+    }
+
+    &:disabled {
+      background: rgba($border-color, 0.3);
+      border-color: $border-color;
+      color: rgba($text-color, 0.5);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+
+      &:hover {
+        transform: none;
+        box-shadow: none;
+      }
+    }
+
+    // Состояния голосования
+    &.voted-yes {
+      border-color: $success-color;
+      color: $success-color;
+      background: rgba($success-color, 0.05);
+
+      &:hover {
+        background: rgba($success-color, 0.1);
+        border-color: $success-color;
+      }
+    }
+
+    &.voted-no {
+      border-color: $error-color;
+      color: $error-color;
+      background: rgba($error-color, 0.05);
+
+      &:hover {
+        background: rgba($error-color, 0.1);
+        border-color: $error-color;
+      }
+    }
+  }
+
+  // Кнопка статистики
+  &.votes-button {
+    background: rgba($success-color, 0.05);
+    border-color: rgba($success-color, 0.2);
+    color: $success-color;
+
+    &:hover:not(:disabled) {
+      background: rgba($success-color, 0.1);
+      border-color: rgba($success-color, 0.4);
+      color: $success-color;
+    }
+  }
+
+  // Кнопка подсообществ
+  &.subcommunities-button {
+    background: rgba($primary-color, 0.05);
+    border-color: rgba($primary-color, 0.2);
+    color: $primary-color;
+
+    &:hover:not(:disabled) {
+      background: rgba($primary-color, 0.1);
+      border-color: rgba($primary-color, 0.4);
+      color: $primary-color;
+    }
+  }
+}
+
+// Адаптивные стили для мобильных устройств
+@media (max-width: 480px) {
+  .ant-btn {
+    &.join-button,
+    &.remove-button,
+    &.dispute-button,
+    &.vote-button,
+    &.votes-button,
+    &.subcommunities-button {
+      span:not(.anticon) {
+        display: none;
+      }
+
+      .anticon {
+        margin: 0 !important;
+      }
+
+      &.subcommunities-button {
+        min-width: 36px;
+      }
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  .ant-btn {
+    // Кнопка оспаривания
+    &.dispute-button {
+      background: rgba($error-color, 0.1);
+      border-color: rgba($error-color, 0.3);
+
+      &:hover:not(:disabled) {
+        background: rgba($error-color, 0.15);
+        border-color: rgba($error-color, 0.5);
+      }
+
+      &:disabled {
+        background: rgba(#ffffff, 0.1);
+        border-color: #434343;
+        color: rgba(#ffffff, 0.3);
+      }
+    }
+
+    // Кнопка голосования
+    &.vote-button {
+      background: rgba($info-color, 0.1);
+      border-color: rgba($info-color, 0.3);
+
+      &:hover:not(:disabled) {
+        background: rgba($info-color, 0.15);
+        border-color: rgba($info-color, 0.5);
+      }
+
+      &:disabled {
+        background: rgba(#ffffff, 0.1);
+        border-color: #434343;
+        color: rgba(#ffffff, 0.3);
+      }
+
+      &.voted-yes {
+        background: rgba($success-color, 0.1);
+        border-color: rgba($success-color, 0.3);
+
+        &:hover {
+          background: rgba($success-color, 0.15);
+          border-color: rgba($success-color, 0.5);
+        }
+      }
+
+      &.voted-no {
+        background: rgba($error-color, 0.1);
+        border-color: rgba($error-color, 0.3);
+
+        &:hover {
+          background: rgba($error-color, 0.15);
+          border-color: rgba($error-color, 0.5);
+        }
+      }
+    }
+
+    // Кнопка статистики
+    &.votes-button {
+      background: rgba($success-color, 0.1);
+      border-color: rgba($success-color, 0.3);
+
+      &:hover:not(:disabled) {
+        background: rgba($success-color, 0.15);
+        border-color: rgba($success-color, 0.5);
+      }
+    }
+
+    // Кнопка подсообществ
+    &.subcommunities-button {
+      background: rgba($primary-color, 0.1);
+      border-color: rgba($primary-color, 0.3);
+
+      &:hover:not(:disabled) {
+        background: rgba($primary-color, 0.15);
+        border-color: rgba($primary-color, 0.5);
+      }
+    }
+  }
+}
+
+// Высококонтрастный режим
+@media (prefers-contrast: more) {
+  .ant-btn {
+    &.join-button,
+    &.remove-button,
+    &.dispute-button,
+    &.vote-button,
+    &.votes-button,
+    &.subcommunities-button {
+      border-width: 2px;
+      font-weight: 600;
+
+      &:focus {
+        box-shadow: 0 0 0 3px rgba($primary-color, 0.3);
+      }
+    }
+  }
+}

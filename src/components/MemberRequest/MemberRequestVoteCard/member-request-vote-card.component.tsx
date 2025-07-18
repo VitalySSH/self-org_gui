@@ -1,11 +1,12 @@
-import './member-request-vote-card.component.scss';
 import { Card } from 'antd';
+import { FileTextOutlined } from '@ant-design/icons';
 import { MemberRequestCardProps, MemberRequestCardItem } from 'src/interfaces';
 import {
   CoverLetter,
   MemberRequestVoteButton,
   MemberRequestVotesButton,
 } from 'src/components';
+import './member-request-vote-card.component.scss';
 
 export function MemberRequestVoteCard({
   item,
@@ -32,19 +33,35 @@ export function MemberRequestVoteCard({
       actions={renderActions()}
     >
       <div className="card-content">
-        <div>
-          <strong>Участник сообщества:</strong> {item.member}
+        <div className="info-item member-info">
+          <span className="info-label">Участник:</span>
+          <span className="info-value">{item.member}</span>
         </div>
-        <div>
-          <strong>Решение:</strong> {item.decision}
+
+        <div className="info-item decision-info">
+          <span className="info-label">Решение:</span>
+          <span className="info-value">{item.decision}</span>
         </div>
-        <div>
-          <strong>Статус:</strong> {item.status}
+
+        <div className="info-item status-info">
+          <span className="info-label">Статус:</span>
+          <span className="info-value">{item.status}</span>
         </div>
-        <div>
-          <strong>Дата подачи:</strong> {item.created}
+
+        <div className="info-item date-info">
+          <span className="info-label">Дата подачи:</span>
+          <span className="info-value">{item.created}</span>
         </div>
-        {!isParent && <CoverLetter letter={item.reason} />}
+
+        {!isParent && item.reason && (
+          <div className="reason-section">
+            <div className="reason-label">
+              <FileTextOutlined className="reason-icon" />
+              Сопроводительное письмо
+            </div>
+            <CoverLetter letter={item.reason} showIcon={false} />
+          </div>
+        )}
       </div>
     </Card>
   );

@@ -1,15 +1,19 @@
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Badge,
   Button,
   Empty,
-  Layout,
-  List,
+  Card,
+  Space,
   Pagination,
   Typography,
+  Spin,
 } from 'antd';
-import styles from 'src/shared/assets/scss/module/list.module.scss';
+import {
+  FilterOutlined,
+  UserSwitchOutlined,
+} from '@ant-design/icons';
 import moment from 'moment';
-import { SetStateAction, useCallback, useEffect, useState } from 'react';
 import {
   AuthContextProvider,
   MemberRequestFilterValues,
@@ -17,21 +21,24 @@ import {
 } from 'src/interfaces';
 import { CrudDataSourceService } from 'src/services';
 import { RequestMemberModel } from 'src/models';
-import { FilterOutlined } from '@ant-design/icons';
 import { useAuth } from 'src/hooks';
-import { useNavigate } from 'react-router-dom';
 import { Filters } from 'src/shared/types.ts';
 import {
   MemberRequestFilterModal,
   MemberRequestVoteCard,
 } from 'src/components';
+import './add-member-requests-for-me.page.scss';
 
-export function AddMemberRequestsForMe(props: any) {
+const { Title, Text } = Typography;
+
+interface AddMemberRequestsForMeProps {
+  communityId: string;
+}
+
+export function AddMemberRequestsForMe({ communityId }: AddMemberRequestsForMeProps) {
   const maxPageSize = 20;
-  const navigate = useNavigate();
   const authData: AuthContextProvider = useAuth();
   const currentUserId = authData.user?.id;
-  const communityId = props?.communityId;
 
   const getBaseFilters = (): Filters => {
     return [
@@ -54,55 +61,51 @@ export function AddMemberRequestsForMe(props: any) {
   };
 
   const [loading, setLoading] = useState(true);
-  const [dataSource, setDataSource] = useState([] as MemberRequestCardItem[]);
+  const [dataSource, setDataSource] = useState<MemberRequestCardItem[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(maxPageSize);
   const [total, setTotal] = useState(0);
   const [filters, setFilters] = useState<Filters>(getBaseFilters());
   const [showFilters, setShowFilters] = useState(false);
 
-  const loadData = useCallback(() => {
-    if (loading && communityId) {
-      const memberRequestService = new CrudDataSourceService(
-        RequestMemberModel
+  const loadData = useCallback(async () => {
+    if (!loading || !communityId) return;
+
+    try {
+      const memberRequestService = new CrudDataSourceService(RequestMemberModel);
+      const resp = await memberRequestService.list(
+        filters,
+        undefined,
+        { skip: currentPage, limit: pageSize },
+        ['status', 'member']
       );
-      memberRequestService
-        .list(filters, undefined, { skip: currentPage, limit: pageSize }, [
-          'status',
-          'member',
-        ])
-        .then((resp) => {
-          setTotal(resp.total);
-          const items: MemberRequestCardItem[] = [];
-          resp.data.forEach((requestMember) => {
-            const isMyRequest = requestMember.member?.id === currentUserId;
-            const item = {
-              key: requestMember.id || '',
-              member: requestMember.member?.fullname || '',
-              reason: requestMember.reason || '',
-              status: requestMember.status?.name || '',
-              created: moment(requestMember.created).format('DD.MM.yyyy HH:mm'),
-              isMyRequest: isMyRequest,
-              vote: requestMember.vote,
-              decision:
-                requestMember.vote === true
-                  ? 'Одобрена'
-                  : requestMember.vote === false
-                    ? 'Отклонена'
-                    : 'Нет',
-            };
-            items.push(item);
-          });
-          setDataSource(items);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+
+      setTotal(resp.total);
+      const items: MemberRequestCardItem[] = resp.data.map((requestMember) => {
+        const isMyRequest = requestMember.member?.id === currentUserId;
+        return {
+          key: requestMember.id || '',
+          member: requestMember.member?.fullname || '',
+          reason: requestMember.reason || '',
+          status: requestMember.status?.name || '',
+          created: moment(requestMember.created).format('DD.MM.yyyy HH:mm'),
+          isMyRequest: isMyRequest,
+          vote: requestMember.vote,
+          decision:
+            requestMember.vote === true
+              ? 'Одобрена'
+              : requestMember.vote === false
+                ? 'Отклонена'
+                : 'Нет',
+        };
+      });
+      setDataSource(items);
+    } catch (error) {
+      console.error('Error loading member requests for me:', error);
+    } finally {
+      setLoading(false);
     }
-  }, [communityId, currentUserId, loading, navigate]);
+  }, [communityId, currentUserId, loading, filters, currentPage, pageSize]);
 
   useEffect(() => {
     loadData();
@@ -110,6 +113,7 @@ export function AddMemberRequestsForMe(props: any) {
 
   const handleApplyFilters = (values: MemberRequestFilterValues) => {
     const newFilters: Filters = getBaseFilters();
+
     if (values.status) {
       newFilters.push({
         field: 'status.id',
@@ -117,6 +121,7 @@ export function AddMemberRequestsForMe(props: any) {
         val: values.status.id,
       });
     }
+
     if (values.member) {
       newFilters.push({
         field: 'member.id',
@@ -124,6 +129,7 @@ export function AddMemberRequestsForMe(props: any) {
         val: values.member.id,
       });
     }
+
     if (values.decision !== undefined) {
       newFilters.push({
         field: 'vote',
@@ -131,6 +137,7 @@ export function AddMemberRequestsForMe(props: any) {
         val: values.decision,
       });
     }
+
     if (values.created !== undefined) {
       const dates = [
         values.created[0].format('YYYY-MM-DD'),
@@ -142,67 +149,159 @@ export function AddMemberRequestsForMe(props: any) {
         val: JSON.stringify(dates),
       });
     }
-    if (newFilters.length > 3) {
-      setFilters(newFilters);
-      setCurrentPage(1);
-      setLoading(true);
-      setShowFilters(false);
-    }
+
+    setFilters(newFilters);
+    setCurrentPage(1);
+    setLoading(true);
+    setShowFilters(false);
   };
 
-  const handlePageChange = (
-    page: SetStateAction<number>,
-    size: SetStateAction<number>
-  ) => {
+  const handleResetFilters = () => {
+    setFilters(getBaseFilters());
+    setCurrentPage(1);
+    setLoading(true);
+    setShowFilters(false);
+  };
+
+  const handlePageChange = (page: number, size: number) => {
     setCurrentPage(page);
     setPageSize(size);
     setLoading(true);
   };
 
-  return (
-    <Layout className={styles.container}>
-      <div className={styles.header}>
-        <Typography.Title level={3} className={styles.title}>
-          Заявки на вступление
-        </Typography.Title>
+  const renderHeader = () => (
+    <div className="page-header">
+      <div className="header-content">
+        <div className="header-main">
+          <div className="header-icon">
+            <UserSwitchOutlined />
+          </div>
+          <div className="header-text">
+            <Title level={1} className="page-title">
+              Мои рассматриваемые заявки
+            </Title>
+            <Text type="secondary" className="page-subtitle">
+              Заявки участников на вступление, для моего рассмотрения
+            </Text>
+          </div>
+        </div>
 
-        <div className={styles.buttons}>
-          <Button type="text" onClick={() => setShowFilters(true)}>
-            <Badge count={filters.length - 3}>
-              <FilterOutlined style={{ fontSize: 20 }} />
+        <div className="header-actions">
+          <Button
+            type="default"
+            icon={<FilterOutlined />}
+            onClick={() => setShowFilters(true)}
+            className="filter-button"
+            style={{
+              borderRadius: '6px',
+              fontWeight: 500,
+              fontSize: '13px',
+              height: '36px',
+              padding: '0 16px'
+            }}
+          >
+            <Badge
+              count={filters.length - 3}
+              size="small"
+              offset={[8, -2]}
+              style={{
+                backgroundColor: filters.length > 3 ? '#722ed1' : '#999',
+                fontSize: '10px'
+              }}
+            >
+              <span style={{ marginLeft: filters.length > 3 ? '12px' : '0' }}>
+                Фильтры
+              </span>
             </Badge>
-            Фильтры
           </Button>
         </div>
       </div>
+    </div>
+  );
 
-      <MemberRequestFilterModal
-        communityId={props.communityId}
-        resource="rule"
-        visible={showFilters}
-        onCancel={() => setShowFilters(false)}
-        onApply={handleApplyFilters}
-        onReset={() => {
-          setFilters(getBaseFilters());
-          setCurrentPage(1);
-          setLoading(true);
-          setShowFilters(false);
-        }}
-      />
+  const renderStats = () => {
+    if (loading) return null;
 
-      <List
-        itemLayout="vertical"
-        dataSource={dataSource}
-        loading={loading}
-        locale={{ emptyText: <Empty description="Заявки не найдены" /> }}
-        className={styles.list}
-        renderItem={(item) => (
-          <List.Item className={styles.listItem}>
-            <MemberRequestVoteCard item={item} setLoading={setLoading} />
-          </List.Item>
-        )}
-      />
-      {total > pageSize && (
+    const activeFiltersCount = filters.length - 3;
+    const hasFilters = activeFiltersCount > 0;
+
+    // Подсчет статистики по решениям
+    const approvedCount = dataSource.filter(item => item.decision === 'Одобрена').length;
+    const rejectedCount = dataSource.filter(item => item.decision === 'Отклонена').length;
+    const pendingCount = dataSource.filter(item => item.decision === 'Нет').length;
+
+    return (
+      <Card className="stats-card" size="small">
+        <Space split={<span className="stats-divider">•</span>} wrap>
+          <Text type="secondary">
+            Всего: <Text strong>{total}</Text>
+          </Text>
+          <Text type="secondary">
+            Одобрено: <Text strong style={{ color: '#52c41a' }}>{approvedCount}</Text>
+          </Text>
+          <Text type="secondary">
+            Отклонено: <Text strong style={{ color: '#ff4d4f' }}>{rejectedCount}</Text>
+          </Text>
+          <Text type="secondary">
+            Ожидает: <Text strong style={{ color: '#1890ff' }}>{pendingCount}</Text>
+          </Text>
+          {hasFilters && (
+            <Text type="secondary">
+              Фильтров: <Text strong style={{ color: '#722ed1' }}>{activeFiltersCount}</Text>
+            </Text>
+          )}
+        </Space>
+      </Card>
+    );
+  };
+
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="loading-container">
+          <Spin size="large" />
+          <Text type="secondary" style={{ marginTop: 16 }}>
+            Загрузка заявок...
+          </Text>
+        </div>
+      );
+    }
+
+    if (!dataSource.length) {
+      return (
+        <Card className="empty-state-card">
+          <Empty
+            description={
+              filters.length > 3
+                ? "По заданным фильтрам заявки не найдены"
+                : "Вы еще не создали ни одной заявки на рассмотрение"
+            }
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+          />
+        </Card>
+      );
+    }
+
+    return (
+      <div className="requests-list">
+        {dataSource.map((item) => (
+          <div key={item.key} className="request-card-wrapper">
+            <MemberRequestVoteCard
+              item={item}
+              setLoading={setLoading}
+              isParent={false}
+            />
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const renderPagination = () => {
+    if (loading || total <= pageSize) return null;
+
+    return (
+      <Card className="pagination-card" size="small">
         <Pagination
           current={currentPage}
           pageSize={pageSize}
@@ -210,11 +309,50 @@ export function AddMemberRequestsForMe(props: any) {
           onChange={handlePageChange}
           showSizeChanger
           pageSizeOptions={['10', '20', '50', '100']}
-          defaultPageSize={maxPageSize}
-          showTotal={(total, range) => `${range[0]}-${range[1]} из ${total}`}
-          className={styles.pagination}
+          showTotal={(total, range) =>
+            `${range[0]}-${range[1]} из ${total} заявок`
+          }
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            margin: 0,
+          }}
+          itemRender={(_page, type, originalElement) => {
+            if (type === 'prev' || type === 'next') {
+              return React.cloneElement(originalElement as React.ReactElement, {
+                style: {
+                  borderRadius: '6px',
+                  fontWeight: 500,
+                },
+              });
+            }
+            return originalElement;
+          }}
         />
-      )}
-    </Layout>
+      </Card>
+    );
+  };
+
+  return (
+    <div className="add-member-requests-for-me-page">
+      {renderHeader()}
+
+      <div className="page-content">
+        <div className="content-container">
+          {renderStats()}
+          {renderContent()}
+          {renderPagination()}
+        </div>
+      </div>
+
+      <MemberRequestFilterModal
+        communityId={communityId}
+        resource="rule"
+        visible={showFilters}
+        onCancel={() => setShowFilters(false)}
+        onApply={handleApplyFilters}
+        onReset={handleResetFilters}
+      />
+    </div>
   );
 }

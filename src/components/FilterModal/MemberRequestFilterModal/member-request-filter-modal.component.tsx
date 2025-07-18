@@ -5,7 +5,12 @@ import { AuthApiClientService, CrudDataSourceService } from 'src/services';
 import { StatusModel } from 'src/models';
 import { Filters } from 'src/shared/types.ts';
 import { CustomSelect } from 'src/components';
-import { AbstainedCode, VotedCode, VotedByDefaultCode } from 'src/consts';
+import {
+  AbstainedCode,
+  VotedCode,
+  VotedByDefaultCode,
+  CommunityMemberCode, MemberExcludedCode,
+} from 'src/consts';
 import dayjs from 'dayjs';
 
 const { RangePicker } = DatePicker;
@@ -27,7 +32,7 @@ export function MemberRequestFilterModal({
     newFilters.push({
       field: 'code',
       op: 'in',
-      val: [VotedCode, AbstainedCode, VotedByDefaultCode],
+      val: [CommunityMemberCode, MemberExcludedCode, VotedCode, AbstainedCode, VotedByDefaultCode],
     });
 
     return statusService.list(newFilters, undefined, pagination);

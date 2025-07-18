@@ -83,7 +83,7 @@ export function MyMemberRequestCard({
         );
       case RequestSuccessfulCode:
         return (
-          <MemberRequestJoinButton item={item} setLoading={setLoading} />
+          <MemberRequestJoinButton item={item}/>
         );
       case CommunityMemberCode:
         return (
@@ -91,7 +91,7 @@ export function MyMemberRequestCard({
         );
       case MemberExcludedCode:
         return (
-          <MemberRequestDisputeButton item={item} setLoading={setLoading} />
+          <MemberRequestDisputeButton item={item} />
         );
       default:
         return null;

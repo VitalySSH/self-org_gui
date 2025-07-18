@@ -1,6 +1,7 @@
 @use 'sass:color';
 @use 'src/shared/assets/scss/variables' as *;
 @use 'src/shared/assets/scss/antd/antd_form' as *;
+@use 'src/shared/assets/scss/antd/antd_popconfirm' as *;
 @use 'src/shared/assets/scss/mixins' as *;
 @use 'src/shared/assets/scss/ui/header' as *;
 @use 'src/shared/assets/scss/ui/toolbar' as *;
@@ -9,6 +10,7 @@
 @use 'src/shared/assets/scss/ui/filter_modals' as *;
 @use 'src/shared/assets/scss/components/sider' as *;
 @use 'src/shared/assets/scss/components/select' as *;
+@use 'src/shared/assets/scss/components/parameter-statistics' as *;
 @use 'src/shared/assets/scss/ui/ai/button' as *;
 
 body {
