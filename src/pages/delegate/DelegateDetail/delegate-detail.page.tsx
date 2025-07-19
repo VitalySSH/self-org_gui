@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Button, Card, Form, message, Select, Spin, Tooltip, Typography } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
-import { QuestionCircleOutlined, EditOutlined, SaveOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import {
+  QuestionCircleOutlined,
+  EditOutlined,
+  SaveOutlined,
+  ArrowLeftOutlined,
+  TeamOutlined,
+} from '@ant-design/icons';
 import { AuthApiClientService, CrudDataSourceService } from 'src/services';
 import { DelegateSettingsModel } from 'src/models';
 import { CustomSelect } from 'src/components';
@@ -25,6 +31,7 @@ export function DelegateDetail(props: DelegateDetailProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const [disabled, setDisabled] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
+  const [formProgress, setFormProgress] = useState(0);
 
   const authApiClientService = new AuthApiClientService();
   const [form] = Form.useForm();
@@ -57,6 +64,8 @@ export function DelegateDetail(props: DelegateDetailProps) {
             category: delegateInst.category?.name,
             delegate: delegateInst.delegate,
           });
+          // Инициализируем прогресс
+          setFormProgress(delegateInst.delegate ? 100 : 0);
         })
         .catch((error) => {
           errorInfo(`Не удалось загрузить настройки советника: ${error}`);
@@ -77,7 +86,11 @@ export function DelegateDetail(props: DelegateDetailProps) {
   };
 
   const handleFormChange = () => {
-    setDisabled(!Boolean(form.getFieldValue('delegate')));
+    const hasDelegate = Boolean(form.getFieldValue('delegate'));
+    setDisabled(!hasDelegate);
+
+    // Обновляем прогресс (есть только одно обязательное поле - delegate)
+    setFormProgress(hasDelegate ? 100 : 0);
   };
 
   const fetchUsers = async (pagination?: Pagination, filters?: Filters) => {
@@ -118,6 +131,20 @@ export function DelegateDetail(props: DelegateDetailProps) {
       setButtonLoading(false);
     }
   };
+
+  const getFormStatus = () => {
+    if (disabled) return 'Требуется выбор советника';
+    return 'Готово к сохранению';
+  };
+
+  // const getCurrentDelegate = () => {
+  //   const currentDelegate = form.getFieldValue('delegate');
+  //   return currentDelegate?.fullname || 'Не выбран';
+  // };
+  //
+  // const getCategoryName = () => {
+  //   return delegate?.category?.name || 'Загрузка...';
+  // };
 
   // Состояние загрузки
   if (loading) {
@@ -247,12 +274,9 @@ export function DelegateDetail(props: DelegateDetailProps) {
           </div>
         </Card>
 
-        {/* Панель инструментов */}
+        {/* СТАРЫЙ КОД С КНОПКАМИ - ЗАКОММЕНТИРОВАН
         <Card className="form-toolbar-card" variant="borderless">
           <div className="toolbar-content">
-            <div className="toolbar-info">
-              Последнее изменение: {delegate.updated_at ? new Date(delegate.updated_at).toLocaleDateString('ru-RU') : 'неизвестно'}
-            </div>
             <div className="toolbar-actions">
               <Button
                 type="default"
@@ -275,6 +299,61 @@ export function DelegateDetail(props: DelegateDetailProps) {
             </div>
           </div>
         </Card>
+        */}
+      </div>
+
+      {/* НОВЫЙ TOOLBAR С ЦЕНТРИРОВАННЫМИ КНОПКАМИ */}
+      <div className="toolbar">
+        <div className="toolbar-info-left">
+          <div className="toolbar-info">
+            <TeamOutlined className="info-icon" />
+            <span className="info-text">
+              Прогресс: <span className="info-highlight">{formProgress}%</span>
+            </span>
+          </div>
+          <div className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}>
+            <span className="status-icon">●</span>
+            <span>{getFormStatus()}</span>
+          </div>
+        </div>
+
+        <div className="toolbar-actions">
+          <Button
+            type="default"
+            htmlType="button"
+            onClick={onCancel}
+            className="toolbar-button toolbar-button-secondary"
+            icon={<ArrowLeftOutlined />}
+          >
+            Отмена
+          </Button>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={buttonLoading}
+            onClick={onFinish}
+            disabled={disabled}
+            className="toolbar-button toolbar-button-primary"
+            icon={<SaveOutlined />}
+          >
+            Сохранить изменения
+          </Button>
+        </div>
+
+        <div className="toolbar-info-right">
+        {/*  <div className="toolbar-info">*/}
+        {/*    <ClockCircleOutlined className="info-icon" />*/}
+        {/*    <span className="info-text">*/}
+        {/*      Операция: <span className="info-highlight">Замена</span>*/}
+        {/*    </span>*/}
+        {/*  </div>*/}
+        {/*  <div className="toolbar-meta">*/}
+        {/*    Категория: {getCategoryName()}*/}
+        {/*  </div>*/}
+        {/*  <div className="toolbar-meta">*/}
+        {/*    Советник: {getCurrentDelegate()}*/}
+        {/*  </div>*/}
+        </div>
       </div>
     </div>
   );

@@ -9,7 +9,9 @@ import {
   UserOutlined,
   TagOutlined,
   CalendarOutlined,
-  StarOutlined
+  StarOutlined,
+  TeamOutlined,
+  ClockCircleOutlined
 } from '@ant-design/icons';
 import { CrudDataSourceService, VotingResultAoService } from 'src/services';
 import {
@@ -258,6 +260,26 @@ export function InitiativeDetail() {
     }
   };
 
+  // Вычисляем статистику для отображения
+  const totalVotes = useMemo(() => {
+    if (!voteInPercent.yes && !voteInPercent.no && !voteInPercent.abstain) return 0;
+    // Предполагаем, что проценты уже рассчитаны от общего количества голосов
+    return Math.round(100 / Math.max(voteInPercent.yes || 0.01, voteInPercent.no || 0.01, voteInPercent.abstain || 0.01));
+  }, [voteInPercent]);
+
+  const getUserVoteStatus = () => {
+    if (!userVotingResult) return 'Не проголосовано';
+    if (!userVotingResult.is_voted_myself && userVotingResult.vote !== null && !userVotingResult.is_voted_by_default) {
+      return 'Делегированный голос';
+    }
+    if (userVotingResult.is_voted_by_default) {
+      return 'Голос по умолчанию';
+    }
+    if (userVotingResult.vote === true) return 'ЗА';
+    if (userVotingResult.vote === false) return 'ПРОТИВ';
+    return 'Воздержался';
+  };
+
   if (loading) {
     return (
       <div className="initiative-detail-page">
@@ -298,140 +320,161 @@ export function InitiativeDetail() {
   }
 
   return (
-    <div className="initiative-detail-page">
+    <>
       {contextHolder}
+      <div className="initiative-detail-page">
+        <div className="form-page-container">
+          {/* Заголовок инициативы */}
+          <Card className="initiative-header-card" variant="borderless">
+            <div className="initiative-header-content">
+              <Title level={1} className="initiative-title">
+                {initiative.title}
+              </Title>
 
-      <div className="form-page-container">
-        {/* Заголовок инициативы */}
-        <Card className="initiative-header-card" variant="borderless">
-          <div className="initiative-header-content">
-            <Title level={1} className="initiative-title">
-              {initiative.title}
-            </Title>
-
-            <div className="initiative-meta">
-              <div className="meta-item">
-                <UserOutlined />
-                <span className="meta-label">Автор:</span>
-                <span className="meta-value">{initiative.creator?.fullname}</span>
-              </div>
-              <div className="meta-item">
-                <FileTextOutlined />
-                <span className="meta-label">Статус:</span>
-                <StatusTag status={initiativeStatus} statusCode={initiativeStatusCode} />
-              </div>
-              <div className="meta-item">
-                <TagOutlined />
-                <span className="meta-label">Категория:</span>
-                <span className="meta-value">{initiative.category?.name}</span>
-              </div>
-              {initiative.is_one_day_event && eventDate && (
+              <div className="initiative-meta">
                 <div className="meta-item">
-                  <CalendarOutlined />
-                  <span className="meta-label">Дата события:</span>
-                  <span className="meta-value">{eventDate}</span>
+                  <UserOutlined />
+                  <span className="meta-label">Автор:</span>
+                  <span className="meta-value">{initiative.creator?.fullname}</span>
                 </div>
-              )}
-              {initiative.is_one_day_event && (
-                <div className="meta-item event-type-item">
-                  <StarOutlined />
-                  <span className="meta-label">Тип:</span>
-                  <span className="event-type-badge">{OneDayEventLabel}</span>
+                <div className="meta-item">
+                  <FileTextOutlined />
+                  <span className="meta-label">Статус:</span>
+                  <StatusTag status={initiativeStatus} statusCode={initiativeStatusCode} />
                 </div>
-              )}
+                <div className="meta-item">
+                  <TagOutlined />
+                  <span className="meta-label">Категория:</span>
+                  <span className="meta-value">{initiative.category?.name}</span>
+                </div>
+                {initiative.is_one_day_event && eventDate && (
+                  <div className="meta-item">
+                    <CalendarOutlined />
+                    <span className="meta-label">Дата события:</span>
+                    <span className="meta-value">{eventDate}</span>
+                  </div>
+                )}
+                {initiative.is_one_day_event && (
+                  <div className="meta-item event-type-item">
+                    <StarOutlined />
+                    <span className="meta-label">Тип:</span>
+                    <span className="event-type-badge">{OneDayEventLabel}</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="initiative-description">
+                <span className="description-label">Описание инициативы:</span>
+                {initiative.content}
+              </div>
+
+              <div className="initiative-question">
+                {initiative.question}
+              </div>
             </div>
+          </Card>
 
-            <div className="initiative-description">
-              <span className="description-label">Описание инициативы:</span>
-              {initiative.content}
-            </div>
-
-            <div className="initiative-question">
-              {initiative.question}
-            </div>
-          </div>
-        </Card>
-
-        {/* Результаты голосования */}
-        <Card className="initiative-component-card voting-results-card" variant="borderless">
-          <VotingResults
-            yesPercent={voteInPercent.yes}
-            noPercent={voteInPercent.no}
-            abstainPercent={voteInPercent.abstain}
-            resource="initiative"
-            initiativeId={id}
-            extraQuestion={initiative.extra_question}
-            selectedOptions={selectedOptions}
-            minorityOptions={minorityOptions}
-          />
-        </Card>
-
-        {/* Голосование пользователя */}
-        {userVotingResult && (
-          <Card className="initiative-component-card user-voting-card" variant="borderless">
-            <UserVoting
-              communityId={userVotingResult.community_id}
+          {/* Результаты голосования */}
+          <div className="initiative-component-wrapper voting-results-wrapper">
+            <VotingResults
+              yesPercent={voteInPercent.yes}
+              noPercent={voteInPercent.no}
+              abstainPercent={voteInPercent.abstain}
               resource="initiative"
               initiativeId={id}
-              question={initiative.question || ''}
-              extraQuestion={initiative.extra_question || ''}
-              vote={userVotingResult.vote}
-              isOptions={initiative.is_extra_options || false}
-              options={userOption}
-              isDelegateVote={
-                !userVotingResult.is_voted_myself &&
-                userVotingResult.vote !== null &&
-                !userVotingResult.is_voted_by_default
-              }
-              isVoteByDefault={!!userVotingResult.is_voted_by_default}
-              onVote={handleVote}
-              onSelectChange={handleSelectChange}
+              extraQuestion={initiative.extra_question}
+              selectedOptions={selectedOptions}
+              minorityOptions={minorityOptions}
             />
-          </Card>
-        )}
-
-        {/* Мнения */}
-        <Card className="initiative-component-card opinions-card" variant="borderless">
-          <Opinions maxPageSize={20} resource="initiative" initiativeId={id} />
-        </Card>
-
-        {/* Панель действий */}
-        <Card className="initiative-actions-card" variant="borderless">
-          <div className="actions-content">
-            <div className="actions-info">
-              <Title level={5} className="actions-title">
-                Готовы проголосовать?
-              </Title>
-              <Text className="actions-subtitle">
-                {disabled
-                  ? 'Заполните все необходимые поля для голосования'
-                  : 'Все данные заполнены, можно отдать голос'
-                }
-              </Text>
-            </div>
-            <div className="actions-buttons">
-              <Button
-                type="default"
-                icon={<ArrowLeftOutlined />}
-                onClick={onCancel}
-                className="back-button"
-              >
-                Назад
-              </Button>
-              <Button
-                type="primary"
-                icon={<CheckCircleOutlined />}
-                loading={buttonLoading}
-                onClick={onFinish}
-                disabled={disabled}
-                className="vote-button"
-              >
-                Проголосовать
-              </Button>
-            </div>
           </div>
-        </Card>
+
+          {/* Голосование пользователя */}
+          {userVotingResult && (
+            <div className="initiative-component-wrapper user-voting-wrapper">
+              <UserVoting
+                communityId={userVotingResult.community_id}
+                resource="initiative"
+                initiativeId={id}
+                question={initiative.question || ''}
+                extraQuestion={initiative.extra_question || ''}
+                vote={userVotingResult.vote}
+                isOptions={initiative.is_extra_options || false}
+                options={userOption}
+                isDelegateVote={
+                  !userVotingResult.is_voted_myself &&
+                  userVotingResult.vote !== null &&
+                  !userVotingResult.is_voted_by_default
+                }
+                isVoteByDefault={!!userVotingResult.is_voted_by_default}
+                onVote={handleVote}
+                onSelectChange={handleSelectChange}
+              />
+            </div>
+          )}
+
+          {/* Мнения */}
+          <div className="initiative-component-wrapper opinions-wrapper">
+            <Opinions maxPageSize={20} resource="initiative" initiativeId={id} />
+          </div>
+        </div>
       </div>
-    </div>
+
+      {/* Toolbar с кнопками */}
+      <div className="toolbar">
+        <div className="toolbar-info-left">
+          <div className="toolbar-info">
+            <TeamOutlined className="info-icon" />
+            <span className="info-text">
+              Участников: <span className="info-highlight">{totalVotes}</span>
+            </span>
+          </div>
+          <div className={`toolbar-status ${
+            userVotingResult?.vote === true ? 'status-success' :
+              userVotingResult?.vote === false ? 'status-error' :
+                userVotingResult?.vote === null ? 'status-warning' : ''
+          }`}>
+            <span className="status-icon">●</span>
+            <span>{getUserVoteStatus()}</span>
+          </div>
+        </div>
+
+        <div className="toolbar-actions">
+          <Button
+            type="default"
+            htmlType="button"
+            onClick={onCancel}
+            className="toolbar-button toolbar-button-secondary"
+            icon={<ArrowLeftOutlined />}
+          >
+            Назад
+          </Button>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={buttonLoading}
+            onClick={onFinish}
+            disabled={disabled}
+            className="toolbar-button toolbar-button-success"
+            icon={<CheckCircleOutlined />}
+          >
+            Проголосовать
+          </Button>
+        </div>
+
+        <div className="toolbar-info-right">
+          {/*<div className="toolbar-info">*/}
+          {/*  <ClockCircleOutlined className="info-icon" />*/}
+          {/*  <span className="info-text">*/}
+          {/*    Статус: <span className="info-highlight">{initiativeStatus}</span>*/}
+          {/*  </span>*/}
+          {/*</div>*/}
+          {/*{initiative.is_one_day_event && eventDate && (*/}
+          {/*  <div className="toolbar-meta">*/}
+          {/*    Событие: {eventDate}*/}
+          {/*  </div>*/}
+          {/*)}*/}
+        </div>
+      </div>
+    </>
   );
 }

@@ -1,4 +1,4 @@
-import { Button, Form, message, Typography, Space, Card, Steps } from 'antd';
+import { Button, Form, message, Typography, Space, Card } from 'antd';
 import { UserSettingsAoService } from 'src/services';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -7,12 +7,13 @@ import {
   TeamOutlined,
   InfoCircleOutlined,
   CheckCircleOutlined,
-  SettingOutlined
+  SettingOutlined,
+  ArrowLeftOutlined,
 } from '@ant-design/icons';
 import './new-community.page.scss';
 
 const { Title, Text } = Typography;
-const { Step } = Steps;
+// const { Step } = Steps;
 
 export function NewCommunity() {
   const navigate = useNavigate();
@@ -86,20 +87,20 @@ export function NewCommunity() {
           </div>
         </div>
 
-        <div className="header-steps">
-          <Steps size="small" current={0}>
-            <Step
-              title="Настройка"
-              icon={<SettingOutlined />}
-              description="Заполните форму"
-            />
-            <Step
-              title="Создание"
-              icon={<CheckCircleOutlined />}
-              description="Подтвердите создание"
-            />
-          </Steps>
-        </div>
+        {/*<div className="header-steps">*/}
+        {/*  <Steps size="small" current={0}>*/}
+        {/*    <Step*/}
+        {/*      title="Настройка"*/}
+        {/*      icon={<SettingOutlined />}*/}
+        {/*      description="Заполните форму"*/}
+        {/*    />*/}
+        {/*    <Step*/}
+        {/*      title="Создание"*/}
+        {/*      icon={<CheckCircleOutlined />}*/}
+        {/*      description="Подтвердите создание"*/}
+        {/*    />*/}
+        {/*  </Steps>*/}
+        {/*</div>*/}
       </div>
     </div>
   );
@@ -121,6 +122,19 @@ export function NewCommunity() {
     </Card>
   );
 
+  // Получаем количество заполненных полей для отображения прогресса
+  const getFormProgress = () => {
+    const formData = form.getFieldsValue();
+    const requiredFields = ['name', 'description', 'quorum', 'vote', 'significant_minority', 'decision_delay', 'dispute_time_limit'];
+    const filledFields = requiredFields.filter(field => formData[field] && formData[field] !== '');
+    return Math.round((filledFields.length / requiredFields.length) * 100);
+  };
+
+  const getFormStatus = () => {
+    if (disabled) return 'В процессе заполнения';
+    return 'Готово к созданию';
+  };
+
   return (
     <div className="new-community-page">
       {contextHolder}
@@ -140,25 +154,55 @@ export function NewCommunity() {
         </div>
       </div>
 
+      {/* Toolbar с кнопками */}
       <div className="toolbar">
-        <Button
-          type="primary"
-          htmlType="submit"
-          loading={buttonLoading}
-          onClick={onFinish}
-          disabled={disabled}
-          className="toolbar-button"
-        >
-          Создать сообщество
-        </Button>
-        <Button
-          type="primary"
-          htmlType="button"
-          onClick={onCancel}
-          className="toolbar-button"
-        >
-          Назад
-        </Button>
+        <div className="toolbar-info-left">
+          <div className="toolbar-info">
+            <SettingOutlined className="info-icon" />
+            <span className="info-text">
+              Прогресс: <span className="info-highlight">{getFormProgress()}%</span>
+            </span>
+          </div>
+          <div className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}>
+            <span className="status-icon">●</span>
+            <span>{getFormStatus()}</span>
+          </div>
+        </div>
+
+        <div className="toolbar-actions">
+          <Button
+            type="default"
+            htmlType="button"
+            onClick={onCancel}
+            className="toolbar-button toolbar-button-secondary"
+            icon={<ArrowLeftOutlined />}
+          >
+            Назад
+          </Button>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={buttonLoading}
+            onClick={onFinish}
+            disabled={disabled}
+            className="toolbar-button toolbar-button-primary"
+            icon={<CheckCircleOutlined />}
+          >
+            Создать сообщество
+          </Button>
+        </div>
+
+        <div className="toolbar-info-right">
+          {/*<div className="toolbar-info">*/}
+          {/*  <ClockCircleOutlined className="info-icon" />*/}
+          {/*  <span className="info-text">*/}
+          {/*    Этап: <span className="info-highlight">Настройка</span>*/}
+          {/*  </span>*/}
+          {/*</div>*/}
+          {/*<div className="toolbar-meta">*/}
+          {/*  Шаг 1 из 2*/}
+          {/*</div>*/}
+        </div>
       </div>
     </div>
   );

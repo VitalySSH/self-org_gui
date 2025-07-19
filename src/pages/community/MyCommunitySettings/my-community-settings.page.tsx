@@ -22,6 +22,8 @@ import {
   TeamOutlined,
   UserOutlined,
   TagOutlined,
+  SaveOutlined,
+  ArrowLeftOutlined,
 } from '@ant-design/icons';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { CrudDataSourceService, UserSettingsAoService } from 'src/services';
@@ -88,6 +90,7 @@ export function MyCommunitySettings(props: any) {
   const responsibilityService = new CrudDataSourceService(ResponsibilityModel);
 
   const [form] = Form.useForm();
+  const requiredFields = ['names', 'descriptions', 'quorum', 'vote', 'significant_minority', 'decision_delay', 'dispute_time_limit'];
 
   const successInfo = (content: string) => {
     messageApi.open({
@@ -241,6 +244,9 @@ export function MyCommunitySettings(props: any) {
         if (!isUpdatingRef.current) {
           isUpdatingRef.current = true;
           form.setFieldValue(fieldName, value);
+          if (value === null && requiredFields.includes(fieldName)) {
+            setDisabled(true)
+          }
           // Сброс флага через короткий таймаут
           setTimeout(() => {
             isUpdatingRef.current = false;
@@ -342,6 +348,10 @@ export function MyCommunitySettings(props: any) {
     } finally {
       setButtonLoading(false);
     }
+  };
+
+  const onCancel = () => {
+    navigate(-1);
   };
 
   // Компонент поля рабочей группы
@@ -927,6 +937,28 @@ export function MyCommunitySettings(props: any) {
     </Card>
   );
 
+  // Получаем количество заполненных обязательных полей для отображения прогресса
+  // const getFormProgress = () => {
+  //   const formData = form.getFieldsValue();
+  //   const filledFields = requiredFields.filter(field => {
+  //     const value = formData[field];
+  //     return value && (Array.isArray(value) ? value.length > 0 : true);
+  //   });
+  //   return Math.round((filledFields.length / requiredFields.length) * 100);
+  // };
+
+  const getFormStatus = () => {
+    if (disabled) return 'Требуется заполнение';
+    return 'Готово к сохранению';
+  };
+
+  // const getCommunityName = () => {
+  //   if (settings?.names && settings.names.length > 0) {
+  //     return settings.names[0].name || 'Сообщество';
+  //   }
+  //   return 'Сообщество';
+  // };
+
   if (isLoading) {
     return (
       <div className="my-community-settings-loading">
@@ -974,17 +1006,55 @@ export function MyCommunitySettings(props: any) {
         onCancel={() => setIsModalOpen(false)}
       />
 
+      {/* Toolbar с кнопками */}
       <div className="toolbar">
-        <Button
-          type="primary"
-          htmlType="submit"
-          loading={buttonLoading}
-          onClick={onFinish}
-          disabled={disabled}
-          className="toolbar-button"
-        >
-          Сохранить
-        </Button>
+        <div className="toolbar-info-left">
+          {/*<div className="toolbar-info">*/}
+          {/*  <SettingOutlined className="info-icon" />*/}
+          {/*  <span className="info-text">*/}
+          {/*    Прогресс: <span className="info-highlight">{getFormProgress()}%</span>*/}
+          {/*  </span>*/}
+          {/*</div>*/}
+          <div className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}>
+            <span className="status-icon">●</span>
+            <span>{getFormStatus()}</span>
+          </div>
+        </div>
+
+        <div className="toolbar-actions">
+          <Button
+            type="default"
+            htmlType="button"
+            onClick={onCancel}
+            className="toolbar-button toolbar-button-secondary"
+            icon={<ArrowLeftOutlined />}
+          >
+            Назад
+          </Button>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={buttonLoading}
+            onClick={onFinish}
+            disabled={disabled}
+            className="toolbar-button toolbar-button-primary"
+            icon={<SaveOutlined />}
+          >
+            Сохранить настройки
+          </Button>
+        </div>
+
+        <div className="toolbar-info-right">
+          {/*<div className="toolbar-info">*/}
+          {/*  <ClockCircleOutlined className="info-icon" />*/}
+          {/*  <span className="info-text">*/}
+          {/*    Статус: <span className="info-highlight">Настройка</span>*/}
+          {/*  </span>*/}
+          {/*</div>*/}
+          {/*<div className="toolbar-meta">*/}
+          {/*  {getCommunityName()}*/}
+          {/*</div>*/}
+        </div>
       </div>
     </div>
   );

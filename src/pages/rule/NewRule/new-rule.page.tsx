@@ -47,6 +47,7 @@ export function NewRule(props: NewRuleProps) {
   const [isExtraOptions, setIsExtraOptions] = useState(false);
   const [isCheckingResponsibility, setIsCheckingResponsibility] = useState(false);
   const [isAIMode, setIsAIMode] = useState(false);
+  const [formProgress, setFormProgress] = useState(0);
 
   const categoryService = new CrudDataSourceService(CategoryModel);
   const ruleAoService = new RuleAoService();
@@ -75,6 +76,7 @@ export function NewRule(props: NewRuleProps) {
   const handleFormChange = () => {
     const formData = form.getFieldsValue();
     setIsExtraOptions(Boolean(formData.is_extra_options));
+
     const isValidOptions = formData.is_extra_options
       ? (formData.extra_options || []).length > 0
       : true;
@@ -85,6 +87,15 @@ export function NewRule(props: NewRuleProps) {
       Boolean(formData.category) &&
       isValidOptions;
     setDisabled(!isValid);
+
+    // Обновляем прогресс
+    const requiredFields = ['title', 'question', 'content', 'category'];
+    const filledFields = requiredFields.filter(field => {
+      const value = formData[field];
+      return value && (typeof value === 'string' ? value.trim() : true);
+    });
+    const progress = Math.round((filledFields.length / requiredFields.length) * 100);
+    setFormProgress(progress);
   };
 
   const fetchCategories = async (
@@ -268,6 +279,21 @@ export function NewRule(props: NewRuleProps) {
     </div>
   );
 
+  const getFormStatus = () => {
+    if (disabled) return 'Требуется заполнение';
+    return 'Готово к созданию';
+  };
+
+  // const getSelectedCategory = () => {
+  //   const formData = form.getFieldsValue();
+  //   return formData.category?.name || 'Не выбрана';
+  // };
+
+  // const getExtraOptionsCount = () => {
+  //   const formData = form.getFieldsValue();
+  //   return (formData.extra_options || []).length;
+  // };
+
   return (
     <div className="new-rule-page">
       {contextHolder}
@@ -443,7 +469,7 @@ export function NewRule(props: NewRuleProps) {
           </Form>
         </Card>
 
-        {/* Панель инструментов */}
+        {/* СТАРЫЙ КОД С КНОПКАМИ - ЗАКОММЕНТИРОВАН
         <Card className="form-toolbar-card" variant="borderless">
           <div className="toolbar-content">
             <div className="toolbar-info">
@@ -471,6 +497,64 @@ export function NewRule(props: NewRuleProps) {
             </div>
           </div>
         </Card>
+        */}
+      </div>
+
+      {/* НОВЫЙ TOOLBAR С ЦЕНТРИРОВАННЫМИ КНОПКАМИ */}
+      <div className="toolbar">
+        <div className="toolbar-info-left">
+          <div className="toolbar-info">
+            <FileTextOutlined className="info-icon" />
+            <span className="info-text">
+              Прогресс: <span className="info-highlight">{formProgress}%</span>
+            </span>
+          </div>
+          <div className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}>
+            <span className="status-icon">●</span>
+            <span>{getFormStatus()}</span>
+          </div>
+        </div>
+
+        <div className="toolbar-actions">
+          <Button
+            type="default"
+            htmlType="button"
+            onClick={onCancel}
+            className="toolbar-button toolbar-button-secondary"
+            icon={<ArrowLeftOutlined />}
+          >
+            Отмена
+          </Button>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={buttonLoading}
+            onClick={() => setIsCheckingResponsibility(true)}
+            disabled={disabled}
+            className="toolbar-button toolbar-button-primary"
+            icon={<SaveOutlined />}
+          >
+            Создать правило
+          </Button>
+        </div>
+
+        <div className="toolbar-info-right">
+          {/*<div className="toolbar-info">*/}
+          {/*  <ClockCircleOutlined className="info-icon" />*/}
+          {/*  <span className="info-text">*/}
+          {/*    Тип: <span className="info-highlight">Правило</span>*/}
+          {/*  </span>*/}
+          {/*</div>*/}
+          {/*{isExtraOptions && (*/}
+          {/*  <div className="toolbar-status status-success">*/}
+          {/*    <SettingOutlined className="status-icon" />*/}
+          {/*    <span>Доп. опции: {getExtraOptionsCount()}</span>*/}
+          {/*  </div>*/}
+          {/*)}*/}
+          {/*<div className="toolbar-meta">*/}
+          {/*  Категория: {getSelectedCategory()}*/}
+          {/*</div>*/}
+        </div>
       </div>
     </div>
   );

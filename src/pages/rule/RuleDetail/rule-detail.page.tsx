@@ -8,7 +8,10 @@ import {
   FileTextOutlined,
   UserOutlined,
   TagOutlined,
-  NumberOutlined
+  NumberOutlined,
+  TeamOutlined,
+  ClockCircleOutlined,
+  ExclamationCircleOutlined
 } from '@ant-design/icons';
 import { CrudDataSourceService, VotingResultAoService } from 'src/services';
 import {
@@ -309,6 +312,30 @@ export function RuleDetail() {
     }
   };
 
+  // Вычисляем статистику для отображения
+  const totalVotes = useMemo(() => {
+    if (!voteInPercent.yes && !voteInPercent.no && !voteInPercent.abstain) return 0;
+    // Предполагаем, что проценты уже рассчитаны от общего количества голосов
+    return Math.round(100 / Math.max(voteInPercent.yes || 0.01, voteInPercent.no || 0.01, voteInPercent.abstain || 0.01));
+  }, [voteInPercent]);
+
+  const getUserVoteStatus = () => {
+    if (!userVotingResult) return 'Не проголосовано';
+    if (!userVotingResult.is_voted_myself && userVotingResult.vote !== null && !userVotingResult.is_voted_by_default) {
+      return 'Делегированный голос';
+    }
+    if (userVotingResult.is_voted_by_default) {
+      return 'Голос по умолчанию';
+    }
+    if (userVotingResult.vote === true) return 'ЗА';
+    if (userVotingResult.vote === false) return 'ПРОТИВ';
+    return 'Воздержался';
+  };
+
+  const hasNoncomplianceIssues = useMemo(() => {
+    return selectedNoncompliance.length > 0 || minorityNoncompliance.length > 0;
+  }, [selectedNoncompliance, minorityNoncompliance]);
+
   if (loading) {
     return (
       <div className="rule-detail-page">
@@ -349,134 +376,159 @@ export function RuleDetail() {
   }
 
   return (
-    <div className="rule-detail-page">
+    <>
       {contextHolder}
+      <div className="rule-detail-page">
+        <div className="form-page-container">
+          {/* Заголовок правила */}
+          <Card className="rule-header-card" variant="borderless">
+            <div className="rule-header-content">
+              <Title level={1} className="rule-title">
+                {rule.title}
+              </Title>
 
-      <div className="form-page-container">
-        {/* Заголовок правила */}
-        <Card className="rule-header-card" variant="borderless">
-          <div className="rule-header-content">
-            <Title level={1} className="rule-title">
-              {rule.title}
-            </Title>
+              <div className="rule-meta">
+                <div className="meta-item">
+                  <NumberOutlined />
+                  <span className="meta-label">Номер:</span>
+                  <span className="meta-value">{rule.tracker}</span>
+                </div>
+                <div className="meta-item">
+                  <UserOutlined />
+                  <span className="meta-label">Автор:</span>
+                  <span className="meta-value">{rule.creator?.fullname}</span>
+                </div>
+                <div className="meta-item">
+                  <TagOutlined />
+                  <span className="meta-label">Категория:</span>
+                  <span className="meta-value">{rule.category?.name}</span>
+                </div>
+                <div className="meta-item">
+                  <FileTextOutlined />
+                  <span className="meta-label">Статус:</span>
+                  <StatusTag status={ruleStatus} statusCode={ruleStatusCode} />
+                </div>
+              </div>
 
-            <div className="rule-meta">
-              <div className="meta-item">
-                <NumberOutlined />
-                <span className="meta-label">Номер:</span>
-                <span className="meta-value">{rule.tracker}</span>
+              <div className="rule-description">
+                <span className="description-label">Описание правила:</span>
+                {rule.content}
               </div>
-              <div className="meta-item">
-                <UserOutlined />
-                <span className="meta-label">Автор:</span>
-                <span className="meta-value">{rule.creator?.fullname}</span>
-              </div>
-              <div className="meta-item">
-                <TagOutlined />
-                <span className="meta-label">Категория:</span>
-                <span className="meta-value">{rule.category?.name}</span>
-              </div>
-              <div className="meta-item">
-                <FileTextOutlined />
-                <span className="meta-label">Статус:</span>
-                <StatusTag status={ruleStatus} statusCode={ruleStatusCode} />
+
+              <div className="rule-question">
+                {rule.question}
               </div>
             </div>
+          </Card>
 
-            <div className="rule-description">
-              <span className="description-label">Описание правила:</span>
-              {rule.content}
-            </div>
-
-            <div className="rule-question">
-              {rule.question}
-            </div>
-          </div>
-        </Card>
-
-        {/* Результаты голосования */}
-        <Card className="rule-component-card voting-results-card" variant="borderless">
-          <VotingResults
-            yesPercent={voteInPercent.yes}
-            noPercent={voteInPercent.no}
-            abstainPercent={voteInPercent.abstain}
-            resource="rule"
-            ruleId={id}
-            extraQuestion={rule.extra_question}
-            selectedOptions={selectedOptions}
-            minorityOptions={minorityOptions}
-            noncompliance={selectedNoncompliance}
-            minorityNoncompliance={minorityNoncompliance}
-          />
-        </Card>
-
-        {/* Голосование пользователя */}
-        {userVotingResult && (
-          <Card className="rule-component-card user-voting-card" variant="borderless">
-            <UserVoting
-              communityId={userVotingResult.community_id}
+          {/* Результаты голосования */}
+          <div className="rule-component-wrapper voting-results-wrapper">
+            <VotingResults
+              yesPercent={voteInPercent.yes}
+              noPercent={voteInPercent.no}
+              abstainPercent={voteInPercent.abstain}
               resource="rule"
               ruleId={id}
-              question={rule.question || ''}
-              extraQuestion={rule.extra_question || ''}
-              vote={userVotingResult.vote}
-              isOptions={rule.is_extra_options || false}
-              options={userOption}
-              noncompliance={noncompliance}
-              isDelegateVote={
-                !userVotingResult.is_voted_myself &&
-                userVotingResult.vote !== null &&
-                !userVotingResult.is_voted_by_default
-              }
-              isVoteByDefault={!!userVotingResult.is_voted_by_default}
-              onVote={handleVote}
-              onSelectChange={handleSelectChange}
+              extraQuestion={rule.extra_question}
+              selectedOptions={selectedOptions}
+              minorityOptions={minorityOptions}
+              noncompliance={selectedNoncompliance}
+              minorityNoncompliance={minorityNoncompliance}
             />
-          </Card>
-        )}
-
-        {/* Мнения */}
-        <Card className="rule-component-card opinions-card" variant="borderless">
-          <Opinions maxPageSize={20} resource="rule" ruleId={id} />
-        </Card>
-      </div>
-
-      {/* Фиксированная панель действий */}
-      <div className="rule-actions-bar">
-        <div className="actions-container">
-          <div className="actions-info">
-            <Title level={5} className="actions-title">
-              Готовы проголосовать?
-            </Title>
-            <Text className="actions-subtitle">
-              {disabled
-                ? 'Заполните все необходимые поля для голосования'
-                : 'Все данные заполнены, можно отдать голос'
-              }
-            </Text>
           </div>
-          <div className="actions-buttons">
-            <Button
-              type="default"
-              icon={<ArrowLeftOutlined />}
-              onClick={onCancel}
-              className="back-button"
-            >
-              Назад
-            </Button>
-            <Button
-              type="primary"
-              icon={<CheckCircleOutlined />}
-              loading={buttonLoading}
-              onClick={onFinish}
-              disabled={disabled}
-              className="vote-button"
-            >
-              Проголосовать
-            </Button>
+
+          {/* Голосование пользователя */}
+          {userVotingResult && (
+            <div className="rule-component-wrapper user-voting-wrapper">
+              <UserVoting
+                communityId={userVotingResult.community_id}
+                resource="rule"
+                ruleId={id}
+                question={rule.question || ''}
+                extraQuestion={rule.extra_question || ''}
+                vote={userVotingResult.vote}
+                isOptions={rule.is_extra_options || false}
+                options={userOption}
+                noncompliance={noncompliance}
+                isDelegateVote={
+                  !userVotingResult.is_voted_myself &&
+                  userVotingResult.vote !== null &&
+                  !userVotingResult.is_voted_by_default
+                }
+                isVoteByDefault={!!userVotingResult.is_voted_by_default}
+                onVote={handleVote}
+                onSelectChange={handleSelectChange}
+              />
+            </div>
+          )}
+
+          {/* Мнения */}
+          <div className="rule-component-wrapper opinions-wrapper">
+            <Opinions maxPageSize={20} resource="rule" ruleId={id} />
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Toolbar с кнопками */}
+      <div className="toolbar">
+        <div className="toolbar-info-left">
+          <div className="toolbar-info">
+            <TeamOutlined className="info-icon" />
+            <span className="info-text">
+              Участников: <span className="info-highlight">{totalVotes}</span>
+            </span>
+          </div>
+          <div className={`toolbar-status ${
+            userVotingResult?.vote === true ? 'status-success' :
+              userVotingResult?.vote === false ? 'status-error' :
+                userVotingResult?.vote === null ? 'status-warning' : ''
+          }`}>
+            <span className="status-icon">●</span>
+            <span>{getUserVoteStatus()}</span>
+          </div>
+        </div>
+
+        <div className="toolbar-actions">
+          <Button
+            type="default"
+            htmlType="button"
+            onClick={onCancel}
+            className="toolbar-button toolbar-button-secondary"
+            icon={<ArrowLeftOutlined />}
+          >
+            Назад
+          </Button>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={buttonLoading}
+            onClick={onFinish}
+            disabled={disabled}
+            className="toolbar-button toolbar-button-primary"
+            icon={<CheckCircleOutlined />}
+          >
+            Проголосовать
+          </Button>
+        </div>
+
+        <div className="toolbar-info-right">
+          {/*<div className="toolbar-info">*/}
+          {/*  <ClockCircleOutlined className="info-icon" />*/}
+          {/*  <span className="info-text">*/}
+          {/*    Статус: <span className="info-highlight">{ruleStatus}</span>*/}
+          {/*  </span>*/}
+          {/*</div>*/}
+          {/*{hasNoncomplianceIssues && (*/}
+          {/*  <div className="toolbar-status status-warning">*/}
+          {/*    <ExclamationCircleOutlined className="status-icon" />*/}
+          {/*    <span>Есть нарушения</span>*/}
+          {/*  </div>*/}
+          {/*)}*/}
+          {/*<div className="toolbar-meta">*/}
+          {/*  Правило №{rule.tracker}*/}
+          {/*</div>*/}
+        </div>
+      </div>
+    </>
   );
 }

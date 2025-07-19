@@ -22,6 +22,7 @@ import {
   ArrowLeftOutlined,
   SettingOutlined,
   CalendarOutlined,
+  FileTextOutlined,
 } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import { useNavigate } from 'react-router-dom';
@@ -61,6 +62,7 @@ export function NewInitiative(props: NewInitiativeProps) {
   const [isExtraOptions, setIsExtraOptions] = useState(false);
   const [isCheckingResponsibility, setIsCheckingResponsibility] = useState(false);
   const [isAIMode, setIsAIMode] = useState(false);
+  const [formProgress, setFormProgress] = useState(0);
 
   const categoryService = new CrudDataSourceService(CategoryModel);
   const initiativeAoService = new InitiativeAoService();
@@ -90,6 +92,7 @@ export function NewInitiative(props: NewInitiativeProps) {
     const formData = form.getFieldsValue();
     setIsOneDayEvent(Boolean(formData.is_one_day_event));
     setIsExtraOptions(Boolean(formData.is_extra_options));
+
     const isValidOptions = formData.is_extra_options
       ? (formData.extra_options || []).length > 0
       : true;
@@ -100,6 +103,15 @@ export function NewInitiative(props: NewInitiativeProps) {
       Boolean(formData.category) &&
       isValidOptions;
     setDisabled(!isValid);
+
+    // Обновляем прогресс
+    const requiredFields = ['title', 'question', 'content', 'category'];
+    const filledFields = requiredFields.filter(field => {
+      const value = formData[field];
+      return value && (typeof value === 'string' ? value.trim() : true);
+    });
+    const progress = Math.round((filledFields.length / requiredFields.length) * 100);
+    setFormProgress(progress);
   };
 
   const fetchCategories = async (
@@ -316,6 +328,16 @@ export function NewInitiative(props: NewInitiativeProps) {
     </div>
   );
 
+  const getFormStatus = () => {
+    if (disabled) return 'Требуется заполнение';
+    return 'Готово к созданию';
+  };
+
+  // const getSelectedCategory = () => {
+  //   const formData = form.getFieldsValue();
+  //   return formData.category?.name || 'Не выбрана';
+  // };
+
   return (
     <div className="new-initiative-page">
       {contextHolder}
@@ -512,7 +534,7 @@ export function NewInitiative(props: NewInitiativeProps) {
           </Form>
         </Card>
 
-        {/* Панель инструментов */}
+        {/* СТАРЫЙ КОД С КНОПКАМИ - ЗАКОММЕНТИРОВАН
         <Card className="form-toolbar-card" variant="borderless">
           <div className="toolbar-content">
             <div className="toolbar-info">
@@ -540,6 +562,64 @@ export function NewInitiative(props: NewInitiativeProps) {
             </div>
           </div>
         </Card>
+        */}
+      </div>
+
+      {/* НОВЫЙ TOOLBAR С ЦЕНТРИРОВАННЫМИ КНОПКАМИ */}
+      <div className="toolbar">
+        <div className="toolbar-info-left">
+          <div className="toolbar-info">
+            <FileTextOutlined className="info-icon" />
+            <span className="info-text">
+              Прогресс: <span className="info-highlight">{formProgress}%</span>
+            </span>
+          </div>
+          <div className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}>
+            <span className="status-icon">●</span>
+            <span>{getFormStatus()}</span>
+          </div>
+        </div>
+
+        <div className="toolbar-actions">
+          <Button
+            type="default"
+            htmlType="button"
+            onClick={onCancel}
+            className="toolbar-button toolbar-button-secondary"
+            icon={<ArrowLeftOutlined />}
+          >
+            Отмена
+          </Button>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={buttonLoading}
+            onClick={() => setIsCheckingResponsibility(true)}
+            disabled={disabled}
+            className="toolbar-button toolbar-button-primary"
+            icon={<SaveOutlined />}
+          >
+            Создать инициативу
+          </Button>
+        </div>
+
+        <div className="toolbar-info-right">
+          {/*<div className="toolbar-info">*/}
+          {/*  <ClockCircleOutlined className="info-icon" />*/}
+          {/*  <span className="info-text">*/}
+          {/*    Тип: <span className="info-highlight">Инициатива</span>*/}
+          {/*  </span>*/}
+          {/*</div>*/}
+          {/*{isOneDayEvent && (*/}
+          {/*  <div className="toolbar-status status-success">*/}
+          {/*    <CalendarOutlined className="status-icon" />*/}
+          {/*    <span>Событие</span>*/}
+          {/*  </div>*/}
+          {/*)}*/}
+          {/*<div className="toolbar-meta">*/}
+          {/*  Категория: {getSelectedCategory()}*/}
+          {/*</div>*/}
+        </div>
       </div>
     </div>
   );

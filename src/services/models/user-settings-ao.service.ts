@@ -49,7 +49,7 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
       UserCommunitySettingsModel
     );
     const names = await Promise.all(
-      formData.names.map((name) =>
+      formData.names?.map((name) =>
         this._getOrCreateName(name, communityId, user.id)
       )
     );

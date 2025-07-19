@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { Button, Card, Form, message, Tooltip, Typography } from 'antd';
-import { QuestionCircleOutlined, TeamOutlined, SaveOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import {
+  QuestionCircleOutlined,
+  TeamOutlined,
+  SaveOutlined,
+  ArrowLeftOutlined,
+} from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   AuthContextProvider,
@@ -35,6 +40,7 @@ export function NewDelegate(props: NewDelegateProps) {
   const categoryIds = (location.state?.categoryIds as string[]) || [];
   const [buttonLoading, setButtonLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
+  const [formProgress, setFormProgress] = useState(0);
 
   const authApiClientService = new AuthApiClientService();
   const categoryService = new CrudDataSourceService(CategoryModel);
@@ -64,6 +70,12 @@ export function NewDelegate(props: NewDelegateProps) {
     const formData = form.getFieldsValue();
     const isValid = Boolean(formData.category) && Boolean(formData.delegate);
     setDisabled(!isValid);
+
+    // Обновляем прогресс (2 обязательных поля: category и delegate)
+    const requiredFields = ['category', 'delegate'];
+    const filledFields = requiredFields.filter(field => Boolean(formData[field]));
+    const progress = Math.round((filledFields.length / requiredFields.length) * 100);
+    setFormProgress(progress);
   };
 
   const fetchCategories = async (
@@ -130,6 +142,27 @@ export function NewDelegate(props: NewDelegateProps) {
       setButtonLoading(false);
     }
   };
+
+  const getFormStatus = () => {
+    if (disabled) return 'Требуется заполнение';
+    return 'Готово к назначению';
+  };
+
+  // const getSelectedCategory = () => {
+  //   const formData = form.getFieldsValue();
+  //   return formData.category?.name || 'Не выбрана';
+  // };
+  //
+  // const getSelectedDelegate = () => {
+  //   const formData = form.getFieldsValue();
+  //   return formData.delegate?.fullname || 'Не выбран';
+  // };
+  //
+  // const getAvailableCategoriesCount = () => {
+  //   // Можно добавить логику для подсчета доступных категорий
+  //   // Пока возвращаем статическое значение
+  //   return categoryIds.length > 0 ? `Исключено: ${categoryIds.length}` : 'Все доступны';
+  // };
 
   return (
     <div className="new-delegate-page">
@@ -215,7 +248,7 @@ export function NewDelegate(props: NewDelegateProps) {
           </Form>
         </Card>
 
-        {/* Панель инструментов */}
+        {/* СТАРЫЙ КОД С КНОПКАМИ - ЗАКОММЕНТИРОВАН
         <Card className="form-toolbar-card" variant="borderless">
           <div className="toolbar-content">
             <div className="toolbar-info">
@@ -243,6 +276,61 @@ export function NewDelegate(props: NewDelegateProps) {
             </div>
           </div>
         </Card>
+        */}
+      </div>
+
+      {/* НОВЫЙ TOOLBAR С ЦЕНТРИРОВАННЫМИ КНОПКАМИ */}
+      <div className="toolbar">
+        <div className="toolbar-info-left">
+          <div className="toolbar-info">
+            <TeamOutlined className="info-icon" />
+            <span className="info-text">
+              Прогресс: <span className="info-highlight">{formProgress}%</span>
+            </span>
+          </div>
+          <div className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}>
+            <span className="status-icon">●</span>
+            <span>{getFormStatus()}</span>
+          </div>
+        </div>
+
+        <div className="toolbar-actions">
+          <Button
+            type="default"
+            htmlType="button"
+            onClick={onCancel}
+            className="toolbar-button toolbar-button-secondary"
+            icon={<ArrowLeftOutlined />}
+          >
+            Отмена
+          </Button>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={buttonLoading}
+            onClick={onFinish}
+            disabled={disabled}
+            className="toolbar-button toolbar-button-primary"
+            icon={<SaveOutlined />}
+          >
+            Назначить советника
+          </Button>
+        </div>
+
+        <div className="toolbar-info-right">
+          {/*<div className="toolbar-info">*/}
+          {/*  <ClockCircleOutlined className="info-icon" />*/}
+          {/*  <span className="info-text">*/}
+          {/*    Операция: <span className="info-highlight">Назначение</span>*/}
+          {/*  </span>*/}
+          {/*</div>*/}
+          {/*<div className="toolbar-meta">*/}
+          {/*  Категория: {getSelectedCategory()}*/}
+          {/*</div>*/}
+          {/*<div className="toolbar-meta">*/}
+          {/*  Советник: {getSelectedDelegate()}*/}
+          {/*</div>*/}
+        </div>
       </div>
     </div>
   );

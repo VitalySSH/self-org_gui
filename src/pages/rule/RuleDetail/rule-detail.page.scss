@@ -1,10 +1,9 @@
-@use 'sass:color';
 @use 'src/shared/assets/scss/variables' as *;
 
 .rule-detail-page {
   min-height: 100vh;
   background: linear-gradient(135deg, $secondary-color 0%, rgba($sider-background-color, 0.3) 100%);
-  padding: 32px 0 120px; // Добавляем отступ снизу для actions-bar
+  padding: 32px 0 120px; // Добавляем отступ снизу для toolbar
   position: relative;
 
   &::before {
@@ -147,34 +146,19 @@
     }
   }
 
-  // Карточки компонентов
-  .rule-component-card {
-    background: rgba($background-color, 0.98);
-    border: 1px solid $border-color;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    backdrop-filter: blur(20px);
-    transition: all 0.3s ease;
+  // Компоненты без карточек
+  .rule-component-wrapper {
     animation: slideInUp 0.6s ease-out;
 
-    &:hover {
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      transform: translateY(-1px);
-    }
-
-    .ant-card-body {
-      padding: 0;
-    }
-
-    &.voting-results-card {
+    &.voting-results-wrapper {
       animation-delay: 0.1s;
     }
 
-    &.user-voting-card {
+    &.user-voting-wrapper {
       animation-delay: 0.2s;
     }
 
-    &.opinions-card {
+    &.opinions-wrapper {
       animation-delay: 0.3s;
     }
   }
@@ -207,129 +191,6 @@
         font-size: 16px;
         color: $text-color;
         margin: 0;
-      }
-    }
-  }
-}
-
-// Фиксированная панель действий
-.rule-actions-bar {
-  position: fixed;
-  bottom: 0;
-  //left: 0;
-  right: 0;
-  z-index: 1000;
-  background: rgba($background-color, 0.95);
-  backdrop-filter: blur(20px);
-  border-top: 1px solid $border-color;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-  animation: slideInUp 0.6s ease-out 0.4s both;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 3px;
-    background: linear-gradient(90deg, $gradient-start 0%, $gradient-end 100%);
-    border-radius: 0 0 3px 3px;
-  }
-
-  .actions-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 16px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .actions-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-
-    .actions-title {
-      font-size: 16px;
-      font-weight: 600;
-      color: $heading-color;
-      margin: 0;
-      line-height: 1.2;
-    }
-
-    .actions-subtitle {
-      font-size: 13px;
-      color: rgba($text-color, 0.7);
-      margin: 0;
-      line-height: 1.2;
-    }
-  }
-
-  .actions-buttons {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-
-    .vote-button {
-      background: $success-color;
-      border: none;
-      border-radius: 12px;
-      height: 48px;
-      padding: 0 24px;
-      font-size: 15px;
-      font-weight: 600;
-      color: white;
-      box-shadow: 0 4px 16px rgba($success-color, 0.25);
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-
-      &:hover:not(:disabled) {
-        background: color.mix($success-color, black, 90%);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 24px rgba($success-color, 0.35);
-      }
-
-      &:disabled {
-        opacity: 0.6;
-        transform: none;
-        box-shadow: 0 2px 8px rgba($text-color, 0.15);
-        background: rgba($text-color, 0.3);
-        cursor: not-allowed;
-      }
-
-      .anticon {
-        font-size: 16px;
-      }
-    }
-
-    .back-button {
-      background: transparent;
-      border: 2px solid rgba($text-color, 0.2);
-      border-radius: 12px;
-      height: 48px;
-      padding: 0 20px;
-      font-size: 15px;
-      font-weight: 500;
-      color: $text-color;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-
-      &:hover {
-        border-color: $gradient-start;
-        color: $gradient-start;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba($gradient-start, 0.15);
-      }
-
-      .anticon {
-        font-size: 16px;
       }
     }
   }
@@ -393,20 +254,6 @@
       }
     }
   }
-
-  .rule-actions-bar {
-    .actions-container {
-      padding: 14px 20px;
-    }
-
-    .actions-buttons {
-      .vote-button,
-      .back-button {
-        height: 44px;
-        font-size: 14px;
-      }
-    }
-  }
 }
 
 @media (max-width: 768px) {
@@ -450,43 +297,6 @@
           font-size: 15px;
           padding: 14px;
         }
-      }
-    }
-
-    .rule-component-card {
-      border-radius: 14px;
-    }
-  }
-
-  .rule-actions-bar {
-    .actions-container {
-      flex-direction: column;
-      gap: 12px;
-      padding: 12px 16px;
-      text-align: center;
-    }
-
-    .actions-info {
-      .actions-title {
-        font-size: 15px;
-      }
-
-      .actions-subtitle {
-        font-size: 12px;
-      }
-    }
-
-    .actions-buttons {
-      width: 100%;
-
-      .vote-button {
-        flex: 1;
-        height: 48px;
-      }
-
-      .back-button {
-        height: 48px;
-        min-width: 100px;
       }
     }
   }
@@ -539,23 +349,6 @@
       }
     }
   }
-
-  .rule-actions-bar {
-    .actions-container {
-      padding: 10px 12px;
-      gap: 10px;
-    }
-
-    .actions-buttons {
-      gap: 8px;
-
-      .vote-button,
-      .back-button {
-        height: 44px;
-        font-size: 13px;
-      }
-    }
-  }
 }
 
 // Темная тема
@@ -569,7 +362,6 @@
     }
 
     .rule-header-card,
-    .rule-component-card,
     .rule-loading-card {
       background: rgba(#1a1a1a, 0.98);
       border-color: #434343;
@@ -621,43 +413,12 @@
         }
       }
     }
-  }
 
-  .rule-actions-bar {
-    background: rgba(#1a1a1a, 0.98);
-    border-top-color: #434343;
-
-    &::before {
-      background: linear-gradient(90deg, $gradient-start 0%, $gradient-end 100%);
-    }
-
-    .actions-info {
-      .actions-title {
-        color: #ffffff;
-      }
-
-      .actions-subtitle {
-        color: rgba(#ffffff, 0.6);
-      }
-    }
-
-    .actions-buttons {
-      .back-button {
-        border-color: #434343;
-        color: #ffffff;
-
-        &:hover {
-          border-color: $gradient-start;
-          color: $gradient-start;
+    .rule-loading-card {
+      .loading-content {
+        .loading-text {
+          color: rgba(#ffffff, 0.8);
         }
-      }
-    }
-  }
-
-  .rule-loading-card {
-    .loading-content {
-      .loading-text {
-        color: rgba(#ffffff, 0.8);
       }
     }
   }
