@@ -1,47 +1,661 @@
+@use 'sass:color';
 @use 'src/shared/assets/scss/variables' as *;
 
-.initiative-card {
-  width: 100%;
-  margin: 20px auto;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: $background-color;
-}
+.initiative-detail-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, $secondary-color 0%, rgba($sider-background-color, 0.3) 100%);
+  padding: 32px 0;
+  position: relative;
 
-.initiative-description {
-  font-size: 16px;
-  color: #333;
-  line-height: 1.6;
-  margin-bottom: 16px;
-}
-
-.initiative-question {
-  font-size: 16px;
-  font-weight: 600 !important;
-  color: #333;
-  margin-bottom: 16px;
-}
-
-.loading-spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-}
-
-@media (max-width: $breakpoint-sm) {
-  .initiative-card {
-    margin: 10px;
-    padding: 15px;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 20%, rgba($accent-yellow, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba($success-color, 0.05) 0%, transparent 50%);
+    pointer-events: none;
   }
 
-  .initiative-description {
-    font-size: 13px;
+  .form-page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
   }
 
-  .initiative-question {
-    font-size: 14px;
+  // Заголовок инициативы
+  .initiative-header-card {
+    background: rgba($background-color, 0.95);
+    border: 1px solid $border-color;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(20px);
+    animation: slideInUp 0.6s ease-out;
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .ant-card-body {
+      padding: 32px;
+    }
+
+    .initiative-header-content {
+      .initiative-title {
+        color: $heading-color;
+        font-weight: 700;
+        font-size: 32px;
+        margin-bottom: 24px;
+        line-height: 1.2;
+        background: linear-gradient(135deg, $accent-yellow 0%, $success-color 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+
+        &.ant-typography {
+          margin-bottom: 24px;
+        }
+      }
+
+      .initiative-meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px 24px;
+        margin-bottom: 24px;
+
+        .meta-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 15px;
+
+          .meta-label {
+            font-weight: 600;
+            color: $heading-color;
+            min-width: 80px;
+          }
+
+          .meta-value {
+            color: $text-color;
+            flex: 1;
+          }
+
+          .ant-tag {
+            margin: 0;
+          }
+        }
+
+        .event-type-item {
+          grid-column: 1 / -1;
+
+          .event-type-badge {
+            background: linear-gradient(135deg, rgba($accent-yellow, 0.15) 0%, rgba($success-color, 0.15) 100%);
+            border: 1px solid rgba($accent-yellow, 0.3);
+            color: color.mix($accent-yellow, $text-color, 70%);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+          }
+        }
+      }
+
+      .initiative-description {
+        font-size: 16px;
+        color: $text-color;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        padding: 20px;
+        background: rgba($success-color, 0.04);
+        border-radius: 12px;
+        border-left: 4px solid $success-color;
+
+        .description-label {
+          font-weight: 600;
+          color: $heading-color;
+          margin-bottom: 8px;
+          display: block;
+        }
+      }
+
+      .initiative-question {
+        font-size: 18px;
+        font-weight: 600;
+        color: $success-color;
+        font-style: italic;
+        text-align: center;
+        padding: 20px;
+        background: linear-gradient(135deg, rgba($success-color, 0.05) 0%, rgba($success-color, 0.02) 100%);
+        border-radius: 12px;
+        border: 1px solid rgba($success-color, 0.15);
+        margin: 0;
+      }
+    }
+  }
+
+  // Карточки компонентов
+  .initiative-component-card {
+    background: rgba($background-color, 0.95);
+    border: 1px solid $border-color;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+    animation: slideInUp 0.6s ease-out;
+
+    &:hover {
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .ant-card-body {
+      padding: 0;
+    }
+
+    &.voting-results-card {
+      animation-delay: 0.1s;
+    }
+
+    &.user-voting-card {
+      animation-delay: 0.2s;
+    }
+
+    &.opinions-card {
+      animation-delay: 0.3s;
+    }
+  }
+
+  // Панель действий
+  .initiative-actions-card {
+    background: rgba($background-color, 0.98);
+    border: 1px solid rgba($accent-yellow, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba($accent-yellow, 0.15);
+    backdrop-filter: blur(20px);
+    animation: slideInUp 0.6s ease-out 0.4s both;
+    position: sticky;
+    bottom: 24px;
+    z-index: 10;
+
+    .ant-card-body {
+      padding: 20px 24px;
+    }
+
+    .actions-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+
+      .actions-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .actions-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: $heading-color;
+          margin: 0;
+        }
+
+        .actions-subtitle {
+          font-size: 13px;
+          color: rgba($text-color, 0.7);
+          margin: 0;
+        }
+      }
+
+      .actions-buttons {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+
+        .vote-button {
+          background: linear-gradient(135deg, $accent-yellow 0%, color.mix($accent-yellow, $success-color, 80%) 100%);
+          border: none;
+          border-radius: 12px;
+          height: 48px;
+          padding: 0 24px;
+          font-size: 15px;
+          font-weight: 600;
+          color: color.mix($accent-yellow, black, 20%);
+          box-shadow: 0 4px 16px rgba($accent-yellow, 0.3);
+          transition: all 0.3s ease;
+
+          &:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba($accent-yellow, 0.4);
+          }
+
+          &:disabled {
+            opacity: 0.6;
+            transform: none;
+            box-shadow: 0 2px 8px rgba($text-color, 0.2);
+            background: rgba($text-color, 0.3);
+            color: white;
+          }
+
+          .anticon {
+            font-size: 16px;
+          }
+        }
+
+        .back-button {
+          background: transparent;
+          border: 2px solid $border-color;
+          border-radius: 12px;
+          height: 48px;
+          padding: 0 20px;
+          font-size: 15px;
+          font-weight: 500;
+          color: $text-color;
+          transition: all 0.3s ease;
+
+          &:hover {
+            border-color: $accent-yellow;
+            color: $accent-yellow;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba($accent-yellow, 0.2);
+          }
+
+          .anticon {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+
+  // Состояние загрузки
+  .initiative-loading-card {
+    background: rgba($background-color, 0.95);
+    border: 1px solid $border-color;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(20px);
+    text-align: center;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: slideInUp 0.6s ease-out;
+
+    .ant-card-body {
+      padding: 48px 32px;
+    }
+
+    .loading-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+
+      .loading-text {
+        font-size: 16px;
+        color: $text-color;
+        margin: 0;
+      }
+    }
+  }
+}
+
+// Анимации
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 1024px) {
+  .initiative-detail-page {
+    padding: 24px 0;
+
+    .form-page-container {
+      max-width: 100%;
+      padding: 0 20px;
+      gap: 20px;
+    }
+
+    .initiative-header-card {
+      .ant-card-body {
+        padding: 24px;
+      }
+
+      .initiative-header-content {
+        .initiative-title {
+          font-size: 28px;
+          margin-bottom: 20px;
+        }
+
+        .initiative-meta {
+          grid-template-columns: 1fr;
+          gap: 12px;
+
+          .meta-item {
+            .meta-label {
+              min-width: 70px;
+            }
+          }
+
+          .event-type-item {
+            grid-column: 1;
+          }
+        }
+
+        .initiative-description {
+          font-size: 15px;
+          padding: 16px;
+        }
+
+        .initiative-question {
+          font-size: 16px;
+          padding: 16px;
+        }
+      }
+    }
+
+    .initiative-actions-card {
+      .actions-content {
+        .actions-buttons {
+          .vote-button,
+          .back-button {
+            height: 44px;
+            font-size: 14px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .initiative-detail-page {
+    padding: 16px 0;
+
+    .form-page-container {
+      padding: 0 16px;
+      gap: 16px;
+    }
+
+    .initiative-header-card {
+      border-radius: 16px;
+
+      .ant-card-body {
+        padding: 20px;
+      }
+
+      .initiative-header-content {
+        .initiative-title {
+          font-size: 24px;
+          margin-bottom: 16px;
+        }
+
+        .initiative-meta {
+          .meta-item {
+            font-size: 14px;
+
+            .meta-label {
+              min-width: 60px;
+            }
+          }
+
+          .event-type-item {
+            .event-type-badge {
+              font-size: 13px;
+              padding: 6px 12px;
+            }
+          }
+        }
+
+        .initiative-description {
+          font-size: 14px;
+          padding: 14px;
+        }
+
+        .initiative-question {
+          font-size: 15px;
+          padding: 14px;
+        }
+      }
+    }
+
+    .initiative-component-card {
+      border-radius: 14px;
+    }
+
+    .initiative-actions-card {
+      border-radius: 14px;
+      bottom: 16px;
+
+      .ant-card-body {
+        padding: 16px 20px;
+      }
+
+      .actions-content {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+
+        .actions-info {
+          .actions-title {
+            font-size: 15px;
+          }
+
+          .actions-subtitle {
+            font-size: 12px;
+          }
+        }
+
+        .actions-buttons {
+          width: 100%;
+
+          .vote-button {
+            flex: 1;
+            height: 48px;
+          }
+
+          .back-button {
+            height: 48px;
+            min-width: 100px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .initiative-detail-page {
+    padding: 12px 0;
+
+    .form-page-container {
+      padding: 0 12px;
+      gap: 12px;
+    }
+
+    .initiative-header-card {
+      .ant-card-body {
+        padding: 16px;
+      }
+
+      .initiative-header-content {
+        .initiative-title {
+          font-size: 20px;
+          margin-bottom: 12px;
+        }
+
+        .initiative-meta {
+          .meta-item {
+            font-size: 13px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+
+            .meta-label {
+              min-width: auto;
+            }
+          }
+
+          .event-type-item {
+            .event-type-badge {
+              font-size: 12px;
+              padding: 4px 10px;
+            }
+          }
+        }
+
+        .initiative-description {
+          font-size: 13px;
+          padding: 12px;
+        }
+
+        .initiative-question {
+          font-size: 14px;
+          padding: 12px;
+        }
+      }
+    }
+
+    .initiative-actions-card {
+      bottom: 12px;
+
+      .ant-card-body {
+        padding: 12px 16px;
+      }
+
+      .actions-content {
+        gap: 12px;
+
+        .actions-buttons {
+          gap: 8px;
+
+          .vote-button,
+          .back-button {
+            height: 44px;
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  .initiative-detail-page {
+    background: linear-gradient(135deg, #0f0f0f 0%, rgba(#1a1a1a, 0.8) 100%);
+
+    &::before {
+      background: radial-gradient(circle at 30% 20%, rgba($accent-yellow, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 70% 80%, rgba($success-color, 0.08) 0%, transparent 50%);
+    }
+
+    .initiative-header-card,
+    .initiative-component-card,
+    .initiative-loading-card {
+      background: rgba(#1a1a1a, 0.95);
+      border-color: #434343;
+
+      &:hover {
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .initiative-header-card {
+      .initiative-header-content {
+        .initiative-title {
+          color: #ffffff;
+        }
+
+        .initiative-meta {
+          .meta-item {
+            .meta-label {
+              color: #ffffff;
+            }
+
+            .meta-value {
+              color: rgba(#ffffff, 0.8);
+            }
+          }
+
+          .event-type-item {
+            .event-type-badge {
+              background: linear-gradient(135deg, rgba($accent-yellow, 0.2) 0%, rgba($success-color, 0.2) 100%);
+              border-color: rgba($accent-yellow, 0.4);
+              color: color.mix($accent-yellow, white, 80%);
+            }
+          }
+        }
+
+        .initiative-description {
+          background: rgba($success-color, 0.08);
+          color: rgba(#ffffff, 0.9);
+          border-left-color: $success-color;
+
+          .description-label {
+            color: #ffffff;
+          }
+        }
+
+        .initiative-question {
+          background: linear-gradient(135deg, rgba($success-color, 0.1) 0%, rgba($success-color, 0.05) 100%);
+          border-color: rgba($success-color, 0.3);
+          color: $success-color;
+        }
+      }
+    }
+
+    .initiative-actions-card {
+      background: rgba(#1a1a1a, 0.98);
+      border-color: rgba($accent-yellow, 0.3);
+
+      .actions-content {
+        .actions-info {
+          .actions-title {
+            color: #ffffff;
+          }
+
+          .actions-subtitle {
+            color: rgba(#ffffff, 0.6);
+          }
+        }
+
+        .actions-buttons {
+          .back-button {
+            border-color: #434343;
+            color: #ffffff;
+
+            &:hover {
+              border-color: $accent-yellow;
+              color: $accent-yellow;
+            }
+          }
+        }
+      }
+    }
+
+    .initiative-loading-card {
+      .loading-content {
+        .loading-text {
+          color: rgba(#ffffff, 0.8);
+        }
+      }
+    }
   }
 }

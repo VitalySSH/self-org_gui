@@ -1,7 +1,16 @@
 import './Initiative-detail.page.scss';
-import { Button, Card, Flex, message, Spin } from 'antd';
+import { Button, Card, message, Spin, Typography } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import {
+  CheckCircleOutlined,
+  ArrowLeftOutlined,
+  FileTextOutlined,
+  UserOutlined,
+  TagOutlined,
+  CalendarOutlined,
+  StarOutlined
+} from '@ant-design/icons';
 import { CrudDataSourceService, VotingResultAoService } from 'src/services';
 import {
   InitiativeModel,
@@ -15,6 +24,8 @@ import { StatusTag } from 'src/components/StatusTag/status-tag.component.tsx';
 import { convertVotingOptions } from 'src/utils/voting.utils.ts';
 import { OneDayEventLabel } from 'src/consts';
 import dayjs from 'dayjs';
+
+const { Title, Text } = Typography;
 
 export function InitiativeDetail() {
   const { id } = useParams();
@@ -101,7 +112,7 @@ export function InitiativeDetail() {
           });
       }
     },
-    [initiative, id, errorInfo]
+    [initiative, id, errorInfo, votingResultId, eventDate]
   );
 
   const _fetchVoteInPercent = useCallback(() => {
@@ -249,55 +260,100 @@ export function InitiativeDetail() {
 
   if (loading) {
     return (
-      <div className="form-container">
-        <div className="loading-spinner" aria-live="polite" aria-busy="true">
-          <Spin size="large" />
+      <div className="initiative-detail-page">
+        {contextHolder}
+        <div className="form-page-container">
+          <Card className="initiative-loading-card" variant="borderless">
+            <div className="loading-content">
+              <Spin size="large" />
+              <Text className="loading-text">Загрузка данных инициативы...</Text>
+            </div>
+          </Card>
         </div>
       </div>
     );
   }
 
   if (!initiative) {
-    return null;
+    return (
+      <div className="initiative-detail-page">
+        {contextHolder}
+        <div className="form-page-container">
+          <Card className="initiative-loading-card" variant="borderless">
+            <div className="loading-content">
+              <Text className="loading-text">Инициатива не найдена</Text>
+              <Button
+                type="primary"
+                icon={<ArrowLeftOutlined />}
+                onClick={onCancel}
+                style={{ marginTop: 16 }}
+              >
+                Вернуться назад
+              </Button>
+            </div>
+          </Card>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <>
+    <div className="initiative-detail-page">
       {contextHolder}
-      <div className="form-container">
-        <Card className="initiative-card">
-          <h2>{initiative.title}</h2>
-          <div>
-            <strong>Автор:</strong> {initiative.creator?.fullname}
-          </div>
-          <div>
-            <Flex align="center" gap={8}>
-              <strong>Статус:</strong>
-              <StatusTag
-                status={initiativeStatus}
-                statusCode={initiativeStatusCode}
-              />
-            </Flex>
-          </div>
-          <div>
-            <strong>Категория:</strong> {initiative.category?.name}
-          </div>
-          {initiative.is_one_day_event && (
-            <>
-              <div>
-                <strong>Тип:</strong> {OneDayEventLabel}
-              </div>
-              <div>
-                <strong>Дата события:</strong> {eventDate}
-              </div>
-            </>
-          )}
-          <p className="initiative-description">
-            <strong>Описание: </strong>
-            {initiative.content}
-          </p>
-          <i className="initiative-question">{initiative.question}</i>
 
+      <div className="form-page-container">
+        {/* Заголовок инициативы */}
+        <Card className="initiative-header-card" variant="borderless">
+          <div className="initiative-header-content">
+            <Title level={1} className="initiative-title">
+              {initiative.title}
+            </Title>
+
+            <div className="initiative-meta">
+              <div className="meta-item">
+                <UserOutlined />
+                <span className="meta-label">Автор:</span>
+                <span className="meta-value">{initiative.creator?.fullname}</span>
+              </div>
+              <div className="meta-item">
+                <FileTextOutlined />
+                <span className="meta-label">Статус:</span>
+                <StatusTag status={initiativeStatus} statusCode={initiativeStatusCode} />
+              </div>
+              <div className="meta-item">
+                <TagOutlined />
+                <span className="meta-label">Категория:</span>
+                <span className="meta-value">{initiative.category?.name}</span>
+              </div>
+              {initiative.is_one_day_event && eventDate && (
+                <div className="meta-item">
+                  <CalendarOutlined />
+                  <span className="meta-label">Дата события:</span>
+                  <span className="meta-value">{eventDate}</span>
+                </div>
+              )}
+              {initiative.is_one_day_event && (
+                <div className="meta-item event-type-item">
+                  <StarOutlined />
+                  <span className="meta-label">Тип:</span>
+                  <span className="event-type-badge">{OneDayEventLabel}</span>
+                </div>
+              )}
+            </div>
+
+            <div className="initiative-description">
+              <span className="description-label">Описание инициативы:</span>
+              {initiative.content}
+            </div>
+
+            <div className="initiative-question">
+              {initiative.question}
+            </div>
+          </div>
+        </Card>
+
+        {/* Результаты голосования */}
+        <Card className="initiative-component-card voting-results-card" variant="borderless">
           <VotingResults
             yesPercent={voteInPercent.yes}
             noPercent={voteInPercent.no}
@@ -308,8 +364,11 @@ export function InitiativeDetail() {
             selectedOptions={selectedOptions}
             minorityOptions={minorityOptions}
           />
+        </Card>
 
-          {userVotingResult && (
+        {/* Голосование пользователя */}
+        {userVotingResult && (
+          <Card className="initiative-component-card user-voting-card" variant="borderless">
             <UserVoting
               communityId={userVotingResult.community_id}
               resource="initiative"
@@ -328,30 +387,51 @@ export function InitiativeDetail() {
               onVote={handleVote}
               onSelectChange={handleSelectChange}
             />
-          )}
+          </Card>
+        )}
+
+        {/* Мнения */}
+        <Card className="initiative-component-card opinions-card" variant="borderless">
           <Opinions maxPageSize={20} resource="initiative" initiativeId={id} />
         </Card>
+
+        {/* Панель действий */}
+        <Card className="initiative-actions-card" variant="borderless">
+          <div className="actions-content">
+            <div className="actions-info">
+              <Title level={5} className="actions-title">
+                Готовы проголосовать?
+              </Title>
+              <Text className="actions-subtitle">
+                {disabled
+                  ? 'Заполните все необходимые поля для голосования'
+                  : 'Все данные заполнены, можно отдать голос'
+                }
+              </Text>
+            </div>
+            <div className="actions-buttons">
+              <Button
+                type="default"
+                icon={<ArrowLeftOutlined />}
+                onClick={onCancel}
+                className="back-button"
+              >
+                Назад
+              </Button>
+              <Button
+                type="primary"
+                icon={<CheckCircleOutlined />}
+                loading={buttonLoading}
+                onClick={onFinish}
+                disabled={disabled}
+                className="vote-button"
+              >
+                Проголосовать
+              </Button>
+            </div>
+          </div>
+        </Card>
       </div>
-      <div className="toolbar">
-        <Button
-          type="primary"
-          htmlType="submit"
-          loading={buttonLoading}
-          onClick={onFinish}
-          disabled={disabled}
-          className="toolbar-button"
-        >
-          Проголосовать
-        </Button>
-        <Button
-          type="primary"
-          htmlType="button"
-          onClick={onCancel}
-          className="toolbar-button"
-        >
-          Назад
-        </Button>
-      </div>
-    </>
+    </div>
   );
 }

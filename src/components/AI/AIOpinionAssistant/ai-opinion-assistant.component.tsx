@@ -5,7 +5,6 @@ import {
   RobotOutlined,
   UserOutlined,
   ArrowLeftOutlined,
-  QuestionCircleOutlined,
   CheckOutlined
 } from '@ant-design/icons';
 import './ai-opinion-assistant.component.scss';
@@ -165,9 +164,7 @@ export const AIOpinionAssistant: React.FC<AIOpinionAssistantProps> = ({ onComple
                 icon={
                   message.isUser
                     ? <UserOutlined />
-                    : message.isQuestion
-                      ? <QuestionCircleOutlined />
-                      : <RobotOutlined />
+                    : <RobotOutlined />
                 }
                 style={{
                   backgroundColor: message.isUser
@@ -223,7 +220,7 @@ export const AIOpinionAssistant: React.FC<AIOpinionAssistantProps> = ({ onComple
               onChange={(e) => setCurrentMessage(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Поделитесь своими мыслями..."
-              autoSize={{ minRows: 2, maxRows: 5 }}
+              autoSize={{ minRows: 1, maxRows: 4 }}
               className="ai-opinion-textarea"
             />
             <Button

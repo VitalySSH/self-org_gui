@@ -1,7 +1,15 @@
 import './rule-detail.page.scss';
-import { Button, Card, Flex, message, Spin } from 'antd';
+import { Button, Card, message, Spin, Typography } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import {
+  CheckCircleOutlined,
+  ArrowLeftOutlined,
+  FileTextOutlined,
+  UserOutlined,
+  TagOutlined,
+  NumberOutlined
+} from '@ant-design/icons';
 import { CrudDataSourceService, VotingResultAoService } from 'src/services';
 import {
   NoncomplianceModel,
@@ -14,6 +22,8 @@ import { AuthContextProvider, VoteInPercent } from 'src/interfaces';
 import { useAuth } from 'src/hooks';
 import { StatusTag } from 'src/components/StatusTag/status-tag.component.tsx';
 import { convertVotingOptions } from 'src/utils/voting.utils.ts';
+
+const { Title, Text } = Typography;
 
 export function RuleDetail() {
   const { id } = useParams();
@@ -111,7 +121,7 @@ export function RuleDetail() {
           });
       }
     },
-    [rule, id, errorInfo]
+    [rule, id, errorInfo, votingResultId]
   );
 
   const _fetchVoteInPercent = useCallback(() => {
@@ -301,46 +311,91 @@ export function RuleDetail() {
 
   if (loading) {
     return (
-      <div className="form-container">
-        <div className="loading-spinner" aria-live="polite" aria-busy="true">
-          <Spin size="large" />
+      <div className="rule-detail-page">
+        {contextHolder}
+        <div className="form-page-container">
+          <Card className="rule-loading-card" variant="borderless">
+            <div className="loading-content">
+              <Spin size="large" />
+              <Text className="loading-text">Загрузка данных правила...</Text>
+            </div>
+          </Card>
         </div>
       </div>
     );
   }
 
   if (!rule) {
-    return null;
+    return (
+      <div className="rule-detail-page">
+        {contextHolder}
+        <div className="form-page-container">
+          <Card className="rule-loading-card" variant="borderless">
+            <div className="loading-content">
+              <Text className="loading-text">Правило не найдено</Text>
+              <Button
+                type="primary"
+                icon={<ArrowLeftOutlined />}
+                onClick={onCancel}
+                style={{ marginTop: 16 }}
+              >
+                Вернуться назад
+              </Button>
+            </div>
+          </Card>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <>
+    <div className="rule-detail-page">
       {contextHolder}
-      <div className="form-container">
-        <Card className="rule-card">
-          <h2>{rule.title}</h2>
-          <div>
-            <strong>Номер:</strong> {rule.tracker}
-          </div>
-          <div>
-            <strong>Автор:</strong> {rule.creator?.fullname}
-          </div>
-          <div>
-            <strong>Категория:</strong> {rule.category?.name}
-          </div>
-          <div>
-            <Flex align="center" gap={8}>
-              <strong>Статус:</strong>
-              <StatusTag status={ruleStatus} statusCode={ruleStatusCode} />
-            </Flex>
-          </div>
 
-          <p className="rule-description">
-            <strong>Описание: </strong>
-            {rule.content}
-          </p>
-          <i className="rule-question">{rule.question}</i>
+      <div className="form-page-container">
+        {/* Заголовок правила */}
+        <Card className="rule-header-card" variant="borderless">
+          <div className="rule-header-content">
+            <Title level={1} className="rule-title">
+              {rule.title}
+            </Title>
 
+            <div className="rule-meta">
+              <div className="meta-item">
+                <NumberOutlined />
+                <span className="meta-label">Номер:</span>
+                <span className="meta-value">{rule.tracker}</span>
+              </div>
+              <div className="meta-item">
+                <UserOutlined />
+                <span className="meta-label">Автор:</span>
+                <span className="meta-value">{rule.creator?.fullname}</span>
+              </div>
+              <div className="meta-item">
+                <TagOutlined />
+                <span className="meta-label">Категория:</span>
+                <span className="meta-value">{rule.category?.name}</span>
+              </div>
+              <div className="meta-item">
+                <FileTextOutlined />
+                <span className="meta-label">Статус:</span>
+                <StatusTag status={ruleStatus} statusCode={ruleStatusCode} />
+              </div>
+            </div>
+
+            <div className="rule-description">
+              <span className="description-label">Описание правила:</span>
+              {rule.content}
+            </div>
+
+            <div className="rule-question">
+              {rule.question}
+            </div>
+          </div>
+        </Card>
+
+        {/* Результаты голосования */}
+        <Card className="rule-component-card voting-results-card" variant="borderless">
           <VotingResults
             yesPercent={voteInPercent.yes}
             noPercent={voteInPercent.no}
@@ -353,8 +408,11 @@ export function RuleDetail() {
             noncompliance={selectedNoncompliance}
             minorityNoncompliance={minorityNoncompliance}
           />
+        </Card>
 
-          {userVotingResult && (
+        {/* Голосование пользователя */}
+        {userVotingResult && (
+          <Card className="rule-component-card user-voting-card" variant="borderless">
             <UserVoting
               communityId={userVotingResult.community_id}
               resource="rule"
@@ -374,30 +432,51 @@ export function RuleDetail() {
               onVote={handleVote}
               onSelectChange={handleSelectChange}
             />
-          )}
+          </Card>
+        )}
+
+        {/* Мнения */}
+        <Card className="rule-component-card opinions-card" variant="borderless">
           <Opinions maxPageSize={20} resource="rule" ruleId={id} />
         </Card>
       </div>
-      <div className="toolbar">
-        <Button
-          type="primary"
-          htmlType="submit"
-          loading={buttonLoading}
-          onClick={onFinish}
-          disabled={disabled}
-          className="toolbar-button"
-        >
-          Проголосовать
-        </Button>
-        <Button
-          type="primary"
-          htmlType="button"
-          onClick={onCancel}
-          className="toolbar-button"
-        >
-          Назад
-        </Button>
+
+      {/* Фиксированная панель действий */}
+      <div className="rule-actions-bar">
+        <div className="actions-container">
+          <div className="actions-info">
+            <Title level={5} className="actions-title">
+              Готовы проголосовать?
+            </Title>
+            <Text className="actions-subtitle">
+              {disabled
+                ? 'Заполните все необходимые поля для голосования'
+                : 'Все данные заполнены, можно отдать голос'
+              }
+            </Text>
+          </div>
+          <div className="actions-buttons">
+            <Button
+              type="default"
+              icon={<ArrowLeftOutlined />}
+              onClick={onCancel}
+              className="back-button"
+            >
+              Назад
+            </Button>
+            <Button
+              type="primary"
+              icon={<CheckCircleOutlined />}
+              loading={buttonLoading}
+              onClick={onFinish}
+              disabled={disabled}
+              className="vote-button"
+            >
+              Проголосовать
+            </Button>
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -1,47 +1,664 @@
+@use 'sass:color';
 @use 'src/shared/assets/scss/variables' as *;
 
-.rule-card {
-  width: 100%;
-  margin: 20px auto;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: $background-color;
-}
+.rule-detail-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, $secondary-color 0%, rgba($sider-background-color, 0.3) 100%);
+  padding: 32px 0 120px; // Добавляем отступ снизу для actions-bar
+  position: relative;
 
-.rule-description {
-  font-size: 16px;
-  color: #333;
-  line-height: 1.6;
-  margin-bottom: 16px;
-}
-
-.rule-question {
-  font-size: 16px;
-  font-weight: 600 !important;
-  color: #333;
-  margin-bottom: 16px;
-}
-
-.loading-spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-}
-
-@media (max-width: $breakpoint-sm) {
-  .rule-card {
-    margin: 10px;
-    padding: 15px;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 20%, rgba($gradient-start, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba($gradient-end, 0.03) 0%, transparent 50%);
+    pointer-events: none;
   }
 
-  .rule-description {
-    font-size: 13px;
+  .form-page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
   }
 
-  .rule-question {
-    font-size: 14px;
+  // Заголовок правила
+  .rule-header-card {
+    background: rgba($background-color, 0.98);
+    border: 1px solid $border-color;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(20px);
+    animation: slideInUp 0.6s ease-out;
+    transition: all 0.3s ease;
+    overflow: hidden;
+
+    &:hover {
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+      transform: translateY(-2px);
+    }
+
+    // Градиентная полоска сверху
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, $gradient-start 0%, $gradient-end 100%);
+      border-radius: 20px 20px 0 0;
+    }
+
+    .ant-card-body {
+      padding: 32px;
+      position: relative;
+    }
+
+    .rule-header-content {
+      .rule-title {
+        color: $heading-color;
+        font-weight: 700;
+        font-size: 32px;
+        margin-bottom: 24px;
+        line-height: 1.2;
+
+        &.ant-typography {
+          margin-bottom: 24px;
+        }
+      }
+
+      .rule-meta {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px 24px;
+        margin-bottom: 24px;
+        padding: 20px;
+        background: rgba($gradient-start, 0.02);
+        border-radius: 12px;
+        border: 1px solid rgba($gradient-start, 0.1);
+
+        .meta-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 15px;
+
+          .anticon {
+            color: $gradient-start;
+            font-size: 16px;
+          }
+
+          .meta-label {
+            font-weight: 600;
+            color: $heading-color;
+            min-width: 80px;
+          }
+
+          .meta-value {
+            color: $text-color;
+            flex: 1;
+          }
+
+          .ant-tag {
+            margin: 0;
+          }
+        }
+      }
+
+      .rule-description {
+        font-size: 16px;
+        color: $text-color;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        padding: 20px;
+        background: rgba($info-color, 0.04);
+        border-radius: 12px;
+        border-left: 4px solid $info-color;
+
+        .description-label {
+          font-weight: 600;
+          color: $heading-color;
+          margin-bottom: 8px;
+          display: block;
+        }
+      }
+
+      .rule-question {
+        font-size: 18px;
+        font-weight: 600;
+        color: $primary-color;
+        font-style: italic;
+        text-align: center;
+        padding: 20px;
+        background: linear-gradient(135deg, rgba($primary-color, 0.05) 0%, rgba($primary-color, 0.02) 100%);
+        border-radius: 12px;
+        border: 1px solid rgba($primary-color, 0.15);
+        margin: 0;
+      }
+    }
+  }
+
+  // Карточки компонентов
+  .rule-component-card {
+    background: rgba($background-color, 0.98);
+    border: 1px solid $border-color;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+    animation: slideInUp 0.6s ease-out;
+
+    &:hover {
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .ant-card-body {
+      padding: 0;
+    }
+
+    &.voting-results-card {
+      animation-delay: 0.1s;
+    }
+
+    &.user-voting-card {
+      animation-delay: 0.2s;
+    }
+
+    &.opinions-card {
+      animation-delay: 0.3s;
+    }
+  }
+
+  // Состояние загрузки
+  .rule-loading-card {
+    background: rgba($background-color, 0.98);
+    border: 1px solid $border-color;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(20px);
+    text-align: center;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: slideInUp 0.6s ease-out;
+
+    .ant-card-body {
+      padding: 48px 32px;
+    }
+
+    .loading-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+
+      .loading-text {
+        font-size: 16px;
+        color: $text-color;
+        margin: 0;
+      }
+    }
+  }
+}
+
+// Фиксированная панель действий
+.rule-actions-bar {
+  position: fixed;
+  bottom: 0;
+  //left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba($background-color, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid $border-color;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+  animation: slideInUp 0.6s ease-out 0.4s both;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, $gradient-start 0%, $gradient-end 100%);
+    border-radius: 0 0 3px 3px;
+  }
+
+  .actions-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .actions-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .actions-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: $heading-color;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .actions-subtitle {
+      font-size: 13px;
+      color: rgba($text-color, 0.7);
+      margin: 0;
+      line-height: 1.2;
+    }
+  }
+
+  .actions-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+
+    .vote-button {
+      background: $success-color;
+      border: none;
+      border-radius: 12px;
+      height: 48px;
+      padding: 0 24px;
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      box-shadow: 0 4px 16px rgba($success-color, 0.25);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      &:hover:not(:disabled) {
+        background: color.mix($success-color, black, 90%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba($success-color, 0.35);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        transform: none;
+        box-shadow: 0 2px 8px rgba($text-color, 0.15);
+        background: rgba($text-color, 0.3);
+        cursor: not-allowed;
+      }
+
+      .anticon {
+        font-size: 16px;
+      }
+    }
+
+    .back-button {
+      background: transparent;
+      border: 2px solid rgba($text-color, 0.2);
+      border-radius: 12px;
+      height: 48px;
+      padding: 0 20px;
+      font-size: 15px;
+      font-weight: 500;
+      color: $text-color;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      &:hover {
+        border-color: $gradient-start;
+        color: $gradient-start;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba($gradient-start, 0.15);
+      }
+
+      .anticon {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+// Анимации
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 1024px) {
+  .rule-detail-page {
+    padding: 24px 0 100px;
+
+    .form-page-container {
+      max-width: 100%;
+      padding: 0 20px;
+      gap: 20px;
+    }
+
+    .rule-header-card {
+      .ant-card-body {
+        padding: 24px;
+      }
+
+      .rule-header-content {
+        .rule-title {
+          font-size: 28px;
+          margin-bottom: 20px;
+        }
+
+        .rule-meta {
+          grid-template-columns: 1fr;
+          gap: 12px;
+          padding: 16px;
+
+          .meta-item {
+            .meta-label {
+              min-width: 70px;
+            }
+          }
+        }
+
+        .rule-description {
+          font-size: 15px;
+          padding: 16px;
+        }
+
+        .rule-question {
+          font-size: 16px;
+          padding: 16px;
+        }
+      }
+    }
+  }
+
+  .rule-actions-bar {
+    .actions-container {
+      padding: 14px 20px;
+    }
+
+    .actions-buttons {
+      .vote-button,
+      .back-button {
+        height: 44px;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .rule-detail-page {
+    padding: 16px 0 80px;
+
+    .form-page-container {
+      padding: 0 16px;
+      gap: 16px;
+    }
+
+    .rule-header-card {
+      border-radius: 16px;
+
+      .ant-card-body {
+        padding: 20px;
+      }
+
+      .rule-header-content {
+        .rule-title {
+          font-size: 24px;
+          margin-bottom: 16px;
+        }
+
+        .rule-meta {
+          .meta-item {
+            font-size: 14px;
+
+            .meta-label {
+              min-width: 60px;
+            }
+          }
+        }
+
+        .rule-description {
+          font-size: 14px;
+          padding: 14px;
+        }
+
+        .rule-question {
+          font-size: 15px;
+          padding: 14px;
+        }
+      }
+    }
+
+    .rule-component-card {
+      border-radius: 14px;
+    }
+  }
+
+  .rule-actions-bar {
+    .actions-container {
+      flex-direction: column;
+      gap: 12px;
+      padding: 12px 16px;
+      text-align: center;
+    }
+
+    .actions-info {
+      .actions-title {
+        font-size: 15px;
+      }
+
+      .actions-subtitle {
+        font-size: 12px;
+      }
+    }
+
+    .actions-buttons {
+      width: 100%;
+
+      .vote-button {
+        flex: 1;
+        height: 48px;
+      }
+
+      .back-button {
+        height: 48px;
+        min-width: 100px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .rule-detail-page {
+    padding: 12px 0 70px;
+
+    .form-page-container {
+      padding: 0 12px;
+      gap: 12px;
+    }
+
+    .rule-header-card {
+      .ant-card-body {
+        padding: 16px;
+      }
+
+      .rule-header-content {
+        .rule-title {
+          font-size: 20px;
+          margin-bottom: 12px;
+        }
+
+        .rule-meta {
+          padding: 12px;
+
+          .meta-item {
+            font-size: 13px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+
+            .meta-label {
+              min-width: auto;
+            }
+          }
+        }
+
+        .rule-description {
+          font-size: 13px;
+          padding: 12px;
+        }
+
+        .rule-question {
+          font-size: 14px;
+          padding: 12px;
+        }
+      }
+    }
+  }
+
+  .rule-actions-bar {
+    .actions-container {
+      padding: 10px 12px;
+      gap: 10px;
+    }
+
+    .actions-buttons {
+      gap: 8px;
+
+      .vote-button,
+      .back-button {
+        height: 44px;
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  .rule-detail-page {
+    background: linear-gradient(135deg, #0f0f0f 0%, rgba(#1a1a1a, 0.8) 100%);
+
+    &::before {
+      background: radial-gradient(circle at 30% 20%, rgba($gradient-start, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 70% 80%, rgba($gradient-end, 0.06) 0%, transparent 50%);
+    }
+
+    .rule-header-card,
+    .rule-component-card,
+    .rule-loading-card {
+      background: rgba(#1a1a1a, 0.98);
+      border-color: #434343;
+
+      &:hover {
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .rule-header-card {
+      &::before {
+        background: linear-gradient(90deg, $gradient-start 0%, $gradient-end 100%);
+      }
+
+      .rule-header-content {
+        .rule-title {
+          color: #ffffff;
+        }
+
+        .rule-meta {
+          background: rgba($gradient-start, 0.05);
+          border-color: rgba($gradient-start, 0.2);
+
+          .meta-item {
+            .meta-label {
+              color: #ffffff;
+            }
+
+            .meta-value {
+              color: rgba(#ffffff, 0.8);
+            }
+          }
+        }
+
+        .rule-description {
+          background: rgba($info-color, 0.08);
+          color: rgba(#ffffff, 0.9);
+          border-left-color: $info-color;
+
+          .description-label {
+            color: #ffffff;
+          }
+        }
+
+        .rule-question {
+          background: linear-gradient(135deg, rgba($primary-color, 0.1) 0%, rgba($primary-color, 0.05) 100%);
+          border-color: rgba($primary-color, 0.3);
+          color: $primary-color;
+        }
+      }
+    }
+  }
+
+  .rule-actions-bar {
+    background: rgba(#1a1a1a, 0.98);
+    border-top-color: #434343;
+
+    &::before {
+      background: linear-gradient(90deg, $gradient-start 0%, $gradient-end 100%);
+    }
+
+    .actions-info {
+      .actions-title {
+        color: #ffffff;
+      }
+
+      .actions-subtitle {
+        color: rgba(#ffffff, 0.6);
+      }
+    }
+
+    .actions-buttons {
+      .back-button {
+        border-color: #434343;
+        color: #ffffff;
+
+        &:hover {
+          border-color: $gradient-start;
+          color: $gradient-start;
+        }
+      }
+    }
+  }
+
+  .rule-loading-card {
+    .loading-content {
+      .loading-text {
+        color: rgba(#ffffff, 0.8);
+      }
+    }
   }
 }
