@@ -262,97 +262,103 @@ export function SiderBar(props: SiderBarInterface) {
         }
       }}
     >
-      <Flex align="center" justify="center" className="sider-logo">
-        <Image
-          height={collapsed ? 32 : 40}
-          preview={false}
-          src={logoPath}
-          onClick={onClickImage}
-          className="sider-logo-image"
-          alt="UTU Logo"
-        />
-      </Flex>
-
-      {props.isNotAuthorized ? (
-        !collapsed && renderUnauthorizedContent()
-      ) : (
-        <>
-          {!props.isCommunityWS && (
-            <>
-              {/* Навигация к сообществам */}
-              {renderCommunitiesNavigation()}
-
-              {/* Руководство пользователя */}
-              {!collapsed && <div className="menu-header">Руководство пользователя</div>}
-              {collapsed && (
-                <Tooltip title="Руководство пользователя" placement="right">
-                  <BookOutlined className="menu-header-icon" />
-                </Tooltip>
-              )}
-              <Menu
-                mode="inline"
-                items={userGuideMenuItems}
-                onClick={() => {
-                  // setUserGuideMenuKeys([item.key]);
-                  // navigate(item.key);
-                }}
-                selectedKeys={userGuideMenuKeys}
-                className="sider-menu sider-menu-disabled"
-              />
-            </>
-          )}
-
-          {props.isCommunityWS && (
-            <>
-              {renderCommunitiesNavigation()}
-              {!collapsed && <div className="menu-header">Сообщество</div>}
-              {collapsed && (
-                <Tooltip title="Сообщество" placement="right">
-                  <ApartmentOutlined className="menu-header-icon" />
-                </Tooltip>
-              )}
-              <Menu
-                mode="inline"
-                items={communityWSMenuItems}
-                onClick={(item) => {
-                  setCommunityWSMenuKeys([item.key]);
-                  navigate(item.key);
-                }}
-                selectedKeys={communityWSMenuKeys}
-                className="sider-menu"
-              />
-            </>
-          )}
-        </>
-      )}
-
-      <Button
-        type="text"
-        icon={
-          collapsed ? (
-            <MenuUnfoldOutlined className="trigger-icon" />
-          ) : (
-            <MenuFoldOutlined className="trigger-icon" />
-          )
-        }
-        onClick={() => {
-          if (collapsed) {
-            setLogoPath('/utu_logo.png');
-          } else {
-            setLogoPath('/utu_logo_small.png');
-          }
-          setCollapsed(!collapsed);
-        }}
-        className="trigger-btn"
-      />
-
-      {!collapsed && (
-        <Flex align="center" justify="center" className="sider-footer">
-          <div className="sider-copyright">
-            UtU ©{new Date().getFullYear()}
-          </div>
+      {/* Основной контент сайдбара */}
+      <div className="sider-content">
+        <Flex align="center" justify="center" className="sider-logo">
+          <Image
+            height={collapsed ? 32 : 40}
+            preview={false}
+            src={logoPath}
+            onClick={onClickImage}
+            className="sider-logo-image"
+            alt="UTU Logo"
+          />
         </Flex>
-      )}
+
+        {props.isNotAuthorized ? (
+          !collapsed && renderUnauthorizedContent()
+        ) : (
+          <>
+            {!props.isCommunityWS && (
+              <>
+                {/* Навигация к сообществам */}
+                {renderCommunitiesNavigation()}
+
+                {/* Руководство пользователя */}
+                {!collapsed && <div className="menu-header">Руководство пользователя</div>}
+                {collapsed && (
+                  <Tooltip title="Руководство пользователя" placement="right">
+                    <BookOutlined className="menu-header-icon" />
+                  </Tooltip>
+                )}
+                <Menu
+                  mode="inline"
+                  items={userGuideMenuItems}
+                  onClick={() => {
+                    // setUserGuideMenuKeys([item.key]);
+                    // navigate(item.key);
+                  }}
+                  selectedKeys={userGuideMenuKeys}
+                  className="sider-menu sider-menu-disabled"
+                />
+              </>
+            )}
+
+            {props.isCommunityWS && (
+              <>
+                {renderCommunitiesNavigation()}
+                {!collapsed && <div className="menu-header">Сообщество</div>}
+                {collapsed && (
+                  <Tooltip title="Сообщество" placement="right">
+                    <ApartmentOutlined className="menu-header-icon" />
+                  </Tooltip>
+                )}
+                <Menu
+                  mode="inline"
+                  items={communityWSMenuItems}
+                  onClick={(item) => {
+                    setCommunityWSMenuKeys([item.key]);
+                    navigate(item.key);
+                  }}
+                  selectedKeys={communityWSMenuKeys}
+                  className="sider-menu"
+                />
+              </>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Нижняя часть с кнопкой и футером */}
+      <div className="sider-bottom">
+        <Button
+          type="text"
+          icon={
+            collapsed ? (
+              <MenuUnfoldOutlined className="trigger-icon" />
+            ) : (
+              <MenuFoldOutlined className="trigger-icon" />
+            )
+          }
+          onClick={() => {
+            if (collapsed) {
+              setLogoPath('/utu_logo.png');
+            } else {
+              setLogoPath('/utu_logo_small.png');
+            }
+            setCollapsed(!collapsed);
+          }}
+          className="trigger-btn"
+        />
+
+        {!collapsed && (
+          <Flex align="center" justify="center" className="sider-footer">
+            <div className="sider-copyright">
+              UtU ©{new Date().getFullYear()}
+            </div>
+          </Flex>
+        )}
+      </div>
     </Sider>
   );
 }

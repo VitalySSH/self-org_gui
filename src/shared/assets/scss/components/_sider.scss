@@ -13,8 +13,7 @@
   top: 0;
   height: 100vh !important;
   z-index: 100;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
 
   // Декоративный градиент справа
   &::after {
@@ -38,6 +37,69 @@
   }
 }
 
+// Основной контент сайдбара
+.sider-content {
+  height: 100%;
+  padding-bottom: 120px; // Место для .sider-bottom
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  // Кастомный скроллбар
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($text-color, 0.2);
+    border-radius: 2px;
+    transition: background $transition-speed ease;
+
+    &:hover {
+      background: rgba($text-color, 0.3);
+    }
+  }
+}
+
+// Главная область с меню (убираем, так как теперь не нужна)
+.sider-main {
+  // Удаляем этот блок - весь контент будет в .sider-content
+}
+
+// Нижняя часть с кнопкой и футером
+.sider-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 15px; // Уменьшаем правый padding на 1px для компенсации границы
+  gap: 12px;
+  background: transparent; // Убираем фон для единообразия
+  border: none; // Убираем границу
+  z-index: 10;
+
+  // Создаем плавный градиент снизу вверх для лучшей читаемости
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 1px; // Компенсируем границу сайдбара
+    height: 60px;
+    background: linear-gradient(0deg,
+            $sider-background-color 0%,
+            rgba($sider-background-color, 0.95) 50%,
+            transparent 100%);
+    pointer-events: none;
+    z-index: -1;
+  }
+}
+
 .sider-logo {
   padding: 20px 16px;
   background: linear-gradient(135deg,
@@ -48,6 +110,7 @@
   margin-bottom: 16px;
   position: relative;
   transition: all $transition-speed ease;
+  flex-shrink: 0;
 
   // Декоративная линия снизу
   &::after {
@@ -519,9 +582,6 @@
 }
 
 .trigger-btn {
-  position: sticky !important;
-  bottom: 80px !important;
-  left: 10%;
   width: 48px;
   height: 48px;
   background: linear-gradient(135deg,
@@ -534,7 +594,10 @@
           inset 0 1px 0 rgba(white, 0.5);
   backdrop-filter: blur(10px);
   transition: all $transition-speed cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  z-index: 101;
+  align-self: center;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 20; // Поднимаем выше градиента
 
   .trigger-icon {
     font-size: 20px;
@@ -547,7 +610,7 @@
             $gradient-start 0%,
             $gradient-end 100%);
     border-color: $gradient-start;
-    transform: translateX(-50%) translateY(-2px);
+    transform: translateY(-2px);
     box-shadow:
             0 8px 20px rgba($gradient-start, 0.3),
             inset 0 1px 0 rgba(white, 0.3);
@@ -559,7 +622,7 @@
   }
 
   &:active {
-    transform: translateX(-50%) translateY(-1px);
+    transform: translateY(-1px);
   }
 
   &:focus-visible {
@@ -569,10 +632,8 @@
 }
 
 .sider-footer {
-  position: absolute;
-  bottom: 16px;
-  left: 0;
-  right: 0;
+  position: relative;
+  z-index: 20; // Поднимаем выше градиента
 
   .sider-copyright {
     font-size: 12px;
@@ -580,6 +641,7 @@
     font-family: $font-family;
     opacity: 0.8;
     transition: opacity $transition-speed ease;
+    text-align: center;
 
     &:hover {
       opacity: 1;
@@ -589,6 +651,10 @@
 
 // Адаптивность для collapsed состояния
 .ant-layout-sider-collapsed {
+  .sider-content {
+    padding-bottom: 100px; // Меньше места для collapsed состояния
+  }
+
   .sider-logo {
     padding: 16px 12px;
   }
@@ -608,929 +674,27 @@
 
       &.ant-menu-item-selected {
         &:hover {
-          // Переменные для страницы сообществ
-          :root {
-            --communities-max-width: 1200px;
-            --communities-header-bg: linear-gradient(135deg, rgba(82, 196, 26, 0.05) 0%, rgba(82, 196, 26, 0.02) 100%);
-            --communities-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            --communities-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-            --communities-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --communities-stats-bg: rgba(82, 196, 26, 0.02);
-            --communities-pagination-bg: rgba(24, 144, 255, 0.02);
-            --communities-switcher-bg: rgba(255, 255, 255, 0.9);
-          }
-
-          // Основная страница сообществ
-          .communities-page {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-
-            // Заголовок страницы
-            .page-header {
-              background: var(--communities-header-bg);
-              border-bottom: 1px solid rgba(82, 196, 26, 0.1);
-              padding: 32px 0;
-
-              .header-content {
-                max-width: var(--communities-max-width);
-                margin: 0 auto;
-                padding: 0 20px;
-
-                .header-main {
-                  display: flex;
-                  align-items: center;
-                  gap: 20px;
-                  margin-bottom: 20px;
-
-                  .header-icon {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 64px;
-                    height: 64px;
-                    background: rgba(82, 196, 26, 0.1);
-                    border-radius: 16px;
-                    border: 2px solid rgba(82, 196, 26, 0.2);
-                    transition: var(--communities-transition);
-
-                    .anticon {
-                      font-size: 28px;
-                      color: #52c41a;
-                      transition: var(--communities-transition);
-                    }
-                  }
-
-                  .header-text {
-                    flex: 1;
-
-                    .page-title {
-                      color: $heading-color;
-                      margin-bottom: 8px;
-                      font-weight: 700;
-                      font-size: 28px;
-                      line-height: 1.2;
-                      transition: var(--communities-transition);
-
-                      &.ant-typography {
-                        margin-bottom: 8px;
-                      }
-                    }
-
-                    .page-subtitle {
-                      font-size: 16px;
-                      color: $text-color;
-                      opacity: 0.8;
-                      line-height: 1.4;
-                      transition: var(--communities-transition);
-                    }
-                  }
-                }
-
-                .header-controls {
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                  gap: 20px;
-
-                  .mode-switcher {
-                    .ant-segmented {
-                      background: var(--communities-switcher-bg);
-                      border: 1px solid rgba($border-color, 0.6);
-                      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-                      transition: var(--communities-transition);
-
-                      &:hover {
-                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                      }
-
-                      .ant-segmented-item {
-                        transition: var(--communities-transition);
-                        font-weight: 500;
-
-                        &:hover {
-                          color: $primary-color;
-                        }
-
-                        &.ant-segmented-item-selected {
-                          background: $success-color;
-                          color: white;
-                          font-weight: 600;
-
-                          .anticon {
-                            color: white;
-                          }
-                        }
-
-                        .anticon {
-                          transition: var(--communities-transition);
-                        }
-                      }
-                    }
-                  }
-
-                  .header-actions {
-                    .action-button,
-                    .filter-button {
-                      transition: var(--communities-transition);
-                      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-                      &:hover {
-                        transform: translateY(-1px);
-                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                      }
-
-                      &.action-button {
-                        border-color: rgba($success-color, 0.3);
-                        color: $success-color;
-
-                        &:hover {
-                          border-color: $success-color;
-                          color: $success-color;
-                        }
-                      }
-
-                      &.filter-button {
-                        border-color: rgba($info-color, 0.3);
-
-                        &:hover {
-                          border-color: $info-color;
-                          color: $info-color;
-                        }
-                      }
-
-                      .ant-badge {
-                        .ant-badge-count {
-                          font-weight: 600;
-                          font-size: 9px;
-                          min-width: 14px;
-                          height: 14px;
-                          line-height: 12px;
-                          border-radius: 7px;
-                          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-
-            // Основной контент
-            .page-content {
-              padding: 32px 0;
-
-              .content-container {
-                max-width: var(--communities-max-width);
-                margin: 0 auto;
-                padding: 0 20px;
-                display: flex;
-                flex-direction: column;
-                gap: 24px;
-              }
-            }
-          }
-
-          // Карточка статистики
-          .stats-card {
-            border-radius: 12px;
-            border: 1px solid rgba(82, 196, 26, 0.2);
-            background: var(--communities-stats-bg);
-            box-shadow: var(--communities-card-shadow);
-
-            .ant-card-body {
-              padding: 16px 20px;
-            }
-
-            .stats-divider {
-              color: rgba($text-color, 0.3);
-              margin: 0 12px;
-            }
-
-            .ant-typography {
-              font-size: 14px;
-              margin: 0;
-
-              &.ant-typography-strong {
-                font-weight: 600;
-              }
-
-              // Цветные акценты для разных статусов
-              strong {
-                &[style*="color: #52c41a"] {
-                  background: rgba(82, 196, 26, 0.1);
-                  padding: 2px 6px;
-                  border-radius: 4px;
-                }
-
-                &[style*="color: #ff4d4f"] {
-                  background: rgba(255, 77, 79, 0.1);
-                  padding: 2px 6px;
-                  border-radius: 4px;
-                }
-              }
-            }
-
-            .ant-space {
-              &.ant-space-wrap {
-                .ant-space-item {
-                  margin-bottom: 4px;
-                }
-              }
-            }
-          }
-
-          // Контейнер загрузки
-          .loading-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 300px;
-
-            .ant-spin {
-              .ant-spin-dot {
-                .ant-spin-dot-item {
-                  background-color: #52c41a;
-                }
-              }
-            }
-          }
-
-          // Карточка пустого состояния
-          .empty-state-card {
-            border-radius: 12px;
-            border: 1px dashed $border-color;
-            background: rgba($background-color, 0.5);
-            box-shadow: var(--communities-card-shadow);
-
-            .ant-card-body {
-              padding: 48px 24px;
-              text-align: center;
-            }
-
-            .ant-empty {
-              .ant-empty-description {
-                color: $text-color;
-                font-size: 16px;
-                opacity: 0.7;
-                margin-bottom: 16px;
-              }
-
-              .ant-btn {
-                border-radius: 6px;
-                font-weight: 500;
-                transition: var(--communities-transition);
-
-                &:hover {
-                  transform: translateY(-1px);
-                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-                }
-              }
-            }
-          }
-
-          // Список сообществ (построчно)
-          .communities-list {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            animation: fadeIn 1s ease-out 0.4s both;
-
-            .community-row-wrapper {
-              width: 100%;
-              animation: slideInUp 0.6s ease-out both;
-
-              // Staggered animation для карточек
-              @for $i from 1 through 20 {
-                &:nth-child(#{$i}) {
-                  animation-delay: #{0.1 + ($i * 0.05)}s;
-                }
-              }
-            }
-          }
-
-          // Карточка пагинации
-          .pagination-card {
-            border-radius: 12px;
-            border: 1px solid rgba(24, 144, 255, 0.2);
-            background: var(--communities-pagination-bg);
-            box-shadow: var(--communities-card-shadow);
-
-            .ant-card-body {
-              padding: 16px 20px;
-            }
-
-            .ant-pagination {
-              .ant-pagination-item {
-                border-radius: 6px;
-                transition: var(--communities-transition);
-
-                &:hover {
-                  transform: translateY(-1px);
-                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                }
-
-                &.ant-pagination-item-active {
-                  background: #52c41a;
-                  border-color: #52c41a;
-
-                  a {
-                    color: white;
-                    font-weight: 600;
-                  }
-                }
-              }
-
-              .ant-pagination-prev,
-              .ant-pagination-next {
-                border-radius: 6px;
-                transition: var(--communities-transition);
-
-                &:hover {
-                  transform: translateY(-1px);
-                  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                  border-color: #52c41a;
-                  color: #52c41a;
-                }
-              }
-
-              .ant-pagination-options {
-                .ant-select {
-                  .ant-select-selector {
-                    border-radius: 6px;
-                    transition: var(--communities-transition);
-
-                    &:hover {
-                      border-color: #52c41a;
-                    }
-                  }
-                }
-              }
-            }
-          }
-
-          // Адаптивные стили
-          @media (max-width: 1200px) {
-            .communities-page {
-              .page-header,
-              .page-content {
-                .header-content,
-                .content-container {
-                  padding: 0 16px;
-                }
-              }
-            }
-
-            .communities-list {
-              gap: 12px;
-            }
-          }
-
-          @media (max-width: 768px) {
-            .communities-page {
-              .page-header {
-                padding: 24px 0;
-
-                .header-content {
-                  padding: 0 12px;
-
-                  .header-main {
-                    flex-direction: column;
-                    align-items: flex-start;
-                    gap: 16px;
-                    margin-bottom: 16px;
-
-                    .header-icon {
-                      width: 56px;
-                      height: 56px;
-
-                      .anticon {
-                        font-size: 24px;
-                      }
-                    }
-
-                    .header-text {
-                      text-align: center;
-                      width: 100%;
-
-                      .page-title {
-                        font-size: 24px;
-                      }
-
-                      .page-subtitle {
-                        font-size: 14px;
-                      }
-                    }
-                  }
-
-                  .header-controls {
-                    flex-direction: column;
-                    gap: 16px;
-                    width: 100%;
-
-                    .mode-switcher {
-                      order: 1;
-                      width: 100%;
-
-                      .ant-segmented {
-                        width: 100%;
-                      }
-                    }
-
-                    .header-actions {
-                      order: 2;
-                      width: 100%;
-                      justify-content: center;
-
-                      .ant-space {
-                        width: 100%;
-                        justify-content: center;
-
-                        .action-button,
-                        .filter-button {
-                          flex: 1;
-                          max-width: 150px;
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-
-              .page-content {
-                padding: 24px 0;
-
-                .content-container {
-                  padding: 0 12px;
-                  gap: 16px;
-                }
-              }
-            }
-
-            .stats-card {
-              .ant-card-body {
-                padding: 12px 16px;
-              }
-
-              .stats-divider {
-                margin: 0 8px;
-              }
-
-              .ant-typography {
-                font-size: 13px;
-              }
-
-              .ant-space {
-                &.ant-space-wrap {
-                  .ant-space-item {
-                    margin-bottom: 6px;
-                  }
-                }
-              }
-            }
-
-            .pagination-card {
-              .ant-card-body {
-                padding: 12px 16px;
-              }
-
-              .ant-pagination {
-                .ant-pagination-total-text {
-                  font-size: 12px;
-                }
-              }
-            }
-
-            .communities-list {
-              gap: 12px;
-            }
-          }
-
-          @media (max-width: 480px) {
-            .communities-page {
-              .page-header {
-                padding: 20px 0;
-
-                .header-content {
-                  padding: 0 8px;
-
-                  .header-main {
-                    .header-icon {
-                      width: 48px;
-                      height: 48px;
-
-                      .anticon {
-                        font-size: 20px;
-                      }
-                    }
-
-                    .header-text {
-                      .page-title {
-                        font-size: 20px;
-                      }
-
-                      .page-subtitle {
-                        font-size: 13px;
-                      }
-                    }
-                  }
-
-                  .header-controls {
-                    gap: 12px;
-
-                    .header-actions {
-                      .ant-space {
-                        .action-button,
-                        .filter-button {
-                          span:not(.ant-badge):not(.anticon) {
-                            display: none;
-                          }
-
-                          .anticon {
-                            margin: 0;
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-
-              .page-content {
-                padding: 20px 0;
-
-                .content-container {
-                  padding: 0 8px;
-                  gap: 12px;
-                }
-              }
-            }
-
-            .stats-card {
-              .ant-card-body {
-                padding: 10px 12px;
-              }
-
-              .ant-space {
-                &.ant-space-wrap {
-                  .ant-space-item {
-                    margin-bottom: 8px;
-                    width: 100%;
-
-                    .ant-typography {
-                      font-size: 12px;
-                      display: block;
-                      text-align: center;
-                      padding: 6px 8px;
-                      background: rgba($background-color, 0.8);
-                      border-radius: 6px;
-                      border: 1px solid rgba($border-color, 0.3);
-
-                      strong {
-                        margin-left: 8px;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-
-            .pagination-card {
-              .ant-card-body {
-                padding: 10px 12px;
-              }
-
-              .ant-pagination {
-                flex-direction: column;
-                gap: 8px;
-
-                .ant-pagination-total-text {
-                  order: -1;
-                  font-size: 11px;
-                }
-              }
-            }
-
-            .empty-state-card {
-              .ant-card-body {
-                padding: 32px 16px;
-              }
-
-              .ant-empty {
-                .ant-empty-description {
-                  font-size: 14px;
-                }
-              }
-            }
-
-            .communities-list {
-              gap: 8px;
-            }
-          }
-
-          // Высококонтрастный режим
-          @media (prefers-contrast: more) {
-            .communities-page {
-              .page-header {
-                border-bottom: 2px solid $text-color;
-              }
-
-              .header-controls {
-                .mode-switcher {
-                  .ant-segmented {
-                    border: 2px solid $text-color;
-
-                    .ant-segmented-item {
-                      border-right: 1px solid $text-color;
-
-                      &.ant-segmented-item-selected {
-                        border: 2px solid $success-color;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-
-            .stats-card,
-            .empty-state-card,
-            .pagination-card {
-              border: 2px solid $text-color;
-            }
-
-            .pagination-card {
-              .ant-pagination {
-                .ant-pagination-item,
-                .ant-pagination-prev,
-                .ant-pagination-next {
-                  border: 1px solid $text-color;
-
-                  &:hover {
-                    border-color: #52c41a;
-                  }
-                }
-              }
-            }
-
-            .stats-card {
-              .ant-typography {
-                strong {
-                  border: 1px solid currentColor;
-                }
-              }
-            }
-          }
-
-          // Темная тема
-          .dark-theme {
-            :root {
-              --communities-header-bg: linear-gradient(135deg, rgba(82, 196, 26, 0.1) 0%, rgba(82, 196, 26, 0.05) 100%);
-              --communities-stats-bg: rgba(82, 196, 26, 0.05);
-              --communities-pagination-bg: rgba(24, 144, 255, 0.05);
-              --communities-switcher-bg: rgba(31, 31, 31, 0.9);
-            }
-
-            .communities-page {
-              background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-
-              .page-header {
-                .header-content {
-                  .header-main {
-                    .header-icon {
-                      background: rgba(82, 196, 26, 0.2);
-                      border-color: rgba(82, 196, 26, 0.4);
-                    }
-
-                    .header-text {
-                      .page-title {
-                        color: #ffffff;
-                      }
-
-                      .page-subtitle {
-                        color: #cccccc;
-                      }
-                    }
-                  }
-
-                  .header-controls {
-                    .mode-switcher {
-                      .ant-segmented {
-                        background: var(--communities-switcher-bg);
-                        border-color: #434343;
-
-                        .ant-segmented-item {
-                          color: #cccccc;
-
-                          &:hover {
-                            color: #52c41a;
-                          }
-
-                          &.ant-segmented-item-selected {
-                            background: #52c41a;
-                            color: white;
-                          }
-                        }
-                      }
-                    }
-
-                    .header-actions {
-                      .action-button,
-                      .filter-button {
-                        background: #2a2a2a;
-                        border-color: #434343;
-                        color: #cccccc;
-
-                        &.action-button {
-                          &:hover {
-                            background: rgba(#52c41a, 0.1);
-                            border-color: rgba(#52c41a, 0.4);
-                            color: #52c41a;
-                          }
-                        }
-
-                        &.filter-button {
-                          &:hover {
-                            background: rgba(#1890ff, 0.1);
-                            border-color: rgba(#1890ff, 0.4);
-                            color: #1890ff;
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-
-            .stats-card,
-            .empty-state-card,
-            .pagination-card {
-              background-color: #1f1f1f;
-              border-color: #434343;
-            }
-
-            .stats-card {
-              background: rgba(82, 196, 26, 0.05);
-              border-color: rgba(82, 196, 26, 0.2);
-
-              .stats-divider {
-                color: rgba(#ffffff, 0.3);
-              }
-
-              .ant-typography {
-                color: #ffffff;
-
-                &.ant-typography-secondary {
-                  color: #cccccc;
-                }
-
-                strong {
-                  color: inherit;
-                  background: rgba(#ffffff, 0.1);
-                }
-              }
-            }
-
-            .pagination-card {
-              background: rgba(24, 144, 255, 0.05);
-              border-color: rgba(24, 144, 255, 0.2);
-
-              .ant-pagination {
-                .ant-pagination-item {
-                  background: #2a2a2a;
-                  border-color: #434343;
-
-                  a {
-                    color: #cccccc;
-                  }
-
-                  &:hover {
-                    background: rgba(#52c41a, 0.1);
-                    border-color: rgba(#52c41a, 0.4);
-
-                    a {
-                      color: #52c41a;
-                    }
-                  }
-
-                  &.ant-pagination-item-active {
-                    background: #52c41a;
-                    border-color: #52c41a;
-
-                    a {
-                      color: white;
-                    }
-                  }
-                }
-
-                .ant-pagination-prev,
-                .ant-pagination-next {
-                  background: #2a2a2a;
-                  border-color: #434343;
-                  color: #cccccc;
-
-                  &:hover {
-                    background: rgba(#52c41a, 0.1);
-                    border-color: rgba(#52c41a, 0.4);
-                    color: #52c41a;
-                  }
-                }
-
-                .ant-pagination-total-text {
-                  color: #cccccc;
-                }
-              }
-            }
-
-            .empty-state-card {
-              background: rgba(#ffffff, 0.02);
-              border-color: #434343;
-
-              .ant-empty {
-                .ant-empty-description {
-                  color: #cccccc;
-                }
-              }
-            }
-          }
-
-          // Анимации
-          @keyframes slideInUp {
-            from {
-              opacity: 0;
-              transform: translateY(20px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-
-          @keyframes fadeIn {
-            from {
-              opacity: 0;
-            }
-            to {
-              opacity: 1;
-            }
-          }
-
-          // Анимации для элементов страницы
-          .communities-page {
-            .page-header {
-              animation: slideInUp 0.6s ease-out;
-            }
-
-            .stats-card {
-              animation: fadeIn 0.8s ease-out 0.2s both;
-            }
-
-            .empty-state-card,
-            .loading-container {
-              animation: fadeIn 0.8s ease-out 0.4s both;
-            }
-
-            .pagination-card {
-              animation: fadeIn 0.8s ease-out 0.6s both;
-            }
-          }
-
-          // Динамические цвета для разных режимов
-          .communities-page {
-            // Режим "Все сообщества"
-            &[data-mode="all"] {
-              .page-header {
-                .header-main {
-                  .header-icon {
-                    background: rgba(24, 144, 255, 0.1);
-                    border-color: rgba(24, 144, 255, 0.2);
-
-                    .anticon {
-                      color: #1890ff;
-                    }
-                  }
-                }
-              }
-            }
-
-            // Режим "Мои сообщества"
-            &[data-mode="my"] {
-              .page-header {
-                .header-main {
-                  .header-icon {
-                    background: rgba(82, 196, 26, 0.1);
-                    border-color: rgba(82, 196, 26, 0.2);
-
-                    .anticon {
-                      color: #52c41a;
-                    }
-                  }
-                }
-              }
-            }
-          }
+          transform: translateX(0) scale(1.02);
         }
       }
+    }
+  }
+
+  .trigger-btn {
+    width: 40px;
+    height: 40px;
+
+    .trigger-icon {
+      font-size: 18px;
+    }
+  }
+
+  .sider-bottom {
+    padding: 12px 11px; // Также компенсируем для collapsed состояния
+
+    &::before {
+      height: 50px; // Меньший градиент для collapsed состояния
+      right: 1px; // Компенсация границы
     }
   }
 }
