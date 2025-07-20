@@ -116,7 +116,7 @@
             inset 0 1px 0 rgba(white, 0.3);
 
     .community-back-icon {
-      color: $gradient-start;
+      color: $heading-color;
       transform: translateX(-1px);
     }
   }
@@ -188,7 +188,7 @@
     transform: scale(1.1);
 
     .community-dropdown-arrow {
-      color: $gradient-start;
+      color: $heading-color;
       transform: rotate(180deg);
     }
   }

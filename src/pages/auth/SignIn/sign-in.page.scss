@@ -290,6 +290,9 @@
 
   &:active {
     transform: translateY(-1px);
+    background: linear-gradient(135deg,
+            color.mix($heading-color, $gradient-start, 90%) 0%,
+            color.mix($heading-color, $gradient-end, 90%) 100%);
     box-shadow:
             0 4px 12px rgba($heading-color, 0.4),
             inset 0 1px 0 rgba(white, 0.1);

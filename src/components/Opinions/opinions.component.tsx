@@ -251,7 +251,7 @@ export function Opinions(props: OpinionsProps) {
                   onClick={handleToggleAIMode}
                   className="ai-mode-button"
                 >
-                  ИИ-помощник
+                  ИИ-режим
                 </Button>
               </div>
               <TextArea

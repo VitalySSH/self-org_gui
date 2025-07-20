@@ -11,7 +11,7 @@ import {
   CalendarOutlined,
   StarOutlined,
   TeamOutlined,
-  ClockCircleOutlined
+  // ClockCircleOutlined
 } from '@ant-design/icons';
 import { CrudDataSourceService, VotingResultAoService } from 'src/services';
 import {

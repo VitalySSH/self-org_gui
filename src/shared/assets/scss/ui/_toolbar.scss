@@ -88,7 +88,7 @@
   .toolbar-info-right {
     .toolbar-info {
       font-size: 14px;
-      color: color.mix($text-color, white, 20%);
+      color: color.mix($text-color, white, 70%);
       font-family: $font-family;
       font-weight: 500;
       opacity: 0.9;
@@ -203,7 +203,7 @@
     // Основной стиль (Primary) - оставляем прежним
     &.toolbar-button-primary,
     &:not([class*="toolbar-button-"]) {
-      @include button-style($primary-color, $background-color);
+      @include button-variant-primary;
 
       &:hover {
         transform: translateY(-2px);
@@ -263,7 +263,7 @@
 
     // Стиль успеха
     &.toolbar-button-success {
-      @include button-style($success-color, $background-color);
+      @include button-variant-success;
 
       &:hover {
         transform: translateY(-2px);
@@ -279,7 +279,7 @@
 
     // Стиль опасности
     &.toolbar-button-danger {
-      @include button-style($error-color, $background-color);
+      @include button-variant-danger;
 
       &:hover {
         transform: translateY(-2px);

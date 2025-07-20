@@ -101,8 +101,7 @@ export function SettingsStatistics({ data, loading = false }: SettingsStatistics
                     showInfo={false}
                     strokeColor={progressColor}
                     trailColor="#f5f5f5"
-                    size="small"
-                    strokeWidth={6}
+                    size={['', 6]}
                     style={{ margin: 0 }}
                   />
 

@@ -10,8 +10,6 @@ import {
   TagOutlined,
   NumberOutlined,
   TeamOutlined,
-  ClockCircleOutlined,
-  ExclamationCircleOutlined
 } from '@ant-design/icons';
 import { CrudDataSourceService, VotingResultAoService } from 'src/services';
 import {
@@ -332,9 +330,9 @@ export function RuleDetail() {
     return 'Воздержался';
   };
 
-  const hasNoncomplianceIssues = useMemo(() => {
-    return selectedNoncompliance.length > 0 || minorityNoncompliance.length > 0;
-  }, [selectedNoncompliance, minorityNoncompliance]);
+  // const hasNoncomplianceIssues = useMemo(() => {
+  //   return selectedNoncompliance.length > 0 || minorityNoncompliance.length > 0;
+  // }, [selectedNoncompliance, minorityNoncompliance]);
 
   if (loading) {
     return (

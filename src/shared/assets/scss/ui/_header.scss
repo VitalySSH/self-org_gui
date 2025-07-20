@@ -288,24 +288,10 @@
 
     .logout-button {
       @include button-variant-danger;
-      border-radius: 8px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-      &:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba($error-color, 0.2);
-      }
     }
 
     .save-button {
       @include button-variant-primary;
-      border-radius: 8px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-      &:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba($primary-color, 0.2);
-      }
     }
   }
 }

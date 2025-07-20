@@ -65,8 +65,6 @@ export function CommunityFilterModal({
           >
             <Input
               placeholder="Введите название для поиска"
-              size="large"
-              allowClear
             />
           </Form.Item>
 
@@ -78,9 +76,7 @@ export function CommunityFilterModal({
             <Input.TextArea
               placeholder="Введите текст для поиска в описании"
               rows={3}
-              showCount
               maxLength={200}
-              size="large"
             />
           </Form.Item>
         </Form>

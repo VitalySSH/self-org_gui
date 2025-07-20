@@ -1,4 +1,4 @@
-// Общие стили для форм Antd
+@use 'sass:color';
 @use 'src/shared/assets/scss/variables' as *;
 
 // Основные переменные для форм
@@ -21,169 +21,721 @@
   --form-active-bg: rgba(204, 0, 0, 0.06);
 }
 
-// Общие стили для всех форм
-.ant-form {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+// Ограничиваем стили только формами и связанными контейнерами
+.ant-form,
+.auth-form-container,
+.auth-space,
+.form-container,
+.modal-form,
+.drawer-form {
 
-  .ant-form-item {
-    margin-bottom: 24px;
+  // Общие стили для всех форм
+  &.ant-form,
+  .ant-form {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
-    .ant-form-item-label {
-      padding-bottom: 8px;
+    .ant-form-item {
+      margin-bottom: 24px;
 
-      > label {
-        color: $heading-color;
-        font-weight: 500;
-        font-size: 14px;
+      .ant-form-item-label {
+        padding-bottom: 8px;
+
+        > label {
+          color: $heading-color;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 1.5;
+
+          &.ant-form-item-required {
+            &::before {
+              color: $error-color;
+              font-size: 14px;
+              margin-right: 4px;
+            }
+          }
+        }
+      }
+
+      .ant-form-item-explain-error {
+        color: $error-color;
+        font-size: 12px;
         line-height: 1.5;
+        margin-top: 4px;
+      }
 
-        &.ant-form-item-required {
-          &::before {
-            color: $error-color;
-            font-size: 14px;
-            margin-right: 4px;
+      .ant-form-item-explain-success {
+        color: $success-color;
+        font-size: 12px;
+        line-height: 1.5;
+        margin-top: 4px;
+      }
+    }
+  }
+
+  // Стили для всех input элементов в формах
+  .ant-input,
+  .ant-input-affix-wrapper,
+  .ant-input-number,
+  .ant-picker,
+  .ant-select-selector {
+    border-radius: var(--form-border-radius);
+    border: 1px solid var(--form-border-color);
+    background-color: var(--form-background);
+    color: var(--form-text-color);
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 8px 12px;
+    transition: var(--form-transition);
+    box-shadow: none;
+
+    &::placeholder {
+      color: var(--form-placeholder-color);
+    }
+
+    &:hover {
+      border-color: var(--form-hover-border-color);
+      box-shadow: var(--form-shadow);
+    }
+
+    &:focus,
+    &.ant-input-focused,
+    &.ant-select-focused .ant-select-selector {
+      border-color: var(--form-focus-border-color);
+      box-shadow: var(--form-focus-shadow);
+      outline: none;
+    }
+
+    &:disabled,
+    &.ant-input-disabled {
+      background-color: var(--form-disabled-background);
+      border-color: var(--form-disabled-border-color);
+      color: rgba(0, 0, 0, 0.25);
+      cursor: not-allowed;
+    }
+  }
+
+  // Специфичные стили для Select в формах
+  .ant-select {
+    font-size: 14px;
+
+    &:not(.ant-select-disabled):hover .ant-select-selector {
+      border-color: var(--form-hover-border-color);
+      box-shadow: var(--form-shadow);
+    }
+
+    &.ant-select-focused .ant-select-selector {
+      border-color: var(--form-focus-border-color);
+      box-shadow: var(--form-focus-shadow);
+    }
+
+    .ant-select-selector {
+      min-height: 40px;
+      padding: 4px 11px;
+
+      .ant-select-selection-search-input {
+        height: 30px;
+        line-height: 30px;
+      }
+
+      .ant-select-selection-placeholder {
+        color: var(--form-placeholder-color);
+        line-height: 30px;
+      }
+
+      .ant-select-selection-item {
+        line-height: 30px;
+        color: var(--form-text-color);
+      }
+    }
+
+    .ant-select-arrow {
+      color: #999;
+      transition: var(--form-transition);
+      margin-top: 0 !important;
+
+      &:hover {
+        color: var(--form-focus-border-color);
+      }
+    }
+
+    &.ant-select-open .ant-select-arrow {
+      color: var(--form-focus-border-color);
+    }
+
+    // Стили для множественного выбора
+    &.ant-select-multiple {
+      .ant-select-selector {
+        padding: 2px 4px;
+      }
+
+      .ant-select-selection-item {
+        background-color: rgba(204, 0, 0, 0.08);
+        border: 1px solid rgba(204, 0, 0, 0.2);
+        border-radius: 6px;
+        font-size: 14px;
+        height: 36px;
+        line-height: 24px;
+        margin: 2px 4px 2px 0;
+        padding: 0 8px;
+
+        .ant-select-selection-item-remove {
+          color: rgba(204, 0, 0, 0.6);
+          font-size: 10px;
+          margin-left: 4px;
+
+          &:hover {
+            color: $primary-color;
           }
         }
       }
     }
-
-    .ant-form-item-explain-error {
-      color: $error-color;
-      font-size: 12px;
-      line-height: 1.5;
-      margin-top: 4px;
-    }
-
-    .ant-form-item-explain-success {
-      color: $success-color;
-      font-size: 12px;
-      line-height: 1.5;
-      margin-top: 4px;
-    }
-  }
-}
-
-// Стили для всех input элементов
-.ant-input,
-.ant-input-affix-wrapper,
-.ant-input-number,
-.ant-picker,
-.ant-select-selector {
-  border-radius: var(--form-border-radius);
-  border: 1px solid var(--form-border-color);
-  background-color: var(--form-background);
-  color: var(--form-text-color);
-  font-size: 14px;
-  line-height: 1.5;
-  padding: 8px 12px;
-  transition: var(--form-transition);
-  box-shadow: none;
-
-  &::placeholder {
-    color: var(--form-placeholder-color);
   }
 
-  &:hover {
-    border-color: var(--form-hover-border-color);
-    box-shadow: var(--form-shadow);
-  }
-
-  &:focus,
-  &.ant-input-focused,
-  &.ant-select-focused .ant-select-selector {
-    border-color: var(--form-focus-border-color);
-    box-shadow: var(--form-focus-shadow);
-    outline: none;
-  }
-
-  &:disabled,
-  &.ant-input-disabled {
-    background-color: var(--form-disabled-background);
-    border-color: var(--form-disabled-border-color);
-    color: rgba(0, 0, 0, 0.25);
-    cursor: not-allowed;
-  }
-}
-
-// Специфичные стили для Select
-.ant-select {
-  font-size: 14px;
-
-  &:not(.ant-select-disabled):hover .ant-select-selector {
-    border-color: var(--form-hover-border-color);
-    box-shadow: var(--form-shadow);
-  }
-
-  &.ant-select-focused .ant-select-selector {
-    border-color: var(--form-focus-border-color);
-    box-shadow: var(--form-focus-shadow);
-  }
-
-  .ant-select-selector {
-    min-height: 40px;
-    padding: 4px 11px;
-
-    .ant-select-selection-search-input {
-      height: 30px;
-      line-height: 30px;
-    }
-
-    .ant-select-selection-placeholder {
-      color: var(--form-placeholder-color);
-      line-height: 30px;
-    }
-
-    .ant-select-selection-item {
-      line-height: 30px;
-      color: var(--form-text-color);
+  // Стили для TextArea в формах
+  .ant-input {
+    &[data-count] {
+      .ant-input {
+        padding-bottom: 20px;
+      }
     }
   }
 
-  .ant-select-arrow {
-    color: #999;
+  // Стили для кнопок в формах
+  .ant-btn {
+    position: relative;
+    border-radius: var(--form-border-radius);
+    font-weight: 600;
+    font-size: 16px;
+    height: 44px;
+    padding: 16px 24px;
+    cursor: pointer;
+    overflow: hidden;
+    letter-spacing: 0.01em;
+    border: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    // Убираем стандартные стили
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    // Анимация блика при ховере
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg,
+              transparent,
+              rgba(white, 0.25),
+              transparent);
+      transition: left 0.6s ease;
+      z-index: 1;
+    }
+
+    &:hover::before {
+      left: 100%;
+    }
+
+    // Primary кнопка
+    &.ant-btn-primary {
+      background: linear-gradient(135deg,
+              $heading-color 0%,
+              color.mix($heading-color, $text-color, 80%) 100%);
+      color: $background-color;
+      box-shadow: 0 4px 16px rgba($heading-color, 0.3),
+      inset 0 1px 0 rgba(white, 0.1);
+
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg,
+                $gradient-start 0%,
+                $gradient-end 100%);
+        color: $background-color;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba($gradient-start, 0.4),
+        inset 0 1px 0 rgba(white, 0.2);
+      }
+
+      &:active:not(:disabled) {
+        transform: translateY(-1px);
+        background: linear-gradient(135deg,
+                color.mix($heading-color, $gradient-start, 90%) 0%,
+                color.mix($heading-color, $gradient-end, 90%) 100%);
+        box-shadow: 0 4px 12px rgba($heading-color, 0.4),
+        inset 0 1px 0 rgba(white, 0.1);
+      }
+
+      &:focus-visible {
+        outline: 2px solid $gradient-start;
+        outline-offset: 3px;
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: none !important;
+        background: color.mix($border-color, white, 20%) !important;
+        color: color.mix($text-color, white, 50%) !important;
+
+        &::before {
+          display: none;
+        }
+      }
+    }
+
+    // Default кнопка
+    &.ant-btn-default {
+      background: linear-gradient(135deg,
+              rgba($background-color, 0.95) 0%,
+              rgba($secondary-color, 0.9) 100%);
+      color: $text-color;
+      border: 1px solid color.mix($border-color, $text-color, 85%);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 2px 8px rgba($card-shadow, 0.1),
+      inset 0 1px 0 rgba(white, 0.8);
+
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg,
+                $gradient-start 0%,
+                $gradient-end 100%);
+        color: $background-color;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba($gradient-start, 0.4),
+        inset 0 1px 0 rgba(white, 0.2);
+        border-color: transparent;
+      }
+
+      &:active:not(:disabled) {
+        transform: translateY(-1px);
+        background: linear-gradient(135deg,
+                color.mix($heading-color, $gradient-start, 90%) 0%,
+                color.mix($heading-color, $gradient-end, 90%) 100%);
+        box-shadow: 0 4px 12px rgba($heading-color, 0.4),
+        inset 0 1px 0 rgba(white, 0.1);
+      }
+
+      &:focus-visible {
+        outline: 2px solid $gradient-start;
+        outline-offset: 3px;
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none !important;
+        box-shadow: none !important;
+        background: color.mix($border-color, white, 20%) !important;
+        color: color.mix($text-color, white, 50%) !important;
+        border-color: color.mix($border-color, white, 40%) !important;
+
+        &::before {
+          display: none;
+        }
+      }
+    }
+
+    // Link кнопка
+    &.ant-btn-link {
+      color: $gradient-start;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 4px 0;
+
+      &:hover:not(:disabled) {
+        color: $gradient-end;
+        background: transparent;
+        transform: none;
+      }
+
+      &:disabled {
+        color: color.mix($text-color, white, 50%) !important;
+        cursor: not-allowed;
+
+        &::before {
+          display: none;
+        }
+      }
+    }
+
+    // Убираем блик для disabled состояний
+    &:disabled {
+      &::before {
+        display: none;
+      }
+    }
+  }
+
+  // Улучшенные стили для InputNumber в формах
+  .ant-input-number {
+    border-radius: var(--form-border-radius);
+    border: 1px solid var(--form-border-color);
     transition: var(--form-transition);
-    margin-top: 0 !important;
 
     &:hover {
-      color: var(--form-focus-border-color);
-    }
-  }
-
-  &.ant-select-open .ant-select-arrow {
-    color: var(--form-focus-border-color);
-  }
-
-  // Стили для множественного выбора
-  &.ant-select-multiple {
-    .ant-select-selector {
-      padding: 2px 4px;
+      border-color: var(--form-hover-border-color);
+      box-shadow: var(--form-shadow);
     }
 
-    .ant-select-selection-item {
-      background-color: rgba(204, 0, 0, 0.08);
-      border: 1px solid rgba(204, 0, 0, 0.2);
-      border-radius: 6px;
-      //color: $primary-color;
-      font-size: 14px;
-      height: 36px;
-      line-height: 24px;
-      margin: 2px 4px 2px 0;
-      padding: 0 8px;
+    &:focus,
+    &.ant-input-number-focused {
+      border-color: var(--form-focus-border-color);
+      box-shadow: var(--form-focus-shadow);
+    }
 
-      .ant-select-selection-item-remove {
-        color: rgba(204, 0, 0, 0.6);
-        font-size: 10px;
-        margin-left: 4px;
+    .ant-input-number-input {
+      border: none;
+      outline: none;
+      color: var(--form-text-color);
+      background-color: transparent;
+
+      &::placeholder {
+        color: var(--form-placeholder-color);
+      }
+    }
+
+    .ant-input-number-handler-wrap {
+      border-radius: 0 var(--form-border-radius) var(--form-border-radius) 0;
+
+      .ant-input-number-handler {
+        border-left: 1px solid var(--form-border-color);
 
         &:hover {
-          color: $primary-color;
+          color: var(--form-focus-border-color);
         }
+      }
+    }
+
+    &.ant-input-number-disabled {
+      background-color: var(--form-disabled-background);
+      border-color: var(--form-disabled-border-color);
+      color: rgba(0, 0, 0, 0.25);
+      cursor: not-allowed;
+
+      .ant-input-number-input {
+        background-color: transparent;
+        color: rgba(0, 0, 0, 0.25);
+      }
+    }
+  }
+
+  // Стили для Switch в формах
+  .ant-switch {
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: 100px;
+    transition: var(--form-transition);
+
+    &:hover:not(.ant-switch-disabled) {
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    &.ant-switch-checked {
+      background-color: var(--form-focus-border-color);
+
+      &:hover:not(.ant-switch-disabled) {
+        background-color: #e60000;
+      }
+    }
+
+    &.ant-switch-disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+
+    .ant-switch-handle {
+      &::before {
+        border-radius: 50%;
+        transition: var(--form-transition);
+      }
+    }
+  }
+
+  // Стили для карточек в формах
+  .ant-card {
+    border-radius: var(--form-border-radius);
+    box-shadow: var(--form-shadow);
+    border: 1px solid var(--form-border-color);
+    transition: var(--form-transition);
+
+    &:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .ant-card-head {
+      border-bottom: 1px solid var(--form-border-color);
+      padding: 16px 24px;
+
+      .ant-card-head-title {
+        color: var(--form-text-color);
+        font-weight: 600;
+        font-size: 16px;
+      }
+    }
+
+    .ant-card-body {
+      padding: 24px;
+    }
+
+    &.ant-card-small {
+      .ant-card-head {
+        padding: 12px 16px;
+      }
+
+      .ant-card-body {
+        padding: 16px;
+      }
+    }
+  }
+
+  // Стили для Typography в формах
+  .ant-typography {
+    &.ant-typography-title {
+      color: var(--form-text-color);
+      font-weight: 600;
+
+      &.ant-typography-title-1 {
+        font-size: 32px;
+        line-height: 1.2;
+      }
+
+      &.ant-typography-title-2 {
+        font-size: 24px;
+        line-height: 1.3;
+      }
+
+      &.ant-typography-title-3 {
+        font-size: 20px;
+        line-height: 1.4;
+      }
+    }
+
+    &.ant-typography-text {
+      color: var(--form-text-color);
+
+      &.ant-typography-secondary {
+        color: rgba(0, 0, 0, 0.65);
+      }
+    }
+  }
+
+  // Стили для Tag в формах
+  .ant-tag {
+    border-radius: 16px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid;
+    transition: var(--form-transition);
+
+    &.ant-tag-default {
+      background-color: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.15);
+      color: var(--form-text-color);
+    }
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .ant-tag-close-icon {
+      color: rgba(0, 0, 0, 0.45);
+      font-size: 10px;
+      margin-left: 4px;
+
+      &:hover {
+        color: rgba(0, 0, 0, 0.85);
+      }
+    }
+  }
+
+  // Стили для Divider в формах
+  .ant-divider {
+    border-color: var(--form-border-color);
+    margin: 16px 0;
+
+    &.ant-divider-horizontal {
+      &.ant-divider-with-text {
+        color: var(--form-text-color);
+        font-size: 14px;
+        font-weight: 500;
+
+        &::before,
+        &::after {
+          border-color: var(--form-border-color);
+        }
+      }
+    }
+  }
+
+  // Стили для Space в формах
+  .ant-space {
+    &.ant-space-vertical {
+      width: 100%;
+    }
+  }
+
+  // Стили для только чтения в формах
+  .readonly-field {
+    background-color: var(--form-disabled-background) !important;
+    border-color: var(--form-disabled-border-color) !important;
+    color: rgba(0, 0, 0, 0.65) !important;
+    cursor: default !important;
+
+    &:hover {
+      border-color: var(--form-disabled-border-color) !important;
+      box-shadow: none !important;
+    }
+
+    &:focus {
+      border-color: var(--form-disabled-border-color) !important;
+      box-shadow: none !important;
+    }
+  }
+
+  // Улучшенные стили для валидации в формах
+  .ant-form-item {
+    &.ant-form-item-has-error {
+      .ant-input,
+      .ant-input-affix-wrapper,
+      .ant-input-number,
+      .ant-picker,
+      .ant-select-selector {
+        border-color: $error-color;
+        box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.1);
+      }
+    }
+
+    &.ant-form-item-has-success {
+      .ant-input,
+      .ant-input-affix-wrapper,
+      .ant-input-number,
+      .ant-picker,
+      .ant-select-selector {
+        border-color: $success-color;
+        box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.1);
+      }
+    }
+
+    &.ant-form-item-has-warning {
+      .ant-input,
+      .ant-input-affix-wrapper,
+      .ant-input-number,
+      .ant-picker,
+      .ant-select-selector {
+        border-color: $accent-yellow;
+        box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.1);
+      }
+    }
+  }
+
+  // Дополнительные улучшения адаптивности для форм
+  @media (max-width: 1200px) {
+    .ant-card {
+      .ant-card-body {
+        padding: 20px;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .ant-card {
+      .ant-card-head {
+        padding: 12px 16px;
+
+        .ant-card-head-title {
+          font-size: 15px;
+        }
+      }
+
+      .ant-card-body {
+        padding: 16px;
+      }
+    }
+
+    .ant-input-number {
+      .ant-input-number-input {
+        font-size: 16px; // Предотвращает зум на iOS
+      }
+    }
+
+    .ant-switch {
+      min-width: 44px;
+      height: 24px;
+
+      .ant-switch-handle {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .ant-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+    }
+
+    .ant-form {
+      .ant-form-item {
+        margin-bottom: 20px;
+      }
+
+      .ant-form-item-label {
+        padding-bottom: 6px;
+      }
+    }
+
+    .ant-input,
+    .ant-input-affix-wrapper,
+    .ant-input-number,
+    .ant-picker,
+    .ant-select-selector {
+      font-size: 16px; // Предотвращает зум на iOS
+      padding: 10px 12px;
+    }
+
+    .ant-select .ant-select-selector {
+      min-height: 44px;
+
+      .ant-select-selection-search-input,
+      .ant-select-selection-placeholder,
+      .ant-select-selection-item {
+        line-height: 32px;
+      }
+    }
+
+    .ant-btn {
+      height: 44px;
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .ant-card {
+      .ant-card-head {
+        padding: 10px 12px;
+
+        .ant-card-head-title {
+          font-size: 14px;
+        }
+      }
+
+      .ant-card-body {
+        padding: 12px;
+      }
+    }
+
+    .ant-form {
+      .ant-form-item {
+        margin-bottom: 16px;
       }
     }
   }
 }
 
-// Стили для dropdown
+// Стили для dropdown (глобальные, так как они рендерятся в body)
 .ant-select-dropdown {
   border-radius: var(--form-border-radius);
   box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
@@ -220,75 +772,16 @@
       font-size: 14px;
     }
   }
-}
 
-// Стили для TextArea
-.ant-input {
-  &[data-count] {
-    .ant-input {
-      padding-bottom: 20px;
+  @media (max-width: 480px) {
+    .ant-select-item {
+      padding: 12px;
+      font-size: 16px;
     }
   }
 }
 
-// Стили для кнопок в формах
-.ant-btn {
-  border-radius: var(--form-border-radius);
-  font-weight: 500;
-  font-size: 14px;
-  height: 40px;
-  padding: 4px 16px;
-  transition: var(--form-transition);
-
-  &.ant-btn-primary {
-    background-color: $primary-color;
-    border-color: $primary-color;
-    color: white;
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
-
-    &:hover {
-      background-color: #e60000;
-      border-color: #e60000;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 8px rgba(204, 0, 0, 0.2);
-    }
-
-    &:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
-    }
-
-    &:disabled {
-      background-color: rgba(204, 0, 0, 0.5);
-      border-color: rgba(204, 0, 0, 0.5);
-      transform: none;
-      box-shadow: none;
-    }
-  }
-
-  &.ant-btn-default {
-    background-color: var(--form-background);
-    border-color: var(--form-border-color);
-    color: var(--form-text-color);
-
-    &:hover {
-      border-color: var(--form-focus-border-color);
-      color: var(--form-focus-border-color);
-      transform: translateY(-1px);
-      box-shadow: var(--form-shadow);
-    }
-  }
-
-  &.ant-btn-link {
-    color: $primary-color;
-
-    &:hover {
-      color: #e60000;
-    }
-  }
-}
-
-// Стили для спиннера
+// Стили для спиннера в формах (глобальные)
 .ant-spin {
   .ant-spin-dot {
     .ant-spin-dot-item {
@@ -297,248 +790,7 @@
   }
 }
 
-// Стили для Divider
-.ant-divider {
-  border-color: var(--form-border-color);
-  margin: 16px 0;
-
-  &.ant-divider-horizontal {
-    &.ant-divider-with-text {
-      color: var(--form-text-color);
-      font-size: 14px;
-      font-weight: 500;
-    }
-  }
-}
-
-// Стили для карточек в формах
-.ant-card {
-  border-radius: var(--form-border-radius);
-  box-shadow: var(--form-shadow);
-  border: 1px solid var(--form-border-color);
-  transition: var(--form-transition);
-
-  &:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  }
-
-  .ant-card-head {
-    border-bottom: 1px solid var(--form-border-color);
-    padding: 16px 24px;
-
-    .ant-card-head-title {
-      color: var(--form-text-color);
-      font-weight: 600;
-      font-size: 16px;
-    }
-  }
-
-  .ant-card-body {
-    padding: 24px;
-  }
-
-  &.ant-card-small {
-    .ant-card-head {
-      padding: 12px 16px;
-    }
-
-    .ant-card-body {
-      padding: 16px;
-    }
-  }
-}
-
-// Улучшенные стили для InputNumber
-.ant-input-number {
-  border-radius: var(--form-border-radius);
-  border: 1px solid var(--form-border-color);
-  transition: var(--form-transition);
-
-  &:hover {
-    border-color: var(--form-hover-border-color);
-    box-shadow: var(--form-shadow);
-  }
-
-  &:focus,
-  &.ant-input-number-focused {
-    border-color: var(--form-focus-border-color);
-    box-shadow: var(--form-focus-shadow);
-  }
-
-  .ant-input-number-input {
-    border: none;
-    outline: none;
-    color: var(--form-text-color);
-    background-color: transparent;
-
-    &::placeholder {
-      color: var(--form-placeholder-color);
-    }
-  }
-
-  .ant-input-number-handler-wrap {
-    border-radius: 0 var(--form-border-radius) var(--form-border-radius) 0;
-
-    .ant-input-number-handler {
-      border-left: 1px solid var(--form-border-color);
-
-      &:hover {
-        color: var(--form-focus-border-color);
-      }
-    }
-  }
-
-  &.ant-input-number-disabled {
-    background-color: var(--form-disabled-background);
-    border-color: var(--form-disabled-border-color);
-    color: rgba(0, 0, 0, 0.25);
-    cursor: not-allowed;
-
-    .ant-input-number-input {
-      background-color: transparent;
-      color: rgba(0, 0, 0, 0.25);
-    }
-  }
-}
-
-// Стили для Switch
-.ant-switch {
-  background-color: rgba(0, 0, 0, 0.25);
-  border-radius: 100px;
-  transition: var(--form-transition);
-
-  &:hover:not(.ant-switch-disabled) {
-    background-color: rgba(0, 0, 0, 0.4);
-  }
-
-  &.ant-switch-checked {
-    background-color: var(--form-focus-border-color);
-
-    &:hover:not(.ant-switch-disabled) {
-      background-color: #e60000;
-    }
-  }
-
-  &.ant-switch-disabled {
-    cursor: not-allowed;
-    opacity: 0.4;
-  }
-
-  .ant-switch-handle {
-    &::before {
-      border-radius: 50%;
-      transition: var(--form-transition);
-    }
-  }
-}
-
-// Стили для Typography
-.ant-typography {
-  &.ant-typography-title {
-    color: var(--form-text-color);
-    font-weight: 600;
-
-    &.ant-typography-title-1 {
-      font-size: 32px;
-      line-height: 1.2;
-    }
-
-    &.ant-typography-title-2 {
-      font-size: 24px;
-      line-height: 1.3;
-    }
-
-    &.ant-typography-title-3 {
-      font-size: 20px;
-      line-height: 1.4;
-    }
-  }
-
-  &.ant-typography-text {
-    color: var(--form-text-color);
-
-    &.ant-typography-secondary {
-      color: rgba(0, 0, 0, 0.65);
-    }
-  }
-}
-
-// Стили для Tag
-.ant-tag {
-  border-radius: 16px;
-  padding: 4px 12px;
-  font-size: 12px;
-  font-weight: 500;
-  border: 1px solid;
-  transition: var(--form-transition);
-
-  &.ant-tag-default {
-    background-color: rgba(0, 0, 0, 0.04);
-    border-color: rgba(0, 0, 0, 0.15);
-    color: var(--form-text-color);
-  }
-
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .ant-tag-close-icon {
-    color: rgba(0, 0, 0, 0.45);
-    font-size: 10px;
-    margin-left: 4px;
-
-    &:hover {
-      color: rgba(0, 0, 0, 0.85);
-    }
-  }
-}
-
-// Стили для Divider
-.ant-divider {
-  border-color: var(--form-border-color);
-  margin: 16px 0;
-
-  &.ant-divider-horizontal {
-    &.ant-divider-with-text {
-      color: var(--form-text-color);
-      font-size: 14px;
-      font-weight: 500;
-
-      &::before,
-      &::after {
-        border-color: var(--form-border-color);
-      }
-    }
-  }
-}
-
-// Стили для Space
-.ant-space {
-  &.ant-space-vertical {
-    width: 100%;
-  }
-}
-
-// Стили для только чтения (общие)
-.readonly-field {
-  background-color: var(--form-disabled-background) !important;
-  border-color: var(--form-disabled-border-color) !important;
-  color: rgba(0, 0, 0, 0.65) !important;
-  cursor: default !important;
-
-  &:hover {
-    border-color: var(--form-disabled-border-color) !important;
-    box-shadow: none !important;
-  }
-
-  &:focus {
-    border-color: var(--form-disabled-border-color) !important;
-    box-shadow: none !important;
-  }
-}
-
-// Стили для Tooltip
+// Стили для Tooltip в формах (глобальные)
 .ant-tooltip {
   z-index: 1060;
 
@@ -560,7 +812,7 @@
   }
 }
 
-// Стили для Alert
+// Стили для Alert в формах (глобальные)
 .ant-alert {
   border-radius: var(--form-border-radius);
   padding: 12px 16px;
@@ -617,43 +869,7 @@
   }
 }
 
-// Улучшенные стили для валидации
-.ant-form-item {
-  &.ant-form-item-has-error {
-    .ant-input,
-    .ant-input-affix-wrapper,
-    .ant-input-number,
-    .ant-picker,
-    .ant-select-selector {
-      border-color: $error-color;
-      box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.1);
-    }
-  }
-
-  &.ant-form-item-has-success {
-    .ant-input,
-    .ant-input-affix-wrapper,
-    .ant-input-number,
-    .ant-picker,
-    .ant-select-selector {
-      border-color: $success-color;
-      box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.1);
-    }
-  }
-
-  &.ant-form-item-has-warning {
-    .ant-input,
-    .ant-input-affix-wrapper,
-    .ant-input-number,
-    .ant-picker,
-    .ant-select-selector {
-      border-color: $accent-yellow;
-      box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.1);
-    }
-  }
-}
-
-// Стили для Message компонента
+// Стили для Message компонента (глобальные)
 .ant-message {
   .ant-message-notice {
     .ant-message-notice-content {
@@ -687,116 +903,6 @@
           }
         }
       }
-    }
-  }
-}
-
-// Дополнительные улучшения адаптивности
-@media (max-width: 1200px) {
-  .ant-card {
-    .ant-card-body {
-      padding: 20px;
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  .ant-card {
-    .ant-card-head {
-      padding: 12px 16px;
-
-      .ant-card-head-title {
-        font-size: 15px;
-      }
-    }
-
-    .ant-card-body {
-      padding: 16px;
-    }
-  }
-
-  .ant-input-number {
-    .ant-input-number-input {
-      font-size: 16px; // Предотвращает зум на iOS
-    }
-  }
-
-  .ant-switch {
-    min-width: 44px;
-    height: 24px;
-
-    .ant-switch-handle {
-      width: 20px;
-      height: 20px;
-    }
-  }
-
-  .ant-tag {
-    font-size: 11px;
-    padding: 3px 8px;
-  }
-}
-
-@media (max-width: 480px) {
-  .ant-card {
-    .ant-card-head {
-      padding: 10px 12px;
-
-      .ant-card-head-title {
-        font-size: 14px;
-      }
-    }
-
-    .ant-card-body {
-      padding: 12px;
-    }
-  }
-}
-.ant-form {
-  .ant-form-item {
-    margin-bottom: 20px;
-  }
-
-  .ant-form-item-label {
-    padding-bottom: 6px;
-  }
-}
-
-.ant-input,
-.ant-input-affix-wrapper,
-.ant-input-number,
-.ant-picker,
-.ant-select-selector {
-  font-size: 16px; // Предотвращает зум на iOS
-  padding: 10px 12px;
-}
-
-.ant-select .ant-select-selector {
-  min-height: 44px;
-
-  .ant-select-selection-search-input,
-  .ant-select-selection-placeholder,
-  .ant-select-selection-item {
-    line-height: 32px;
-  }
-}
-
-.ant-btn {
-  height: 44px;
-  font-size: 16px;
-}
-
-@media (max-width: 480px) {
-  .ant-form {
-    .ant-form-item {
-      margin-bottom: 16px;
-    }
-  }
-
-  .ant-select-dropdown {
-    .ant-select-item {
-      padding: 12px;
-      font-size: 16px;
     }
   }
 }
