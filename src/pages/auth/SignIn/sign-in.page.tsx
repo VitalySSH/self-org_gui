@@ -46,11 +46,8 @@ export function SignIn() {
       });
   };
 
-  // const handleForgotPassword = () => {
-  //   console.log('Забыл пароль');
-  // };
-
-  const handleRegister = () => {
+  const handleRegister = (e: React.MouseEvent) => {
+    e.preventDefault();
     navigate('/sign-up', { preventScrollReset: true });
   };
 

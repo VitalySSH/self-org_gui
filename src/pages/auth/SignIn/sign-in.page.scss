@@ -2,7 +2,6 @@
 @use 'src/shared/assets/scss/variables' as *;
 @use 'src/shared/assets/scss/mixins' as *;
 
-
 .auth-space {
   @include flex-center;
   flex-direction: column;
@@ -367,7 +366,9 @@
   }
 }
 
-// Адаптивность
+// МОБИЛЬНАЯ АДАПТАЦИЯ - ТОЛЬКО КРИТИЧЕСКИЕ ИСПРАВЛЕНИЯ
+
+// Планшеты (768px-1024px) - минимальные изменения
 @media (max-width: $breakpoint-md) {
   .auth-space {
     padding: 20px 16px;
@@ -389,14 +390,24 @@
   }
 }
 
+// Мобильные устройства (до 768px)
 @media (max-width: $breakpoint-sm) {
   .auth-space {
     padding: 16px 12px;
+    // Используем dvh для корректной работы на мобильных
+    height: 100dvh;
+    height: 100vh; // Fallback для старых браузеров
+  }
+
+  .auth-logo-container {
+    margin-bottom: 20px;
   }
 
   .auth-form-container {
     padding: 28px 20px;
     max-width: 100%;
+    // Уменьшаем отступы по краям на маленьких экранах
+    margin: 0 8px;
   }
 
   .auth-form-header {
@@ -418,19 +429,67 @@
 
     .ant-input,
     .ant-input-password {
-      padding: 10px 14px;
-      font-size: 14px;
+      padding: 14px 16px; // Увеличиваем для удобства на мобильных
+      font-size: 16px; // Важно: предотвращает zoom на iOS
     }
   }
 
   .auth-submit-button {
-    height: 46px;
+    height: 48px; // Увеличиваем touch target
     font-size: 15px;
   }
 
   .auth-form-footer {
     .auth-form-footer-text {
       font-size: 14px;
+    }
+  }
+}
+
+// Очень маленькие экраны (до 480px)
+@media (max-width: 480px) {
+  .auth-space {
+    padding: 12px 8px;
+  }
+
+  .auth-form-container {
+    margin: 0 4px;
+    padding: 24px 16px;
+  }
+
+  .auth-form {
+    .ant-input,
+    .ant-input-password {
+      font-size: 16px; // Критично для предотвращения zoom на iOS
+      padding: 16px 14px; // Увеличенный touch target
+    }
+  }
+
+  .auth-submit-button {
+    height: 50px; // Еще больший touch target
+  }
+}
+
+// Поддержка ландшафтной ориентации на мобильных
+@media (max-height: 500px) and (orientation: landscape) {
+  .auth-space {
+    padding: 8px 16px;
+    overflow-y: auto; // Добавляем прокрутку
+  }
+
+  .auth-logo-container {
+    margin-bottom: 12px;
+  }
+
+  .auth-form-container {
+    padding: 20px 24px;
+  }
+
+  .auth-form-header {
+    margin-bottom: 16px;
+
+    .auth-form-title {
+      font-size: 20px;
     }
   }
 }
@@ -532,5 +591,17 @@
 
   .auth-submit-button::before {
     display: none;
+  }
+}
+
+// Поддержка безопасных зон на iOS
+@supports (padding: max(0px)) {
+  @media (max-width: 768px) {
+    .auth-space {
+      padding-top: max(16px, env(safe-area-inset-top));
+      padding-left: max(12px, env(safe-area-inset-left));
+      padding-right: max(12px, env(safe-area-inset-right));
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
   }
 }

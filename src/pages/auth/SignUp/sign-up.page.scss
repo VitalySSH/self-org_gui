@@ -444,10 +444,15 @@
   75% { transform: translateX(4px); }
 }
 
-// Адаптивность
+// МОБИЛЬНАЯ АДАПТАЦИЯ - ТОЛЬКО КРИТИЧЕСКИЕ ИСПРАВЛЕНИЯ
+
+// Планшеты (768px-1024px)
 @media (max-width: $breakpoint-md) {
   .auth-space {
     padding: 20px 16px;
+    // Используем dvh для корректной работы на планшетах
+    min-height: 100dvh;
+    min-height: 100vh; // Fallback
   }
 
   .auth-form-container {
@@ -494,38 +499,61 @@
 
     .auth-form-actions {
       gap: 16px;
+      flex-direction: column; // На планшетах тоже вертикально
+      align-items: stretch;
 
       .auth-form-actions-prev {
-        flex: 0 0 120px;
+        flex: none;
+        width: 100%;
+        order: 2;
+
+        .ant-btn {
+          width: 100%;
+        }
+      }
+
+      .auth-form-actions-submit {
+        flex: none;
+        width: 100%;
+        order: 1;
+        margin-bottom: 8px;
+
+        .ant-btn {
+          width: 100%;
+        }
       }
     }
   }
 }
 
+// Мобильные устройства (до 768px)
 @media (max-width: $breakpoint-sm) {
   .auth-space {
     padding: 16px 12px;
+    min-height: 100dvh;
+    min-height: 100vh; // Fallback для старых браузеров
+    // Добавляем прокрутку для мобильных устройств
+    overflow-y: auto;
+  }
+
+  .auth-logo-container {
+    margin-bottom: 16px; // Уменьшаем отступ под логотипом
   }
 
   .auth-form-container {
-    padding: 28px 20px;
+    padding: 24px 20px; // Уменьшаем внутренние отступы
     max-width: 100%;
+    // Уменьшаем отступы по краям на маленьких экранах
+    margin: 0 8px;
   }
 
   .auth-form-header {
-    margin-bottom: 28px;
-
-    .auth-form-title {
-      font-size: 22px;
-    }
-
-    .auth-form-subtitle {
-      font-size: 14px;
-    }
+    // Полностью скрываем заголовки на мобильных
+    display: none;
   }
 
   .auth-steps-container {
-    margin-bottom: 24px;
+    margin-bottom: 20px; // Уменьшаем отступ
     padding: 0 2px;
 
     .auth-steps {
@@ -533,7 +561,7 @@
         .ant-steps-item-container {
           .ant-steps-item-content {
             .ant-steps-item-description {
-              display: none;
+              display: none; // Скрываем описания на маленьких экранах
             }
           }
         }
@@ -543,39 +571,245 @@
 
   .auth-form {
     .ant-form-item {
-      margin-bottom: 20px;
+      margin-bottom: 16px; // Уменьшаем отступы между полями
 
       &.auth-form-half {
+        margin-bottom: 12px;
+      }
+
+      &.auth-form-submit {
         margin-bottom: 16px;
+        margin-top: 8px; // Небольшой отступ сверху для кнопки
       }
     }
 
     .ant-input,
     .ant-input-password {
-      padding: 10px 14px;
-      font-size: 14px;
+      padding: 14px 16px; // Увеличиваем для удобства на мобильных
+      font-size: 16px; // Важно: предотвращает zoom на iOS
+    }
+
+    // Специальная оптимизация для TextArea "Обо мне"
+    .ant-input.ant-input-borderless {
+      min-height: 60px; // Уменьшаем минимальную высоту
+      padding: 10px 12px; // Уменьшаем отступы
+      font-size: 15px;
+    }
+
+    // Уменьшаем количество строк TextArea для мобильных
+    textarea.ant-input {
+      min-height: 60px !important; // Принудительно уменьшаем высоту
+      resize: none; // Отключаем ресайз на мобильных
     }
 
     .auth-form-actions {
       flex-direction: column;
       gap: 12px;
+      align-items: stretch; // Растягиваем кнопки на всю ширину
+      justify-content: stretch;
+      margin-top: 4px; // Уменьшаем отступ сверху
 
       .auth-form-actions-prev {
         order: 2;
         flex: none;
+        width: 100%; // Полная ширина на мобильных
         margin-bottom: 0;
+
+        .ant-btn {
+          width: 100%;
+        }
       }
 
       .auth-form-actions-submit {
         order: 1;
-        margin-bottom: 12px;
+        flex: none;
+        width: 100%; // Полная ширина на мобильных
+        margin-bottom: 8px;
+
+        .ant-btn {
+          width: 100%;
+        }
       }
     }
   }
 
   .auth-form-footer {
+    padding-top: 16px; // Уменьшаем отступ
+
     .auth-form-footer-text {
       font-size: 14px;
+    }
+  }
+}
+
+// Очень маленькие экраны (до 480px)
+@media (max-width: 480px) {
+  .auth-space {
+    padding: 8px 8px; // Минимальные отступы
+    overflow-y: auto; // Обязательная прокрутка
+  }
+
+  .auth-logo-container {
+    margin-bottom: 12px; // Еще меньший отступ
+  }
+
+  .auth-form-container {
+    margin: 0 4px;
+    padding: 20px 16px; // Компактные отступы
+  }
+
+  .auth-form-header {
+    // Заголовки уже скрыты на экранах ≤768px
+    display: none;
+  }
+
+  .auth-steps-container {
+    margin-bottom: 16px; // Уменьшаем отступ
+    padding: 0;
+  }
+
+  .auth-form {
+    .ant-form-item {
+      margin-bottom: 14px; // Минимальные отступы между полями
+
+      &.auth-form-half {
+        margin-bottom: 10px;
+      }
+
+      &.auth-form-submit {
+        margin-bottom: 12px;
+        margin-top: 4px;
+      }
+    }
+
+    .ant-input,
+    .ant-input-password {
+      font-size: 16px; // Критично для предотвращения zoom на iOS
+      padding: 14px 12px; // Компактные отступы
+    }
+
+    .ant-form-item-extra {
+      font-size: 12px;
+      margin-top: 2px; // Уменьшаем отступ
+    }
+
+    // Максимально компактный TextArea для очень маленьких экранов
+    .ant-input.ant-input-borderless,
+    textarea.ant-input {
+      min-height: 50px !important; // Очень компактная высота
+      padding: 8px 10px; // Минимальные отступы
+      font-size: 15px;
+      resize: none;
+    }
+
+    // Специальные стили для действий на очень маленьких экранах
+    .auth-form-actions {
+      flex-direction: column;
+      gap: 8px;
+      align-items: stretch;
+      justify-content: stretch;
+      margin-top: 0; // Убираем отступ сверху
+
+      .auth-form-actions-prev,
+      .auth-form-actions-submit {
+        width: 100%;
+        margin-bottom: 0;
+
+        .ant-btn {
+          width: 100%;
+          height: 48px; // Оптимальный touch target
+        }
+      }
+
+      .auth-form-actions-submit {
+        order: 1;
+        margin-bottom: 6px;
+      }
+
+      .auth-form-actions-prev {
+        order: 2;
+      }
+    }
+  }
+
+  .auth-form-footer {
+    padding-top: 12px; // Минимальный отступ
+
+    .auth-form-footer-text {
+      font-size: 13px;
+    }
+  }
+
+  // Кнопки на мобильных
+  .ant-btn {
+    height: 48px; // Увеличенный touch target
+    font-size: 15px;
+  }
+}
+
+// Поддержка ландшафтной ориентации на мобильных
+@media (max-height: 600px) and (orientation: landscape) {
+  .auth-space {
+    padding: 8px 16px;
+    overflow-y: auto; // Добавляем прокрутку
+    min-height: 100dvh;
+  }
+
+  .auth-logo-container {
+    margin-bottom: 12px;
+  }
+
+  .auth-form-container {
+    padding: 20px 24px;
+    max-width: 90%;
+  }
+
+  .auth-form-header {
+    margin-bottom: 16px;
+
+    .auth-form-title {
+      font-size: 20px;
+    }
+
+    .auth-form-subtitle {
+      font-size: 13px;
+    }
+  }
+
+  .auth-steps-container {
+    margin-bottom: 16px;
+  }
+
+  .auth-form {
+    .ant-form-item {
+      margin-bottom: 16px;
+    }
+
+    .auth-form-actions {
+      gap: 8px;
+      margin-top: 4px;
+      flex-direction: column;
+      align-items: stretch;
+
+      .auth-form-actions-prev,
+      .auth-form-actions-submit {
+        width: 100%;
+        margin-bottom: 0;
+
+        .ant-btn {
+          width: 100%;
+          height: 44px; // Компактнее для ландшафта
+        }
+      }
+
+      .auth-form-actions-submit {
+        order: 1;
+        margin-bottom: 8px;
+      }
+
+      .auth-form-actions-prev {
+        order: 2;
+      }
     }
   }
 }
@@ -686,6 +920,21 @@
     .auth-form-icon {
       color: rgba(white, 0.6);
     }
+
+    // Темная тема для TextArea
+    .ant-input.ant-input-borderless {
+      background: rgba(white, 0.08);
+      border-color: rgba(white, 0.15);
+      color: rgba(white, 0.9);
+
+      &:hover {
+        border-color: rgba($gradient-start, 0.6);
+      }
+
+      &:focus {
+        border-color: $gradient-start;
+      }
+    }
   }
 
   .auth-form-footer {
@@ -723,6 +972,92 @@
       .ant-input-password {
         animation: none;
       }
+    }
+  }
+}
+
+// Поддержка безопасных зон на iOS
+@supports (padding: max(0px)) {
+  @media (max-width: 768px) {
+    .auth-space {
+      padding-top: max(16px, env(safe-area-inset-top));
+      padding-left: max(12px, env(safe-area-inset-left));
+      padding-right: max(12px, env(safe-area-inset-right));
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+  }
+}
+
+// Дополнительные улучшения для мобильных устройств
+@media (max-width: 768px) {
+  // Улучшения для focus состояний на мобильных
+  .auth-form {
+    .ant-input:focus,
+    .ant-input-password:focus,
+    .ant-input.ant-input-focused,
+    .ant-input-password.ant-input-focused {
+      // Убираем outline для мобильных, используем только border
+      outline: none;
+      box-shadow: 0 0 0 2px rgba($gradient-start, 0.2);
+    }
+
+    // Исправляем отображение кнопок в форме действий
+    .auth-form-actions {
+      .ant-form-item {
+        margin-bottom: 0 !important; // Убираем нижние отступы у Form.Item
+        width: 100%;
+      }
+
+      .auth-form-actions-prev .ant-form-item,
+      .auth-form-actions-submit .ant-form-item {
+        width: 100%;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // Улучшения для кнопок на мобильных
+  .ant-btn {
+    min-height: 48px; // Минимальная высота touch target
+
+    &:active {
+      transform: scale(0.98);
+      transition: transform 0.1s ease;
+    }
+  }
+
+  // Улучшение видимости активных элементов
+  .auth-form-signin-link:active {
+    opacity: 0.8;
+  }
+
+  // Оптимизация шагов для мобильных
+  .auth-steps {
+    .ant-steps-item {
+      .ant-steps-item-container {
+        .ant-steps-item-icon {
+          // Увеличиваем размер иконок на мобильных
+          width: 28px;
+          height: 28px;
+
+          .ant-steps-icon {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Оптимизация для старых Android устройств
+@media (max-width: 480px) and (-webkit-min-device-pixel-ratio: 1) {
+  .auth-form-container {
+    // Упрощаем сложные эффекты для производительности
+    backdrop-filter: none;
+    background: rgba($background-color, 0.95);
+
+    &::after {
+      display: none;
     }
   }
 }

@@ -130,6 +130,7 @@ export function SignUp() {
             placeholder="Введите ваше имя"
             size="large"
             maxLength={50}
+            autoComplete="given-name"
           />
         </Form.Item>
 
@@ -162,6 +163,7 @@ export function SignUp() {
             placeholder="Введите вашу фамилию"
             size="large"
             maxLength={50}
+            autoComplete="family-name"
           />
         </Form.Item>
       </div>
@@ -178,10 +180,11 @@ export function SignUp() {
         ]}
       >
         <TextArea
-          rows={3}
+          rows={window.innerWidth <= 576 ? 2 : 3} // Адаптивное количество строк
           placeholder="Опишите ваши интересы, опыт или цели..."
           showCount
           maxLength={500}
+          autoSize={{ minRows: window.innerWidth <= 576 ? 2 : 3, maxRows: window.innerWidth <= 576 ? 3 : 4 }}
         />
       </Form.Item>
 
@@ -237,6 +240,7 @@ export function SignUp() {
           size="large"
           type="email"
           autoComplete="email"
+          inputMode="email"
         />
       </Form.Item>
 
@@ -371,6 +375,7 @@ export function SignUp() {
           onClick={onClickImage}
           className="auth-logo"
           alt="UTU Logo"
+          loading="eager"
         />
       </div>
 
