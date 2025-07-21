@@ -20,6 +20,7 @@ import {
   GlobalOutlined,
   UserOutlined,
   HomeOutlined,
+  CloseOutlined,
 } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { SiderBarInterface } from 'src/interfaces';
@@ -130,6 +131,39 @@ export function SiderBar(props: SiderBarInterface) {
   const [communitiesActive, setCommunitiesActive] = useState(false);
   const [userGuideMenuKeys, setUserGuideMenuKeys] = useState<string[]>([]);
   const [communityWSMenuKeys, setCommunityWSMenuKeys] = useState<string[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Определяем мобильное устройство
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
+
+  // Закрываем мобильное меню при изменении маршрута
+  useEffect(() => {
+    if (isMobile) {
+      setMobileMenuOpen(false);
+    }
+  }, [location.pathname, isMobile]);
+
+  // Блокируем скролл при открытом мобильном меню
+  useEffect(() => {
+    if (isMobile && mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobile, mobileMenuOpen]);
 
   const cleanKeys = () => {
     setCommunitiesActive(false);
@@ -140,12 +174,22 @@ export function SiderBar(props: SiderBarInterface) {
   const onClickImage = () => {
     cleanKeys();
     navigate('/');
+    if (isMobile) {
+      setMobileMenuOpen(false);
+    }
   };
 
   const onClickCommunities = () => {
     cleanKeys();
     setCommunitiesActive(true);
     navigate('/communities');
+    if (isMobile) {
+      setMobileMenuOpen(false);
+    }
+  };
+
+  const handleMobileMenuToggle = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
   };
 
   useEffect(() => {
@@ -184,9 +228,9 @@ export function SiderBar(props: SiderBarInterface) {
     }
   }, [location.pathname, navigate, props.isCommunityWS, props.isNotAuthorized]);
 
-  // Компонент навигации к сообществам
+
   const renderCommunitiesNavigation = () => {
-    if (collapsed) {
+    if (collapsed && !isMobile) {
       return (
         <Tooltip title="Сообщества" placement="right">
           <div
@@ -225,7 +269,6 @@ export function SiderBar(props: SiderBarInterface) {
     );
   };
 
-  // Компонент для неавторизованных пользователей
   const renderUnauthorizedContent = () => (
     <div className="sider-unauthorized">
       <div className="auth-welcome">
@@ -245,6 +288,147 @@ export function SiderBar(props: SiderBarInterface) {
     </div>
   );
 
+  const renderSiderContent = () => (
+    <>
+      {/* Основной контент сайдбара */}
+      <div className="sider-content">
+        <Flex align="center" justify="center" className="sider-logo">
+          <Image
+            height={collapsed && !isMobile ? 32 : 40}
+            preview={false}
+            src={logoPath}
+            onClick={onClickImage}
+            className="sider-logo-image"
+            alt="UTU Logo"
+          />
+        </Flex>
+
+        {props.isNotAuthorized ? (
+          (!collapsed || isMobile) && renderUnauthorizedContent()
+        ) : (
+          <>
+            {!props.isCommunityWS && (
+              <>
+                {/* Навигация к сообществам */}
+                {renderCommunitiesNavigation()}
+
+                {/* Руководство пользователя */}
+                {(!collapsed || isMobile) && <div className="menu-header">Руководство пользователя</div>}
+                {collapsed && !isMobile && (
+                  <Tooltip title="Руководство пользователя" placement="right">
+                    <BookOutlined className="menu-header-icon" />
+                  </Tooltip>
+                )}
+                <Menu
+                  mode="inline"
+                  items={userGuideMenuItems}
+                  onClick={(_item) => {
+                    if (isMobile) {
+                      setMobileMenuOpen(false);
+                    }
+                  }}
+                  selectedKeys={userGuideMenuKeys}
+                  className="sider-menu sider-menu-disabled"
+                />
+              </>
+            )}
+
+            {props.isCommunityWS && (
+              <>
+                {renderCommunitiesNavigation()}
+                {(!collapsed || isMobile) && <div className="menu-header">Сообщество</div>}
+                {collapsed && !isMobile && (
+                  <Tooltip title="Сообщество" placement="right">
+                    <ApartmentOutlined className="menu-header-icon" />
+                  </Tooltip>
+                )}
+                <Menu
+                  mode="inline"
+                  items={communityWSMenuItems}
+                  onClick={(item) => {
+                    setCommunityWSMenuKeys([item.key]);
+                    navigate(item.key);
+                    if (isMobile) {
+                      setMobileMenuOpen(false);
+                    }
+                  }}
+                  selectedKeys={communityWSMenuKeys}
+                  className="sider-menu"
+                />
+              </>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Нижняя часть с кнопкой и футером */}
+      <div className="sider-bottom">
+        {isMobile ? (
+          <Button
+            type="text"
+            icon={<CloseOutlined className="trigger-icon" />}
+            onClick={handleMobileMenuToggle}
+            className="trigger-btn mobile-close-btn"
+          />
+        ) : (
+          <Button
+            type="text"
+            icon={
+              collapsed ? (
+                <MenuUnfoldOutlined className="trigger-icon" />
+              ) : (
+                <MenuFoldOutlined className="trigger-icon" />
+              )
+            }
+            onClick={() => {
+              if (collapsed) {
+                setLogoPath('/utu_logo.png');
+              } else {
+                setLogoPath('/utu_logo_small.png');
+              }
+              setCollapsed(!collapsed);
+            }}
+            className="trigger-btn"
+          />
+        )}
+
+        {(!collapsed || isMobile) && (
+          <Flex align="center" justify="center" className="sider-footer">
+            <div className="sider-copyright">
+              UtU ©{new Date().getFullYear()}
+            </div>
+          </Flex>
+        )}
+      </div>
+    </>
+  );
+
+  if (isMobile) {
+    return (
+      <>
+        {/* Плавающая кнопка меню */}
+        <Button
+          type="primary"
+          shape="circle"
+          size="large"
+          icon={<MenuUnfoldOutlined />}
+          onClick={handleMobileMenuToggle}
+          className={`mobile-fab-menu ${mobileMenuOpen ? 'menu-open' : ''}`}
+        />
+
+        {/* Overlay с backdrop */}
+        {mobileMenuOpen && (
+          <div className="mobile-sider-overlay">
+            <div className="mobile-sider-backdrop" onClick={handleMobileMenuToggle} />
+            <div className="mobile-sider">
+              {renderSiderContent()}
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
+
   return (
     <Sider
       collapsible
@@ -262,103 +446,7 @@ export function SiderBar(props: SiderBarInterface) {
         }
       }}
     >
-      {/* Основной контент сайдбара */}
-      <div className="sider-content">
-        <Flex align="center" justify="center" className="sider-logo">
-          <Image
-            height={collapsed ? 32 : 40}
-            preview={false}
-            src={logoPath}
-            onClick={onClickImage}
-            className="sider-logo-image"
-            alt="UTU Logo"
-          />
-        </Flex>
-
-        {props.isNotAuthorized ? (
-          !collapsed && renderUnauthorizedContent()
-        ) : (
-          <>
-            {!props.isCommunityWS && (
-              <>
-                {/* Навигация к сообществам */}
-                {renderCommunitiesNavigation()}
-
-                {/* Руководство пользователя */}
-                {!collapsed && <div className="menu-header">Руководство пользователя</div>}
-                {collapsed && (
-                  <Tooltip title="Руководство пользователя" placement="right">
-                    <BookOutlined className="menu-header-icon" />
-                  </Tooltip>
-                )}
-                <Menu
-                  mode="inline"
-                  items={userGuideMenuItems}
-                  onClick={() => {
-                    // setUserGuideMenuKeys([item.key]);
-                    // navigate(item.key);
-                  }}
-                  selectedKeys={userGuideMenuKeys}
-                  className="sider-menu sider-menu-disabled"
-                />
-              </>
-            )}
-
-            {props.isCommunityWS && (
-              <>
-                {renderCommunitiesNavigation()}
-                {!collapsed && <div className="menu-header">Сообщество</div>}
-                {collapsed && (
-                  <Tooltip title="Сообщество" placement="right">
-                    <ApartmentOutlined className="menu-header-icon" />
-                  </Tooltip>
-                )}
-                <Menu
-                  mode="inline"
-                  items={communityWSMenuItems}
-                  onClick={(item) => {
-                    setCommunityWSMenuKeys([item.key]);
-                    navigate(item.key);
-                  }}
-                  selectedKeys={communityWSMenuKeys}
-                  className="sider-menu"
-                />
-              </>
-            )}
-          </>
-        )}
-      </div>
-
-      {/* Нижняя часть с кнопкой и футером */}
-      <div className="sider-bottom">
-        <Button
-          type="text"
-          icon={
-            collapsed ? (
-              <MenuUnfoldOutlined className="trigger-icon" />
-            ) : (
-              <MenuFoldOutlined className="trigger-icon" />
-            )
-          }
-          onClick={() => {
-            if (collapsed) {
-              setLogoPath('/utu_logo.png');
-            } else {
-              setLogoPath('/utu_logo_small.png');
-            }
-            setCollapsed(!collapsed);
-          }}
-          className="trigger-btn"
-        />
-
-        {!collapsed && (
-          <Flex align="center" justify="center" className="sider-footer">
-            <div className="sider-copyright">
-              UtU ©{new Date().getFullYear()}
-            </div>
-          </Flex>
-        )}
-      </div>
+      {renderSiderContent()}
     </Sider>
   );
 }

@@ -2,6 +2,10 @@
 @use 'src/shared/assets/scss/variables' as *;
 @use 'src/shared/assets/scss/mixins' as *;
 
+// ========================================
+// ОСНОВНЫЕ СТИЛИ САЙДБАРА
+// ========================================
+
 .sider-bar {
   background: linear-gradient(180deg,
           $sider-background-color 0%,
@@ -40,7 +44,7 @@
 // Основной контент сайдбара
 .sider-content {
   height: 100%;
-  padding-bottom: 120px; // Место для .sider-bottom
+  padding-bottom: 120px;
   overflow-y: auto;
   overflow-x: hidden;
 
@@ -64,11 +68,6 @@
   }
 }
 
-// Главная область с меню (убираем, так как теперь не нужна)
-.sider-main {
-  // Удаляем этот блок - весь контент будет в .sider-content
-}
-
 // Нижняя часть с кнопкой и футером
 .sider-bottom {
   position: absolute;
@@ -77,10 +76,10 @@
   right: 0;
   display: flex;
   flex-direction: column;
-  padding: 16px 15px; // Уменьшаем правый padding на 1px для компенсации границы
+  padding: 16px 15px;
   gap: 12px;
-  background: transparent; // Убираем фон для единообразия
-  border: none; // Убираем границу
+  background: transparent;
+  border: none;
   z-index: 10;
 
   // Создаем плавный градиент снизу вверх для лучшей читаемости
@@ -89,7 +88,7 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    right: 1px; // Компенсируем границу сайдбара
+    right: 1px;
     height: 60px;
     background: linear-gradient(0deg,
             $sider-background-color 0%,
@@ -597,7 +596,7 @@
   align-self: center;
   margin-bottom: 8px;
   position: relative;
-  z-index: 20; // Поднимаем выше градиента
+  z-index: 20;
 
   .trigger-icon {
     font-size: 20px;
@@ -633,7 +632,7 @@
 
 .sider-footer {
   position: relative;
-  z-index: 20; // Поднимаем выше градиента
+  z-index: 20;
 
   .sider-copyright {
     font-size: 12px;
@@ -652,7 +651,7 @@
 // Адаптивность для collapsed состояния
 .ant-layout-sider-collapsed {
   .sider-content {
-    padding-bottom: 100px; // Меньше места для collapsed состояния
+    padding-bottom: 100px;
   }
 
   .sider-logo {
@@ -690,11 +689,444 @@
   }
 
   .sider-bottom {
-    padding: 12px 11px; // Также компенсируем для collapsed состояния
+    padding: 12px 11px;
 
     &::before {
-      height: 50px; // Меньший градиент для collapsed состояния
-      right: 1px; // Компенсация границы
+      height: 50px;
+      right: 1px;
     }
+  }
+}
+
+// ========================================
+// МОБИЛЬНЫЕ СТИЛИ
+// ========================================
+
+// Плавающая кнопка меню (FAB)
+.mobile-fab-menu {
+  position: fixed;
+  bottom: 24px;
+  left: 24px; // Перенесли влево
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,
+          $gradient-start 0%,
+          $gradient-end 100%);
+  border: none;
+  box-shadow:
+          0 4px 12px rgba($gradient-start, 0.3),
+          0 8px 20px rgba($card-shadow, 0.15);
+  z-index: 999;
+  transition: all $transition-speed cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // Пульсирующий эффект для привлечения внимания
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,
+            $gradient-start 0%,
+            $gradient-end 100%);
+    opacity: 0.3;
+    animation: pulse 2s infinite;
+    z-index: -1;
+  }
+
+  .anticon {
+    font-size: 24px;
+    color: white;
+    transition: transform $transition-speed ease;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow:
+            0 6px 16px rgba($gradient-start, 0.4),
+            0 12px 28px rgba($card-shadow, 0.2);
+
+    .anticon {
+      transform: scale(1.1);
+    }
+
+    &::before {
+      animation-duration: 1s;
+    }
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  // Скрываем при открытом меню
+  &.menu-open {
+    transform: scale(0) rotate(180deg);
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+// Анимация пульсации
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+}
+
+// Overlay для мобильного меню
+.mobile-sider-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end; // Прижимаем сайдбар к правому краю
+}
+
+// Backdrop
+.mobile-sider-backdrop {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+// Мобильный сайдбар
+.mobile-sider {
+  width: 300px;
+  max-width: 85vw;
+  height: 100vh;
+  background: linear-gradient(180deg,
+          $sider-background-color 0%,
+          color.mix($sider-background-color, $secondary-color, 85%) 100%);
+  box-shadow: -2px 0 8px rgba($card-shadow, 0.15);
+  transform: translateX(100%); // Изначально скрыт справа
+  animation: slideInFromRight 0.3s ease-out forwards;
+  overflow: hidden;
+  position: relative;
+
+  // Используем те же стили, что и для десктопа
+  .sider-content {
+    height: 100%;
+    padding-bottom: 120px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    // Кастомный скроллбар
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba($text-color, 0.2);
+      border-radius: 2px;
+      transition: background $transition-speed ease;
+
+      &:hover {
+        background: rgba($text-color, 0.3);
+      }
+    }
+  }
+
+  .sider-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    gap: 12px;
+    background: transparent;
+    border: none;
+    z-index: 10;
+
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(0deg,
+              $sider-background-color 0%,
+              rgba($sider-background-color, 0.95) 50%,
+              transparent 100%);
+      pointer-events: none;
+      z-index: -1;
+    }
+  }
+
+  // Кнопка закрытия для мобильного меню
+  .mobile-close-btn {
+    background: linear-gradient(135deg,
+            rgba($error-color, 0.1) 0%,
+            rgba($error-color, 0.05) 100%);
+    border-color: rgba($error-color, 0.3);
+
+    .trigger-icon {
+      color: $error-color;
+    }
+
+    &:hover {
+      background: linear-gradient(135deg,
+              $error-color 0%,
+              color.mix($error-color, $accent-yellow, 80%) 100%);
+      border-color: $error-color;
+
+      .trigger-icon {
+        color: white;
+      }
+    }
+  }
+
+  // Все элементы в мобильном сайдбаре отображаются развернуто
+  .communities-nav-collapsed {
+    display: none;
+  }
+
+  .menu-header-icon {
+    display: none;
+  }
+
+  .sider-menu {
+    .ant-menu-item {
+      margin: 4px 16px;
+      text-align: left;
+
+      &:hover {
+        transform: translateX(4px);
+      }
+
+      &.ant-menu-item-selected {
+        &:hover {
+          transform: translateX(2px);
+        }
+      }
+    }
+  }
+}
+
+// Анимации для мобильного меню
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+// Медиа-запросы для точной настройки
+@media (max-width: 768px) {
+  // Скрываем десктопный сайдбар на мобильных устройствах
+  .ant-layout-sider {
+    display: none !important;
+  }
+
+  // Обеспечиваем, что мобильное меню занимает всю высоту
+  .mobile-sider {
+    min-height: 100dvh;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobile-fab-menu {
+    bottom: 20px;
+    left: 20px; // Обновляем для маленьких экранов
+    width: 52px;
+    height: 52px;
+
+    .anticon {
+      font-size: 22px;
+    }
+  }
+
+  .mobile-sider {
+    width: 280px;
+    max-width: 90vw;
+
+    .sider-logo {
+      padding: 16px 12px;
+    }
+
+    .communities-navigation {
+      margin: 8px 12px 20px 12px;
+    }
+
+    .menu-header {
+      padding: 12px 20px 6px 20px;
+      font-size: 13px;
+    }
+
+    .sider-menu {
+      .ant-menu-item {
+        height: 44px;
+        line-height: 44px;
+        margin: 3px 12px;
+
+        .anticon {
+          font-size: 15px;
+        }
+
+        .ant-menu-title-content {
+          font-size: 14px;
+        }
+      }
+    }
+
+    .sider-bottom {
+      padding: 12px;
+
+      .trigger-btn {
+        width: 44px;
+        height: 44px;
+
+        .trigger-icon {
+          font-size: 18px;
+        }
+      }
+
+      .sider-copyright {
+        font-size: 11px;
+      }
+    }
+  }
+}
+
+// Поддержка safe-area для устройств с вырезами
+@supports (padding: max(0px)) {
+  .mobile-fab-menu {
+    bottom: max(24px, calc(24px + env(safe-area-inset-bottom)));
+    left: max(24px, calc(24px + env(safe-area-inset-left))); // Обновляем safe area для левой стороны
+  }
+
+  .mobile-sider {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+
+  .mobile-sider-overlay {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+    padding-top: max(0px, env(safe-area-inset-top));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+}
+
+// Темная тема для мобильного меню
+.dark-theme {
+  .mobile-fab-menu {
+    background: linear-gradient(135deg,
+            #52c41a 0%,
+            #73d13d 100%);
+    box-shadow:
+            0 4px 12px rgba(#52c41a, 0.3),
+            0 8px 20px rgba(0, 0, 0, 0.2);
+
+    &::before {
+      background: linear-gradient(135deg,
+              #52c41a 0%,
+              #73d13d 100%);
+    }
+
+    &:hover {
+      box-shadow:
+              0 6px 16px rgba(#52c41a, 0.4),
+              0 12px 28px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  .mobile-sider-backdrop {
+    background: rgba(0, 0, 0, 0.7);
+  }
+
+  .mobile-sider {
+    background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 100%);
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
+
+    .sider-bottom {
+      &::before {
+        background: linear-gradient(0deg,
+                #1a1a1a 0%,
+                rgba(#1a1a1a, 0.95) 50%,
+                transparent 100%);
+      }
+    }
+
+    .mobile-close-btn {
+      background: linear-gradient(135deg,
+              rgba(#ff4d4f, 0.1) 0%,
+              rgba(#ff4d4f, 0.05) 100%);
+      border-color: rgba(#ff4d4f, 0.3);
+
+      .trigger-icon {
+        color: #ff4d4f;
+      }
+
+      &:hover {
+        background: linear-gradient(135deg,
+                #ff4d4f 0%,
+                #ff7875 100%);
+        border-color: #ff4d4f;
+
+        .trigger-icon {
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+// Оптимизация производительности для анимаций
+@media (prefers-reduced-motion: reduce) {
+  .mobile-fab-menu {
+    &::before {
+      animation: none;
+    }
+
+    &:hover::before {
+      animation: none;
+    }
+  }
+
+  .mobile-sider-backdrop,
+  .mobile-sider {
+    animation: none;
+  }
+
+  .mobile-sider {
+    transform: translateX(0);
   }
 }
