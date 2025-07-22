@@ -419,10 +419,10 @@ export function SiderBar(props: SiderBarInterface) {
         {/* Overlay с backdrop */}
         {mobileMenuOpen && (
           <div className="mobile-sider-overlay">
-            <div className="mobile-sider-backdrop" onClick={handleMobileMenuToggle} />
             <div className="mobile-sider">
               {renderSiderContent()}
             </div>
+            <div className="mobile-sider-backdrop" onClick={handleMobileMenuToggle} />
           </div>
         )}
       </>

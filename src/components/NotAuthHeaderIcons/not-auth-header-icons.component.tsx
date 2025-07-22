@@ -19,6 +19,7 @@ export function NotAuthHeaderIcons() {
           <Avatar
             icon={<UserAddOutlined />}
             size={40}
+            onClick={handleLoginClick}
             className="guest-avatar"
           />
         </div>

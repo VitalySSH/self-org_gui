@@ -798,15 +798,20 @@
   bottom: 0;
   z-index: 1000;
   display: flex;
-  justify-content: flex-end; // Прижимаем сайдбар к правому краю
+  justify-content: flex-start;
 }
 
 // Backdrop
 .mobile-sider-backdrop {
-  flex: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
   animation: fadeIn 0.3s ease-out;
+  z-index: 1;
 }
 
 // Мобильный сайдбар
@@ -817,11 +822,12 @@
   background: linear-gradient(180deg,
           $sider-background-color 0%,
           color.mix($sider-background-color, $secondary-color, 85%) 100%);
-  box-shadow: -2px 0 8px rgba($card-shadow, 0.15);
-  transform: translateX(100%); // Изначально скрыт справа
-  animation: slideInFromRight 0.3s ease-out forwards;
+  box-shadow: 2px 0 8px rgba($card-shadow, 0.15);
+  transform: translateX(-100%);
+  animation: slideInFromLeft 0.3s ease-out forwards;
   overflow: hidden;
   position: relative;
+  z-index: 2;
 
   // Используем те же стили, что и для десктопа
   .sider-content {
@@ -939,9 +945,18 @@
   }
 }
 
-@keyframes slideInFromRight {
+//@keyframes slideInFromRight {
+//  from {
+//    transform: translateX(100%);
+//  }
+//  to {
+//    transform: translateX(0);
+//  }
+//}
+
+@keyframes slideInFromLeft {
   from {
-    transform: translateX(100%);
+    transform: translateX(-100%);
   }
   to {
     transform: translateX(0);
@@ -1074,7 +1089,7 @@
 
   .mobile-sider {
     background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 100%);
-    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
 
     .sider-bottom {
       &::before {
