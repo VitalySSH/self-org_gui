@@ -24,7 +24,7 @@ export function NotAuthHeaderIcons() {
           />
         </div>
 
-        <div className="user-info guest-info" onClick={handleLoginClick}>
+        <div className="guest-info" onClick={handleLoginClick}>
           <Text strong className="user-name">Гость</Text>
           <Text className="user-status">Не авторизован</Text>
         </div>

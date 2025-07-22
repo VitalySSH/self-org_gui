@@ -83,6 +83,7 @@
 }
 
 // Информация о пользователе
+.guest-info,
 .user-info {
   display: flex;
   flex-direction: column;
@@ -488,6 +489,10 @@
         width: 36px;
         height: 36px;
       }
+    }
+
+    .user-info {
+      display: none;
     }
 
     .auth-actions {

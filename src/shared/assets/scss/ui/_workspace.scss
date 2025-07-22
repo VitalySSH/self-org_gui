@@ -452,15 +452,21 @@
   }
 }
 
-// Адаптивность
+// УЛУЧШЕННАЯ МОБИЛЬНАЯ АДАПТАЦИЯ
+
+// Планшеты (768px-1024px)
 @media (max-width: $breakpoint-lg) {
+  .workspace-page {
+    padding: 0 16px;
+  }
+
   .workspace-tabs {
     .ant-tabs-nav {
       padding: 0 0 12px 0;
 
       .ant-tabs-nav-list {
         .ant-tabs-tab {
-          margin-right: 6px;
+          margin-right: 4px;
 
           .ant-tabs-tab-btn {
             padding: 10px 16px;
@@ -490,25 +496,51 @@
   }
 }
 
+// Средние мобильные устройства (481px-768px)
 @media (max-width: $breakpoint-md) {
+  .workspace-page {
+    padding: 0 12px;
+  }
+
   .workspace-tabs {
     .ant-tabs-nav {
+      padding: 0 0 12px 0;
+      // Добавляем прокрутку для табов на средних экранах
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch; // Smooth scrolling на iOS
+      scrollbar-width: none; // Firefox
+      -ms-overflow-style: none; // IE/Edge
+
+      // Скрываем скроллбар
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
       .ant-tabs-nav-list {
-        flex-wrap: wrap;
+        flex-wrap: nowrap; // Запрещаем перенос строк
+        white-space: nowrap;
+        min-width: min-content;
 
         .ant-tabs-tab {
-          margin-right: 4px;
-          margin-bottom: 4px;
+          margin-right: 0;
+          margin-bottom: 0;
+          flex-shrink: 0; // Запрещаем сжатие табов
 
           .ant-tabs-tab-btn {
-            padding: 8px 12px;
-            font-size: 13px;
+            padding: 10px 16px;
+            font-size: 14px;
+            white-space: nowrap;
+            min-width: max-content;
 
             .workspace-tab-label {
-              gap: 4px;
+              gap: 6px;
+              display: flex;
+              align-items: center;
 
               .anticon {
                 font-size: 14px;
+                flex-shrink: 0;
               }
             }
           }
@@ -518,7 +550,7 @@
 
     .ant-tabs-content-holder {
       .ant-tabs-content {
-        height: calc(100vh - #{$header-height} - 32px - 60px);
+        height: calc(100vh - #{$header-height} - 36px - 55px);
       }
     }
   }
@@ -531,24 +563,182 @@
       font-size: 16px;
     }
   }
+
+  .workspace-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding-bottom: 16px;
+
+    .workspace-list-actions {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
 }
 
+// Мобильные телефоны (до 480px)
 @media (max-width: $breakpoint-sm) {
+  .workspace-page {
+    padding: 0 8px;
+  }
+
+  .workspace-tabs {
+    .ant-tabs-nav {
+      padding: 0 0 8px 0;
+      margin-bottom: 8px;
+      // Горизонтальная прокрутка обязательна
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      // Добавляем индикатор прокрутки для пользователей
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 20px;
+        height: 100%;
+        background: linear-gradient(90deg, transparent 0%, rgba($background-color, 0.8) 100%);
+        pointer-events: none;
+        opacity: 0.8;
+      }
+
+      .ant-tabs-nav-list {
+        flex-wrap: nowrap;
+        white-space: nowrap;
+        min-width: max-content;
+        padding-right: 20px; // Место для индикатора прокрутки
+
+        .ant-tabs-tab {
+          margin-right: 0;
+          margin-bottom: 0;
+          flex-shrink: 0;
+
+          .ant-tabs-tab-btn {
+            padding: 8px 12px;
+            font-size: 13px;
+            white-space: nowrap;
+            min-width: max-content;
+            border-radius: calc($border-radius * 0.8);
+
+            .workspace-tab-label {
+              gap: 4px;
+              display: flex;
+              align-items: center;
+
+              .anticon {
+                font-size: 14px;
+                flex-shrink: 0;
+              }
+
+              // Скрываем текст на очень маленьких экранах, оставляя только иконки
+              @media (max-width: 360px) {
+                flex-direction: column;
+                gap: 2px;
+                font-size: 11px;
+                line-height: 1.2;
+              }
+            }
+          }
+
+          // Улучшенная активная вкладка для мобильных
+          &.ant-tabs-tab-active {
+            .ant-tabs-tab-btn {
+              box-shadow: 0 2px 6px rgba($primary-color, 0.4);
+              transform: scale(1.02);
+            }
+          }
+
+          // Улучшенный hover для мобильных
+          &:hover {
+            .ant-tabs-tab-btn {
+              transform: scale(1.01);
+            }
+          }
+        }
+      }
+    }
+
+    .ant-tabs-content-holder {
+      .ant-tabs-content {
+        height: calc(100dvh - #{$header-height} - 32px - 50px);
+      }
+    }
+  }
+
+  .workspace-card {
+    padding: 12px;
+    margin-bottom: 8px;
+    border-radius: calc($border-radius * 0.8);
+
+    .workspace-card-title {
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .workspace-card-content {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+  }
+
+  .workspace-list-header {
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+
+    .workspace-page-title {
+      font-size: 16px;
+    }
+
+    .workspace-list-actions {
+      gap: 8px;
+    }
+  }
+
+  .workspace-filter-button {
+    padding: 6px 10px;
+    font-size: 12px;
+
+    .workspace-filter-icon {
+      font-size: 14px;
+    }
+  }
+}
+
+// Очень маленькие экраны (до 360px)
+@media (max-width: 360px) {
+  .workspace-page {
+    padding: 0 6px;
+  }
+
   .workspace-tabs {
     .ant-tabs-nav {
       .ant-tabs-nav-list {
         .ant-tabs-tab {
+          margin-right: 0;
+
           .ant-tabs-tab-btn {
-            padding: 6px 10px;
+            padding: 6px 8px;
             font-size: 12px;
+            min-width: 44px; // Минимальная ширина для touch target
 
             .workspace-tab-label {
+              // На очень маленьких экранах - иконка сверху, текст снизу
               flex-direction: column;
-              gap: 2px;
+              gap: 1px;
               text-align: center;
+              font-size: 10px;
 
               .anticon {
-                font-size: 14px;
+                font-size: 16px; // Увеличиваем иконку
               }
             }
           }
@@ -558,11 +748,95 @@
   }
 
   .workspace-card {
-    padding: 12px;
+    padding: 8px;
+
+    .workspace-card-title {
+      font-size: 13px;
+    }
+
+    .workspace-card-content {
+      font-size: 13px;
+    }
   }
 }
 
-// Темная тема
+// Ландшафтная ориентация на мобильных
+@media (max-height: 500px) and (orientation: landscape) {
+  .workspace-tabs {
+    .ant-tabs-nav {
+      padding: 0 0 6px 0;
+
+      .ant-tabs-nav-list {
+        .ant-tabs-tab {
+          .ant-tabs-tab-btn {
+            padding: 6px 12px;
+            font-size: 12px;
+
+            .workspace-tab-label {
+              gap: 4px;
+
+              .anticon {
+                font-size: 13px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .ant-tabs-content-holder {
+      .ant-tabs-content {
+        height: calc(100vh - #{$header-height} - 24px - 40px);
+      }
+    }
+  }
+}
+
+// Поддержка безопасных зон на iOS
+@supports (padding: max(0px)) {
+  @media (max-width: $breakpoint-sm) {
+    .workspace-page {
+      padding-left: max(8px, env(safe-area-inset-left));
+      padding-right: max(8px, env(safe-area-inset-right));
+    }
+  }
+}
+
+// Улучшение производительности на слабых устройствах
+@media (max-width: $breakpoint-sm) and (-webkit-min-device-pixel-ratio: 1) {
+  .workspace-tabs {
+    .ant-tabs-nav {
+      .ant-tabs-nav-list {
+        .ant-tabs-tab {
+          .ant-tabs-tab-btn {
+            // Упрощаем анимации для производительности
+            transition: background-color 0.2s ease, color 0.2s ease;
+
+            &:hover {
+              transform: none;
+            }
+          }
+
+          &.ant-tabs-tab-active {
+            .ant-tabs-tab-btn {
+              transform: none;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .workspace-card {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+// Темная тема (без изменений)
 .dark-theme {
   .workspace-tabs {
     .ant-tabs-nav {
@@ -628,7 +902,7 @@
   }
 }
 
-// Reduced motion
+// Анимация для reduced motion
 @media (prefers-reduced-motion: reduce) {
   .workspace-tabs {
     .ant-tabs-nav {
@@ -638,7 +912,8 @@
             transition: none;
           }
 
-          &:hover {
+          &:hover,
+          &.ant-tabs-tab-active {
             .ant-tabs-tab-btn {
               transform: none;
             }
