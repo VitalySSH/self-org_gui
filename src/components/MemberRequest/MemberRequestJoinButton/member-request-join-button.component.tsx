@@ -31,7 +31,7 @@ export function MemberRequestJoinButton({
       setButtonLoading(true);
       const requestMemberAOService = new RequestMemberAoService();
       await requestMemberAOService.addNewMember(item.key);
-      navigate(`/my-communities/${item.communityId}`);
+      navigate(`/communities/${item.communityId}`);
     } catch (error) {
       errorInfo(`Ошибка вступления в сообщество: ${error}`);
     } finally {
