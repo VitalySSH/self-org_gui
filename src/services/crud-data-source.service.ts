@@ -223,7 +223,7 @@ export class CrudDataSourceService<
 
       return this.jsonApiToModel(r.data);
     } else {
-      const url = `/${this.model.entityName}`;
+      const url = `/${this.model.entityName}/`;
       const r = await this.http.post<CrudApiDataInterface>(url, data);
 
       return this.jsonApiToModel(r.data);
