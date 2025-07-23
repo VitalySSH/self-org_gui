@@ -81,6 +81,14 @@ export function MyCommunitySettings(props: any) {
   const [isWorkGroup, setIsWorkGroup] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [switchStates, setSwitchStates] = useState({
+    is_secret_ballot: false,
+    is_can_offer: false,
+    is_minority_not_participate: false,
+    is_default_add_member: false,
+    is_not_delegate: false,
+  });
+
   const isUpdatingRef = useRef(false);
 
   const communityId = props?.communityId;
@@ -159,12 +167,20 @@ export function MyCommunitySettings(props: any) {
           dispute_time_limit: settingsInst?.dispute_time_limit,
           is_workgroup: settingsInst?.is_workgroup,
           workgroup: settingsInst?.workgroup,
-          is_secret_ballot: settingsInst?.is_secret_ballot || false,
-          is_can_offer: settingsInst?.is_can_offer || false,
-          is_minority_not_participate: settingsInst?.is_minority_not_participate || false,
-          is_default_add_member: settingsInst?.is_default_add_member || false,
-          is_not_delegate: settingsInst?.is_not_delegate || false,
+          is_secret_ballot: Boolean(settingsInst?.is_secret_ballot),
+          is_can_offer: Boolean(settingsInst?.is_can_offer),
+          is_minority_not_participate: Boolean(settingsInst?.is_minority_not_participate),
+          is_default_add_member: Boolean(settingsInst?.is_default_add_member),
+          is_not_delegate: Boolean(settingsInst?.is_not_delegate),
         };
+
+        setSwitchStates({
+          is_secret_ballot: Boolean(settingsInst?.is_secret_ballot),
+          is_can_offer: Boolean(settingsInst?.is_can_offer),
+          is_minority_not_participate: Boolean(settingsInst?.is_minority_not_participate),
+          is_default_add_member: Boolean(settingsInst?.is_default_add_member),
+          is_not_delegate: Boolean(settingsInst?.is_not_delegate),
+        });
 
         form.setFieldsValue(formValues);
         setIsWorkGroup(Boolean(settingsInst?.is_workgroup));
@@ -317,6 +333,11 @@ export function MyCommunitySettings(props: any) {
         }
       }, 0);
     }
+  }, [form]);
+
+  const handleSwitchChange = useCallback((fieldName: string, checked: boolean) => {
+    setSwitchStates(prev => ({ ...prev, [fieldName]: checked }));
+    form.setFieldValue(fieldName, checked);
   }, [form]);
 
   useEffect(() => {
@@ -717,6 +738,8 @@ export function MyCommunitySettings(props: any) {
               <Switch
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
+                checked={switchStates.is_secret_ballot}
+                onChange={(checked) => handleSwitchChange('is_secret_ballot', checked)}
               />
             </div>
           </Form.Item>
@@ -731,6 +754,8 @@ export function MyCommunitySettings(props: any) {
               <Switch
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
+                checked={switchStates.is_can_offer}
+                onChange={(checked) => handleSwitchChange('is_can_offer', checked)}
               />
             </div>
           </Form.Item>
@@ -752,6 +777,8 @@ export function MyCommunitySettings(props: any) {
               <Switch
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
+                checked={switchStates.is_minority_not_participate}
+                onChange={(checked) => handleSwitchChange('is_minority_not_participate', checked)}
               />
             </div>
           </Form.Item>
@@ -766,6 +793,8 @@ export function MyCommunitySettings(props: any) {
               <Switch
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
+                checked={switchStates.is_default_add_member}
+                onChange={(checked) => handleSwitchChange('is_default_add_member', checked)}
               />
             </div>
           </Form.Item>
@@ -780,6 +809,8 @@ export function MyCommunitySettings(props: any) {
               <Switch
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
+                checked={switchStates.is_not_delegate}
+                onChange={(checked) => handleSwitchChange('is_not_delegate', checked)}
               />
             </div>
           </Form.Item>
