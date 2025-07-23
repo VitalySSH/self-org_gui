@@ -157,13 +157,20 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
         (settings) => settings.user?.id === authData.user?.id
       );
       const isBlocked = settings.length ? settings[0].is_blocked : false;
+      const isMyCommunity =
+        (community.user_settings || [])
+          .filter(
+            (ucs) =>
+              ucs.user?.id === authData.user?.id
+          ).length > 0;
+
       const communityItem = {
         id: community.id,
         title: community.main_settings?.name?.name || '',
         description: community.main_settings?.description?.value || '',
         members: (community.user_settings || []).length,
         isBlocked: isBlocked,
-        isMyCommunity: true,
+        isMyCommunity: isMyCommunity,
       };
       communities.push(communityItem);
     });
