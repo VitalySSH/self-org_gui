@@ -191,6 +191,7 @@
         &.requested-action {
           background: rgba($success-color, 0.05);
           border: 1px solid rgba($success-color, 0.2);
+          cursor: default;
 
           .action-icon {
             color: $success-color;

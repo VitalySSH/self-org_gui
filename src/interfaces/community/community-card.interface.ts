@@ -4,5 +4,6 @@ export interface CommunityCardInterface {
   description: string;
   members: number;
   isMyCommunity?: boolean;
+  isAddRequest?: boolean;
   isBlocked?: boolean;
 }

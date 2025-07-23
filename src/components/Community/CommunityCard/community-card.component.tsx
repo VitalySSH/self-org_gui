@@ -29,7 +29,7 @@ export function CommunityCard({ item, actions }: CommunityCardProps) {
   const [messageApi, contextHolder] = message.useMessage();
   const [modalOpen, setModalOpen] = useState(false);
   const [disabled, setDisabled] = useState(false);
-  const [isSentRequest, setIsSentRequest] = useState(false);
+  const [isSentRequest, setIsSentRequest] = useState(Boolean(item.isAddRequest));
 
   const successInfo = (content: string) => {
     messageApi.open({
