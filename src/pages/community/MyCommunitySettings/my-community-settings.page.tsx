@@ -800,7 +800,7 @@ export function MyCommunitySettings(props: any) {
       className="settings-section"
     >
       <Row gutter={[24, 16]}>
-        <Col xs={24} lg={12}>
+        <Col xs={24}>
           <Form.Item
             name="categories"
             label={
@@ -827,7 +827,7 @@ export function MyCommunitySettings(props: any) {
             />
           </Form.Item>
         </Col>
-        <Col xs={24} lg={12}>
+        <Col xs={24}>
           <Form.Item
             name="responsibilities"
             label={

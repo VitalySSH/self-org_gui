@@ -85,6 +85,25 @@
     .ant-tabs-ink-bar {
       display: none;
     }
+
+    // Стили для кнопок переключения табов (показываем только на мобильных)
+    .ant-tabs-nav-operations {
+      display: none;
+
+      // Принудительно показываем кнопки навигации на мобильных
+      @media (max-width: $breakpoint-md) {
+        display: flex !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        position: relative;
+
+        .ant-tabs-nav-more {
+          display: flex !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+      }
+    }
   }
 
   .ant-tabs-content-holder {
@@ -505,27 +524,63 @@
   .workspace-tabs {
     .ant-tabs-nav {
       padding: 0 0 12px 0;
-      // Добавляем прокрутку для табов на средних экранах
-      overflow-x: auto;
-      overflow-y: hidden;
-      -webkit-overflow-scrolling: touch; // Smooth scrolling на iOS
-      scrollbar-width: none; // Firefox
-      -ms-overflow-style: none; // IE/Edge
+      position: relative;
+      // Включаем кнопки навигации для средних экранов
 
-      // Скрываем скроллбар
-      &::-webkit-scrollbar {
-        display: none;
+      .ant-tabs-nav-operations {
+        display: flex !important;
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        background: linear-gradient(90deg, transparent 0%, rgba($background-color, 0.9) 20%, rgba($background-color, 0.95) 100%);
+        padding-left: 20px;
+        z-index: 10;
+
+        .ant-tabs-nav-more {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          border-radius: $border-radius;
+          background: rgba($background-color, 0.9);
+          border: 1px solid rgba($border-color, 0.6);
+          color: $text-color;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          backdrop-filter: blur(8px);
+
+          &:hover {
+            background: rgba($primary-color, 0.1);
+            border-color: rgba($primary-color, 0.3);
+            color: $primary-color;
+            transform: scale(1.05);
+          }
+
+          .anticon {
+            font-size: 14px;
+          }
+        }
       }
 
       .ant-tabs-nav-list {
-        flex-wrap: nowrap; // Запрещаем перенос строк
+        flex-wrap: nowrap;
         white-space: nowrap;
-        min-width: min-content;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
 
         .ant-tabs-tab {
           margin-right: 0;
           margin-bottom: 0;
-          flex-shrink: 0; // Запрещаем сжатие табов
+          flex-shrink: 0;
 
           .ant-tabs-tab-btn {
             padding: 10px 16px;
@@ -587,64 +642,59 @@
     .ant-tabs-nav {
       padding: 0 0 8px 0;
       margin-bottom: 8px;
-      // Горизонтальная прокрутка обязательна
-      overflow-x: auto;
-      overflow-y: hidden;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
 
-      &::-webkit-scrollbar {
-        display: none;
-      }
-
-      // Добавляем индикатор прокрутки для пользователей
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 20px;
-        height: 100%;
-        background: linear-gradient(90deg, transparent 0%, rgba($background-color, 0.8) 100%);
-        pointer-events: none;
-        opacity: 0.8;
+      // ПОЛНОСТЬЮ УБИРАЕМ кнопку "Еще" на мобильных
+      .ant-tabs-nav-operations {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        width: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
       }
 
       .ant-tabs-nav-list {
         flex-wrap: nowrap;
         white-space: nowrap;
-        min-width: max-content;
-        padding-right: 20px; // Место для индикатора прокрутки
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+
+        // Плавная прокрутка
+        scroll-behavior: smooth;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
 
         .ant-tabs-tab {
-          margin-right: 0;
+          margin-right: 1px; // Минимальное расстояние между табами
           margin-bottom: 0;
           flex-shrink: 0;
 
           .ant-tabs-tab-btn {
-            padding: 8px 12px;
+            padding: 8px 10px; // Компактные отступы
             font-size: 13px;
             white-space: nowrap;
             min-width: max-content;
             border-radius: calc($border-radius * 0.8);
 
             .workspace-tab-label {
-              gap: 4px;
+              gap: 0; // Убираем gap
               display: flex;
               align-items: center;
 
+              // ПОЛНОСТЬЮ УБИРАЕМ иконки на мобильных
               .anticon {
-                font-size: 14px;
-                flex-shrink: 0;
-              }
-
-              // Скрываем текст на очень маленьких экранах, оставляя только иконки
-              @media (max-width: 360px) {
-                flex-direction: column;
-                gap: 2px;
-                font-size: 11px;
-                line-height: 1.2;
+                display: none !important;
+                visibility: hidden !important;
+                width: 0 !important;
+                height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
               }
             }
           }
@@ -652,15 +702,15 @@
           // Улучшенная активная вкладка для мобильных
           &.ant-tabs-tab-active {
             .ant-tabs-tab-btn {
-              box-shadow: 0 2px 6px rgba($primary-color, 0.4);
-              transform: scale(1.02);
+              box-shadow: 0 2px 8px rgba($primary-color, 0.4);
+              transform: scale(1.05);
             }
           }
 
-          // Улучшенный hover для мобильных
-          &:hover {
+          // Touch-friendly hover
+          &:active {
             .ant-tabs-tab-btn {
-              transform: scale(1.01);
+              transform: scale(0.98);
             }
           }
         }
@@ -721,25 +771,21 @@
 
   .workspace-tabs {
     .ant-tabs-nav {
+      // Кнопка "Еще" уже скрыта выше для всех мобильных
+
       .ant-tabs-nav-list {
         .ant-tabs-tab {
-          margin-right: 0;
+          margin-right: 0; // Вообще без расстояния
 
           .ant-tabs-tab-btn {
-            padding: 6px 8px;
+            padding: 6px 8px; // Очень компактные отступы
             font-size: 12px;
             min-width: 44px; // Минимальная ширина для touch target
 
             .workspace-tab-label {
-              // На очень маленьких экранах - иконка сверху, текст снизу
-              flex-direction: column;
-              gap: 1px;
+              // Иконки уже скрыты выше
+              font-size: 12px;
               text-align: center;
-              font-size: 10px;
-
-              .anticon {
-                font-size: 16px; // Увеличиваем иконку
-              }
             }
           }
         }
@@ -766,6 +812,8 @@
     .ant-tabs-nav {
       padding: 0 0 6px 0;
 
+      // Кнопка "Еще" уже скрыта для мобильных
+
       .ant-tabs-nav-list {
         .ant-tabs-tab {
           .ant-tabs-tab-btn {
@@ -773,11 +821,8 @@
             font-size: 12px;
 
             .workspace-tab-label {
-              gap: 4px;
-
-              .anticon {
-                font-size: 13px;
-              }
+              // Иконки уже скрыты для мобильных
+              font-size: 12px;
             }
           }
         }
@@ -806,7 +851,12 @@
 @media (max-width: $breakpoint-sm) and (-webkit-min-device-pixel-ratio: 1) {
   .workspace-tabs {
     .ant-tabs-nav {
+      // Кнопка "Еще" уже полностью отключена для мобильных
+
       .ant-tabs-nav-list {
+        // Отключаем плавную прокрутку на слабых устройствах
+        scroll-behavior: auto;
+
         .ant-tabs-tab {
           .ant-tabs-tab-btn {
             // Упрощаем анимации для производительности
@@ -836,12 +886,27 @@
   }
 }
 
-// Темная тема (без изменений)
+// Темная тема
 .dark-theme {
   .workspace-tabs {
     .ant-tabs-nav {
       &::before {
         border-color: rgba(white, 0.1);
+      }
+
+      .ant-tabs-nav-operations {
+        .ant-tabs-nav-more {
+          background: rgba(white, 0.08);
+          border-color: rgba(white, 0.15);
+          color: rgba(white, 0.8);
+
+          &:hover,
+          &:active {
+            background: rgba($primary-color, 0.15);
+            border-color: rgba($primary-color, 0.4);
+            color: $primary-color;
+          }
+        }
       }
 
       .ant-tabs-nav-list {
@@ -906,7 +971,19 @@
 @media (prefers-reduced-motion: reduce) {
   .workspace-tabs {
     .ant-tabs-nav {
+      .ant-tabs-nav-operations {
+        .ant-tabs-nav-more {
+          transition: none;
+
+          &:hover .anticon {
+            transform: none;
+          }
+        }
+      }
+
       .ant-tabs-nav-list {
+        scroll-behavior: auto;
+
         .ant-tabs-tab {
           .ant-tabs-tab-btn {
             transition: none;

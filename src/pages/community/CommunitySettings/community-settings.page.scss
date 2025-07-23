@@ -10,6 +10,7 @@
   --community-settings-info-card-bg: rgba(24, 144, 255, 0.05);
   --community-settings-readonly-bg: #fafafa;
   --community-settings-readonly-border: #e8e8e8;
+  --community-settings-readonly-text: #{$text-color}; // Используем переменную
   --community-settings-tag-bg: rgba(204, 0, 0, 0.08);
   --community-settings-tag-border: rgba(204, 0, 0, 0.2);
   --community-settings-transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
@@ -140,7 +141,7 @@
 .readonly-input {
   background-color: var(--community-settings-readonly-bg) !important;
   border: 1px solid var(--community-settings-readonly-border) !important;
-  color: $text-color !important;
+  color: var(--community-settings-readonly-text) !important;
   cursor: default !important;
 
   &:hover {
@@ -157,7 +158,7 @@
 .readonly-textarea {
   background-color: var(--community-settings-readonly-bg) !important;
   border: 1px solid var(--community-settings-readonly-border) !important;
-  color: $text-color !important;
+  color: var(--community-settings-readonly-text) !important;
   cursor: default !important;
   resize: none !important;
 
@@ -196,7 +197,7 @@
   .readonly-number {
     background-color: var(--community-settings-readonly-bg) !important;
     border: 1px solid var(--community-settings-readonly-border) !important;
-    color: $text-color !important;
+    color: var(--community-settings-readonly-text) !important;
     cursor: default !important;
     width: 100% !important;
     max-width: 120px;
@@ -206,7 +207,7 @@
     &.ant-input-number {
       .ant-input-number-input {
         background-color: transparent !important;
-        color: $text-color !important;
+        color: var(--community-settings-readonly-text) !important;
         cursor: default !important;
         text-align: center;
       }
@@ -410,30 +411,26 @@
     }
   }
 
+  // ИСПРАВЛЕНИЕ: убираем жестко заданные белые цвета для мобильных
+  // Используем CSS переменные, которые будут корректными для всех тем
   .readonly-input,
   .readonly-textarea {
-    background-color: var(--community-settings-readonly-bg) !important;
-    border-color: var(--community-settings-readonly-border) !important;
-    color: #ffffff !important;
+    // Цвет уже задан через CSS переменную выше, не переопределяем
   }
 
   .readonly-select {
     .ant-select-selector {
-      background-color: var(--community-settings-readonly-bg) !important;
-      border-color: var(--community-settings-readonly-border) !important;
-      color: #ffffff !important;
+      // Цвет уже задан через CSS переменную выше, не переопределяем
     }
   }
 
   .number-display {
     .readonly-number {
-      background-color: var(--community-settings-readonly-bg) !important;
-      border-color: var(--community-settings-readonly-border) !important;
-      color: #ffffff !important;
+      // Цвет уже задан через CSS переменную выше, не переопределяем
 
       &.ant-input-number {
         .ant-input-number-input {
-          color: #ffffff !important;
+          // Цвет уже задан через CSS переменную выше, не переопределяем
         }
       }
     }
@@ -441,7 +438,9 @@
 
   .switch-display {
     .switch-label {
-      color: #cccccc;
+      // Используем стандартный цвет текста
+      color: $text-color;
+      opacity: 0.8;
     }
   }
 
@@ -561,14 +560,12 @@
   }
 }
 
-
 .number-display {
   .readonly-number {
     max-width: 100px;
     font-size: 13px;
   }
 }
-
 
 // Высококонтрастный режим
 @media (prefers-contrast: more) {
@@ -601,6 +598,7 @@
   :root {
     --community-settings-readonly-bg: #262626;
     --community-settings-readonly-border: #434343;
+    --community-settings-readonly-text: #ffffff; // Белый текст для темной темы
     --community-settings-info-card-bg: rgba(24, 144, 255, 0.1);
     --community-settings-tag-bg: rgba(204, 0, 0, 0.15);
     --community-settings-tag-border: rgba(204, 0, 0, 0.3);
@@ -636,9 +634,9 @@
     }
   }
 
-  .readonly-input,
-  .readonly-textarea,
-  .readonly-select .ant-select-selector {
-    border: 2px solid #ffffff !important;
+  .switch-display {
+    .switch-label {
+      color: #cccccc;
+    }
   }
 }

@@ -9,7 +9,7 @@ import {
   Space,
   Spin,
 } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
 import { SelectInterface } from 'src/interfaces';
 import React, {
   ChangeEvent,
@@ -40,8 +40,20 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const [newTextValue, setNewTextValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [showMinCharsHint, setShowMinCharsHint] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const MIN_SEARCH_CHARS = 3;
+
+  // Простое определение мобильного устройства
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const fetchOptions = useCallback(
     (
@@ -177,10 +189,13 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     setNewTextValue(text);
   };
 
-  const addOwnValue = (
-    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>
-  ) => {
+  // КРИТИЧНОЕ ИСПРАВЛЕНИЕ: Упрощенный обработчик добавления
+  const addOwnValue = useCallback((e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
+    e.stopPropagation();
+
+    if (!newTextValue.trim()) return;
+
     const currentValues: string[] = [];
     if (Array.isArray(value)) {
       const _currentValues = value
@@ -191,7 +206,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
       currentValues.push((value as any)[props.bindLabel]);
     }
 
-    if (props.fieldService && newTextValue.trim() && !currentValues.includes(newTextValue.trim())) {
+    if (props.fieldService && !currentValues.includes(newTextValue.trim())) {
       const newObj = props.fieldService.createRecord();
       (newObj as any)[props.bindLabel] = newTextValue.trim();
       const currentOptions = options || [];
@@ -201,6 +216,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
           .save(newObj)
           .then((resp) => {
             setOptions([...currentOptions, resp]);
+            setNewTextValue('');
           })
           .catch((error) => {
             console.error('Ошибка создания нового значения в селекторе:', error);
@@ -208,10 +224,17 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
           });
       } else {
         setOptions([...currentOptions, newObj]);
+        setNewTextValue('');
       }
     }
-    setNewTextValue('');
-  };
+  }, [newTextValue, value, props, options]);
+
+  // Обработчик закрытия dropdown для мобильных
+  const handleMobileClose = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDropdownOpen(false);
+  }, []);
 
   const onDropdownVisibleChange = (open: boolean) => {
     setIsDropdownOpen(open);
@@ -268,7 +291,24 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
 
     return (
       <div className="custom-select-dropdown-content">
-        <div className="custom-select-menu" style={{ maxHeight: 300, overflowY: 'auto' }}>
+        {/* Кнопка закрытия только для мобильных */}
+        {isMobile && (
+          <div className="mobile-close-button">
+            <span className="close-button-title">Выберите значение</span>
+            <div
+              className="close-button"
+              onClick={handleMobileClose}
+              onMouseDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+              role="button"
+              aria-label="Закрыть список"
+            >
+              <CloseOutlined />
+            </div>
+          </div>
+        )}
+
+        <div className="custom-select-menu" style={{ maxHeight: 300 }}>
           {props.enableSearch && showMinCharsHint ? (
             <Empty
               image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -294,8 +334,17 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
                     ref={textAreaRef}
                     onChange={onTextareaChange}
                     value={newTextValue}
-                    onKeyDown={(e) => e.stopPropagation()}
+                    onKeyDown={(e) => {
+                      e.stopPropagation();
+                      if (e.key === 'Enter' && !e.shiftKey && newTextValue.trim()) {
+                        addOwnValue(e);
+                      }
+                    }}
                     maxLength={props.ownValueMaxLength}
+                    // КРИТИЧНЫЕ НАСТРОЙКИ ДЛЯ МОБИЛЬНЫХ
+                    onMouseDown={(e) => e.stopPropagation()}
+                    onTouchStart={(e) => e.stopPropagation()}
+                    autoComplete="off"
                   />
                 ) : (
                   <Input
@@ -303,8 +352,17 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
                     ref={inputRef}
                     onChange={onInputChange}
                     value={newTextValue}
-                    onKeyDown={(e) => e.stopPropagation()}
+                    onKeyDown={(e) => {
+                      e.stopPropagation();
+                      if (e.key === 'Enter' && newTextValue.trim()) {
+                        addOwnValue(e);
+                      }
+                    }}
                     maxLength={props.ownValueMaxLength}
+                    // КРИТИЧНЫЕ НАСТРОЙКИ ДЛЯ МОБИЛЬНЫХ
+                    onMouseDown={(e) => e.stopPropagation()}
+                    onTouchStart={(e) => e.stopPropagation()}
+                    autoComplete="off"
                   />
                 )}
                 <Button
@@ -315,6 +373,9 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
                   size="small"
                   className="custom-add-button"
                   style={{ width: 'auto', minWidth: '80px' }}
+                  // КРИТИЧНЫЕ НАСТРОЙКИ ДЛЯ МОБИЛЬНЫХ
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
                 >
                   Добавить
                 </Button>
@@ -356,6 +417,13 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         allowClear={true}
         style={{ width: '100%' }}
         popupClassName="custom-select-dropdown"
+        // КРИТИЧНЫЕ НАСТРОЙКИ ДЛЯ МОБИЛЬНЫХ
+        getPopupContainer={isMobile ? () => document.body : undefined}
+        open={isDropdownOpen} // Контролируемое состояние для корректного закрытия
+        dropdownStyle={isMobile ? {
+          position: 'fixed',
+          zIndex: 9999,
+        } : undefined}
       />
     </ConfigProvider>
   );

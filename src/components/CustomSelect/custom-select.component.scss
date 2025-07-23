@@ -156,43 +156,180 @@
     }
   }
 
+  // ПРОСТАЯ И НАДЕЖНАЯ МОБИЛЬНАЯ АДАПТАЦИЯ
   @media (max-width: 768px) {
-    width: 100% !important;
-    min-width: 200px !important;
+    // Критичные исправления для мобильных
+    z-index: 9999 !important;
+    position: fixed !important;
 
+    // Упрощенные размеры
+    width: calc(100vw - 32px) !important;
+    max-width: none !important;
+    min-width: 200px !important;
+    max-height: 60vh !important;
+
+    // Центрирование по горизонтали
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+
+    // Отступы от краев экрана
+    margin: 16px;
+
+    // Упрощенная тень
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+
+    // Кнопка закрытия для мобильных
+    .mobile-close-button {
+      position: sticky;
+      top: 0;
+      right: 0;
+      z-index: 11;
+      background: rgba($background-color, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba($border-color, 0.3);
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .close-button-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: $text-color;
+        font-family: $font-family;
+      }
+
+      .close-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba($border-color, 0.1);
+        border: 1px solid rgba($border-color, 0.3);
+        color: $text-color;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        // Обеспечиваем кликабельность
+        pointer-events: auto !important;
+        touch-action: manipulation !important;
+
+        .anticon {
+          font-size: 14px;
+        }
+
+        &:hover,
+        &:active {
+          background: rgba($primary-color, 0.1);
+          border-color: rgba($primary-color, 0.3);
+          color: $primary-color;
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+    }
+
+    .custom-select-menu {
+      max-height: 30vh !important;
+    }
+
+    .ant-select-item {
+      // Увеличенные touch targets
+      padding: 16px 12px;
+      font-size: 16px; // Предотвращает zoom на iOS
+      margin: 2px 4px;
+      min-height: 48px; // Минимальный touch target
+
+      // Упрощенные hover эффекты
+      &:active {
+        background-color: rgba($primary-color, 0.12);
+      }
+    }
+
+    // КРИТИЧНОЕ ИСПРАВЛЕНИЕ: Секция добавления
     .add-own-value-container {
-      padding: 12px;
+      padding: 16px 12px;
+      // Предотвращаем потерю фокуса
+      position: sticky;
+      bottom: 0;
+      background-color: $secondary-color;
+      border-top: 2px solid $border-color;
+      z-index: 10;
 
       .ant-input,
       .ant-input-textarea {
-        font-size: 16px; // Предотвращает зум на iOS
-        padding: 10px 12px;
+        font-size: 16px !important; // Критично для iOS
+        padding: 12px;
+        margin-bottom: 12px;
+        border: 2px solid $border-color; // Увеличенная граница для видимости
+        min-height: 44px; // Touch target
+
+        // ВАЖНО: Предотвращаем потерю фокуса
+        &:focus {
+          border-color: $primary-color !important;
+          outline: none !important;
+          box-shadow: 0 0 0 2px rgba($primary-color, 0.2) !important;
+        }
       }
 
-      .ant-btn {
-        height: 32px;
-        font-size: 13px;
-        min-width: 90px;
-        padding: 6px 14px;
+      .ant-btn,
+      .custom-add-button {
+        height: 4px !important; // Увеличенный touch target
+        font-size: 14px;
+        min-width: 100px;
+        width: 100%; // Полная ширина для удобства
+        padding: 12px;
+
+        // ВАЖНО: Обеспечиваем кликабельность
+        pointer-events: auto !important;
+        touch-action: manipulation !important;
+
+        .anticon {
+          font-size: 14px;
+        }
+
+        // Простая анимация нажатия
+        &:active {
+          transform: scale(0.95);
+        }
       }
     }
 
-    .ant-select-item {
-      padding: 14px 16px;
-      font-size: 16px; // Предотвращает зум на iOS
+    // Упрощенная кнопка "Загрузить ещё"
+    .ant-btn-link {
+      padding: 16px 0;
+      font-size: 16px;
+      min-height: 48px;
+
+      // Обеспечиваем кликабельность
+      pointer-events: auto !important;
+      touch-action: manipulation !important;
+    }
+
+    .ant-empty {
+      padding: 24px 16px;
+    }
+
+    .custom-select-loading {
+      padding: 32px 0;
     }
   }
 
+  // Очень маленькие экраны - дополнительные упрощения
   @media (max-width: 480px) {
-    min-width: 180px !important;
+    width: calc(100vw - 16px) !important;
+    margin: 8px;
 
-    .add-own-value-container {
-      padding: 10px 12px;
+    .custom-select-menu {
+      max-height: 25vh !important;
     }
 
-    .ant-select-item {
-      padding: 16px 12px;
-      margin: 2px 4px;
+    .add-own-value-container {
+      padding: 12px 8px;
     }
   }
 }
@@ -218,6 +355,7 @@
   }
 }
 
+// Упрощенная темная тема
 .dark-theme {
   :root {
     --custom-select-background: #1f1f1f;
@@ -249,6 +387,31 @@
 
         &::placeholder {
           color: #888888;
+        }
+      }
+    }
+
+    // Темная тема для кнопки закрытия на мобильных
+    @media (max-width: 768px) {
+      .mobile-close-button {
+        background: rgba(#1f1f1f, 0.95);
+        border-color: rgba(white, 0.1);
+
+        .close-button-title {
+          color: rgba(white, 0.9);
+        }
+
+        .close-button {
+          background: rgba(white, 0.1);
+          border-color: rgba(white, 0.2);
+          color: rgba(white, 0.8);
+
+          &:hover,
+          &:active {
+            background: rgba($primary-color, 0.2);
+            border-color: rgba($primary-color, 0.4);
+            color: $primary-color;
+          }
         }
       }
     }

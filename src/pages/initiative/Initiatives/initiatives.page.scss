@@ -662,14 +662,42 @@
 
         .header-actions {
           .ant-space {
-            .action-button,
-            .filter-button {
-              span:not(.ant-badge):not(.anticon) {
-                display: none;
-              }
+            width: 100%;
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+            justify-items: stretch;
 
-              .anticon {
-                margin: 0;
+            .ant-space-item {
+              margin-right: 0 !important;
+              margin-bottom: 0 !important;
+
+              .action-button,
+              .filter-button {
+                width: 100%;
+                justify-content: center;
+                min-height: 44px;
+                font-size: 14px;
+
+                .ant-badge {
+                  .ant-badge-count {
+                    font-size: 10px;
+                    min-width: 16px;
+                    height: 16px;
+                    line-height: 14px;
+                  }
+                }
+
+                .anticon {
+                  margin-right: 6px;
+                }
+
+                @media (max-width: 320px) {
+                  font-size: 13px;
+                  min-height: 40px;
+
+                  grid-template-columns: 1fr;
+                }
               }
             }
           }

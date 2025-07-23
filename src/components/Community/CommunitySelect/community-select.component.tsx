@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useState, useMemo } from 'react';
-import Select, { components, MultiValue, SingleValue } from 'react-select';
-import { Modal, Form, Button } from 'antd';
+import { useCallback, useEffect, useState, useMemo, useRef } from 'react';
+import { Select, Modal, Form, Button, ConfigProvider, Empty } from 'antd';
 import {
   CategoryModel,
   CommunityDescriptionModel,
@@ -11,13 +10,7 @@ import { CrudDataSourceService } from 'src/services';
 import { CommunitySelectProps } from 'src/interfaces';
 import { NewCommunityForm } from 'src/components';
 import './community-select.component.scss';
-import { PlusOutlined } from '@ant-design/icons';
-
-interface CommunityOption {
-  value: string;
-  label: string;
-  data: UserCommunitySettingsModel;
-}
+import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
 
 export function CommunitySelect(props: CommunitySelectProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -25,8 +18,25 @@ export function CommunitySelect(props: CommunitySelectProps) {
   const [options, setOptions] = useState<UserCommunitySettingsModel[] | undefined>(undefined);
   const [disabled, setDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // ИСПРАВЛЕНИЕ: добавляем ref для Select компонента
+  const selectRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const [form] = Form.useForm();
+
+  // Простое определение мобильного устройства
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Безопасное получение имени сообщества
   const communityName = useCallback((settings: UserCommunitySettingsModel): string => {
@@ -60,35 +70,57 @@ export function CommunitySelect(props: CommunitySelectProps) {
     }
   }, []);
 
-  // Мемоизированные опции для react-select
-  const selectOptions = useMemo((): CommunityOption[] => {
+  // Мемоизированные опции для Ant Design Select
+  const selectOptions = useMemo(() => {
     if (!options) return [];
 
-    return options.map((setting) => ({
-      value: setting.id || Math.random().toString(36),
-      label: `${communityName(setting)} - ${communityDescription(setting)}`,
-      data: setting,
-    }));
+    return options.map((setting, index) => {
+      const name = communityName(setting);
+      const description = communityDescription(setting);
+      // ИСПРАВЛЕНИЕ: используем индекс как уникальный идентификатор
+      const optionValue = setting.id || `index_${index}`;
+
+      return {
+        value: optionValue,
+        label: name, // Простой текст для основного отображения
+        title: `${name} - ${description}`, // Tooltip с полным описанием
+        data: setting,
+        index: index, // Сохраняем индекс для поиска
+        // Кастомный рендер для dropdown
+        customLabel: (
+          <div className="community-option">
+            <div className="community-option-name">{name}</div>
+            <div className="community-option-description">{description}</div>
+          </div>
+        ),
+      };
+    });
   }, [options, communityName, communityDescription]);
 
   // Мемоизированные выбранные значения
-  const selectedValues = useMemo((): CommunityOption[] => {
-    if (!values) return [];
+  const selectedValues = useMemo(() => {
+    if (!values || !selectOptions) return [];
 
-    return values.map((setting) => ({
-      value: setting.id || Math.random().toString(36),
-      label: `${communityName(setting)} - ${communityDescription(setting)}`,
-      data: setting,
-    }));
-  }, [values, communityName, communityDescription]);
+    // ИСПРАВЛЕНИЕ: ищем по объектам, а не по id
+    return values
+      .map(value => {
+        const matchingOption = selectOptions.find(option =>
+          // Сравниваем объекты или их содержимое
+          option.data === value ||
+          (option.data.names?.[0]?.name === value.names?.[0]?.name &&
+            option.data.descriptions?.[0]?.value === value.descriptions?.[0]?.value)
+        );
+        return matchingOption?.value;
+      })
+      .filter(Boolean); // Убираем undefined значения
+  }, [values, selectOptions]);
 
-  // Форматирование метки опции
-  const formatOptionLabel = useCallback((option: CommunityOption) => (
-    <div className="community-option">
-      <div className="community-option-name">{communityName(option.data)}</div>
-      <div className="community-option-description">{communityDescription(option.data)}</div>
-    </div>
-  ), [communityName, communityDescription]);
+  // Обработчик закрытия dropdown для мобильных
+  const handleMobileClose = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDropdownOpen(false);
+  }, []);
 
   // Обработчик добавления настроек сообщества
   const handleAddCommunitySettings = useCallback(async () => {
@@ -141,19 +173,30 @@ export function CommunitySelect(props: CommunitySelectProps) {
       newSettings.is_not_delegate = Boolean(formData.is_not_delegate);
       newSettings.is_default_add_member = Boolean(formData.is_default_add_member);
 
+      // ИСПРАВЛЕНИЕ: используем индекс как уникальный идентификатор
+      const updatedOptions = options ? [...options, newSettings] : [newSettings];
+      setOptions(updatedOptions);
+
       const newValues = values ? [...values, newSettings] : [newSettings];
       setValues(newValues);
       props.onChange(newValues);
-      setIsModalVisible(false);
 
+      setIsModalVisible(false);
       form.resetFields();
     } catch (error) {
       console.error('Error adding community settings:', error);
     }
-  }, [form, values, props]);
+  }, [form, values, props, options]);
 
-  // Обработчик открытия модального окна
-  const handleClick = useCallback(() => {
+  // Простой обработчик открытия модального окна
+  const handleOpenModal = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Закрываем dropdown
+    setIsDropdownOpen(false);
+
+    // Открываем модальное окно
     setIsModalVisible(true);
   }, []);
 
@@ -229,34 +272,63 @@ export function CommunitySelect(props: CommunitySelectProps) {
   }, [getOptions, getCurrentValues]);
 
   // Обработчик изменения выбранных значений
-  const handleSelectChange = useCallback((
-    selected: MultiValue<CommunityOption> | SingleValue<CommunityOption>
-  ) => {
-    const selectedArray = Array.isArray(selected) ? selected : (selected ? [selected] : []);
-    const _values = selectedArray.map(option => option.data);
+  const handleSelectChange = useCallback((selectedIds: string[]) => {
+    if (!selectOptions) return;
 
-    props.onChange(_values);
-    setValues(_values);
-  }, [props]);
+    // ИСПРАВЛЕНИЕ: находим объекты по выбранным id
+    const selectedSettings = selectedIds
+      .map(id => selectOptions.find(option => option.value === id)?.data)
+      .filter(Boolean); // Убираем undefined значения
 
-  // Кастомный компонент меню с кнопкой добавления
-  const CustomMenuList = useCallback((menuProps: any) => {
+    // @ts-ignore
+    setValues(selectedSettings);
+    props.onChange(selectedSettings);
+  }, [selectOptions, props]);
+
+  // Обработчик открытия/закрытия dropdown
+  const handleDropdownVisibleChange = useCallback((open: boolean) => {
+    setIsDropdownOpen(open);
+    if (open && !options) {
+      getOptions();
+    }
+  }, [options, getOptions]);
+
+  // Кастомный рендер dropdown содержимого (аналогично CustomSelect)
+  const renderDropdownContent = useCallback((menu: React.ReactNode) => {
     return (
-      <div className="community-select-menu">
-        <div className="community-select-options">
-          <components.MenuList {...menuProps}>
-            {menuProps.children}
-          </components.MenuList>
+      <div className="community-select-dropdown-content">
+        {/* Кнопка закрытия только для мобильных */}
+        {isMobile && (
+          <div className="mobile-close-button">
+            <span className="close-button-title">Выберите сообщества</span>
+            <div
+              className="close-button"
+              onClick={handleMobileClose}
+              onMouseDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+              role="button"
+              aria-label="Закрыть список"
+            >
+              <CloseOutlined />
+            </div>
+          </div>
+        )}
+
+        <div className='community-select-menu'>
+          {menu}
         </div>
+
         {!props.readonly && (
-          <div className="community-select-add-button">
+          <div className="add-community-container">
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={handleClick}
+              onClick={handleOpenModal}
               size="small"
               className="custom-add-button"
-              style={{ width: 'auto', minWidth: '80px' }}
+              style={{ width: 'auto', minWidth: '120px' }}
+              onMouseDown={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
             >
               Добавить сообщество
             </Button>
@@ -264,119 +336,50 @@ export function CommunitySelect(props: CommunitySelectProps) {
         )}
       </div>
     );
-  }, [props.readonly, handleClick]);
+  }, [isMobile, props.readonly, handleMobileClose, handleOpenModal]);
 
-  // Кастомные стили для react-select
-  const customStyles = useMemo(() => ({
-    control: (provided: any, state: any) => ({
-      ...provided,
-      borderRadius: '6px',
-      border: `1px solid ${state.isFocused ? '#cc0000' : '#e0e0e0'}`,
-      boxShadow: state.isFocused ? '0 0 0 2px rgba(204, 0, 0, 0.1)' : 'none',
-      '&:hover': {
-        borderColor: state.isFocused ? '#cc0000' : '#b0b0b0',
-        boxShadow: state.isFocused ? '0 0 0 2px rgba(204, 0, 0, 0.1)' : '0 2px 8px rgba(0, 0, 0, 0.06)',
-      },
-      minHeight: '40px',
-      fontSize: '14px',
-      transition: 'all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1)',
-    }),
-    placeholder: (provided: any) => ({
-      ...provided,
-      color: '#bfbfbf',
-      fontSize: '14px',
-    }),
-    singleValue: (provided: any) => ({
-      ...provided,
-      color: '#333333',
-      fontSize: '14px',
-      fontWeight: '400',
-    }),
-    multiValue: (provided: any) => ({
-      ...provided,
-      backgroundColor: 'rgba(204, 0, 0, 0.08)',
-      border: '1px solid rgba(204, 0, 0, 0.2)',
-      borderRadius: '4px',
-    }),
-    multiValueLabel: (provided: any) => ({
-      ...provided,
-      color: '#cc0000',
-      fontSize: '12px',
-      fontWeight: '400',
-      padding: '2px 6px',
-    }),
-    multiValueRemove: (provided: any) => ({
-      ...provided,
-      color: 'rgba(204, 0, 0, 0.5)',
-      '&:hover': {
-        backgroundColor: 'rgba(204, 0, 0, 0.2)',
-        color: '#cc0000',
-      },
-      borderRadius: '0 3px 3px 0',
-    }),
-    menu: (provided: any) => ({
-      ...provided,
-      borderRadius: '6px',
-      boxShadow: '0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)',
-      border: '1px solid #e0e0e0',
-      overflow: 'hidden',
-    }),
-    option: (provided: any, state: any) => ({
-      ...provided,
-      backgroundColor: state.isSelected
-        ? 'rgba(204, 0, 0, 0.08)'
-        : state.isFocused
-          ? 'rgba(204, 0, 0, 0.04)'
-          : 'white',
-      color: state.isSelected ? '#cc0000' : '#333333',
-      fontWeight: state.isSelected ? '500' : '400',
-      padding: '12px 16px',
-      cursor: 'pointer',
-      fontSize: '14px',
-      '&:active': {
-        backgroundColor: 'rgba(204, 0, 0, 0.06)',
-      },
-    }),
-    noOptionsMessage: (provided: any) => ({
-      ...provided,
-      color: '#999999',
-      fontSize: '14px',
-      padding: '16px',
-    }),
-    loadingMessage: (provided: any) => ({
-      ...provided,
-      color: '#999999',
-      fontSize: '14px',
-      padding: '16px',
-    }),
-  }), []);
+  // Кастомный рендер пустого состояния
+  const emptyRender = useCallback(() => {
+    if (isLoading && !options) return null;
+    return (
+      <Empty
+        image={Empty.PRESENTED_IMAGE_SIMPLE}
+        description="Сообщества не найдены"
+        style={{ padding: '20px 0' }}
+      />
+    );
+  }, [isLoading, options]);
 
   return (
-    <div className="community-select-wrapper">
-      <Select<CommunityOption, true>
-        isMulti
-        isSearchable
-        isLoading={isLoading}
-        menuPlacement="auto"
-        menuPosition="fixed"
-        options={selectOptions}
-        value={selectedValues}
-        onChange={handleSelectChange}
-        getOptionLabel={(option) => option.label}
-        getOptionValue={(option) => option.value}
-        formatOptionLabel={formatOptionLabel}
-        placeholder="Выберите или добавьте свои сообщества"
-        noOptionsMessage={() => 'Сообщества не найдены'}
-        loadingMessage={() => 'Загрузка...'}
-        components={{ MenuList: CustomMenuList }}
-        styles={customStyles}
-        isDisabled={props.readonly}
-        closeMenuOnSelect={false}
-        hideSelectedOptions={false}
-        isClearable={false}
-        isRtl={false}
-        classNamePrefix="community-select"
-      />
+    <div className="community-select-wrapper" ref={containerRef}>
+      <ConfigProvider renderEmpty={emptyRender}>
+        <Select
+          ref={selectRef}
+          mode="multiple"
+          showSearch
+          filterOption={false}
+          /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+          // @ts-expect-error
+          value={selectedValues}
+          onChange={handleSelectChange}
+          onDropdownVisibleChange={handleDropdownVisibleChange}
+          dropdownRender={renderDropdownContent}
+          options={selectOptions}
+          placeholder="Выберите или добавьте свои сообщества"
+          loading={isLoading}
+          disabled={props.readonly}
+          allowClear
+          style={{ width: '100%' }}
+          popupClassName="community-select-dropdown"
+          open={isDropdownOpen}
+          optionRender={(option) => option.data?.customLabel || option.label}
+          getPopupContainer={isMobile ? () => document.body : () => containerRef.current || document.body}
+          dropdownStyle={isMobile ? {
+            position: 'fixed',
+            zIndex: 9999,
+          } : undefined}
+        />
+      </ConfigProvider>
 
       <Modal
         title="Новое внутреннее сообщество"
@@ -409,10 +412,11 @@ export function CommunitySelect(props: CommunitySelectProps) {
             padding: '16px 24px',
           },
         }}
-        width="60%"
+        width={isMobile ? "100%" : "60%"}
         className="custom-modal"
         centered
         destroyOnClose
+        getContainer={() => containerRef.current || document.body}
       >
         <div className="new-community-form in-modal">
           <NewCommunityForm

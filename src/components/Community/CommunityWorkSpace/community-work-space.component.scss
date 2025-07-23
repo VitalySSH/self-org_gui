@@ -163,7 +163,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 400px;
+  max-width: 450px;
 }
 
 .community-dropdown-trigger {
@@ -319,7 +319,7 @@
 // Адаптивность
 @media (max-width: $breakpoint-xl) {
   .community-name {
-    max-width: 300px;
+    max-width: 400px;
     font-size: 22px;
   }
 }
@@ -334,7 +334,7 @@
   }
 
   .community-name {
-    max-width: 250px;
+    max-width: 350px;
     font-size: 20px;
   }
 
@@ -365,7 +365,7 @@
   }
 
   .community-name {
-    max-width: 200px;
+    max-width: 300px;
     font-size: 18px;
   }
 
@@ -395,7 +395,7 @@
   }
 
   .community-name {
-    max-width: 150px;
+    max-width: 250px;
     font-size: 16px;
   }
 

@@ -161,7 +161,6 @@
   }
 }
 
-// Адаптивные стили для мобильных устройств
 @media (max-width: 480px) {
   .ant-btn {
     &.join-button,
@@ -170,16 +169,68 @@
     &.vote-button,
     &.votes-button,
     &.subcommunities-button {
-      span:not(.anticon) {
-        display: none;
+      padding: 6px 12px;
+      font-size: 14px;
+      min-height: 40px;
+
+      // Улучшаем расположение иконки и текста
+      .anticon {
+        margin-right: 6px !important;
+        font-size: 14px;
       }
 
-      .anticon {
-        margin: 0 !important;
+      &:not(:has(span:not(.anticon))) {
+        .anticon {
+          margin: 0 !important;
+        }
       }
 
       &.subcommunities-button {
-        min-width: 36px;
+        min-width: auto;
+        padding: 8px 12px;
+      }
+
+      @media (max-width: 360px) {
+        padding: 6px 10px;
+        font-size: 13px;
+        min-height: 38px;
+
+        .anticon {
+          font-size: 13px;
+          margin-right: 4px !important;
+        }
+      }
+
+      @media (max-width: 768px) and (-webkit-min-device-pixel-ratio: 1) {
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+
+        &:hover:not(:disabled) {
+          transform: none;
+
+          .anticon {
+            transform: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Планшеты (дополнительная адаптация)
+@media (min-width: 481px) and (max-width: 768px) {
+  .ant-btn {
+    &.join-button,
+    &.remove-button,
+    &.dispute-button,
+    &.vote-button,
+    &.votes-button,
+    &.subcommunities-button {
+      font-size: 15px;
+      padding: 8px 16px;
+
+      .anticon {
+        font-size: 15px;
+        margin-right: 8px !important;
       }
     }
   }
@@ -280,6 +331,28 @@
 
       &:focus {
         box-shadow: 0 0 0 3px rgba($primary-color, 0.3);
+      }
+    }
+  }
+}
+
+// Поддержка reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .ant-btn {
+    &.join-button,
+    &.remove-button,
+    &.dispute-button,
+    &.vote-button,
+    &.votes-button,
+    &.subcommunities-button {
+      transition: none;
+
+      &:hover:not(:disabled) {
+        transform: none;
+
+        .anticon {
+          transform: none;
+        }
       }
     }
   }

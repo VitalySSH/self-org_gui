@@ -312,7 +312,7 @@ export function CommunitySettings(props: any) {
       className="settings-section"
     >
       <Row gutter={[24, 16]}>
-        <Col xs={24} lg={12}>
+        <Col xs={24}>
           <Form.Item name="categories" label={CategoriesLabel}>
             <div className="tags-display">
               <div className="tags-container">
@@ -330,7 +330,7 @@ export function CommunitySettings(props: any) {
             </div>
           </Form.Item>
         </Col>
-        <Col xs={24} lg={12}>
+        <Col xs={24}>
           <Form.Item name="responsibilities" label={ResponsibilitiesLabel}>
             <div className="tags-display">
               <div className="tags-container">

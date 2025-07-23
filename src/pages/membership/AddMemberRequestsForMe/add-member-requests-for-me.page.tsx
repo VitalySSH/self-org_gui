@@ -181,7 +181,7 @@ export function AddMemberRequestsForMe({ communityId }: AddMemberRequestsForMePr
               Мои рассматриваемые заявки
             </Title>
             <Text type="secondary" className="page-subtitle">
-              Заявки участников на вступление, для моего рассмотрения
+              Заявки участников на вступление в сообщество, для моего рассмотрения
             </Text>
           </div>
         </div>

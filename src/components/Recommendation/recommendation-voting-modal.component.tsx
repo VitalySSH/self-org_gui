@@ -1,31 +1,73 @@
 import { Modal } from 'antd';
+import { useEffect, useState } from 'react';
 import { RecommendationModalProps } from 'src/interfaces';
 import './recommendation-voting-modal.component.scss';
 
 export const RecommendationVotingModal = ({
-  open,
-  onCancel,
-}: RecommendationModalProps) => {
+                                            open,
+                                            onCancel,
+                                          }: RecommendationModalProps) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Определение мобильного устройства
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <Modal
-      title="Рекомендации"
+      title="Рекомендации по настройке голосований"
       open={open}
       onCancel={onCancel}
       footer={null}
       styles={{
         body: {
-          maxHeight: 'calc(100vh - 200px)',
+          maxHeight: isMobile ? 'calc(100vh - 120px)' : 'calc(100vh - 200px)',
           overflowY: 'auto',
-          padding: '16px 24px',
+          padding: isMobile ? '12px 16px' : '16px 24px',
         },
         content: {
-          maxHeight: 'calc(100vh - 40px)',
+          maxHeight: isMobile ? '100vh' : 'calc(100vh - 40px)',
           display: 'flex',
           flexDirection: 'column',
         },
       }}
-      width="60%"
+      width={isMobile ? "100%" : "60%"}
       className="recommendation-modal"
+      centered={!isMobile}
+      destroyOnClose
+      maskClosable
+      keyboard
+      // Мобильные настройки
+      {...(isMobile && {
+        style: {
+          top: 0,
+          paddingBottom: 0,
+          margin: 0,
+        },
+        styles: {
+          ...{
+            body: {
+              maxHeight: 'calc(100vh - 120px)',
+              overflowY: 'auto',
+              padding: '12px 16px',
+            },
+            content: {
+              height: '100vh',
+              maxHeight: '100vh',
+              display: 'flex',
+              flexDirection: 'column',
+              borderRadius: 0,
+            },
+          },
+        },
+      })}
     >
       <div className="voting-settings-guide">
         <h2 className="guide-title">Философия настройки голосований</h2>
@@ -119,10 +161,10 @@ export const RecommendationVotingModal = ({
             кворум. Главное — помнить, что эти параметры не просто технические
             настройки, а инструменты формирования культуры вашего сообщества.
           </p>
-          <p className="warning-note">
-            ⚠️ Любые изменения мгновенно влияют на все текущие голосования.
+          <div className="warning-note">
+            <strong>⚠️ Важно:</strong> Любые изменения мгновенно влияют на все текущие голосования.
             Особенно осторожно меняйте параметры в процессе важных обсуждений!
-          </p>
+          </div>
         </div>
       </div>
     </Modal>

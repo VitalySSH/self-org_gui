@@ -17,7 +17,7 @@
 .my-community-settings-container {
   max-width: var(--my-settings-max-width);
   margin: 0 auto;
-  padding-bottom: 200px;
+  padding-bottom: 50px;
 
   .settings-header {
     margin-bottom: 32px;
@@ -262,7 +262,6 @@
 @media (max-width: 1200px) {
   .my-community-settings-container {
     max-width: 100%;
-    padding: 16px;
   }
 }
 
@@ -272,7 +271,7 @@
   }
 
   .my-community-settings-container {
-    padding: 12px;
+    padding-bottom: 90px;
 
     .settings-header {
       padding: 20px 16px;
@@ -303,6 +302,10 @@
         .recommendations-button {
           font-size: 13px;
           padding: 4px 8px;
+        }
+
+        .anticon {
+          display: none;
         }
       }
     }
@@ -344,7 +347,7 @@
   }
 
   .my-community-settings-container {
-    padding: 8px;
+    padding-bottom: 90px;
 
     .settings-header {
       padding: 16px 12px;
