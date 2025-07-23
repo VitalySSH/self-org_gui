@@ -386,16 +386,9 @@
           .ant-space {
             .ant-space-item {
               .ant-btn {
-                span:not(.anticon) {
-                  display: none;
-                }
-
-                .anticon {
-                  margin: 0;
-                }
 
                 &.subcommunities-button {
-                  min-width: 36px;
+                  min-width: 84px;
                 }
               }
             }
@@ -437,10 +430,6 @@
         .expand-button {
           height: 24px;
           font-size: 10px;
-
-          span:not(.anticon) {
-            display: none;
-          }
 
           .anticon {
             margin: 0;

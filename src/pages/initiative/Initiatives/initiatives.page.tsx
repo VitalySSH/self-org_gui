@@ -270,7 +270,7 @@ export function Initiatives(props: InitiativesProps) {
                   height: '36px',
                 }}
               >
-                Новая инициатива
+                Добавить
               </Button>
 
               <Button

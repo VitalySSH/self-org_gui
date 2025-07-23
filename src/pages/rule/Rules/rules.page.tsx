@@ -228,7 +228,7 @@ export function Rules(props: RulesProps) {
                   height: '36px',
                 }}
               >
-                Новое правило
+                Добавить
               </Button>
 
               <Button

@@ -27,7 +27,7 @@
 
     .ant-tabs-nav-list {
       .ant-tabs-tab {
-        margin-right: 8px;
+        margin-right: 0;
         padding: 0;
         border: none;
         background: transparent;
@@ -485,7 +485,6 @@
 
       .ant-tabs-nav-list {
         .ant-tabs-tab {
-          margin-right: 4px;
 
           .ant-tabs-tab-btn {
             padding: 10px 16px;
@@ -578,7 +577,7 @@
         }
 
         .ant-tabs-tab {
-          margin-right: 0;
+          margin-right: -12px;
           margin-bottom: 0;
           flex-shrink: 0;
 
@@ -643,7 +642,6 @@
       padding: 0 0 8px 0;
       margin-bottom: 8px;
 
-      // ПОЛНОСТЬЮ УБИРАЕМ кнопку "Еще" на мобильных
       .ant-tabs-nav-operations {
         display: none !important;
         visibility: hidden !important;
@@ -671,7 +669,7 @@
         }
 
         .ant-tabs-tab {
-          margin-right: 1px; // Минимальное расстояние между табами
+          margin-right: -16px;
           margin-bottom: 0;
           flex-shrink: 0;
 
@@ -771,19 +769,17 @@
 
   .workspace-tabs {
     .ant-tabs-nav {
-      // Кнопка "Еще" уже скрыта выше для всех мобильных
 
       .ant-tabs-nav-list {
         .ant-tabs-tab {
-          margin-right: 0; // Вообще без расстояния
+          margin-right: -20px;
 
           .ant-tabs-tab-btn {
-            padding: 6px 8px; // Очень компактные отступы
+            padding: 6px 8px;
             font-size: 12px;
-            min-width: 44px; // Минимальная ширина для touch target
+            min-width: 44px;
 
             .workspace-tab-label {
-              // Иконки уже скрыты выше
               font-size: 12px;
               text-align: center;
             }
@@ -812,8 +808,6 @@
     .ant-tabs-nav {
       padding: 0 0 6px 0;
 
-      // Кнопка "Еще" уже скрыта для мобильных
-
       .ant-tabs-nav-list {
         .ant-tabs-tab {
           .ant-tabs-tab-btn {
@@ -821,7 +815,6 @@
             font-size: 12px;
 
             .workspace-tab-label {
-              // Иконки уже скрыты для мобильных
               font-size: 12px;
             }
           }
@@ -851,15 +844,12 @@
 @media (max-width: $breakpoint-sm) and (-webkit-min-device-pixel-ratio: 1) {
   .workspace-tabs {
     .ant-tabs-nav {
-      // Кнопка "Еще" уже полностью отключена для мобильных
 
       .ant-tabs-nav-list {
-        // Отключаем плавную прокрутку на слабых устройствах
         scroll-behavior: auto;
 
         .ant-tabs-tab {
           .ant-tabs-tab-btn {
-            // Упрощаем анимации для производительности
             transition: background-color 0.2s ease, color 0.2s ease;
 
             &:hover {

@@ -199,7 +199,7 @@ export function MyDelegates(props: any) {
                   height: '36px',
                 }}
               >
-                Добавить советника
+                Добавить
               </Button>
             )}
 
