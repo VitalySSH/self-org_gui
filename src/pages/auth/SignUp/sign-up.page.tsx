@@ -86,7 +86,10 @@ export function SignUp() {
 
   const handleSignIn = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    navigate('/sign-in', { preventScrollReset: true });
+    navigate(
+      '/sign-in',
+      { preventScrollReset: true, state: { signUp: true } },
+    );
   }, [navigate]);
 
   // Контент первого шага
