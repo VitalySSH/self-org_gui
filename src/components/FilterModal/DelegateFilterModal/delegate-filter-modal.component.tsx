@@ -5,7 +5,11 @@ import { AuthApiClientService, CrudDataSourceService } from 'src/services';
 import { CategoryModel } from 'src/models';
 import { Filters } from 'src/shared/types.ts';
 import { CustomSelect } from 'src/components';
-import { CategorySelectedCode, DelegateLabel } from 'src/consts';
+import {
+  CategorySelectedCode,
+  DelegateLabel,
+  SystemCategoryCode,
+} from 'src/consts';
 
 export function DelegateFilterModal({
   communityId,
@@ -31,8 +35,8 @@ export function DelegateFilterModal({
     });
     newFilters.push({
       field: 'status.code',
-      op: 'equals',
-      val: CategorySelectedCode,
+      op: 'in',
+      val: [CategorySelectedCode, SystemCategoryCode],
     });
 
     return categoryService.list(newFilters, undefined, pagination);

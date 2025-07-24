@@ -101,7 +101,6 @@ export function CommunitySelect(props: CommunitySelectProps) {
   const selectedValues = useMemo(() => {
     if (!values || !selectOptions) return [];
 
-    // ИСПРАВЛЕНИЕ: ищем по объектам, а не по id
     return values
       .map(value => {
         const matchingOption = selectOptions.find(option =>
