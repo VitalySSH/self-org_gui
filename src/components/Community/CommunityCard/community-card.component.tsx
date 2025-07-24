@@ -201,6 +201,7 @@ export function CommunityCard({ item, actions }: CommunityCardProps) {
           name="reason"
           label="Сопроводительное письмо"
           extra="Расскажите о себе и причинах, по которым хотели бы вступить в сообщество"
+          className="join-community-reason"
         >
           <TextArea
             rows={5}

@@ -9,6 +9,12 @@
   --community-card-min-height: 280px;
 }
 
+.join-community-reason {
+  .ant-form-item-extra {
+    margin-top: 24px;
+  }
+}
+
 .community-card {
   border-radius: var(--community-card-border-radius);
   border: 1px solid $border-color;
