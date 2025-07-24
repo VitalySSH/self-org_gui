@@ -23,7 +23,7 @@ export const AuthProvider = (component: ProviderComponent) => {
     setUser(user);
     changeAvatarUrl(user.foto_id);
     if (toMainPage) {
-      navigate('/', { preventScrollReset: true });
+      navigate('/');
     } else navigate(-1);
   };
   const logout = () => {

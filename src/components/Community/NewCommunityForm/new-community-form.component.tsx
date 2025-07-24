@@ -41,13 +41,21 @@ import {
   TagOutlined,
 } from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import './new-community-form.component.scss';
 
 const { Text } = Typography;
 
 export function NewCommunityForm(props: NewCommunityFormProps) {
   const [isWorkGroup, setIsWorkGroup] = useState(false);
+
+  const [switchStates, setSwitchStates] = useState({
+    is_secret_ballot: false,
+    is_can_offer: false,
+    is_minority_not_participate: false,
+    is_default_add_member: false,
+    is_not_delegate: false,
+  });
 
   const handleFormChange = () => {
     const formData = props.form.getFieldsValue();
@@ -73,6 +81,11 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
     setIsWorkGroup(checked);
     props.form.setFieldValue('is_workgroup', checked);
   };
+
+  const handleSwitchChange = useCallback((fieldName: string, checked: boolean) => {
+    setSwitchStates(prev => ({ ...prev, [fieldName]: checked }));
+    props.form.setFieldValue(fieldName, checked);
+  }, [props.form]);
 
   // Компонент поля рабочей группы
   const WorkgroupField = () => (
@@ -419,6 +432,8 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
               <Switch
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
+                checked={switchStates.is_secret_ballot}
+                onChange={(checked) => handleSwitchChange('is_secret_ballot', checked)}
               />
             </div>
           </Form.Item>
@@ -433,6 +448,8 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
               <Switch
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
+                checked={switchStates.is_can_offer}
+                onChange={(checked) => handleSwitchChange('is_can_offer', checked)}
               />
             </div>
           </Form.Item>
@@ -454,6 +471,8 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
               <Switch
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
+                checked={switchStates.is_minority_not_participate}
+                onChange={(checked) => handleSwitchChange('is_minority_not_participate', checked)}
               />
             </div>
           </Form.Item>
@@ -468,6 +487,8 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
               <Switch
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
+                checked={switchStates.is_default_add_member}
+                onChange={(checked) => handleSwitchChange('is_default_add_member', checked)}
               />
             </div>
           </Form.Item>
@@ -482,6 +503,8 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
               <Switch
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
+                checked={switchStates.is_not_delegate}
+                onChange={(checked) => handleSwitchChange('is_not_delegate', checked)}
               />
             </div>
           </Form.Item>
