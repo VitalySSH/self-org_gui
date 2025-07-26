@@ -44,6 +44,9 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
 
   const MIN_SEARCH_CHARS = 3;
 
+  // Readonly режим (по умолчанию false)
+  const isReadonly = props.readonly || false;
+
   // Простое определение мобильного устройства
   useEffect(() => {
     const checkMobile = () => {
@@ -96,7 +99,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
 
   const { run: handleSearch } = useDebounceFn(
     (value: string) => {
-      if (!props.enableSearch) return;
+      if (!props.enableSearch || isReadonly) return;
 
       setSearchQuery(value);
       const _isShowMinCharsHint =
@@ -146,6 +149,9 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   }, [getInitValue]);
 
   const onValueChange = (_: string, option: any) => {
+    // Не обрабатываем изменения в readonly режиме
+    if (isReadonly) return;
+
     if (!uploadedFieldValue) {
       setUploadedFieldValue(true);
     }
@@ -181,10 +187,12 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   };
 
   const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (isReadonly) return;
     setNewTextValue(event.target.value);
   };
 
   const onTextareaChange = () => {
+    if (isReadonly) return;
     const text = textAreaRef.current?.resizableTextArea?.textArea.value || '';
     setNewTextValue(text);
   };
@@ -194,7 +202,8 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     e.preventDefault();
     e.stopPropagation();
 
-    if (!newTextValue.trim()) return;
+    // Не добавляем значения в readonly режиме
+    if (isReadonly || !newTextValue.trim()) return;
 
     const currentValues: string[] = [];
     if (Array.isArray(value)) {
@@ -227,7 +236,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         setNewTextValue('');
       }
     }
-  }, [newTextValue, value, props, options]);
+  }, [newTextValue, value, props, options, isReadonly]);
 
   // Обработчик закрытия dropdown для мобильных
   const handleMobileClose = useCallback((e: React.MouseEvent) => {
@@ -237,6 +246,9 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   }, []);
 
   const onDropdownVisibleChange = (open: boolean) => {
+    // В readonly режиме не открываем dropdown
+    if (isReadonly) return;
+
     setIsDropdownOpen(open);
     if (open && !options) {
       fetchOptions(1);
@@ -260,6 +272,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
 
   const renderLoadMoreButton = () => {
     if (
+      isReadonly ||
       (options || []).length >= totalOptions ||
       searchQuery.length < MIN_SEARCH_CHARS
     )
@@ -290,11 +303,13 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     }
 
     return (
-      <div className="custom-select-dropdown-content">
+      <div className={`custom-select-dropdown-content ${isReadonly ? 'readonly-mode' : ''}`}>
         {/* Кнопка закрытия только для мобильных */}
         {isMobile && (
           <div className="mobile-close-button">
-            <span className="close-button-title">Выберите значение</span>
+            <span className="close-button-title">
+              {isReadonly ? 'Просмотр значений' : 'Выберите значение'}
+            </span>
             <div
               className="close-button"
               onClick={handleMobileClose}
@@ -309,7 +324,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         )}
 
         <div className="custom-select-menu" style={{ maxHeight: 300 }}>
-          {props.enableSearch && showMinCharsHint ? (
+          {props.enableSearch && showMinCharsHint && !isReadonly ? (
             <Empty
               image={Empty.PRESENTED_IMAGE_SIMPLE}
               description={`Введите минимум ${MIN_SEARCH_CHARS} символа для поиска`}
@@ -322,7 +337,8 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
             </>
           )}
         </div>
-        {props.addOwnValue && (
+        {/* Секция добавления скрыта в readonly режиме */}
+        {props.addOwnValue && !isReadonly && (
           <>
             <Divider style={{ margin: '8px 0' }} />
             <div className="add-own-value-container">
@@ -401,9 +417,9 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   return (
     <ConfigProvider renderEmpty={emptyRender}>
       <Select
-        showSearch={props.enableSearch}
+        showSearch={props.enableSearch && !isReadonly}
         onChange={onValueChange}
-        onSearch={props.enableSearch ? handleSearch : undefined}
+        onSearch={props.enableSearch && !isReadonly ? handleSearch : undefined}
         filterOption={false}
         dropdownRender={renderDropdownContent}
         onDropdownVisibleChange={onDropdownVisibleChange}
@@ -414,12 +430,12 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         options={selectOptions}
         loading={isLoading && !options}
         placeholder={props.label}
-        allowClear={true}
+        allowClear={!isReadonly}
         style={{ width: '100%' }}
-        popupClassName="custom-select-dropdown"
-        // КРИТИЧНЫЕ НАСТРОЙКИ ДЛЯ МОБИЛЬНЫХ
+        popupClassName={`custom-select-dropdown ${isReadonly ? 'readonly-dropdown' : ''}`}
+        disabled={isReadonly}
         getPopupContainer={isMobile ? () => document.body : undefined}
-        open={isDropdownOpen} // Контролируемое состояние для корректного закрытия
+        open={isReadonly ? false : isDropdownOpen}
         dropdownStyle={isMobile ? {
           position: 'fixed',
           zIndex: 9999,

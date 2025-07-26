@@ -27,7 +27,7 @@ import {
 } from 'src/interfaces';
 import { useAuth } from 'src/hooks';
 import { StatusTag } from 'src/components/StatusTag/status-tag.component.tsx';
-import { OneDayEventLabel } from 'src/consts';
+import { EventCompletedCode, OneDayEventLabel } from 'src/consts';
 import dayjs from 'dayjs';
 
 const { Title, Text } = Typography;
@@ -55,6 +55,7 @@ export function InitiativeDetail() {
   const [disabled, setDisabled] = useState(true);
   const [buttonLoading, setButtonLoading] = useState(false);
   const [eventDate, setEventDate] = useState<string | null>(null);
+  const [readonly, setReadonly] = useState(false);
 
   const userVotingResultService = useMemo(
     () => new CrudDataSourceService(UserVotingResultModel),
@@ -93,6 +94,9 @@ export function InitiativeDetail() {
             setInitiative(initiativeInst);
             if (!votingResultId) {
               setVotingResultId(initiativeInst.voting_result?.id);
+            }
+            if (initiativeInst.status?.code === EventCompletedCode) {
+              setReadonly(true);
             }
             setSelectedOptions(initiativeInst.voting_result?.options || {});
             setMinorityOptions(initiativeInst.voting_result?.minority_options || {});
@@ -405,6 +409,7 @@ export function InitiativeDetail() {
                 isVoteByDefault={!!userVotingResult.is_voted_by_default}
                 onVote={handleVote}
                 onSelectChange={handleSelectChange}
+                readonly={readonly}
               />
             </div>
           )}
@@ -416,62 +421,65 @@ export function InitiativeDetail() {
         </div>
       </div>
 
+
       {/* Toolbar с кнопками */}
-      <div className="toolbar">
-        <div className="toolbar-info-left">
-          <div className="toolbar-info">
-            <TeamOutlined className="info-icon" />
-            <span className="info-text">
+      {!readonly && (
+        <div className="toolbar">
+          <div className="toolbar-info-left">
+            <div className="toolbar-info">
+              <TeamOutlined className="info-icon" />
+              <span className="info-text">
               Участников: <span className="info-highlight">{totalVotes}</span>
             </span>
+            </div>
+            <div className={`toolbar-status ${
+              userVotingResult?.vote === true ? 'status-success' :
+                userVotingResult?.vote === false ? 'status-error' :
+                  userVotingResult?.vote === null ? 'status-warning' : ''
+            }`}>
+              <span className="status-icon">●</span>
+              <span>{getUserVoteStatus()}</span>
+            </div>
           </div>
-          <div className={`toolbar-status ${
-            userVotingResult?.vote === true ? 'status-success' :
-              userVotingResult?.vote === false ? 'status-error' :
-                userVotingResult?.vote === null ? 'status-warning' : ''
-          }`}>
-            <span className="status-icon">●</span>
-            <span>{getUserVoteStatus()}</span>
+
+          <div className="toolbar-actions">
+            <Button
+              type="default"
+              htmlType="button"
+              onClick={onCancel}
+              className="toolbar-button toolbar-button-secondary"
+              icon={<ArrowLeftOutlined />}
+            >
+              Назад
+            </Button>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={buttonLoading}
+              onClick={onFinish}
+              disabled={disabled}
+              className="toolbar-button toolbar-button-success"
+              icon={<CheckCircleOutlined />}
+            >
+              Проголосовать
+            </Button>
+          </div>
+
+          <div className="toolbar-info-right">
+            {/*<div className="toolbar-info">*/}
+            {/*  <ClockCircleOutlined className="info-icon" />*/}
+            {/*  <span className="info-text">*/}
+            {/*    Статус: <span className="info-highlight">{initiativeStatus}</span>*/}
+            {/*  </span>*/}
+            {/*</div>*/}
+            {/*{initiative.is_one_day_event && eventDate && (*/}
+            {/*  <div className="toolbar-meta">*/}
+            {/*    Событие: {eventDate}*/}
+            {/*  </div>*/}
+            {/*)}*/}
           </div>
         </div>
-
-        <div className="toolbar-actions">
-          <Button
-            type="default"
-            htmlType="button"
-            onClick={onCancel}
-            className="toolbar-button toolbar-button-secondary"
-            icon={<ArrowLeftOutlined />}
-          >
-            Назад
-          </Button>
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={buttonLoading}
-            onClick={onFinish}
-            disabled={disabled}
-            className="toolbar-button toolbar-button-success"
-            icon={<CheckCircleOutlined />}
-          >
-            Проголосовать
-          </Button>
-        </div>
-
-        <div className="toolbar-info-right">
-          {/*<div className="toolbar-info">*/}
-          {/*  <ClockCircleOutlined className="info-icon" />*/}
-          {/*  <span className="info-text">*/}
-          {/*    Статус: <span className="info-highlight">{initiativeStatus}</span>*/}
-          {/*  </span>*/}
-          {/*</div>*/}
-          {/*{initiative.is_one_day_event && eventDate && (*/}
-          {/*  <div className="toolbar-meta">*/}
-          {/*    Событие: {eventDate}*/}
-          {/*  </div>*/}
-          {/*)}*/}
-        </div>
-      </div>
+      )}
     </>
   );
 }

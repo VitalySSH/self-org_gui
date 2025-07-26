@@ -53,6 +53,9 @@ export function UserVoting(props: UserVotingProps) {
   };
 
   const handleVote = (vote: boolean) => {
+    // Не обрабатываем изменения в readonly режиме
+    if (props.readonly) return;
+
     setUserVote(vote);
     props.onVote(vote);
   };
@@ -108,7 +111,7 @@ export function UserVoting(props: UserVotingProps) {
   );
 
   return (
-    <div className="user-voting">
+    <div className={`user-voting ${props.readonly ? 'readonly-mode' : ''}`}>
       {/* Заголовок секции */}
       <div className="voting-header">
         <h3 className="voting-title">
@@ -131,6 +134,11 @@ export function UserVoting(props: UserVotingProps) {
               </Tooltip>
             </>
           )}
+          {props.readonly && (
+            <Tag className="delegate-tag readonly-tag">
+              Только для просмотра
+            </Tag>
+          )}
         </div>
       </div>
 
@@ -147,6 +155,7 @@ export function UserVoting(props: UserVotingProps) {
             onChange={() => handleVote(true)}
             aria-label="Да"
             className={userVote === true ? 'checked' : ''}
+            disabled={props.readonly}
           >
             Да
           </Checkbox>
@@ -157,6 +166,7 @@ export function UserVoting(props: UserVotingProps) {
             onChange={() => handleVote(false)}
             aria-label="Нет"
             className={userVote === false ? 'checked' : ''}
+            disabled={props.readonly}
           >
             Нет
           </Checkbox>
@@ -179,6 +189,7 @@ export function UserVoting(props: UserVotingProps) {
             value={props.options}
             formField="options"
             bindLabel="content"
+            readonly={props.readonly}
             addOwnValue={true}
             ownValuePlaceholder="Введите свой вариант"
             ownValueMaxLength={140}
@@ -192,7 +203,7 @@ export function UserVoting(props: UserVotingProps) {
           <div className="noncompliance-title">
             <ExclamationCircleOutlined />
             Последствия несоблюдения правила
-            <MultipleChoiceHint />
+            {!props.readonly && <MultipleChoiceHint />}
           </div>
           <div className="noncompliance-section">
             <Form.Item>
@@ -206,6 +217,7 @@ export function UserVoting(props: UserVotingProps) {
                 value={props.noncompliance}
                 formField="noncompliance"
                 bindLabel="name"
+                readonly={props.readonly}
                 addOwnValue={true}
                 ownValuePlaceholder="Введите свой вариант"
                 ownValueMaxLength={140}

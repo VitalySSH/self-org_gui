@@ -13,6 +13,7 @@ export interface SelectInterface<T extends ApiModel> {
   value?: T | T[];
   formField: string;
   bindLabel: string;
+  readonly?: boolean;
   multiple?: boolean;
   enableSearch?: boolean;
   label?: string;

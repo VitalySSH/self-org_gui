@@ -12,12 +12,86 @@
   box-shadow: 0 2px 8px $card-shadow;
   transition: all 0.3s ease;
 
-
-
   &:hover {
     box-shadow: 0 4px 16px $hover-shadow;
     border-color: rgba($gradient-start, 0.3);
     transform: translateY(-2px);
+  }
+
+  // Стили для readonly режима
+  &.readonly-mode {
+    background: linear-gradient(135deg, rgba($secondary-color, 0.7) 0%, rgba($sider-background-color, 0.4) 100%);
+    border-color: rgba($border-color, 0.6);
+    opacity: 0.85;
+
+    &:hover {
+      transform: none;
+      box-shadow: 0 2px 8px $card-shadow;
+      border-color: rgba($border-color, 0.6);
+    }
+
+    .voting-header {
+      .voting-tags {
+        .readonly-tag {
+          background: rgba($info-color, 0.1);
+          border: 1px solid rgba($info-color, 0.2);
+          color: $info-color;
+          font-size: 12px;
+          font-weight: 500;
+          padding: 4px 12px;
+          border-radius: 20px;
+          text-transform: none;
+          letter-spacing: 0;
+        }
+      }
+    }
+
+    .voting-options {
+      .vote-option {
+        &.yes-option,
+        &.no-option {
+          .ant-checkbox-wrapper {
+            cursor: not-allowed;
+            opacity: 0.7;
+
+            &:hover {
+              transform: none;
+              box-shadow: none;
+            }
+
+            &.checked {
+              transform: none;
+              cursor: not-allowed;
+            }
+          }
+        }
+      }
+    }
+
+    .additional-question,
+    .noncompliance-section {
+      opacity: 0.8;
+
+      .ant-select {
+        .ant-select-selector {
+          cursor: not-allowed;
+          background: rgba($background-color, 0.5) !important;
+
+          &:hover {
+            border-color: $border-color !important;
+          }
+        }
+
+        &.ant-select-disabled .ant-select-selector {
+          background: rgba($background-color, 0.5) !important;
+          color: rgba($text-color, 0.6) !important;
+        }
+      }
+    }
+
+    .multiple-choice-hint {
+      display: none; // Скрываем подсказки в readonly режиме
+    }
   }
 
   // Заголовок секции голосования
@@ -68,6 +142,12 @@
           background: rgba($accent-yellow, 0.1);
           border-color: rgba($accent-yellow, 0.3);
           color: color.mix($accent-yellow, $text-color, 70%);
+        }
+
+        &.readonly-tag {
+          background: rgba($info-color, 0.1);
+          border: 1px solid rgba($info-color, 0.2);
+          color: $info-color;
         }
       }
 
@@ -177,6 +257,17 @@
                 }
               }
             }
+
+            &.ant-checkbox-disabled {
+              .ant-checkbox-inner {
+                background-color: rgba($success-color, 0.1) !important;
+                border-color: rgba($success-color, 0.3) !important;
+
+                &::after {
+                  border-color: rgba($success-color, 0.5) !important;
+                }
+              }
+            }
           }
         }
       }
@@ -249,6 +340,17 @@
                 }
               }
             }
+
+            &.ant-checkbox-disabled {
+              .ant-checkbox-inner {
+                background-color: rgba($error-color, 0.1) !important;
+                border-color: rgba($error-color, 0.3) !important;
+
+                &::after {
+                  border-color: rgba($error-color, 0.5) !important;
+                }
+              }
+            }
           }
         }
       }
@@ -300,6 +402,12 @@
       &.ant-select-focused .ant-select-selector {
         border-color: $info-color;
         box-shadow: 0 0 0 3px rgba($info-color, 0.1);
+      }
+
+      &.ant-select-disabled .ant-select-selector {
+        background: rgba($background-color, 0.5) !important;
+        color: rgba($text-color, 0.6) !important;
+        cursor: not-allowed !important;
       }
     }
   }
@@ -361,6 +469,12 @@
         &.ant-select-focused .ant-select-selector {
           border-color: $error-color;
           box-shadow: 0 0 0 3px rgba($error-color, 0.1);
+        }
+
+        &.ant-select-disabled .ant-select-selector {
+          background: rgba($background-color, 0.5) !important;
+          color: rgba($text-color, 0.6) !important;
+          cursor: not-allowed !important;
         }
       }
     }
@@ -542,6 +656,27 @@
       border-color: rgba($gradient-start, 0.5);
     }
 
+    &.readonly-mode {
+      background: linear-gradient(135deg, rgba(#1a1a1a, 0.7) 0%, rgba(#2a2a2a, 0.5) 100%);
+      border-color: rgba(#434343, 0.6);
+
+      &:hover {
+        transform: none;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        border-color: rgba(#434343, 0.6);
+      }
+
+      .voting-header {
+        .voting-tags {
+          .readonly-tag {
+            background: rgba($info-color, 0.15);
+            border-color: rgba($info-color, 0.3);
+            color: $info-color;
+          }
+        }
+      }
+    }
+
     .voting-header {
       .voting-title {
         color: #ffffff;
@@ -562,6 +697,12 @@
             background: rgba($accent-yellow, 0.15);
             border-color: rgba($accent-yellow, 0.3);
             color: color.mix($accent-yellow, white, 80%);
+          }
+
+          &.readonly-tag {
+            background: rgba($info-color, 0.15);
+            border-color: rgba($info-color, 0.3);
+            color: $info-color;
           }
         }
 
@@ -599,6 +740,19 @@
               border-color: $success-color;
               color: white;
             }
+
+            .ant-checkbox {
+              &.ant-checkbox-disabled {
+                .ant-checkbox-inner {
+                  background-color: rgba($success-color, 0.15) !important;
+                  border-color: rgba($success-color, 0.4) !important;
+
+                  &::after {
+                    border-color: rgba($success-color, 0.6) !important;
+                  }
+                }
+              }
+            }
           }
         }
 
@@ -616,6 +770,19 @@
               background: $error-color;
               border-color: $error-color;
               color: white;
+            }
+
+            .ant-checkbox {
+              &.ant-checkbox-disabled {
+                .ant-checkbox-inner {
+                  background-color: rgba($error-color, 0.15) !important;
+                  border-color: rgba($error-color, 0.4) !important;
+
+                  &::after {
+                    border-color: rgba($error-color, 0.6) !important;
+                  }
+                }
+              }
             }
           }
         }
@@ -643,6 +810,11 @@
             color: $info-color;
           }
         }
+
+        &.ant-select-disabled .ant-select-selector {
+          background: rgba(#2a2a2a, 0.5) !important;
+          color: rgba(#ffffff, 0.6) !important;
+        }
       }
     }
 
@@ -666,6 +838,11 @@
             border-color: rgba($error-color, 0.3);
             color: $error-color;
           }
+        }
+
+        &.ant-select-disabled .ant-select-selector {
+          background: rgba(#2a2a2a, 0.5) !important;
+          color: rgba(#ffffff, 0.6) !important;
         }
       }
     }

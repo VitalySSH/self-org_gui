@@ -443,6 +443,7 @@ export function RuleDetail() {
                 isVoteByDefault={!!userVotingResult.is_voted_by_default}
                 onVote={handleVote}
                 onSelectChange={handleSelectChange}
+                readonly={false}
               />
             </div>
           )}

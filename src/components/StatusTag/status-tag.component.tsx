@@ -9,6 +9,7 @@ const STATUS_CLASSES: Record<string, string> = {
   noncompliance: styles.statusTagNoncompliance,
   initiative_approved: styles.statusTagActive,
   initiative_revoked: styles.statusTagInactive,
+  event_completed: styles.statusTagCompleted,
 };
 
 export const StatusTag = ({

@@ -15,8 +15,42 @@
 .ant-select-dropdown.custom-select-dropdown {
   padding: 8px 0;
 
+  // Стили для readonly режима
+  &.readonly-dropdown {
+    opacity: 0.8;
+    pointer-events: none;
+
+    .ant-select-item {
+      cursor: not-allowed;
+
+      &:hover {
+        background-color: transparent;
+      }
+
+      &.ant-select-item-option-active {
+        background-color: transparent;
+      }
+    }
+  }
+
   .custom-select-dropdown-content {
     // Минимальная структура без сложных ограничений
+
+    &.readonly-mode {
+      .mobile-close-button {
+        .close-button-title {
+          color: rgba($text-color, 0.7);
+        }
+      }
+
+      .custom-select-menu {
+        opacity: 0.8;
+      }
+
+      .add-own-value-container {
+        display: none; // Полностью скрываем секцию добавления в readonly режиме
+      }
+    }
   }
 
   .custom-select-menu {
@@ -178,6 +212,20 @@
     // Упрощенная тень
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
 
+    // Readonly режим на мобильных
+    &.readonly-dropdown {
+      .mobile-close-button {
+        .close-button-title {
+          color: rgba($text-color, 0.6);
+        }
+
+        .close-button {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+      }
+    }
+
     // Кнопка закрытия для мобильных
     .mobile-close-button {
       position: sticky;
@@ -278,7 +326,7 @@
 
       .ant-btn,
       .custom-add-button {
-        height: 4px !important; // Увеличенный touch target
+        height: 44px !important; // Увеличенный touch target
         font-size: 14px;
         min-width: 100px;
         width: 100%; // Полная ширина для удобства
@@ -334,10 +382,42 @@
   }
 }
 
+// Стили для самого Select компонента в readonly режиме
+.ant-select.ant-select-disabled {
+  &.custom-select-readonly {
+    .ant-select-selector {
+      cursor: not-allowed;
+      background: rgba($background-color, 0.6) !important;
+      color: rgba($text-color, 0.7) !important;
+      border-color: rgba($border-color, 0.6) !important;
+
+      .ant-select-selection-item {
+        color: rgba($text-color, 0.7) !important;
+      }
+
+      .ant-select-selection-placeholder {
+        color: rgba($text-color, 0.5) !important;
+      }
+    }
+
+    .ant-select-arrow {
+      color: rgba($text-color, 0.4) !important;
+    }
+
+    .ant-select-clear {
+      display: none !important; // Скрываем кнопку очистки в readonly режиме
+    }
+  }
+}
+
 // Высококонтрастный режим
 @media (prefers-contrast: more) {
   .ant-select-dropdown.custom-select-dropdown {
     border: 2px solid $text-color;
+
+    &.readonly-dropdown {
+      border-color: rgba($text-color, 0.5);
+    }
 
     .ant-select-item {
       border: 1px solid transparent;
@@ -353,6 +433,12 @@
       }
     }
   }
+
+  .ant-select.ant-select-disabled.custom-select-readonly {
+    .ant-select-selector {
+      border: 2px solid rgba($text-color, 0.5) !important;
+    }
+  }
 }
 
 // Упрощенная темная тема
@@ -366,6 +452,10 @@
   .ant-select-dropdown.custom-select-dropdown {
     background-color: var(--custom-select-background);
     border-color: var(--custom-select-border-color);
+
+    &.readonly-dropdown {
+      opacity: 0.7;
+    }
 
     .ant-select-item {
       color: #ffffff;
@@ -414,6 +504,48 @@
           }
         }
       }
+
+      &.readonly-dropdown {
+        .mobile-close-button {
+          .close-button-title {
+            color: rgba(white, 0.6);
+          }
+
+          .close-button {
+            opacity: 0.6;
+            cursor: not-allowed;
+
+            &:hover,
+            &:active {
+              background: rgba(white, 0.1);
+              border-color: rgba(white, 0.2);
+              color: rgba(white, 0.6);
+              transform: none;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Темная тема для readonly Select
+  .ant-select.ant-select-disabled.custom-select-readonly {
+    .ant-select-selector {
+      background: rgba(#1f1f1f, 0.6) !important;
+      color: rgba(white, 0.6) !important;
+      border-color: rgba(#434343, 0.6) !important;
+
+      .ant-select-selection-item {
+        color: rgba(white, 0.6) !important;
+      }
+
+      .ant-select-selection-placeholder {
+        color: rgba(white, 0.4) !important;
+      }
+    }
+
+    .ant-select-arrow {
+      color: rgba(white, 0.3) !important;
     }
   }
 }

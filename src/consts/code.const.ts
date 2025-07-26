@@ -13,3 +13,4 @@ export const RuleRevokedCode = 'rule_revoked';
 export const InitiativeApprovedCode = 'initiative_approved';
 export const InitiativeRevokedCode = 'initiative_revoked';
 export const CategorySelectedCode = 'category_selected';
+export const EventCompletedCode = 'event_completed';

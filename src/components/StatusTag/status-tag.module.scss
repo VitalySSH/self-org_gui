@@ -10,30 +10,43 @@
   &-onReview {
     background: $status-pending-bg;
     color: $status-pending-text;
+    border: 1px solid rgba($status-pending-text, 0.2);
   }
 
   &-approved {
     background: $status-approved-bg;
     color: $status-approved-text;
+    border: 1px solid rgba($status-approved-text, 0.2);
   }
 
   &-compromise {
     background: $status-compromise-bg;
     color: $status-compromise-text;
+    border: 1px solid rgba($status-compromise-text, 0.2);
   }
 
   &-active {
     background: $status-active-bg;
     color: $status-active-text;
+    border: 1px solid rgba($status-active-text, 0.2);
   }
 
   &-inactive {
     background: $status-inactive-bg;
     color: $status-inactive-text;
+    border: 1px solid rgba($status-inactive-text, 0.2);
   }
 
   &-noncompliance {
     background: $status-warning-bg;
     color: $status-warning-text;
+    border: 1px solid rgba($status-warning-text, 0.2);
+  }
+
+  // Новый статус "Событие завершено"
+  &-completed {
+    background: $status-completed-bg;
+    color: $status-completed-text;
+    border: 1px solid rgba(71, 85, 105, 0.2);
   }
 }

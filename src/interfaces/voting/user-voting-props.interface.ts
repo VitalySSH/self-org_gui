@@ -12,6 +12,7 @@ export interface UserVotingProps {
   isOptions: boolean;
   isDelegateVote: boolean;
   isVoteByDefault: boolean;
+  readonly: boolean;
   options: VotingOptionModel[];
   noncompliance?: NoncomplianceModel[];
   onVote: (vote: boolean) => void;
