@@ -112,6 +112,7 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
         max={15}
         min={3}
         step={1}
+        precision={0}
         style={{ width: '100%', maxWidth: 120 }}
         addonAfter="чел."
       />
@@ -238,6 +239,7 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
               max={100}
               min={1}
               step={1}
+              precision={0}
               style={{ width: '100%', maxWidth: 120 }}
               addonAfter="%"
             />
@@ -249,7 +251,7 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
             label={
               <span>
                 {VoteLabel}&nbsp;
-                <Tooltip title="Введите минимальную долю голосов, необходимую для принятия решения. Значение от 50 до 100%.">
+                <Tooltip title="Введите минимальную долю голосов, необходимую для принятия решения. Значение от 51 до 100%.">
                   <QuestionCircleOutlined />
                 </Tooltip>
               </span>
@@ -265,8 +267,9 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
               type="number"
               controls={false}
               max={100}
-              min={50}
+              min={51}
               step={1}
+              precision={0}
               style={{ width: '100%', maxWidth: 120 }}
               addonAfter="%"
             />
@@ -296,6 +299,7 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
               max={50}
               min={1}
               step={1}
+              precision={0}
               style={{ width: '100%', maxWidth: 120 }}
               addonAfter="%"
             />
@@ -341,6 +345,7 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
               max={30}
               min={1}
               step={1}
+              precision={0}
               style={{ width: '100%', maxWidth: 120 }}
               addonAfter="дн."
             />
@@ -370,6 +375,7 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
               max={30}
               min={1}
               step={1}
+              precision={0}
               style={{ width: '100%', maxWidth: 120 }}
               addonAfter="дн."
             />

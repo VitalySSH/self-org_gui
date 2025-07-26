@@ -228,7 +228,6 @@ export function SiderBar(props: SiderBarInterface) {
     }
   }, [location.pathname, navigate, props.isCommunityWS, props.isNotAuthorized]);
 
-
   const renderCommunitiesNavigation = () => {
     if (collapsed && !isMobile) {
       return (
@@ -296,7 +295,7 @@ export function SiderBar(props: SiderBarInterface) {
           <Image
             height={collapsed && !isMobile ? 32 : 40}
             preview={false}
-            src={logoPath}
+            src={isMobile ? '/utu_logo.png' : logoPath}
             onClick={onClickImage}
             className="sider-logo-image"
             alt="UTU Logo"

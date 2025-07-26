@@ -282,21 +282,6 @@
         }
       }
     }
-
-    .ant-card-actions {
-      > li {
-        .ant-btn {
-          span:not(.anticon) {
-            display: none;
-          }
-
-          .anticon {
-            margin: 0;
-            font-size: 12px;
-          }
-        }
-      }
-    }
   }
 }
 

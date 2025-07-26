@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, Input, Card, Avatar, Typography } from 'antd';
+import { Button, Input, Card, Avatar, Typography, Modal } from 'antd';
 import {
   SendOutlined,
   RobotOutlined,
   UserOutlined,
   ArrowLeftOutlined,
-  CheckOutlined
+  CheckOutlined,
+  CloseOutlined
 } from '@ant-design/icons';
 import './ai-opinion-assistant.component.scss';
 
@@ -36,7 +37,12 @@ const OPINION_QUESTIONS = [
   }
 ];
 
-export const AIOpinionAssistant: React.FC<AIOpinionAssistantProps> = ({ onComplete, onCancel }) => {
+// Исходный компонент без изменений
+const AIOpinionChat: React.FC<AIOpinionAssistantProps & { isMobile?: boolean }> = ({
+                                                                                     onComplete,
+                                                                                     onCancel,
+                                                                                     isMobile = false
+                                                                                   }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentMessage, setCurrentMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -137,20 +143,20 @@ export const AIOpinionAssistant: React.FC<AIOpinionAssistantProps> = ({ onComple
   };
 
   return (
-    <div className="ai-opinion-container">
+    <div className={`ai-opinion-container ${isMobile ? 'ai-opinion-mobile' : ''}`}>
       <div className="ai-opinion-header">
+        <div className="ai-opinion-title">
+          <RobotOutlined />
+          ИИ-помощник
+        </div>
         <Button
           type="text"
-          icon={<ArrowLeftOutlined />}
+          icon={isMobile ? <CloseOutlined /> : <ArrowLeftOutlined />}
           onClick={onCancel}
           className="ai-opinion-back-button"
         >
-          Назад к полю ввода
+          {isMobile ? 'Закрыть' : 'Назад к полю ввода'}
         </Button>
-        <div className="ai-opinion-title">
-          <RobotOutlined />
-          ИИ-помощник для формирования мнения
-        </div>
       </div>
 
       <div className="ai-opinion-messages">
@@ -218,7 +224,7 @@ export const AIOpinionAssistant: React.FC<AIOpinionAssistantProps> = ({ onComple
             <TextArea
               value={currentMessage}
               onChange={(e) => setCurrentMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onPressEnter={handleKeyPress}
               placeholder="Поделитесь своими мыслями..."
               autoSize={{ minRows: 1, maxRows: 4 }}
               className="ai-opinion-textarea"
@@ -249,4 +255,40 @@ export const AIOpinionAssistant: React.FC<AIOpinionAssistantProps> = ({ onComple
       </div>
     </div>
   );
+};
+
+// Главный компонент с простым условием
+export const AIOpinionAssistant: React.FC<AIOpinionAssistantProps> = ({ onComplete, onCancel }) => {
+  // Простое определение мобильного устройства при загрузке
+  const isMobile = window.innerWidth <= 768;
+
+  // Для мобильных - модальное окно, для десктопа - обычный компонент
+  if (isMobile) {
+    return (
+      <Modal
+        open={true}
+        onCancel={onCancel}
+        footer={null}
+        width="100%"
+        style={{
+          top: 0,
+          padding: 0,
+          maxWidth: '100vw'
+        }}
+        bodyStyle={{
+          padding: 0,
+          height: '100vh',
+          overflow: 'hidden'
+        }}
+        className="ai-opinion-modal"
+        closable={false}
+        destroyOnClose={true}
+      >
+        <AIOpinionChat onComplete={onComplete} onCancel={onCancel} isMobile={true} />
+      </Modal>
+    );
+  }
+
+  // Десктопная версия - без изменений
+  return <AIOpinionChat onComplete={onComplete} onCancel={onCancel} isMobile={false} />;
 };

@@ -173,17 +173,16 @@
       font-size: 14px;
       min-height: 40px;
 
-      // Улучшаем расположение иконки и текста
       .anticon {
         margin-right: 6px !important;
         font-size: 14px;
       }
 
-      &:not(:has(span:not(.anticon))) {
-        .anticon {
-          margin: 0 !important;
-        }
-      }
+      //&:not(:has(span:not(.anticon))) {
+      //  .anticon {
+      //    margin: 0 !important;
+      //  }
+      //}
 
       //&.subcommunities-button {
       //  min-width: auto;

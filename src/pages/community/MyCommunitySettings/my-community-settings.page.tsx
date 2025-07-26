@@ -400,6 +400,7 @@ export function MyCommunitySettings(props: any) {
         max={15}
         min={3}
         step={1}
+        precision={0}
         style={{ width: '100%', maxWidth: 120 }}
         addonAfter="чел."
       />
@@ -544,6 +545,7 @@ export function MyCommunitySettings(props: any) {
               max={100}
               min={1}
               step={1}
+              precision={0}
               style={{ width: '100%', maxWidth: 120 }}
               addonAfter="%"
             />
@@ -555,7 +557,7 @@ export function MyCommunitySettings(props: any) {
             label={
               <span>
                 {VoteLabel}&nbsp;
-                <Tooltip title="Введите минимальный процент от всех голосов, который должен получить вариант, требующийся для победы в голосовании. Значение от 50 до 100%.">
+                <Tooltip title="Введите минимальный процент от всех голосов, который должен получить вариант, требующийся для победы в голосовании. Значение от 51 до 100%.">
                   <QuestionCircleOutlined />
                 </Tooltip>
               </span>
@@ -563,7 +565,7 @@ export function MyCommunitySettings(props: any) {
             rules={[
               {
                 required: true,
-                message: 'Пожалуйста, укажите процент голосов для принятия решения, значение от 50 до 100%.',
+                message: 'Пожалуйста, укажите процент голосов для принятия решения, значение от 51 до 100%.',
               },
             ]}
           >
@@ -571,8 +573,9 @@ export function MyCommunitySettings(props: any) {
               type="number"
               controls={false}
               max={100}
-              min={50}
+              min={51}
               step={1}
+              precision={0}
               style={{ width: '100%', maxWidth: 120 }}
               addonAfter="%"
             />
@@ -602,6 +605,7 @@ export function MyCommunitySettings(props: any) {
               max={49}
               min={1}
               step={1}
+              precision={0}
               style={{ width: '100%', maxWidth: 120 }}
               addonAfter="%"
             />
@@ -647,6 +651,7 @@ export function MyCommunitySettings(props: any) {
               max={30}
               min={1}
               step={1}
+              precision={0}
               style={{ width: '100%', maxWidth: 120 }}
               addonAfter="дн."
             />
@@ -676,6 +681,7 @@ export function MyCommunitySettings(props: any) {
               max={30}
               min={1}
               step={1}
+              precision={0}
               style={{ width: '100%', maxWidth: 120 }}
               addonAfter="дн."
             />

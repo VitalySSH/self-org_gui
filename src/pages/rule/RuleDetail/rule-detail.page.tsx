@@ -19,10 +19,13 @@ import {
   VotingOptionModel,
 } from 'src/models';
 import { Opinions, UserVoting, VotingResults } from 'src/components';
-import { AuthContextProvider, VoteInPercent } from 'src/interfaces';
+import {
+  AuthContextProvider, ResponsibilityData,
+  VoteInPercent,
+  VotingOptionData,
+} from 'src/interfaces';
 import { useAuth } from 'src/hooks';
 import { StatusTag } from 'src/components/StatusTag/status-tag.component.tsx';
-import { convertVotingOptions } from 'src/utils/voting.utils.ts';
 
 const { Title, Text } = Typography;
 
@@ -44,14 +47,10 @@ export function RuleDetail() {
   const [userVote, setUserVote] = useState<boolean | undefined>(undefined);
   const [userOption, setUserOption] = useState<VotingOptionModel[]>([]);
   const [noncompliance, setNoncompliance] = useState<NoncomplianceModel[]>([]);
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  const [minorityOptions, setMinorityOptions] = useState<string[]>([]);
-  const [selectedNoncompliance, setSelectedNoncompliance] = useState<string[]>(
-    []
-  );
-  const [minorityNoncompliance, setMinorityNoncompliance] = useState<string[]>(
-    []
-  );
+  const [selectedOptions, setSelectedOptions] = useState<VotingOptionData | {}>({});
+  const [minorityOptions, setMinorityOptions] = useState<VotingOptionData | {}>({});
+  const [selectedNoncompliance, setSelectedNoncompliance] = useState<ResponsibilityData | {}>({});
+  const [minorityNoncompliance, setMinorityNoncompliance] = useState<ResponsibilityData | {}>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [disabled, setDisabled] = useState(true);
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -95,22 +94,10 @@ export function RuleDetail() {
             if (!votingResultId) {
               setVotingResultId(ruleInst.voting_result?.id);
             }
-            const options: string[] = convertVotingOptions(
-              ruleInst.voting_result?.options || {}
-            );
-            setSelectedOptions(options);
-            const _minorityOptions = convertVotingOptions(
-              ruleInst.voting_result?.minority_options || {}
-            );
-            setMinorityOptions(_minorityOptions);
-            const _selectedNoncompliance = convertVotingOptions(
-              ruleInst.voting_result?.noncompliance || {}
-            );
-            setSelectedNoncompliance(_selectedNoncompliance);
-            const _minorityNoncompliance = convertVotingOptions(
-              ruleInst.voting_result?.minority_noncompliance || {}
-            );
-            setMinorityNoncompliance(_minorityNoncompliance);
+            setSelectedOptions(ruleInst.voting_result?.options || {});
+            setMinorityOptions(ruleInst.voting_result?.minority_options || {});
+            setSelectedNoncompliance(ruleInst.voting_result?.noncompliance || {});
+            setMinorityNoncompliance(ruleInst.voting_result?.minority_noncompliance || {});
             setRuleStatus(ruleInst.status?.name || '');
             setRuleStatusCode(ruleInst.status?.code || '');
           })

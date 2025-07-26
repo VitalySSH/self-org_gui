@@ -1,6 +1,36 @@
 @use 'sass:color';
 @use 'src/shared/assets/scss/variables' as *;
 
+// Стили для мобильного модального окна
+.ai-opinion-modal {
+  .ant-modal {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: 100vw !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    top: 0 !important;
+  }
+
+  .ant-modal-content {
+    height: 100vh !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .ant-modal-body {
+    padding: 0 !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+  }
+
+  .ant-modal-mask {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+  }
+}
+
 .ai-opinion-container {
   display: flex;
   flex-direction: column;
@@ -16,6 +46,20 @@
     box-shadow: 0 6px 32px $hover-shadow;
     border-color: rgba($gradient-start, 0.3);
   }
+
+  // Мобильная версия в модальном окне
+  &.ai-opinion-mobile {
+    height: 100vh !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+
+    &:hover {
+      box-shadow: none !important;
+      border-color: transparent !important;
+    }
+  }
 }
 
 /* Заголовок */
@@ -28,6 +72,7 @@
   align-items: center;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   position: relative;
+  z-index: 10;
 
   &::after {
     content: '';
@@ -45,9 +90,12 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    color: white !important;
+    flex: 1;
 
     .anticon {
       font-size: 18px;
+      color: white !important;
     }
   }
 
@@ -61,11 +109,58 @@
     font-weight: 500 !important;
     font-size: 14px !important;
     transition: all 0.3s ease !important;
+    flex-shrink: 0;
+    margin-left: 12px;
 
     &:hover {
       background: rgba(255, 255, 255, 0.2) !important;
       border-color: rgba(255, 255, 255, 0.5) !important;
       transform: translateY(-1px) !important;
+      color: white !important;
+    }
+
+    &:focus {
+      color: white !important;
+      background: rgba(255, 255, 255, 0.2) !important;
+      border-color: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    .anticon {
+      color: white !important;
+    }
+  }
+
+  // Мобильные стили для заголовка
+  .ai-opinion-mobile & {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    padding: 16px 20px !important;
+    min-height: 60px !important;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2) !important;
+
+    .ai-opinion-title {
+      font-size: 15px !important;
+      font-weight: 600 !important;
+      color: white !important;
+
+      .anticon {
+        font-size: 16px !important;
+        color: white !important;
+      }
+    }
+
+    .ai-opinion-back-button {
+      padding: 8px 16px !important;
+      font-size: 13px !important;
+      border-radius: 12px !important;
+      background: rgba(255, 255, 255, 0.15) !important;
+      border: 2px solid rgba(255, 255, 255, 0.25) !important;
+
+      &:hover,
+      &:focus {
+        background: rgba(255, 255, 255, 0.25) !important;
+        border-color: rgba(255, 255, 255, 0.4) !important;
+        color: white !important;
+      }
     }
   }
 }
@@ -94,6 +189,28 @@
 
     &:hover {
       background: $gradient-start;
+    }
+  }
+
+  // Мобильные стили для области сообщений
+  .ai-opinion-mobile & {
+    padding: 16px !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+
+    &::-webkit-scrollbar {
+      width: 3px !important;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1) !important;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(102, 126, 234, 0.6) !important;
+
+      &:hover {
+        background: rgba(102, 126, 234, 0.8) !important;
+      }
     }
   }
 }
@@ -127,10 +244,14 @@
     margin-right: 10px;
 
     .ant-avatar {
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      border: 2px solid white;
-      width: 36px;
-      height: 36px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+      border: 2px solid white !important;
+      width: 36px !important;
+      height: 36px !important;
+
+      .anticon {
+        color: white !important;
+      }
     }
   }
 
@@ -140,50 +261,97 @@
     flex-direction: column;
 
     .ai-message-card {
-      border: none;
-      border-radius: 14px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-      transition: all 0.3s ease;
-      position: relative;
+      border: none !important;
+      border-radius: 14px !important;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08) !important;
+      transition: all 0.3s ease !important;
+      position: relative !important;
 
       &:hover {
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        transform: translateY(-1px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+        transform: translateY(-1px) !important;
       }
 
       &.ai-message-card-ai {
-        background: rgba($background-color, 0.95);
-        border-top-left-radius: 6px;
-        border-left: 4px solid $gradient-start;
+        background: rgba($background-color, 0.95) !important;
+        border-top-left-radius: 6px !important;
+        border-left: 4px solid $gradient-start !important;
 
         .ant-card-body {
-          color: $text-color;
+          color: $text-color !important;
         }
       }
 
       &.ai-message-card-user {
-        background: linear-gradient(135deg, $info-color 0%, color.mix($info-color, $gradient-end, 80%) 100%);
-        color: white;
-        border-top-right-radius: 6px;
+        background: linear-gradient(135deg, $info-color 0%, color.mix($info-color, $gradient-end, 80%) 100%) !important;
+        color: white !important;
+        border-top-right-radius: 6px !important;
 
         .ant-card-body {
-          color: white;
+          color: white !important;
         }
       }
 
       .ant-card-body {
-        padding: 12px 16px;
-        font-size: 14px;
-        line-height: 1.5;
+        padding: 12px 16px !important;
+        font-size: 14px !important;
+        line-height: 1.5 !important;
       }
     }
 
     .ai-message-time {
-      font-size: 11px;
-      color: rgba($text-color, 0.5);
-      margin-top: 4px;
-      padding: 0 10px;
-      font-weight: 400;
+      font-size: 11px !important;
+      color: rgba($text-color, 0.5) !important;
+      margin-top: 4px !important;
+      padding: 0 10px !important;
+      font-weight: 400 !important;
+    }
+  }
+
+  // Мобильные стили для сообщений
+  .ai-opinion-mobile & {
+    margin-bottom: 16px !important;
+
+    .ai-message-avatar {
+      .ant-avatar {
+        width: 32px !important;
+        height: 32px !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+      }
+    }
+
+    .ai-message-content {
+      max-width: 85% !important;
+
+      .ai-message-card {
+        border-radius: 12px !important;
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.12) !important;
+
+        &.ai-message-card-ai {
+          background: white !important;
+          border-left: 3px solid #667eea !important;
+          border-top-left-radius: 4px !important;
+
+          .ant-card-body {
+            color: #333 !important;
+          }
+        }
+
+        &.ai-message-card-user {
+          background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%) !important;
+          border-top-right-radius: 4px !important;
+        }
+
+        .ant-card-body {
+          padding: 10px 14px !important;
+          font-size: 14px !important;
+        }
+      }
+
+      .ai-message-time {
+        color: rgba(0, 0, 0, 0.45) !important;
+        font-size: 10px !important;
+      }
     }
   }
 }
@@ -210,6 +378,13 @@
   span:nth-child(2) {
     animation-delay: -0.16s;
   }
+
+  // Мобильные стили для индикатора печати
+  .ai-opinion-mobile & {
+    span {
+      background: #667eea !important;
+    }
+  }
 }
 
 /* Область ввода */
@@ -224,47 +399,59 @@
     align-items: flex-end;
 
     .ai-opinion-textarea {
-      flex: 1;
-      border-radius: 20px;
-      border: 1px solid #d1d5db;
-      transition: all 0.3s ease;
-      resize: none;
+      flex: 1 !important;
+      border-radius: 20px !important;
+      border: 1px solid #d1d5db !important;
+      transition: all 0.3s ease !important;
+      resize: none !important;
+      background: white !important;
+      color: #333 !important;
 
       &:focus {
-        border-color: $gradient-start;
-        box-shadow: 0 0 0 3px rgba($gradient-start, 0.1);
+        border-color: $gradient-start !important;
+        box-shadow: 0 0 0 3px rgba($gradient-start, 0.1) !important;
       }
 
       &::placeholder {
-        color: rgba($text-color, 0.5);
-        font-style: italic;
+        color: rgba($text-color, 0.5) !important;
+        font-style: italic !important;
       }
     }
 
     .ai-opinion-send-button {
-      border-radius: 20px;
-      height: 40px;
-      padding: 0 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border: none;
-      transition: all 0.3s ease;
+      border-radius: 20px !important;
+      height: 40px !important;
+      padding: 0 20px !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+      border: none !important;
+      transition: all 0.3s ease !important;
+      color: white !important;
 
       &:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4) !important;
+        background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%) !important;
+        color: white !important;
+      }
+
+      &:focus {
+        background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%) !important;
+        color: white !important;
       }
 
       &:disabled {
-        opacity: 0.6;
-        transform: none;
-        box-shadow: none;
+        opacity: 0.6 !important;
+        transform: none !important;
+        box-shadow: none !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
       }
 
       .anticon {
-        font-size: 16px;
+        font-size: 16px !important;
+        color: white !important;
       }
     }
   }
@@ -273,29 +460,84 @@
     text-align: center;
 
     .ai-opinion-complete-button {
-      background: linear-gradient(135deg, $success-color 0%, color.mix($success-color, black, 90%) 100%);
-      border: none;
-      border-radius: 16px;
-      height: 52px;
-      padding: 0 32px;
-      font-size: 16px;
-      font-weight: 600;
-      color: white;
-      box-shadow: 0 4px 16px rgba($success-color, 0.3);
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
+      background: linear-gradient(135deg, $success-color 0%, color.mix($success-color, black, 90%) 100%) !important;
+      border: none !important;
+      border-radius: 16px !important;
+      height: 52px !important;
+      padding: 0 32px !important;
+      font-size: 16px !important;
+      font-weight: 600 !important;
+      color: white !important;
+      box-shadow: 0 4px 16px rgba($success-color, 0.3) !important;
+      transition: all 0.3s ease !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 10px !important;
+      width: 100% !important;
 
       &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 24px rgba($success-color, 0.4);
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 24px rgba($success-color, 0.4) !important;
+        background: linear-gradient(135deg, #389e0d 0%, #237804 100%) !important;
+        color: white !important;
+      }
+
+      &:focus {
+        background: linear-gradient(135deg, #389e0d 0%, #237804 100%) !important;
+        color: white !important;
       }
 
       .anticon {
-        font-size: 18px;
+        font-size: 18px !important;
+        color: white !important;
+      }
+    }
+  }
+
+  // Мобильные стили для области ввода
+  .ai-opinion-mobile & {
+    background: white !important;
+    border-top: 1px solid #e2e8f0 !important;
+    padding: 16px !important;
+    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.1) !important;
+
+    .ai-opinion-input-wrapper {
+      gap: 10px !important;
+
+      .ai-opinion-textarea {
+        font-size: 16px !important; /* Предотвращает зум на iOS */
+        padding: 12px 16px !important;
+        border-radius: 16px !important;
+        border: 2px solid #e2e8f0 !important;
+        background: #f8f9fa !important;
+
+        &:focus {
+          border-color: #667eea !important;
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+          background: white !important;
+        }
+      }
+
+      .ai-opinion-send-button {
+        height: 44px !important;
+        padding: 0 18px !important;
+        font-size: 14px !important;
+        border-radius: 16px !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+
+        &:hover {
+          background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%) !important;
+        }
+      }
+    }
+
+    .ai-opinion-complete {
+      .ai-opinion-complete-button {
+        height: 48px !important;
+        font-size: 15px !important;
+        border-radius: 12px !important;
+        background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%) !important;
       }
     }
   }
@@ -324,9 +566,9 @@
   }
 }
 
-/* Адаптивные стили */
+/* Адаптивные стили для обычной (не мобильной) версии */
 @media (max-width: 768px) {
-  .ai-opinion-container {
+  .ai-opinion-container:not(.ai-opinion-mobile) {
     height: 450px;
   }
 
@@ -397,7 +639,7 @@
 }
 
 @media (max-width: 480px) {
-  .ai-opinion-container {
+  .ai-opinion-container:not(.ai-opinion-mobile) {
     height: 400px;
   }
 
@@ -433,6 +675,10 @@
   .ai-opinion-container {
     background: linear-gradient(135deg, #1a1a1a 0%, rgba(#2a2a2a, 0.8) 100%);
     border-color: #434343;
+
+    &.ai-opinion-mobile {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+    }
   }
 
   .ai-opinion-messages {
@@ -442,6 +688,18 @@
 
     &::-webkit-scrollbar-thumb {
       background: rgba($gradient-start, 0.8);
+    }
+
+    .ai-opinion-mobile & {
+      background: rgba(#1a1a1a, 0.95) !important;
+
+      &::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1) !important;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: rgba(102, 126, 234, 0.8) !important;
+      }
     }
   }
 
@@ -455,12 +713,31 @@
           .ant-card-body {
             color: #ffffff;
           }
+
+          .ai-opinion-mobile & {
+            background: rgba(#2a2a2a, 0.95) !important;
+            border-left-color: #667eea !important;
+
+            .ant-card-body {
+              color: #ffffff !important;
+            }
+          }
         }
       }
 
       .ai-message-time {
         color: rgba(#ffffff, 0.5);
+
+        .ai-opinion-mobile & {
+          color: rgba(255, 255, 255, 0.6) !important;
+        }
       }
+    }
+  }
+
+  .ai-opinion-header {
+    .ai-opinion-mobile & {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
     }
   }
 
@@ -481,7 +758,136 @@
         &::placeholder {
           color: rgba(#ffffff, 0.5);
         }
+
+        .ai-opinion-mobile & {
+          background: #2a2a2a !important;
+          color: #ffffff !important;
+          border-color: #434343 !important;
+
+          &:focus {
+            border-color: #667eea !important;
+            background: #333 !important;
+          }
+
+          &::placeholder {
+            color: rgba(255, 255, 255, 0.5) !important;
+          }
+        }
       }
+    }
+
+    .ai-opinion-mobile & {
+      background: rgba(#1a1a1a, 0.95) !important;
+      border-top-color: #434343 !important;
+    }
+  }
+
+  .ai-typing-indicator {
+    .ai-opinion-mobile & {
+      span {
+        background: #667eea !important;
+      }
+    }
+  }
+}
+
+/* Дополнительные стили для корректного отображения модального окна */
+.ai-opinion-modal {
+  z-index: 1050 !important;
+
+  .ant-modal-wrap {
+    overflow: hidden !important;
+  }
+
+  .ant-modal {
+    .ant-modal-content {
+      overflow: hidden !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    .ant-modal-body {
+      flex: 1 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+  }
+
+  // Скрываем стандартные элементы модального окна
+  .ant-modal-header {
+    display: none !important;
+  }
+
+  .ant-modal-close {
+    display: none !important;
+  }
+
+  .ant-modal-footer {
+    display: none !important;
+  }
+
+  // Обеспечиваем правильное поведение на мобильных устройствах
+  @media (max-width: 768px) {
+    .ant-modal {
+      margin: 0 !important;
+      padding: 0 !important;
+      max-width: 100vw !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      transform: none !important;
+    }
+
+    .ant-modal-content {
+      height: 100vh !important;
+      max-height: 100vh !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+  }
+}
+
+/* Фиксы для предотвращения конфликтов с глобальными стилями */
+.ai-opinion-modal {
+  * {
+    box-sizing: border-box !important;
+  }
+
+  button {
+    outline: none !important;
+
+    &:focus {
+      outline: none !important;
+    }
+  }
+
+  .ant-input {
+    outline: none !important;
+
+    &:focus {
+      outline: none !important;
+    }
+  }
+
+  .ant-card {
+    margin: 0 !important;
+  }
+
+  .ant-avatar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  // Переопределяем потенциально конфликтующие стили
+  .ai-opinion-container.ai-opinion-mobile {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+
+    * {
+      font-family: inherit !important;
     }
   }
 }

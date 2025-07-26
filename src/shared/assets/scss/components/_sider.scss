@@ -100,7 +100,12 @@
 }
 
 .sider-logo {
-  padding: 20px 16px;
+  // КРИТИЧЕСКИ ВАЖНО: высота строго соответствует $header-height
+  height: $header-height !important;
+  min-height: $header-height !important;
+  max-height: $header-height !important;
+
+  padding: 12px 16px;
   background: linear-gradient(135deg,
           rgba($background-color, 0.95) 0%,
           rgba($secondary-color, 0.9) 100%);
@@ -110,6 +115,9 @@
   position: relative;
   transition: all $transition-speed ease;
   flex-shrink: 0;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 
   // Декоративная линия снизу
   &::after {
@@ -125,10 +133,34 @@
             transparent 100%);
   }
 
+  // Контейнер для изображения
+  .ant-image {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
+
   .sider-logo-image {
     cursor: pointer;
     transition: all $transition-speed cubic-bezier(0.25, 0.46, 0.45, 0.94);
     filter: drop-shadow(0 2px 4px rgba($card-shadow, 0.15));
+
+    // Критически важно: сохраняем пропорции и предотвращаем растягивание
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: 40px !important; // Максимальная высота для развернутого состояния
+    object-fit: contain !important; // Сохраняем пропорции
+    object-position: center !important;
+    display: block !important;
+
+    // Дополнительная защита от растягивания в WebKit браузерах
+    -webkit-box-sizing: content-box !important;
+    box-sizing: content-box !important;
 
     &:hover {
       transform: scale(1.05);
@@ -655,7 +687,15 @@
   }
 
   .sider-logo {
-    padding: 16px 12px;
+    // Высота остается $header-height даже в свернутом состоянии
+    height: $header-height !important;
+    min-height: $header-height !important;
+    max-height: $header-height !important;
+    padding: 12px;
+
+    .sider-logo-image {
+      max-height: 32px !important; // Максимальная высота для свернутого состояния
+    }
   }
 
   .menu-header {
@@ -706,7 +746,7 @@
 .mobile-fab-menu {
   position: fixed;
   bottom: 24px;
-  left: 24px; // Перенесли влево
+  left: 24px;
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -856,6 +896,18 @@
     }
   }
 
+  .sider-logo {
+    // В мобильной версии высота также соответствует $header-height
+    height: $header-height !important;
+    min-height: $header-height !important;
+    max-height: $header-height !important;
+    padding: 12px 16px;
+
+    .sider-logo-image {
+      max-height: 40px !important; // В мобильной версии используем полный размер
+    }
+  }
+
   .sider-bottom {
     position: absolute;
     bottom: 0;
@@ -945,15 +997,6 @@
   }
 }
 
-//@keyframes slideInFromRight {
-//  from {
-//    transform: translateX(100%);
-//  }
-//  to {
-//    transform: translateX(0);
-//  }
-//}
-
 @keyframes slideInFromLeft {
   from {
     transform: translateX(-100%);
@@ -961,6 +1004,74 @@
   to {
     transform: translateX(0);
   }
+}
+
+// Специальные исправления для iOS Safari и WebKit браузеров
+@supports (-webkit-touch-callout: none) {
+  .sider-logo-image {
+    // Принудительно отключаем автоматическое изменение размеров в iOS Safari
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+
+    // Дополнительная защита от растягивания
+    min-width: auto !important;
+    min-height: auto !important;
+
+    // Обеспечиваем правильное масштабирование
+    transform-origin: center center !important;
+  }
+}
+
+// Исправления для старых версий браузеров
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  .sider-logo-image {
+    // Фиксы для старых WebKit браузеров
+    width: auto !important;
+    height: auto !important;
+  }
+}
+
+// Дополнительная защита для Retina дисплеев
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (min--moz-device-pixel-ratio: 2),
+only screen and (-o-min-device-pixel-ratio: 2/1),
+only screen and (min-device-pixel-ratio: 2),
+only screen and (min-resolution: 192dpi),
+only screen and (min-resolution: 2dppx) {
+  .sider-logo-image {
+    // Обеспечиваем четкость на Retina дисплеях без изменения размеров
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
+  }
+}
+
+// Резервные стили для экстремальных случаев
+.sider-logo {
+  // Если изображение по каким-то причинам не загружается правильно
+  .ant-image-img {
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    object-fit: contain !important;
+  }
+
+  // Дополнительная защита для Ant Design Image компонента
+  .ant-image-mask {
+    border-radius: 0 !important;
+  }
+}
+
+// Специальная обработка для случаев, когда изображение может быть обернуто
+img.sider-logo-image,
+.sider-logo img,
+.sider-logo .ant-image img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  display: block !important;
 }
 
 // Медиа-запросы для точной настройки
@@ -979,7 +1090,7 @@
 @media (max-width: 480px) {
   .mobile-fab-menu {
     bottom: 20px;
-    left: 20px; // Обновляем для маленьких экранов
+    left: 20px;
     width: 52px;
     height: 52px;
 
@@ -993,7 +1104,15 @@
     max-width: 90vw;
 
     .sider-logo {
-      padding: 16px 12px;
+      // Даже на маленьких экранах высота соответствует $header-height
+      height: $header-height !important;
+      min-height: $header-height !important;
+      max-height: $header-height !important;
+      padding: 10px 12px;
+
+      .sider-logo-image {
+        max-height: 36px !important; // Немного уменьшаем для маленьких экранов
+      }
     }
 
     .communities-navigation {
@@ -1044,7 +1163,7 @@
 @supports (padding: max(0px)) {
   .mobile-fab-menu {
     bottom: max(24px, calc(24px + env(safe-area-inset-bottom)));
-    left: max(24px, calc(24px + env(safe-area-inset-left))); // Обновляем safe area для левой стороны
+    left: max(24px, calc(24px + env(safe-area-inset-left)));
   }
 
   .mobile-sider {

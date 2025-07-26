@@ -20,10 +20,13 @@ import {
   VotingOptionModel,
 } from 'src/models';
 import { Opinions, UserVoting, VotingResults } from 'src/components';
-import { AuthContextProvider, VoteInPercent } from 'src/interfaces';
+import {
+  AuthContextProvider,
+  VoteInPercent,
+  VotingOptionData,
+} from 'src/interfaces';
 import { useAuth } from 'src/hooks';
 import { StatusTag } from 'src/components/StatusTag/status-tag.component.tsx';
-import { convertVotingOptions } from 'src/utils/voting.utils.ts';
 import { OneDayEventLabel } from 'src/consts';
 import dayjs from 'dayjs';
 
@@ -46,8 +49,8 @@ export function InitiativeDetail() {
   const [voteInPercent, setVoteInPercent] = useState({} as VoteInPercent);
   const [userVote, setUserVote] = useState<boolean | undefined>(undefined);
   const [userOption, setUserOption] = useState<VotingOptionModel[]>([]);
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-  const [minorityOptions, setMinorityOptions] = useState<string[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<VotingOptionData | {}>({});
+  const [minorityOptions, setMinorityOptions] = useState<VotingOptionData | {}>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [disabled, setDisabled] = useState(true);
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -91,14 +94,8 @@ export function InitiativeDetail() {
             if (!votingResultId) {
               setVotingResultId(initiativeInst.voting_result?.id);
             }
-            const options: string[] = convertVotingOptions(
-              initiativeInst.voting_result?.options || {}
-            );
-            setSelectedOptions(options);
-            const _minorityOptions = convertVotingOptions(
-              initiativeInst.voting_result?.minority_options || {}
-            );
-            setMinorityOptions(_minorityOptions);
+            setSelectedOptions(initiativeInst.voting_result?.options || {});
+            setMinorityOptions(initiativeInst.voting_result?.minority_options || {});
             setInitiativeStatus(initiativeInst.status?.name || '');
             setInitiativeStatusCode(initiativeInst.status?.code || '');
             if (!eventDate && initiativeInst.event_date) {

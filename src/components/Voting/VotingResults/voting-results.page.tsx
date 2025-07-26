@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Form, Progress, Select, Tooltip } from 'antd';
+import { Button, Progress, Tooltip } from 'antd';
 import {
   InfoCircleOutlined,
   RobotOutlined,
@@ -7,7 +7,7 @@ import {
   QuestionCircleOutlined,
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
-import { VotingResultsProps } from 'src/interfaces';
+import { VotingResultsProps, VotingOptionData } from 'src/interfaces';
 import { AiCompromise } from 'src/components';
 import './voting-results.page.scss';
 
@@ -16,6 +16,20 @@ export function VotingResults(props: VotingResultsProps) {
 
   const handleCompromise = () => {
     setAIModalVisible(true);
+  };
+
+  // Функция для сортировки и обработки опций голосования
+  const processVotingOptions = (data: VotingOptionData | {} | undefined): VotingOptionData[] => {
+    if (!data) return [];
+    return Object.values(data).sort(
+      (a, b) => a.number - b.number
+    );
+  };
+
+  // Проверка существования данных
+  const hasData = (data: VotingOptionData | {} | undefined): boolean => {
+    if (!data) return false;
+    return Object.keys(data).length > 0;
   };
 
   return (
@@ -96,55 +110,80 @@ export function VotingResults(props: VotingResultsProps) {
         </div>
       </div>
 
-      {/* Дополнительный вопрос */}
-      {props.extraQuestion && (props.selectedOptions || []).length > 0 && (
+      {/* Результаты дополнительного вопроса */}
+      {props.extraQuestion && hasData(props.selectedOptions) && (
         <div className="extra-question-section">
           <div className="extra-question-title">
             <QuestionCircleOutlined />
-            Дополнительные параметры
+            Результаты уточняющего вопроса
           </div>
           <div className="extra-question-text">
             {props.extraQuestion}
           </div>
-          <Form.Item>
-            <Select
-              mode="multiple"
-              value={props.selectedOptions}
-              suffixIcon={null}
-              open={false}
-              removeIcon={null}
-              placeholder="Выбранные варианты"
-            />
-          </Form.Item>
+
+          <div className="extra-options-results">
+            {processVotingOptions(props.selectedOptions).map((option, index) => (
+              <div key={index} className="extra-option-item">
+                <div className="option-header">
+                  <div className="option-label">
+                    <div className="option-number">{option.number}</div>
+                    <div className="option-value">{option.value}</div>
+                  </div>
+                  <div className="option-percentage">{option.percent}%</div>
+                </div>
+                <div className="option-progress-container">
+                  <Progress
+                    percent={option.percent}
+                    status="active"
+                    showInfo={false}
+                    className="extra-option-progress"
+                    size={['', 6]}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
       {/* Последствия несоблюдения правила */}
-      {props.resource === 'rule' && (props.noncompliance || []).length > 0 && (
-        <div className="extra-question-section">
-          <div className="extra-question-title">
+      {props.resource === 'rule' && hasData(props.noncompliance) && (
+        <div className="noncompliance-section">
+          <div className="noncompliance-title">
             <ExclamationCircleOutlined />
-            Последствия несоблюдения
+            Последствия несоблюдения правила
           </div>
-          <div className="extra-question-text">
-            Последствия несоблюдения правила:
+          <div className="noncompliance-text">
+            Установленные последствия несоблюдения правила:
           </div>
-          <Form.Item>
-            <Select
-              mode="multiple"
-              value={props.noncompliance}
-              suffixIcon={null}
-              open={false}
-              removeIcon={null}
-              placeholder="Установленные последствия"
-            />
-          </Form.Item>
+
+          <div className="noncompliance-results">
+            {processVotingOptions(props.noncompliance).map((option, index) => (
+              <div key={index} className="noncompliance-item">
+                <div className="option-header">
+                  <div className="option-label">
+                    <div className="option-number">{option.number}</div>
+                    <div className="option-value">{option.value}</div>
+                  </div>
+                  <div className="option-percentage">{option.percent}%</div>
+                </div>
+                <div className="option-progress-container">
+                  <Progress
+                    percent={option.percent}
+                    status="active"
+                    showInfo={false}
+                    className="noncompliance-progress"
+                    size={['', 6]}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
       {/* Секция мнения меньшинства */}
-      {((props.minorityOptions || []).length > 0 ||
-        (props.minorityNoncompliance || []).length > 0) && (
+      {(hasData(props.minorityOptions) || hasData(props.minorityNoncompliance)) && (
         <div className="minority-section">
           <div className="minority-header">
             <div className="minority-info">
@@ -164,36 +203,65 @@ export function VotingResults(props: VotingResultsProps) {
           </div>
 
           <div className="minority-content">
-            {(props.minorityOptions || []).length > 0 && (
+            {/* Варианты общественно-значимого меньшинства */}
+            {hasData(props.minorityOptions) && (
               <div className="minority-form-field">
-                <Form.Item label="Варианты голосования">
-                  <Select
-                    mode="multiple"
-                    value={props.minorityOptions}
-                    suffixIcon={null}
-                    open={false}
-                    removeIcon={null}
-                    placeholder="Альтернативные варианты"
-                  />
-                </Form.Item>
+                <div className="minority-field-title">Варианты общественно-значимого меньшинства</div>
+
+                <div className="minority-options-results">
+                  {processVotingOptions(props.minorityOptions).map((option, index) => (
+                    <div key={index} className="minority-option-item">
+                      <div className="option-header">
+                        <div className="option-label">
+                          <div className="option-number">{option.number}</div>
+                          <div className="option-value">{option.value}</div>
+                        </div>
+                        <div className="option-percentage">{option.percent}%</div>
+                      </div>
+                      <div className="option-progress-container">
+                        <Progress
+                          percent={option.percent}
+                          status="active"
+                          showInfo={false}
+                          className="minority-option-progress"
+                          size={['', 6]}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
-            {props.resource === 'rule' &&
-              (props.minorityNoncompliance || []).length > 0 && (
-                <div className="minority-form-field">
-                  <Form.Item label="Последствия несоблюдения правила">
-                    <Select
-                      mode="multiple"
-                      value={props.minorityNoncompliance}
-                      suffixIcon={null}
-                      open={false}
-                      removeIcon={null}
-                      placeholder="Альтернативные последствия"
-                    />
-                  </Form.Item>
+            {/* Варианты меньшинства последствий несоблюдения */}
+            {props.resource === 'rule' && hasData(props.minorityNoncompliance) && (
+              <div className="minority-form-field">
+                <div className="minority-field-title">Варианты меньшинства последствий несоблюдения</div>
+
+                <div className="minority-noncompliance-results">
+                  {processVotingOptions(props.minorityNoncompliance).map((option, index) => (
+                    <div key={index} className="minority-noncompliance-item">
+                      <div className="option-header">
+                        <div className="option-label">
+                          <div className="option-number">{option.number}</div>
+                          <div className="option-value">{option.value}</div>
+                        </div>
+                        <div className="option-percentage">{option.percent}%</div>
+                      </div>
+                      <div className="option-progress-container">
+                        <Progress
+                          percent={option.percent}
+                          status="active"
+                          showInfo={false}
+                          className="minority-noncompliance-progress"
+                          size={['', 6]}
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
+            )}
           </div>
         </div>
       )}

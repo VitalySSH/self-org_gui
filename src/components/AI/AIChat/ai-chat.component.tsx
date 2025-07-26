@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, Input, Card, Avatar, Typography, Space, Divider } from 'antd';
+import { Button, Input, Card, Avatar, Typography, Space, Divider, Modal } from 'antd';
 import {
   SendOutlined,
   RobotOutlined,
   UserOutlined,
   CheckOutlined,
-  ArrowLeftOutlined
+  ArrowLeftOutlined,
+  CloseOutlined
 } from '@ant-design/icons';
 import { RuleFormInterface, Pagination } from 'src/interfaces';
 import { Filters } from 'src/shared/types.ts';
@@ -27,7 +28,13 @@ interface AIChatProps {
   fetchCategories: (pagination?: Pagination, filters?: Filters) => Promise<any>;
 }
 
-export const AIChat: React.FC<AIChatProps> = ({ onComplete, onCancel, fetchCategories }) => {
+// Исходный компонент без изменений
+const AIChatComponent: React.FC<AIChatProps & { isMobile?: boolean }> = ({
+                                                                           onComplete,
+                                                                           onCancel,
+                                                                           fetchCategories,
+                                                                           isMobile = false
+                                                                         }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -197,22 +204,22 @@ export const AIChat: React.FC<AIChatProps> = ({ onComplete, onCancel, fetchCateg
     (conversationStep >= 2 && !ruleData.is_extra_options);
 
   return (
-    <div className="ai-chat-container">
+    <div className={`ai-chat-container ${isMobile ? 'ai-chat-mobile' : ''}`}>
       <div className="ai-chat-header">
-        <Space>
-          <Button
-            type="text"
-            icon={<ArrowLeftOutlined />}
-            onClick={onCancel}
-            className="ai-chat-back-button"
-          >
-            Назад к форме
-          </Button>
-        </Space>
         <div className="ai-chat-title">
           <RobotOutlined style={{ color: '#1890ff', marginRight: 8 }} />
           ИИ-помощник
         </div>
+        <Space>
+          <Button
+            type="text"
+            icon={isMobile ? <CloseOutlined /> : <ArrowLeftOutlined />}
+            onClick={onCancel}
+            className="ai-chat-back-button"
+          >
+            {isMobile ? 'Закрыть' : 'Назад к форме'}
+          </Button>
+        </Space>
       </div>
 
       <div className="ai-chat-messages">
@@ -306,5 +313,53 @@ export const AIChat: React.FC<AIChatProps> = ({ onComplete, onCancel, fetchCateg
         )}
       </div>
     </div>
+  );
+};
+
+// Главный компонент с простым условием
+export const AIChat: React.FC<AIChatProps> = ({ onComplete, onCancel, fetchCategories }) => {
+  // Простое определение мобильного устройства при загрузке
+  const isMobile = window.innerWidth <= 768;
+
+  // Для мобильных - модальное окно, для десктопа - обычный компонент
+  if (isMobile) {
+    return (
+      <Modal
+        open={true}
+        onCancel={onCancel}
+        footer={null}
+        width="100%"
+        style={{
+          top: 0,
+          padding: 0,
+          maxWidth: '100vw'
+        }}
+        bodyStyle={{
+          padding: 0,
+          height: '100vh',
+          overflow: 'hidden'
+        }}
+        className="ai-chat-modal"
+        closable={false}
+        destroyOnClose={true}
+      >
+        <AIChatComponent
+          onComplete={onComplete}
+          onCancel={onCancel}
+          fetchCategories={fetchCategories}
+          isMobile={true}
+        />
+      </Modal>
+    );
+  }
+
+  // Десктопная версия - без изменений
+  return (
+    <AIChatComponent
+      onComplete={onComplete}
+      onCancel={onCancel}
+      fetchCategories={fetchCategories}
+      isMobile={false}
+    />
   );
 };

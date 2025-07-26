@@ -1,4 +1,5 @@
 import { Resource } from 'src/shared/types.ts';
+import { ResponsibilityData, VotingOptionData } from 'src/interfaces';
 
 export interface VotingResultsProps {
   yesPercent: number;
@@ -8,8 +9,8 @@ export interface VotingResultsProps {
   ruleId?: string;
   initiativeId?: string;
   extraQuestion?: string;
-  selectedOptions?: string[];
-  minorityOptions?: string[];
-  noncompliance?: string[];
-  minorityNoncompliance?: string[];
+  selectedOptions?: VotingOptionData | {};
+  minorityOptions?: VotingOptionData | {};
+  noncompliance?: ResponsibilityData | {};
+  minorityNoncompliance?: ResponsibilityData | {};
 }

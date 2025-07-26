@@ -19,13 +19,19 @@ export const AuthProvider = (component: ProviderComponent) => {
   const [user, setUser] = useLocalStorage('user', null);
   const [avatarUrl, setAvatarUrl] = useLocalStorage('avatar', null);
 
+  // храним последнюю валидную страницу (не auth страницы)
+  const lastValidPageRef = useRef<string>('/');
+
   const login = (user: UserInterface, toMainPage: boolean = false) => {
     setUser(user);
     changeAvatarUrl(user.foto_id);
     if (toMainPage) {
-      navigate('/');
-    } else navigate(-1);
+      navigate('/', { preventScrollReset: true });
+    } else {
+      navigate(-1);
+    }
   };
+
   const logout = () => {
     setAvatarUrl(null);
     setUser(null);
@@ -33,8 +39,10 @@ export const AuthProvider = (component: ProviderComponent) => {
   };
 
   const changeFotoId = (fotoId: string | null) => {
-    user.foto_id = fotoId;
-    setUser(user);
+    if (user) {
+      const updatedUser = { ...user, foto_id: fotoId };
+      setUser(updatedUser);
+    }
   };
 
   const changeAvatarUrl = (fotoId?: string | null, base64?: string) => {
@@ -67,8 +75,9 @@ export const AuthProvider = (component: ProviderComponent) => {
 
   const getUserRelation = (): UserModel => {
     const userModel = new UserModel();
-    userModel.id = user.id;
-
+    if (user?.id) {
+      userModel.id = user.id;
+    }
     return userModel;
   };
 
@@ -82,17 +91,29 @@ export const AuthProvider = (component: ProviderComponent) => {
     changeAvatarUrl,
   };
 
+  // отслеживаем изменения маршрута и сохраняем валидные страницы
+  useEffect(() => {
+    if (user && !exemptedRoutes.includes(location.pathname)) {
+      lastValidPageRef.current = location.pathname;
+    }
+  }, [location.pathname, user]);
+
   useEffect(() => {
     if (!user || exemptedRoutes.includes(location.pathname)) return;
+
     const handleWindowEvents = () => {
       clearTimeout(timeoutRef.current);
 
       timeoutRef.current = setTimeout(() => {
         setAvatarUrl(null);
         setUser(null);
+
+        // Если последняя валидная страница не auth страница - значит следуем по ссылке
+        const isFollowingLink = !exemptedRoutes.includes(lastValidPageRef.current);
+
         navigate('/sign-in', {
           preventScrollReset: true,
-          state: { isFollowingLink: true },
+          state: { isFollowingLink },
         });
       }, 1800000);
     };
@@ -110,7 +131,7 @@ export const AuthProvider = (component: ProviderComponent) => {
       window.removeEventListener('click', handleWindowEvents);
       window.removeEventListener('scroll', handleWindowEvents);
     };
-  }, [navigate, location.pathname, user, setAvatarUrl, setUser]);
+  }, [navigate, user, setAvatarUrl, setUser]);
 
-  return <AuthContext.Provider value={value} children={component.children} />;
+  return <AuthContext.Provider value={value}>{component.children}</AuthContext.Provider>;
 };
