@@ -1041,7 +1041,6 @@ only screen and (min-resolution: 192dpi),
 only screen and (min-resolution: 2dppx) {
   .sider-logo-image {
     // Обеспечиваем четкость на Retina дисплеях без изменения размеров
-    image-rendering: -webkit-optimize-contrast !important;
     image-rendering: crisp-edges !important;
   }
 }
