@@ -242,8 +242,8 @@
     right: 0 !important;
     transform: none !important;
 
-    // Высота и вертикальное позиционирование
-    max-height: 80vh !important;
+    // Высота и вертикальное позиционирование - единообразно с CustomSelect
+    max-height: 70vh !important;
     top: 20vh !important;
 
     // Убираем все отступы и границы
@@ -288,11 +288,11 @@
     }
 
     .ant-select-item {
-      // Увеличенные touch targets
-      padding: 16px;
+      // Увеличенные touch targets - единообразно с CustomSelect
+      padding: 14px; // Приведено к единообразию
       font-size: 16px; // Предотвращает zoom на iOS
-      margin: 2px 0;
-      min-height: 48px; // Минимальный touch target
+      margin: 1px 0; // Приведено к единообразию
+      min-height: 44px; // Минимальный touch target - приведено к единообразию
       display: flex;
       align-items: center;
 
@@ -302,9 +302,9 @@
       }
     }
 
-    // КРИТИЧНОЕ ИСПРАВЛЕНИЕ: Секция добавления
+    // КРИТИЧНОЕ ИСПРАВЛЕНИЕ: Секция добавления - единообразно с CustomSelect
     .add-community-container {
-      padding: 16px;
+      padding: 12px; // Приведено к единообразию
       // Фиксируем внизу
       position: sticky;
       bottom: 0;
@@ -315,11 +315,11 @@
 
       .ant-btn,
       .custom-add-button {
-        height: 48px !important; // Увеличенный touch target
+        height: 40px !important; // Приведено к единообразию
         font-size: 14px;
         min-width: 150px;
         width: auto; // Кнопка слева, не на всю ширину
-        padding: 12px 16px;
+        padding: 10px 16px; // Приведено к единообразию
 
         // ВАЖНО: Обеспечиваем кликабельность
         pointer-events: auto !important;
@@ -336,12 +336,22 @@
       }
     }
 
+    // Кнопка закрытия - единообразно с CustomSelect
     .mobile-close-button {
-      padding: 12px 16px;
+      padding: 6px 12px; // Приведено к единообразию
       flex-shrink: 0;
 
       .close-button-title {
-        font-size: 16px;
+        font-size: 13px; // Приведено к единообразию
+      }
+
+      .close-button {
+        width: 28px; // Приведено к единообразию
+        height: 28px; // Приведено к единообразию
+
+        .anticon {
+          font-size: 12px; // Приведено к единообразию
+        }
       }
     }
   }
@@ -353,14 +363,14 @@
     }
 
     .add-community-container {
-      padding: 12px;
+      padding: 12px; // Единообразно
     }
 
     .mobile-close-button {
-      padding: 8px 12px;
+      padding: 6px 12px; // Единообразно
 
       .close-button-title {
-        font-size: 14px;
+        font-size: 13px; // Единообразно
       }
     }
   }
@@ -653,7 +663,7 @@
       }
     }
 
-    // Темная тема для кнопки закрытия на мобильных
+    // Темная тема для кнопки закрытия на мобильных - единообразно с CustomSelect
     @media (max-width: 768px) {
       .mobile-close-button {
         background: rgba(#1f1f1f, 0.95);

@@ -196,11 +196,11 @@
     z-index: 9999 !important;
     position: fixed !important;
 
-    // Упрощенные размеры
+    // Упрощенные размеры - увеличиваем max-height для размещения кнопки
     width: calc(100vw - 32px) !important;
     max-width: none !important;
     min-width: 200px !important;
-    max-height: 60vh !important;
+    max-height: 70vh !important;
 
     // Центрирование по горизонтали
     left: 50% !important;
@@ -226,7 +226,31 @@
       }
     }
 
-    // Кнопка закрытия для мобильных
+    // ИСПРАВЛЕНИЕ: структура для предотвращения лишнего скролла
+    .custom-select-dropdown-content {
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+
+      &.readonly-mode {
+        .mobile-close-button {
+          .close-button-title {
+            color: rgba($text-color, 0.7);
+          }
+        }
+
+        .custom-select-menu {
+          opacity: 0.8;
+        }
+
+        .add-own-value-container {
+          display: none; // Полностью скрываем секцию добавления в readonly режиме
+        }
+      }
+    }
+
+    // Кнопка закрытия для мобильных - делаем компактнее
     .mobile-close-button {
       position: sticky;
       top: 0;
@@ -235,13 +259,14 @@
       background: rgba($background-color, 0.95);
       backdrop-filter: blur(8px);
       border-bottom: 1px solid rgba($border-color, 0.3);
-      padding: 8px 12px;
+      padding: 6px 12px; // Уменьшили с 8px до 6px
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-shrink: 0; // ИСПРАВЛЕНИЕ: добавлено для фиксации
 
       .close-button-title {
-        font-size: 14px;
+        font-size: 13px; // Уменьшили с 14px до 13px
         font-weight: 500;
         color: $text-color;
         font-family: $font-family;
@@ -251,8 +276,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 32px;
-        height: 32px;
+        width: 28px; // Уменьшили с 32px до 28px
+        height: 28px; // Уменьшили с 32px до 28px
         border-radius: 50%;
         background: rgba($border-color, 0.1);
         border: 1px solid rgba($border-color, 0.3);
@@ -265,7 +290,7 @@
         touch-action: manipulation !important;
 
         .anticon {
-          font-size: 14px;
+          font-size: 12px; // Уменьшили с 14px до 12px
         }
 
         &:hover,
@@ -282,15 +307,36 @@
     }
 
     .custom-select-menu {
-      max-height: 30vh !important;
+      // ИСПРАВЛЕНИЕ: точно такие же стили как в CommunitySelect
+      flex: 1;
+      overflow-y: auto !important;
+      overflow-x: hidden;
+      max-height: none !important;
+
+      // Убираем дублирующиеся скроллы
+      -webkit-overflow-scrolling: touch;
+
+      // Простой скроллбар
+      &::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: rgba($primary-color, 0.3);
+        border-radius: 2px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
     }
 
     .ant-select-item {
-      // Увеличенные touch targets
-      padding: 16px 12px;
+      // Увеличенные touch targets - делаем чуть компактнее
+      padding: 14px 12px; // Уменьшили с 16px до 14px
       font-size: 16px; // Предотвращает zoom на iOS
-      margin: 2px 4px;
-      min-height: 48px; // Минимальный touch target
+      margin: 1px 4px; // Уменьшили с 2px до 1px
+      min-height: 44px; // Минимальный touch target - уменьшили с 48px
 
       // Упрощенные hover эффекты
       &:active {
@@ -298,23 +344,24 @@
       }
     }
 
-    // КРИТИЧНОЕ ИСПРАВЛЕНИЕ: Секция добавления
+    // КРИТИЧНОЕ ИСПРАВЛЕНИЕ: Секция добавления - делаем компактнее
     .add-own-value-container {
-      padding: 16px 12px;
+      padding: 12px; // Уменьшили с 16px 12px до 12px
       // Предотвращаем потерю фокуса
       position: sticky;
       bottom: 0;
       background-color: $secondary-color;
       border-top: 2px solid $border-color;
       z-index: 10;
+      flex-shrink: 0; // ИСПРАВЛЕНИЕ: добавлено для фиксации
 
       .ant-input,
       .ant-input-textarea {
         font-size: 16px !important; // Критично для iOS
-        padding: 12px;
-        margin-bottom: 12px;
+        padding: 10px; // Уменьшили с 12px до 10px
+        margin-bottom: 8px; // Уменьшили с 12px до 8px
         border: 2px solid $border-color; // Увеличенная граница для видимости
-        min-height: 44px; // Touch target
+        min-height: 40px; // Уменьшили с 44px до 40px
 
         // ВАЖНО: Предотвращаем потерю фокуса
         &:focus {
@@ -326,11 +373,11 @@
 
       .ant-btn,
       .custom-add-button {
-        height: 44px !important; // Увеличенный touch target
+        height: 40px !important; // Уменьшили с 44px до 40px
         font-size: 14px;
         min-width: 100px;
         width: 100%; // Полная ширина для удобства
-        padding: 12px;
+        padding: 10px; // Уменьшили с 12px до 10px
 
         // ВАЖНО: Обеспечиваем кликабельность
         pointer-events: auto !important;
@@ -373,7 +420,7 @@
     margin: 8px;
 
     .custom-select-menu {
-      max-height: 25vh !important;
+      max-height: none !important;
     }
 
     .add-own-value-container {
