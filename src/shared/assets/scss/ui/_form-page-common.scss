@@ -6,12 +6,13 @@
   --form-max-width: 1000px;
   --form-border-radius: 8px;
   --form-transition: all 0.2s ease;
+  --form-mobile-padding: 8px;
+  --form-toolbar-height: 100px;
 }
 
 // Миксин для базовых стилей форм
 @mixin form-page-base($theme-color) {
   min-height: 100vh;
-  background: linear-gradient(135deg, rgba($theme-color, 0.02) 0%, rgba($theme-color, 0.01) 100%);
   padding: 24px;
 
   .form-page-container {
@@ -73,7 +74,6 @@
     background: $background-color;
     border-radius: var(--form-border-radius);
     border: 1px solid $border-color;
-    padding: 32px;
     animation: slideInUp 0.4s ease-out 0.1s both;
 
     .ant-form-item {
@@ -89,6 +89,21 @@
           margin-left: 4px;
         }
       }
+
+      // Оптимизация для мобильных input'ов
+      .ant-input,
+      .ant-input-affix-wrapper,
+      textarea.ant-input {
+        transition: var(--form-transition);
+
+        // Мобильные оптимизации по умолчанию
+        @media (max-width: 768px) {
+          font-size: 16px; // Предотвращает zoom на iOS
+          min-height: 44px; // Минимальный touch target
+          border-radius: 8px;
+          padding: 12px;
+        }
+      }
     }
 
     // Select стили
@@ -99,6 +114,12 @@
         box-shadow: none;
         outline: none;
         transition: var(--form-transition);
+
+        // Мобильные оптимизации для select
+        @media (max-width: 768px) {
+          min-height: 44px;
+          border-radius: 8px;
+        }
       }
 
       &:hover .ant-select-selector {
@@ -117,64 +138,13 @@
     }
   }
 
-  // Панель инструментов
+  // Панель инструментов (общие стили без переопределения)
   .form-toolbar-card {
     background: $background-color;
     border-radius: var(--form-border-radius);
     border: 1px solid $border-color;
     padding: 20px 32px;
     animation: slideInUp 0.4s ease-out 0.2s both;
-
-    //.toolbar-content {
-    //  display: flex;
-    //  justify-content: space-between;
-    //  align-items: center;
-    //  gap: 16px;
-    //
-    //  .toolbar-actions {
-    //    display: flex;
-    //    gap: 12px;
-    //
-    //    .toolbar-button {
-    //      height: 40px;
-    //      padding: 0 24px;
-    //      border-radius: 6px;
-    //      font-weight: 600;
-    //      transition: var(--form-transition);
-    //
-    //      &.ant-btn-primary {
-    //        background: linear-gradient(135deg, $theme-color 0%, color.mix($theme-color, black, 90%) 100%);
-    //        border: none;
-    //
-    //        &:hover:not(:disabled) {
-    //          background: linear-gradient(135deg, color.mix($theme-color, white, 95%) 0%, $theme-color 100%);
-    //          transform: translateY(-1px);
-    //        }
-    //
-    //        &:disabled {
-    //          opacity: 0.6;
-    //        }
-    //      }
-    //
-    //      &.ant-btn-default {
-    //        border-color: $border-color;
-    //        color: $text-color;
-    //
-    //        &:hover {
-    //          border-color: $info-color;
-    //          color: $info-color;
-    //          transform: translateY(-1px);
-    //        }
-    //      }
-    //    }
-    //  }
-    //
-    //  .toolbar-info {
-    //    font-size: 12px;
-    //    color: rgba($text-color, 0.6);
-    //    font-style: italic;
-    //  }
-    //}
   }
 
   // Карточка загрузки
@@ -196,93 +166,135 @@
   }
 }
 
-// Адаптивные стили
+// Оптимизированные адаптивные стили
 @media (max-width: 768px) {
+  // Общие мобильные стили для всех форм
   .form-page-container {
-    padding: 0 12px;
-    gap: 16px;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: var(--form-mobile-padding) var(--form-mobile-padding) calc(var(--form-toolbar-height) + var(--form-mobile-padding)) var(--form-mobile-padding) !important;
+    gap: 12px !important;
+    min-height: 100vh;
+    box-sizing: border-box;
   }
 
+  // Мобильные стили для заголовка
   .form-header-card {
-    padding: 24px 20px;
+    margin: 0 !important;
+    border-radius: 0 0 12px 12px !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+    padding: 20px 16px !important;
 
     .form-header-icon {
-      width: 48px;
-      height: 48px;
+      width: 40px !important;
+      height: 40px !important;
+      margin-bottom: 12px !important;
 
       .anticon {
-        font-size: 20px;
+        font-size: 18px !important;
       }
     }
 
     .form-header-title {
-      font-size: 20px;
+      font-size: 18px !important;
+      margin-bottom: 6px !important;
     }
 
     .form-header-subtitle {
-      font-size: 13px;
+      font-size: 13px !important;
+      max-width: none !important;
     }
   }
 
+  // Мобильные стили для основной карточки
   .form-main-card {
-    padding: 24px 20px;
+    margin: 0 !important;
+    border-radius: 12px !important;
+    padding: 16px 12px !important;
 
     .ant-form-item {
-      margin-bottom: 20px;
+      margin-bottom: 16px !important;
+
+      .ant-form-item-label {
+        padding-bottom: 4px !important;
+
+        > label {
+          font-size: 13px !important;
+          font-weight: 600 !important;
+        }
+      }
+
+      textarea.ant-input {
+        min-height: 100px !important;
+        resize: vertical !important;
+      }
     }
   }
 
+  // Мобильные стили для панели инструментов
   .form-toolbar-card {
-    padding: 16px 20px;
+    padding: 16px 20px !important;
+  }
 
-    //.toolbar-content {
-    //  flex-direction: column;
-    //  align-items: stretch;
-    //  gap: 12px;
-    //
-    //  .toolbar-actions {
-    //    width: 100%;
-    //    justify-content: center;
-    //
-    //    .toolbar-button {
-    //      flex: 1;
-    //      max-width: 140px;
-    //    }
-    //  }
-    //
-    //  .toolbar-info {
-    //    text-align: center;
-    //  }
-    //}
+  // Мобильные стили для карточки загрузки
+  .form-loading-card {
+    min-height: 300px !important;
+    margin: 0 !important;
+    border-radius: 12px !important;
   }
 }
 
 @media (max-width: 480px) {
   .form-page-container {
-    padding: 0 8px;
-    gap: 12px;
+    padding: 4px 4px calc(var(--form-toolbar-height) + 4px) 4px !important;
+    gap: 8px !important;
   }
 
   .form-header-card {
-    padding: 20px 16px;
+    padding: 16px 12px !important;
+    border-radius: 0 0 8px 8px !important;
+
+    .form-header-title {
+      font-size: 16px !important;
+    }
+
+    .form-header-subtitle {
+      font-size: 12px !important;
+    }
   }
 
   .form-main-card {
-    padding: 20px 16px;
+    padding: 12px 8px !important;
+    border-radius: 8px !important;
+
+    .ant-form-item {
+      margin-bottom: 12px !important;
+
+      .ant-form-item-label > label {
+        font-size: 12px !important;
+      }
+
+      .ant-input,
+      .ant-input-affix-wrapper,
+      textarea.ant-input {
+        padding: 10px !important;
+      }
+    }
   }
 
   .form-toolbar-card {
-    padding: 12px 16px;
+    padding: 12px 16px !important;
+  }
+}
 
-    //.toolbar-content {
-    //  .toolbar-actions {
-    //    flex-direction: column;
-    //
-    //    .toolbar-button {
-    //      max-width: none;
-    //    }
-    //  }
-    //}
+// Поддержка safe-area для устройств с вырезами
+@supports (padding: max(0px)) {
+  @media (max-width: 768px) {
+    .form-page-container {
+      padding-bottom: max(calc(var(--form-toolbar-height) + var(--form-mobile-padding)), calc(var(--form-toolbar-height) + var(--form-mobile-padding) + env(safe-area-inset-bottom))) !important;
+    }
   }
 }
 
@@ -342,25 +354,16 @@
     }
   }
 
-  //.form-toolbar-card {
-  //  .toolbar-content {
-  //    .toolbar-button {
-  //      &.ant-btn-default {
-  //        background: #2a2a2a;
-  //        border-color: #434343;
-  //        color: #ffffff;
-  //      }
-  //    }
-  //
-  //    .toolbar-info {
-  //      color: rgba(#ffffff, 0.6);
-  //    }
-  //  }
-  //}
-
   .form-loading-card {
     .loading-text {
       color: rgba(#ffffff, 0.7);
+    }
+  }
+
+  // Мобильные темная тема
+  @media (max-width: 768px) {
+    .form-page-container {
+      background: #1a1a1a;
     }
   }
 }

@@ -6,6 +6,7 @@ import { StatusModel } from 'src/models';
 import { Filters } from 'src/shared/types.ts';
 import { CustomSelect } from 'src/components';
 import {
+  EventCompletedCode,
   InitiativeApprovedCode,
   InitiativeRevokedCode,
   OnConsiderationCode,
@@ -53,6 +54,7 @@ export function ResourceFilterModal({
             PrincipalAgreementCode,
             InitiativeApprovedCode,
             InitiativeRevokedCode,
+            EventCompletedCode,
           ],
         });
         break;

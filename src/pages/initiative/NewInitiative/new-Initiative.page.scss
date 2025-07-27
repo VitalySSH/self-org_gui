@@ -152,59 +152,253 @@
     min-height: 120px;
   }
 
-  // Мобильная адаптация
+  // Мобильная адаптация - УНИФИЦИРОВАННАЯ С NEW-RULE
   @media (max-width: 768px) {
-    .extra-options-section,
-    .event-date-section {
+    // Убираем padding у основного контейнера
+    padding: 0;
+    min-height: 100vh;
+
+    .ant-card-body {
+      padding: 8px;
+    }
+
+    .form-page-container {
+      max-width: none;
+      margin: 0;
+      gap: 12px;
+      padding: 12px 8px 100px 8px; // Добавляем нижний отступ для toolbar
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .form-header-card {
+      margin: 0;
+      border-radius: 0 0 12px 12px;
+      border-left: none;
+      border-right: none;
+      border-top: none;
       padding: 20px 16px;
 
+      .form-header-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 12px;
+
+        .anticon {
+          font-size: 18px;
+        }
+      }
+
+      .form-header-title {
+        font-size: 18px;
+        margin-bottom: 6px;
+      }
+
+      .form-header-subtitle {
+        font-size: 13px;
+        max-width: none;
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: center;
+        margin-top: 12px;
+
+        .ai-button {
+          flex: 1;
+          max-width: 200px;
+          height: 40px;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .form-main-card {
+      margin: 0;
+      border-radius: 12px;
+      border: 1px solid $border-color;
+      padding: 16px 12px;
+
+      .ant-form-item {
+        margin-bottom: 16px;
+
+        .ant-form-item-label {
+          padding-bottom: 4px;
+
+          > label {
+            font-size: 13px;
+            font-weight: 600;
+          }
+        }
+
+        .ant-input,
+        .ant-input-affix-wrapper,
+        textarea.ant-input {
+          font-size: 16px; // Предотвращает zoom на iOS
+          border-radius: 8px;
+          padding: 12px;
+          min-height: 44px; // Минимальный touch target
+        }
+
+        textarea.ant-input {
+          min-height: 100px;
+          resize: vertical;
+        }
+      }
+
+      // DatePicker на мобильных
+      .ant-picker {
+        font-size: 16px;
+        border-radius: 8px;
+        padding: 12px;
+        min-height: 44px;
+      }
+    }
+
+    .extra-options-section,
+    .event-date-section {
+      padding: 16px 12px;
+      margin-top: 12px;
+      border-radius: 12px;
+
       .section-title {
-        font-size: 15px;
+        font-size: 14px;
+        margin-bottom: 12px;
+
+        .anticon {
+          font-size: 16px;
+        }
       }
     }
 
     .extra-options-section {
       .form-list-input {
         .ant-space {
+          width: 100%;
           flex-direction: column;
           align-items: stretch;
+          gap: 8px;
+
+          .ant-form-item {
+            width: 100%;
+          }
 
           .anticon {
             align-self: flex-end;
-            margin-top: 4px;
+            margin-top: 0;
+            padding: 8px;
+            background: rgba($error-color, 0.1);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
           }
+        }
+
+        .ant-btn {
+          height: 44px;
+          font-size: 14px;
+          border-radius: 8px;
         }
       }
     }
 
-    .form-header-card {
-      .header-actions {
-        width: 100%;
-        justify-content: center;
-
-        .ai-button {
-          flex: 1;
-          max-width: 200px;
-        }
-      }
+    // Switch компоненты на мобильных
+    .ant-switch {
+      transform: scale(1.1);
     }
   }
 
   @media (max-width: 480px) {
+    .ant-card-body {
+      padding: 6px;
+    }
+
+    .form-page-container {
+      padding: 8px 4px 100px 4px;
+      gap: 8px;
+    }
+
+    .form-header-card {
+      padding: 16px 12px;
+      border-radius: 0 0 8px 8px;
+
+      .form-header-title {
+        font-size: 16px;
+      }
+
+      .form-header-subtitle {
+        font-size: 12px;
+      }
+
+      .header-actions {
+        .ai-button {
+          height: 36px;
+          font-size: 13px;
+          max-width: 180px;
+        }
+      }
+    }
+
+    .form-main-card {
+      padding: 12px 8px;
+      border-radius: 8px;
+
+      .ant-form-item {
+        margin-bottom: 12px;
+
+        .ant-form-item-label > label {
+          font-size: 12px;
+        }
+
+        .ant-input,
+        .ant-input-affix-wrapper,
+        textarea.ant-input {
+          font-size: 16px;
+          padding: 10px;
+        }
+      }
+
+      .ant-picker {
+        font-size: 16px;
+        padding: 10px;
+      }
+    }
+
     .extra-options-section,
     .event-date-section {
-      padding: 16px;
-      margin-top: 12px;
+      padding: 12px 8px;
 
       .section-title {
-        font-size: 14px;
-        margin-bottom: 12px;
+        font-size: 13px;
+      }
+    }
+
+    .extra-options-section {
+      .form-list-input {
+        .ant-btn {
+          height: 40px;
+          font-size: 13px;
+        }
       }
     }
   }
 
-  // Темная тема
+  // Темная тема для мобильных - УНИФИЦИРОВАННАЯ С NEW-RULE
   .dark-theme & {
+    @media (max-width: 768px) {
+      .form-page-container {
+        background: #1a1a1a;
+      }
+
+      .form-header-card {
+        background: linear-gradient(135deg, rgba(#fa8c16, 0.08) 0%, rgba(#fa8c16, 0.04) 100%);
+        border-color: rgba(#fa8c16, 0.2);
+      }
+    }
+
     .extra-options-section {
       background: rgba(24, 144, 255, 0.05);
       border-color: rgba(24, 144, 255, 0.2);
@@ -243,6 +437,15 @@
       &.ant-picker-focused {
         border-color: $info-color;
         box-shadow: 0 0 0 2px rgba($info-color, 0.1);
+      }
+    }
+  }
+
+  // Поддержка safe-area для устройств с вырезами - ДОБАВЛЕНО
+  @supports (padding: max(0px)) {
+    @media (max-width: 768px) {
+      .form-page-container {
+        padding-bottom: max(100px, calc(100px + env(safe-area-inset-bottom)));
       }
     }
   }
