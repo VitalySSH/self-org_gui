@@ -27,12 +27,13 @@ export function SignIn() {
     authApiClientService
       .login(formData.email, secret_password)
       .then(async () => {
+        const toMainPage = isSignUp || !isFollowingLink;
         if (!authData.user) {
           const currentUser = await authApiClientService.getCurrentUser();
           currentUser.secret_password = secret_password;
-          authData.login(currentUser, isSignUp);
+          authData.login(currentUser, toMainPage);
         } else {
-          if (isSignUp || !isFollowingLink) {
+          if (toMainPage) {
             navigate('/', { preventScrollReset: true });
           } else navigate(-1);
         }
@@ -118,16 +119,25 @@ export function SignIn() {
               {
                 whitespace: false,
               },
+              // {
+              //   pattern: /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])/g,
+              //   message: 'Используйте латинские буквы в разном регистре и цифры',
+              // },
               {
-                pattern: /(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])/g,
-                message: 'Используйте латинские буквы в разном регистре и цифры',
+                min: 4,
+                message: 'Пароль должен содержать минимум 4 символа',
               },
+              {
+                pattern: /^[\w!@#$%^&*()\-+=~`[\]{}|\\:;"'<>,.?/]+$/,
+                message: 'Можно использовать только латинские буквы, цифры и спецсимволы',
+              }
             ]}
           >
             <Input.Password
               prefix={<LockOutlined className="auth-form-icon" />}
               type="password"
-              minLength={8}
+              // minLength={8}
+              maxLength={128}
               placeholder="Введите ваш пароль"
               size="large"
             />

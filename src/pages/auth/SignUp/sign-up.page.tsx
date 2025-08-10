@@ -259,23 +259,31 @@ export function SignUp() {
             whitespace: false,
           },
           {
-            min: 8,
-            message: 'Пароль должен содержать минимум 8 символов',
+            min: 4,
+            message: 'Пароль должен содержать минимум 4 символа',
           },
+          // {
+          //   min: 8,
+          //   message: 'Пароль должен содержать минимум 8 символов',
+          // },
           {
             max: 128,
             message: 'Пароль не должен превышать 128 символов',
           },
+          // {
+          //   pattern: /(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}/g,
+          //   message: 'Пароль должен содержать латинские буквы (разного регистра), цифры и спецсимволы',
+          // },
           {
-            pattern: /(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{8,}/g,
-            message: 'Пароль должен содержать латинские буквы (разного регистра), цифры и спецсимволы',
-          },
+            pattern: /^[\w!@#$%^&*()\-+=~`[\]{}|\\:;"'<>,.?/]+$/,
+            message: 'Можно использовать только латинские буквы, цифры и спецсимволы',
+          }
         ]}
         hasFeedback
       >
         <Input.Password
           prefix={<LockOutlined className="auth-form-icon" />}
-          minLength={8}
+          // minLength={8}
           maxLength={128}
           placeholder="Создайте надежный пароль"
           size="large"
@@ -308,7 +316,7 @@ export function SignUp() {
       >
         <Input.Password
           prefix={<LockOutlined className="auth-form-icon" />}
-          minLength={8}
+          // minLength={8}
           maxLength={128}
           placeholder="Повторите пароль"
           size="large"
