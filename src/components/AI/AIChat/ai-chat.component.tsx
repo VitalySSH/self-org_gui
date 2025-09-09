@@ -1,12 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Button, Input, Card, Avatar, Typography, Space, Divider, Modal } from 'antd';
+import {
+  Button,
+  Input,
+  Card,
+  Avatar,
+  Typography,
+  Space,
+  Divider,
+  Modal,
+} from 'antd';
 import {
   SendOutlined,
   RobotOutlined,
   UserOutlined,
   CheckOutlined,
   ArrowLeftOutlined,
-  CloseOutlined
+  CloseOutlined,
 } from '@ant-design/icons';
 import { RuleFormInterface, Pagination } from 'src/interfaces';
 import { Filters } from 'src/shared/types.ts';
@@ -30,11 +39,11 @@ interface AIChatProps {
 
 // Исходный компонент без изменений
 const AIChatComponent: React.FC<AIChatProps & { isMobile?: boolean }> = ({
-                                                                           onComplete,
-                                                                           onCancel,
-                                                                           fetchCategories,
-                                                                           isMobile = false
-                                                                         }) => {
+  onComplete,
+  onCancel,
+  fetchCategories,
+  isMobile = false,
+}) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -66,7 +75,7 @@ const AIChatComponent: React.FC<AIChatProps & { isMobile?: boolean }> = ({
       isUser,
       timestamp: new Date(),
     };
-    setMessages(prev => [...prev, newMessage]);
+    setMessages((prev) => [...prev, newMessage]);
   };
 
   const simulateTyping = (text: string, delay: number = 1000) => {
@@ -83,36 +92,38 @@ const AIChatComponent: React.FC<AIChatProps & { isMobile?: boolean }> = ({
       condition: (step: number) => step === 0,
       response: (userInput: string) => {
         // Имитируем обработку пользовательского ввода
-        const title = userInput.substring(0, 50) + (userInput.length > 50 ? '...' : '');
-        setRuleData(prev => ({
+        const title =
+          userInput.substring(0, 50) + (userInput.length > 50 ? '...' : '');
+        setRuleData((prev) => ({
           ...prev,
           title: title,
           content: userInput,
         }));
         return `Отлично! Теперь помоги мне сформулировать вопрос для голосования. Это должен быть закрытый вопрос, на который можно ответить "да" или "нет".`;
-      }
+      },
     },
     // Второй ответ после вопроса
     {
       condition: (step: number) => step === 1,
       response: (userInput: string) => {
         const question = userInput.endsWith('?') ? userInput : userInput + '?';
-        setRuleData(prev => ({
+        setRuleData((prev) => ({
           ...prev,
           question: question,
         }));
         return `Хорошо! Теперь скажи, нужны ли дополнительные параметры для голосования? Это может быть полезно, если ответ не ограничивается только "да" или "нет".`;
-      }
+      },
     },
     // Третий ответ
     {
       condition: (step: number) => step === 2,
       response: (userInput: string) => {
-        const needsExtra = userInput.toLowerCase().includes('да') ||
+        const needsExtra =
+          userInput.toLowerCase().includes('да') ||
           userInput.toLowerCase().includes('нужн') ||
           userInput.toLowerCase().includes('необходим');
 
-        setRuleData(prev => ({
+        setRuleData((prev) => ({
           ...prev,
           is_extra_options: needsExtra,
           is_multi_select: false,
@@ -123,14 +134,16 @@ const AIChatComponent: React.FC<AIChatProps & { isMobile?: boolean }> = ({
         } else {
           return `Отлично! Все данные собраны. Теперь я подготовлю форму с вашими данными. Нажмите "Подтвердить", чтобы продолжить.`;
         }
-      }
+      },
     },
     // Четвертый ответ (если нужны дополнительные параметры)
     {
       condition: (step: number) => step === 3,
       response: (userInput: string) => {
-        const extraQuestion = userInput.endsWith('?') ? userInput : userInput + '?';
-        setRuleData(prev => ({
+        const extraQuestion = userInput.endsWith('?')
+          ? userInput
+          : userInput + '?';
+        setRuleData((prev) => ({
           ...prev,
           extra_question: extraQuestion,
           extra_options: [
@@ -140,7 +153,7 @@ const AIChatComponent: React.FC<AIChatProps & { isMobile?: boolean }> = ({
           ],
         }));
         return `Отлично! Все данные собраны. Теперь я подготовлю форму с вашими данными. Нажмите "Подтвердить", чтобы продолжить.`;
-      }
+      },
     },
   ];
 
@@ -152,14 +165,14 @@ const AIChatComponent: React.FC<AIChatProps & { isMobile?: boolean }> = ({
     setCurrentMessage('');
 
     // Находим подходящий ответ
-    const responseConfig = mockAIResponses.find(config =>
+    const responseConfig = mockAIResponses.find((config) =>
       config.condition(conversationStep)
     );
 
     if (responseConfig) {
       const response = responseConfig.response(userInput);
       simulateTyping(response, 800);
-      setConversationStep(prev => prev + 1);
+      setConversationStep((prev) => prev + 1);
     }
   };
 
@@ -200,7 +213,8 @@ const AIChatComponent: React.FC<AIChatProps & { isMobile?: boolean }> = ({
     }
   };
 
-  const canConfirm = conversationStep >= 3 ||
+  const canConfirm =
+    conversationStep >= 3 ||
     (conversationStep >= 2 && !ruleData.is_extra_options);
 
   return (
@@ -232,7 +246,7 @@ const AIChatComponent: React.FC<AIChatProps & { isMobile?: boolean }> = ({
               <Avatar
                 icon={message.isUser ? <UserOutlined /> : <RobotOutlined />}
                 style={{
-                  backgroundColor: message.isUser ? '#87d068' : '#1890ff'
+                  backgroundColor: message.isUser ? '#87d068' : '#1890ff',
                 }}
               />
             </div>
@@ -246,7 +260,7 @@ const AIChatComponent: React.FC<AIChatProps & { isMobile?: boolean }> = ({
               <div className="ai-message-time">
                 {message.timestamp.toLocaleTimeString('ru-RU', {
                   hour: '2-digit',
-                  minute: '2-digit'
+                  minute: '2-digit',
                 })}
               </div>
             </div>
@@ -256,7 +270,10 @@ const AIChatComponent: React.FC<AIChatProps & { isMobile?: boolean }> = ({
         {isTyping && (
           <div className="ai-message ai-message-ai">
             <div className="ai-message-avatar">
-              <Avatar icon={<RobotOutlined />} style={{ backgroundColor: '#1890ff' }} />
+              <Avatar
+                icon={<RobotOutlined />}
+                style={{ backgroundColor: '#1890ff' }}
+              />
             </div>
             <div className="ai-message-content">
               <Card size="small" className="ai-message-card ai-message-card-ai">
@@ -317,7 +334,11 @@ const AIChatComponent: React.FC<AIChatProps & { isMobile?: boolean }> = ({
 };
 
 // Главный компонент с простым условием
-export const AIChat: React.FC<AIChatProps> = ({ onComplete, onCancel, fetchCategories }) => {
+export const AIChat: React.FC<AIChatProps> = ({
+  onComplete,
+  onCancel,
+  fetchCategories,
+}) => {
   // Простое определение мобильного устройства при загрузке
   const isMobile = window.innerWidth <= 768;
 
@@ -332,12 +353,12 @@ export const AIChat: React.FC<AIChatProps> = ({ onComplete, onCancel, fetchCateg
         style={{
           top: 0,
           padding: 0,
-          maxWidth: '100vw'
+          maxWidth: '100vw',
         }}
         bodyStyle={{
           padding: 0,
           height: '100vh',
-          overflow: 'hidden'
+          overflow: 'hidden',
         }}
         className="ai-chat-modal"
         closable={false}

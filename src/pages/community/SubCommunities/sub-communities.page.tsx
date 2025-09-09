@@ -1,13 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import {
-  Badge,
-  Button,
-  Empty,
-  Card,
-  Space,
-  Typography,
-  Spin,
-} from 'antd';
+import { Badge, Button, Empty, Card, Space, Typography, Spin } from 'antd';
 import {
   FilterOutlined,
   ApartmentOutlined,
@@ -27,8 +19,12 @@ interface SubCommunitiesProps {
 export function SubCommunities({ communityId }: SubCommunitiesProps) {
   const [loading, setLoading] = useState(true);
   const [dataSource, setDataSource] = useState<CommunityCardInterface[]>([]);
-  const [allCommunities, setAllCommunities] = useState<CommunityCardInterface[]>([]);
-  const [filter, setFilter] = useState<{ title?: string; content?: string }>({});
+  const [allCommunities, setAllCommunities] = useState<
+    CommunityCardInterface[]
+  >([]);
+  const [filter, setFilter] = useState<{ title?: string; content?: string }>(
+    {}
+  );
   const [showFilters, setShowFilters] = useState(false);
 
   const loadData = useCallback(async () => {
@@ -46,11 +42,16 @@ export function SubCommunities({ communityId }: SubCommunitiesProps) {
     }
   }, [communityId, loading, filter]);
 
-  const applyFilters = (communities: CommunityCardInterface[], currentFilter: { title?: string; content?: string }) => {
+  const applyFilters = (
+    communities: CommunityCardInterface[],
+    currentFilter: { title?: string; content?: string }
+  ) => {
     const filteredData = communities.filter((item) => {
-      const titleMatch = !currentFilter.title ||
+      const titleMatch =
+        !currentFilter.title ||
         item.title.toLowerCase().includes(currentFilter.title.toLowerCase());
-      const contentMatch = !currentFilter.content ||
+      const contentMatch =
+        !currentFilter.content ||
         item.title.toLowerCase().includes(currentFilter.content.toLowerCase());
 
       return titleMatch && contentMatch;
@@ -106,7 +107,7 @@ export function SubCommunities({ communityId }: SubCommunitiesProps) {
               fontWeight: 500,
               fontSize: '13px',
               height: '36px',
-              padding: '0 16px'
+              padding: '0 16px',
             }}
           >
             <Badge
@@ -114,11 +115,16 @@ export function SubCommunities({ communityId }: SubCommunitiesProps) {
               size="small"
               offset={[8, -2]}
               style={{
-                backgroundColor: Object.keys(filter).length > 0 ? '#fa8c16' : '#999',
-                fontSize: '10px'
+                backgroundColor:
+                  Object.keys(filter).length > 0 ? '#fa8c16' : '#999',
+                fontSize: '10px',
               }}
             >
-              <span style={{ marginLeft: Object.keys(filter).length > 0 ? '12px' : '0' }}>
+              <span
+                style={{
+                  marginLeft: Object.keys(filter).length > 0 ? '12px' : '0',
+                }}
+              >
                 Фильтры
               </span>
             </Badge>
@@ -144,17 +150,26 @@ export function SubCommunities({ communityId }: SubCommunitiesProps) {
           </Text>
           {hasFilters && (
             <Text type="secondary">
-              Найдено: <Text strong style={{ color: '#fa8c16' }}>{filteredCommunities}</Text>
+              Найдено:{' '}
+              <Text strong style={{ color: '#fa8c16' }}>
+                {filteredCommunities}
+              </Text>
             </Text>
           )}
           {hasFilters && (
             <Text type="secondary">
-              Фильтров: <Text strong style={{ color: '#fa8c16' }}>{activeFiltersCount}</Text>
+              Фильтров:{' '}
+              <Text strong style={{ color: '#fa8c16' }}>
+                {activeFiltersCount}
+              </Text>
             </Text>
           )}
           {!hasFilters && totalCommunities > 0 && (
             <Text type="secondary">
-              Активных: <Text strong style={{ color: '#52c41a' }}>{totalCommunities}</Text>
+              Активных:{' '}
+              <Text strong style={{ color: '#52c41a' }}>
+                {totalCommunities}
+              </Text>
             </Text>
           )}
         </Space>
@@ -181,8 +196,8 @@ export function SubCommunities({ communityId }: SubCommunitiesProps) {
           <Empty
             description={
               isFiltered
-                ? "По заданным фильтрам сообщества не найдены"
-                : "В данном сообществе нет внутренних подсообществ"
+                ? 'По заданным фильтрам сообщества не найдены'
+                : 'В данном сообществе нет внутренних подсообществ'
             }
             image={Empty.PRESENTED_IMAGE_SIMPLE}
             style={{ padding: '20px 0' }}
@@ -209,13 +224,10 @@ export function SubCommunities({ communityId }: SubCommunitiesProps) {
             key={item.id}
             className="community-row-wrapper"
             style={{
-              animationDelay: `${0.1 + (index * 0.05)}s`
+              animationDelay: `${0.1 + index * 0.05}s`,
             }}
           >
-            <CommunityCard
-              item={item}
-              actions={[]}
-            />
+            <CommunityCard item={item} actions={[]} />
           </div>
         ))}
       </div>

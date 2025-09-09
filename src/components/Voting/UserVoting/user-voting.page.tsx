@@ -120,15 +120,11 @@ export function UserVoting(props: UserVotingProps) {
         </h3>
         <div className="voting-tags">
           {props.isDelegateVote && (
-            <Tag className="delegate-tag">
-              Голос советника
-            </Tag>
+            <Tag className="delegate-tag">Голос советника</Tag>
           )}
           {props.isVoteByDefault && (
             <>
-              <Tag className="delegate-tag default-tag">
-                Голос по умолчанию
-              </Tag>
+              <Tag className="delegate-tag default-tag">Голос по умолчанию</Tag>
               <Tooltip title="Голос был сформирован автоматически, на основе текущего состояния голосования, в момент вашего вступления в сообщество.">
                 <QuestionCircleOutlined className="info-tooltip" />
               </Tooltip>
@@ -143,9 +139,7 @@ export function UserVoting(props: UserVotingProps) {
       </div>
 
       {/* Вопрос для голосования */}
-      <div className="voting-question">
-        {props.question}
-      </div>
+      <div className="voting-question">{props.question}</div>
 
       {/* Варианты голосования */}
       <div className="voting-options">
@@ -176,9 +170,7 @@ export function UserVoting(props: UserVotingProps) {
       {/* Дополнительный вопрос */}
       {userVote && props.isOptions && (
         <div className="additional-question">
-          <div className="additional-question-title">
-            {props.extraQuestion}
-          </div>
+          <div className="additional-question-title">{props.extraQuestion}</div>
           <CustomSelect
             fieldService={votingOptionService}
             requestOptions={getVotingOptions}

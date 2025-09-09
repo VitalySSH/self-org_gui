@@ -49,8 +49,12 @@ export function InitiativeDetail() {
   const [voteInPercent, setVoteInPercent] = useState({} as VoteInPercent);
   const [userVote, setUserVote] = useState<boolean | undefined>(undefined);
   const [userOption, setUserOption] = useState<VotingOptionModel[]>([]);
-  const [selectedOptions, setSelectedOptions] = useState<VotingOptionData | {}>({});
-  const [minorityOptions, setMinorityOptions] = useState<VotingOptionData | {}>({});
+  const [selectedOptions, setSelectedOptions] = useState<VotingOptionData | {}>(
+    {}
+  );
+  const [minorityOptions, setMinorityOptions] = useState<VotingOptionData | {}>(
+    {}
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [disabled, setDisabled] = useState(true);
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -99,7 +103,9 @@ export function InitiativeDetail() {
               setReadonly(true);
             }
             setSelectedOptions(initiativeInst.voting_result?.options || {});
-            setMinorityOptions(initiativeInst.voting_result?.minority_options || {});
+            setMinorityOptions(
+              initiativeInst.voting_result?.minority_options || {}
+            );
             setInitiativeStatus(initiativeInst.status?.name || '');
             setInitiativeStatusCode(initiativeInst.status?.code || '');
             if (!eventDate && initiativeInst.event_date) {
@@ -263,14 +269,26 @@ export function InitiativeDetail() {
 
   // Вычисляем статистику для отображения
   const totalVotes = useMemo(() => {
-    if (!voteInPercent.yes && !voteInPercent.no && !voteInPercent.abstain) return 0;
+    if (!voteInPercent.yes && !voteInPercent.no && !voteInPercent.abstain)
+      return 0;
     // Предполагаем, что проценты уже рассчитаны от общего количества голосов
-    return Math.round(100 / Math.max(voteInPercent.yes || 0.01, voteInPercent.no || 0.01, voteInPercent.abstain || 0.01));
+    return Math.round(
+      100 /
+        Math.max(
+          voteInPercent.yes || 0.01,
+          voteInPercent.no || 0.01,
+          voteInPercent.abstain || 0.01
+        )
+    );
   }, [voteInPercent]);
 
   const getUserVoteStatus = () => {
     if (!userVotingResult) return 'Не проголосовано';
-    if (!userVotingResult.is_voted_myself && userVotingResult.vote !== null && !userVotingResult.is_voted_by_default) {
+    if (
+      !userVotingResult.is_voted_myself &&
+      userVotingResult.vote !== null &&
+      !userVotingResult.is_voted_by_default
+    ) {
       return 'Делегированный голос';
     }
     if (userVotingResult.is_voted_by_default) {
@@ -289,7 +307,9 @@ export function InitiativeDetail() {
           <Card className="initiative-loading-card" variant="borderless">
             <div className="loading-content">
               <Spin size="large" />
-              <Text className="loading-text">Загрузка данных инициативы...</Text>
+              <Text className="loading-text">
+                Загрузка данных инициативы...
+              </Text>
             </div>
           </Card>
         </div>
@@ -336,17 +356,24 @@ export function InitiativeDetail() {
                 <div className="meta-item">
                   <UserOutlined />
                   <span className="meta-label">Автор:</span>
-                  <span className="meta-value">{initiative.creator?.fullname}</span>
+                  <span className="meta-value">
+                    {initiative.creator?.fullname}
+                  </span>
                 </div>
                 <div className="meta-item">
                   <FileTextOutlined />
                   <span className="meta-label">Статус:</span>
-                  <StatusTag status={initiativeStatus} statusCode={initiativeStatusCode} />
+                  <StatusTag
+                    status={initiativeStatus}
+                    statusCode={initiativeStatusCode}
+                  />
                 </div>
                 <div className="meta-item">
                   <TagOutlined />
                   <span className="meta-label">Категория:</span>
-                  <span className="meta-value">{initiative.category?.name}</span>
+                  <span className="meta-value">
+                    {initiative.category?.name}
+                  </span>
                 </div>
                 {initiative.is_one_day_event && eventDate && (
                   <div className="meta-item">
@@ -369,9 +396,7 @@ export function InitiativeDetail() {
                 {initiative.content}
               </div>
 
-              <div className="initiative-question">
-                {initiative.question}
-              </div>
+              <div className="initiative-question">{initiative.question}</div>
             </div>
           </Card>
 
@@ -416,11 +441,14 @@ export function InitiativeDetail() {
 
           {/* Мнения */}
           <div className="initiative-component-wrapper opinions-wrapper">
-            <Opinions maxPageSize={20} resource="initiative" initiativeId={id} />
+            <Opinions
+              maxPageSize={20}
+              resource="initiative"
+              initiativeId={id}
+            />
           </div>
         </div>
       </div>
-
 
       {/* Toolbar с кнопками */}
       {!readonly && (
@@ -429,14 +457,20 @@ export function InitiativeDetail() {
             <div className="toolbar-info">
               <TeamOutlined className="info-icon" />
               <span className="info-text">
-              Участников: <span className="info-highlight">{totalVotes}</span>
-            </span>
+                Участников: <span className="info-highlight">{totalVotes}</span>
+              </span>
             </div>
-            <div className={`toolbar-status ${
-              userVotingResult?.vote === true ? 'status-success' :
-                userVotingResult?.vote === false ? 'status-error' :
-                  userVotingResult?.vote === null ? 'status-warning' : ''
-            }`}>
+            <div
+              className={`toolbar-status ${
+                userVotingResult?.vote === true
+                  ? 'status-success'
+                  : userVotingResult?.vote === false
+                    ? 'status-error'
+                    : userVotingResult?.vote === null
+                      ? 'status-warning'
+                      : ''
+              }`}
+            >
               <span className="status-icon">●</span>
               <span>{getUserVoteStatus()}</span>
             </div>

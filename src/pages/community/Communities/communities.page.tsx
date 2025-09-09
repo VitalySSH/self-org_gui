@@ -77,11 +77,7 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
       filters,
       undefined,
       { skip: currentPage, limit: pageSize },
-      [
-        'user_settings.user',
-        'main_settings.name',
-        'main_settings.description',
-      ]
+      ['user_settings.user', 'main_settings.name', 'main_settings.description']
     );
 
     setTotal(resp.total);
@@ -118,9 +114,8 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
           (ucs) => ucs.user?.id === currentUserId
         ).length > 0;
       const isAddRequest =
-        memberRequests.data.filter(
-          (rm) => rm.community?.id === community.id
-        ).length > 0;
+        memberRequests.data.filter((rm) => rm.community?.id === community.id)
+          .length > 0;
 
       const item = {
         id: community.id || '',
@@ -143,11 +138,7 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
       filters,
       undefined,
       { skip: currentPage, limit: pageSize },
-      [
-        'user_settings.user',
-        'main_settings.name',
-        'main_settings.description',
-      ]
+      ['user_settings.user', 'main_settings.name', 'main_settings.description']
     );
 
     setTotal(resp.total);
@@ -268,8 +259,7 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
               <Text type="secondary" className="page-subtitle">
                 {isMyMode
                   ? 'Сообщества, в которых вы состоите'
-                  : 'Все доступные сообщества платформы'
-                }
+                  : 'Все доступные сообщества платформы'}
               </Text>
             </div>
           </div>
@@ -344,11 +334,16 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
                     size="small"
                     offset={[8, -2]}
                     style={{
-                      backgroundColor: activeFiltersCount > 0 ? '#52c41a' : '#999',
+                      backgroundColor:
+                        activeFiltersCount > 0 ? '#52c41a' : '#999',
                       fontSize: '10px',
                     }}
                   >
-                    <span style={{ marginLeft: activeFiltersCount > 0 ? '12px' : '0' }}>
+                    <span
+                      style={{
+                        marginLeft: activeFiltersCount > 0 ? '12px' : '0',
+                      }}
+                    >
                       Фильтры
                     </span>
                   </Badge>
@@ -374,8 +369,8 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
     let activeCount = 0;
 
     if (isMyMode) {
-      blockedCount = dataSource.filter(item => item.isBlocked).length;
-      activeCount = dataSource.filter(item => !item.isBlocked).length;
+      blockedCount = dataSource.filter((item) => item.isBlocked).length;
+      activeCount = dataSource.filter((item) => !item.isBlocked).length;
     }
 
     return (
@@ -388,11 +383,17 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
           {isMyMode && (
             <>
               <Text type="secondary">
-                Активных: <Text strong style={{ color: '#52c41a' }}>{activeCount}</Text>
+                Активных:{' '}
+                <Text strong style={{ color: '#52c41a' }}>
+                  {activeCount}
+                </Text>
               </Text>
               {blockedCount > 0 && (
                 <Text type="secondary">
-                  Заблокировано: <Text strong style={{ color: '#ff4d4f' }}>{blockedCount}</Text>
+                  Заблокировано:{' '}
+                  <Text strong style={{ color: '#ff4d4f' }}>
+                    {blockedCount}
+                  </Text>
                 </Text>
               )}
             </>
@@ -404,7 +405,10 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
 
           {hasFilters && (
             <Text type="secondary">
-              Фильтров: <Text strong style={{ color: '#52c41a' }}>{activeFiltersCount}</Text>
+              Фильтров:{' '}
+              <Text strong style={{ color: '#52c41a' }}>
+                {activeFiltersCount}
+              </Text>
             </Text>
           )}
         </Space>
@@ -434,10 +438,10 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
           <Empty
             description={
               hasFilters
-                ? "По заданным фильтрам сообщества не найдены"
+                ? 'По заданным фильтрам сообщества не найдены'
                 : isMyMode
-                  ? "Вы еще не состоите ни в одном сообществе"
-                  : "Сообщества не найдены"
+                  ? 'Вы еще не состоите ни в одном сообществе'
+                  : 'Сообщества не найдены'
             }
             image={Empty.PRESENTED_IMAGE_SIMPLE}
           >
@@ -463,7 +467,7 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
             key={item.id}
             className="community-row-wrapper"
             style={{
-              animationDelay: `${0.1 + (index * 0.05)}s`,
+              animationDelay: `${0.1 + index * 0.05}s`,
             }}
           >
             <CommunityCard item={item} actions={[]} />

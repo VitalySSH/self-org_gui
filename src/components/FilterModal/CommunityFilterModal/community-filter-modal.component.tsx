@@ -46,8 +46,8 @@ export function CommunityFilterModal({
         body: {
           maxHeight: 'calc(85vh - 108px)',
           overflowY: 'auto',
-          padding: 0
-        }
+          padding: 0,
+        },
       }}
     >
       <div className="filter-modal-content">
@@ -63,9 +63,7 @@ export function CommunityFilterModal({
             name="title"
             tooltip="Поиск будет выполнен по названию сообщества"
           >
-            <Input
-              placeholder="Введите название для поиска"
-            />
+            <Input placeholder="Введите название для поиска" />
           </Form.Item>
 
           <Form.Item

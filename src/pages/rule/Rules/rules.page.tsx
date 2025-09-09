@@ -8,7 +8,7 @@ import {
   Typography,
   Space,
   Spin,
-  Empty
+  Empty,
 } from 'antd';
 import {
   FilterOutlined,
@@ -16,7 +16,7 @@ import {
   FileTextOutlined,
   UserOutlined,
   TagOutlined,
-  SearchOutlined
+  SearchOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { FilterValues, RuleCardInterface } from 'src/interfaces';
@@ -186,13 +186,14 @@ export function Rules(props: RulesProps) {
   const hasFilters = activeFiltersCount > 0;
 
   // Статистика
-  const activeRules = dataSource.filter(rule =>
-    rule.statusCode?.toLowerCase() === 'active' ||
-    rule.statusCode?.toLowerCase() === 'published'
+  const activeRules = dataSource.filter(
+    (rule) =>
+      rule.statusCode?.toLowerCase() === 'active' ||
+      rule.statusCode?.toLowerCase() === 'published'
   ).length;
 
-  const draftRules = dataSource.filter(rule =>
-    rule.statusCode?.toLowerCase() === 'draft'
+  const draftRules = dataSource.filter(
+    (rule) => rule.statusCode?.toLowerCase() === 'draft'
   ).length;
 
   return (
@@ -248,11 +249,16 @@ export function Rules(props: RulesProps) {
                   size="small"
                   offset={[8, -2]}
                   style={{
-                    backgroundColor: activeFiltersCount > 0 ? '#52c41a' : '#999',
+                    backgroundColor:
+                      activeFiltersCount > 0 ? '#52c41a' : '#999',
                     fontSize: '10px',
                   }}
                 >
-                  <span style={{ marginLeft: activeFiltersCount > 0 ? '12px' : '0' }}>
+                  <span
+                    style={{
+                      marginLeft: activeFiltersCount > 0 ? '12px' : '0',
+                    }}
+                  >
                     Фильтры
                   </span>
                 </Badge>
@@ -274,22 +280,34 @@ export function Rules(props: RulesProps) {
                 </Text>
                 {hasFilters && (
                   <Text type="secondary">
-                    Найдено: <Text strong style={{ color: '#722ed1' }}>{dataSource.length}</Text>
+                    Найдено:{' '}
+                    <Text strong style={{ color: '#722ed1' }}>
+                      {dataSource.length}
+                    </Text>
                   </Text>
                 )}
                 {activeRules > 0 && (
                   <Text type="secondary">
-                    Активных: <Text strong style={{ color: '#52c41a' }}>{activeRules}</Text>
+                    Активных:{' '}
+                    <Text strong style={{ color: '#52c41a' }}>
+                      {activeRules}
+                    </Text>
                   </Text>
                 )}
                 {draftRules > 0 && (
                   <Text type="secondary">
-                    Черновиков: <Text strong style={{ color: '#fa8c16' }}>{draftRules}</Text>
+                    Черновиков:{' '}
+                    <Text strong style={{ color: '#fa8c16' }}>
+                      {draftRules}
+                    </Text>
                   </Text>
                 )}
                 {hasFilters && (
                   <Text type="secondary">
-                    Фильтров: <Text strong style={{ color: '#1890ff' }}>{activeFiltersCount}</Text>
+                    Фильтров:{' '}
+                    <Text strong style={{ color: '#1890ff' }}>
+                      {activeFiltersCount}
+                    </Text>
                   </Text>
                 )}
               </Space>
@@ -312,8 +330,8 @@ export function Rules(props: RulesProps) {
               <Empty
                 description={
                   hasFilters
-                    ? "По заданным фильтрам правила не найдены"
-                    : "В сообществе пока нет правил"
+                    ? 'По заданным фильтрам правила не найдены'
+                    : 'В сообществе пока нет правил'
                 }
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
                 style={{ padding: '20px 0' }}
@@ -353,7 +371,7 @@ export function Rules(props: RulesProps) {
                     key={item.id}
                     className="rule-row-wrapper"
                     style={{
-                      animationDelay: `${0.1 + (index * 0.05)}s`
+                      animationDelay: `${0.1 + index * 0.05}s`,
                     }}
                   >
                     <List.Item>
@@ -367,11 +385,15 @@ export function Rules(props: RulesProps) {
                             <div className="rule-main">
                               <div className="rule-title">{item.title}</div>
                               {item.description && (
-                                <div className="rule-description">{item.description}</div>
+                                <div className="rule-description">
+                                  {item.description}
+                                </div>
                               )}
                             </div>
                             <div className="rule-status">
-                              <span className={`status-badge ${getStatusBadgeClass(item.statusCode)}`}>
+                              <span
+                                className={`status-badge ${getStatusBadgeClass(item.statusCode)}`}
+                              >
                                 {item.status}
                               </span>
                             </div>
@@ -381,20 +403,22 @@ export function Rules(props: RulesProps) {
                               {item.creator && (
                                 <div className="meta-item">
                                   <UserOutlined className="meta-icon" />
-                                  <span className="meta-value">{item.creator}</span>
+                                  <span className="meta-value">
+                                    {item.creator}
+                                  </span>
                                 </div>
                               )}
                               {item.category && (
                                 <div className="meta-item">
                                   <TagOutlined className="meta-icon" />
-                                  <span className="meta-value">{item.category}</span>
+                                  <span className="meta-value">
+                                    {item.category}
+                                  </span>
                                 </div>
                               )}
                             </div>
                             {item.tracker && (
-                              <div className="rule-tracker">
-                                {item.tracker}
-                              </div>
+                              <div className="rule-tracker">{item.tracker}</div>
                             )}
                           </div>
                         </div>

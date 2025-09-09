@@ -201,7 +201,9 @@
       }
 
       @media (max-width: 768px) and (-webkit-min-device-pixel-ratio: 1) {
-        transition: background-color 0.2s ease, border-color 0.2s ease;
+        transition:
+          background-color 0.2s ease,
+          border-color 0.2s ease;
 
         &:hover:not(:disabled) {
           transform: none;

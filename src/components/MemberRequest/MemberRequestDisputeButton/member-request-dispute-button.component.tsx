@@ -10,7 +10,7 @@ interface MemberRequestDisputeButtonProps {
 }
 
 export function MemberRequestDisputeButton({
- item
+  item,
 }: MemberRequestDisputeButtonProps) {
   const isDisabled = item.statusCode !== MemberExcludedCode;
 

@@ -3,7 +3,11 @@
 
 // Основной контейнер голосования пользователя
 .user-voting {
-  background: linear-gradient(135deg, $secondary-color 0%, rgba($sider-background-color, 0.6) 100%);
+  background: linear-gradient(
+    135deg,
+    $secondary-color 0%,
+    rgba($sider-background-color, 0.6) 100%
+  );
   border: 1px solid $border-color;
   border-radius: 16px;
   padding: 32px;
@@ -20,7 +24,11 @@
 
   // Стили для readonly режима
   &.readonly-mode {
-    background: linear-gradient(135deg, rgba($secondary-color, 0.7) 0%, rgba($sider-background-color, 0.4) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba($secondary-color, 0.7) 0%,
+      rgba($sider-background-color, 0.4) 100%
+    );
     border-color: rgba($border-color, 0.6);
     opacity: 0.85;
 
@@ -115,7 +123,11 @@
       .voting-icon {
         font-size: 20px;
         padding: 8px;
-        background: linear-gradient(135deg, rgba($gradient-start, 0.1) 0%, rgba($gradient-end, 0.1) 100%);
+        background: linear-gradient(
+          135deg,
+          rgba($gradient-start, 0.1) 0%,
+          rgba($gradient-end, 0.1) 100%
+        );
         border-radius: 8px;
         color: $gradient-start;
       }
@@ -657,7 +669,11 @@
     }
 
     &.readonly-mode {
-      background: linear-gradient(135deg, rgba(#1a1a1a, 0.7) 0%, rgba(#2a2a2a, 0.5) 100%);
+      background: linear-gradient(
+        135deg,
+        rgba(#1a1a1a, 0.7) 0%,
+        rgba(#2a2a2a, 0.5) 100%
+      );
       border-color: rgba(#434343, 0.6);
 
       &:hover {
@@ -682,7 +698,11 @@
         color: #ffffff;
 
         .voting-icon {
-          background: linear-gradient(135deg, rgba($gradient-start, 0.2) 0%, rgba($gradient-end, 0.2) 100%);
+          background: linear-gradient(
+            135deg,
+            rgba($gradient-start, 0.2) 0%,
+            rgba($gradient-end, 0.2) 100%
+          );
           color: $gradient-start;
         }
       }

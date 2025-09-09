@@ -6,23 +6,26 @@ export function AuthCard() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleNavigation = useCallback(async (path: string, options?: any) => {
-    if (isLoading) return;
+  const handleNavigation = useCallback(
+    async (path: string, options?: any) => {
+      if (isLoading) return;
 
-    setIsLoading(true);
+      setIsLoading(true);
 
-    // Небольшая задержка для плавности анимации
-    await new Promise(resolve => setTimeout(resolve, 200));
+      // Небольшая задержка для плавности анимации
+      await new Promise((resolve) => setTimeout(resolve, 200));
 
-    try {
-      navigate(path, options);
-    } catch (error) {
-      console.error('Navigation error:', error);
-    } finally {
-      // Сбрасываем состояние через некоторое время
-      setTimeout(() => setIsLoading(false), 500);
-    }
-  }, [navigate, isLoading]);
+      try {
+        navigate(path, options);
+      } catch (error) {
+        console.error('Navigation error:', error);
+      } finally {
+        // Сбрасываем состояние через некоторое время
+        setTimeout(() => setIsLoading(false), 500);
+      }
+    },
+    [navigate, isLoading]
+  );
 
   return (
     <div className="auth-card">
@@ -45,10 +48,12 @@ export function AuthCard() {
         </button>
         <button
           className="login"
-          onClick={() => handleNavigation('/sign-in', {
-            preventScrollReset: true,
-            state: { isFollowingLink: true },
-          })}
+          onClick={() =>
+            handleNavigation('/sign-in', {
+              preventScrollReset: true,
+              state: { isFollowingLink: true },
+            })
+          }
           disabled={isLoading}
           aria-label="Войти в существующий аккаунт"
           type="button"

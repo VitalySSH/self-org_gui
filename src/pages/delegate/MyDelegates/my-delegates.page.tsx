@@ -26,7 +26,7 @@ import {
   UserOutlined,
   TeamOutlined,
   TagOutlined,
-  SearchOutlined
+  SearchOutlined,
 } from '@ant-design/icons';
 import { DelegateFilterModal } from 'src/components';
 import { CategorySelectedCode, SystemCategoryCode } from 'src/consts';
@@ -220,11 +220,13 @@ export function MyDelegates(props: any) {
                 size="small"
                 offset={[8, -2]}
                 style={{
-                  backgroundColor: (filters.length - 2) > 0 ? '#52c41a' : '#999',
+                  backgroundColor: filters.length - 2 > 0 ? '#52c41a' : '#999',
                   fontSize: '10px',
                 }}
               >
-                <span style={{ marginLeft: (filters.length - 2) > 0 ? '12px' : '0' }}>
+                <span
+                  style={{ marginLeft: filters.length - 2 > 0 ? '12px' : '0' }}
+                >
                   Фильтры
                 </span>
               </Badge>
@@ -251,17 +253,26 @@ export function MyDelegates(props: any) {
           </Text>
           {hasFilters && (
             <Text type="secondary">
-              Найдено: <Text strong style={{ color: '#cc0000' }}>{dataSource.length}</Text>
+              Найдено:{' '}
+              <Text strong style={{ color: '#cc0000' }}>
+                {dataSource.length}
+              </Text>
             </Text>
           )}
           {availableSlots > 0 && (
             <Text type="secondary">
-              Доступно слотов: <Text strong style={{ color: '#52c41a' }}>{availableSlots}</Text>
+              Доступно слотов:{' '}
+              <Text strong style={{ color: '#52c41a' }}>
+                {availableSlots}
+              </Text>
             </Text>
           )}
           {hasFilters && (
             <Text type="secondary">
-              Фильтров: <Text strong style={{ color: '#1890ff' }}>{activeFiltersCount}</Text>
+              Фильтров:{' '}
+              <Text strong style={{ color: '#1890ff' }}>
+                {activeFiltersCount}
+              </Text>
             </Text>
           )}
         </Space>
@@ -290,8 +301,8 @@ export function MyDelegates(props: any) {
           <Empty
             description={
               isFiltered
-                ? "По заданным фильтрам советники не найдены"
-                : "У вас пока нет назначенных советников"
+                ? 'По заданным фильтрам советники не найдены'
+                : 'У вас пока нет назначенных советников'
             }
             image={Empty.PRESENTED_IMAGE_SIMPLE}
             style={{ padding: '20px 0' }}
@@ -333,7 +344,7 @@ export function MyDelegates(props: any) {
               key={item.id}
               className="delegate-row-wrapper"
               style={{
-                animationDelay: `${0.1 + (index * 0.05)}s`
+                animationDelay: `${0.1 + index * 0.05}s`,
               }}
             >
               <List.Item>

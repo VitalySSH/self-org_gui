@@ -41,27 +41,30 @@ export function CommunityWorkSpace() {
     if (id && communityData?.id !== id) {
       setIsLoading(true);
       const communityService = new CommunityAOService();
-      communityService.getNameData(id).then((resp) => {
-        setIsBlocked(resp.is_blocked);
-        if (resp.is_blocked) {
-          navigate('/no-much-page');
-          return;
-        }
-        setCommunityData({
-          id: id,
-          name: resp.name,
-          menuItems: resp.parent_data.map((it) => {
-            return {
-              key: `/communities/${it.id}`,
-              label: it.name,
-            };
-          }),
+      communityService
+        .getNameData(id)
+        .then((resp) => {
+          setIsBlocked(resp.is_blocked);
+          if (resp.is_blocked) {
+            navigate('/no-much-page');
+            return;
+          }
+          setCommunityData({
+            id: id,
+            name: resp.name,
+            menuItems: resp.parent_data.map((it) => {
+              return {
+                key: `/communities/${it.id}`,
+                label: it.name,
+              };
+            }),
+          });
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error('Failed to load community data:', error);
+          setIsLoading(false);
         });
-        setIsLoading(false);
-      }).catch((error) => {
-        console.error('Failed to load community data:', error);
-        setIsLoading(false);
-      });
     } else if (id && communityData?.id === id) {
       setIsLoading(false);
     }
@@ -182,7 +185,10 @@ export function CommunityWorkSpace() {
                 element={<DelegateDetail communityId={id || ''} />}
               />
               <Route path="rules" element={<Rules communityId={id || ''} />} />
-              <Route path="rules/new" element={<NewRule communityId={id || ''} />} />
+              <Route
+                path="rules/new"
+                element={<NewRule communityId={id || ''} />}
+              />
               <Route path="rules/:id/*" element={<RuleDetail />} />
               <Route
                 path="initiatives"
@@ -197,7 +203,10 @@ export function CommunityWorkSpace() {
                 path="challenges"
                 element={<Challenges communityId={id || ''} />}
               />
-              <Route path="disputes" element={<Disputes communityId={id || ''} />} />
+              <Route
+                path="disputes"
+                element={<Disputes communityId={id || ''} />}
+              />
               <Route
                 path="add-member"
                 element={<AddMemberRequestsForMe communityId={id || ''} />}

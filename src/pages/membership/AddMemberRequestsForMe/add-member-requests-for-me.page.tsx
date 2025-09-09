@@ -9,10 +9,7 @@ import {
   Typography,
   Spin,
 } from 'antd';
-import {
-  FilterOutlined,
-  UserSwitchOutlined,
-} from '@ant-design/icons';
+import { FilterOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import {
   AuthContextProvider,
@@ -35,7 +32,9 @@ interface AddMemberRequestsForMeProps {
   communityId: string;
 }
 
-export function AddMemberRequestsForMe({ communityId }: AddMemberRequestsForMeProps) {
+export function AddMemberRequestsForMe({
+  communityId,
+}: AddMemberRequestsForMeProps) {
   const maxPageSize = 20;
   const authData: AuthContextProvider = useAuth();
   const currentUserId = authData.user?.id;
@@ -72,7 +71,9 @@ export function AddMemberRequestsForMe({ communityId }: AddMemberRequestsForMePr
     if (!loading || !communityId) return;
 
     try {
-      const memberRequestService = new CrudDataSourceService(RequestMemberModel);
+      const memberRequestService = new CrudDataSourceService(
+        RequestMemberModel
+      );
       const resp = await memberRequestService.list(
         filters,
         undefined,
@@ -181,7 +182,8 @@ export function AddMemberRequestsForMe({ communityId }: AddMemberRequestsForMePr
               Мои рассматриваемые заявки
             </Title>
             <Text type="secondary" className="page-subtitle">
-              Заявки участников на вступление в сообщество, для моего рассмотрения
+              Заявки участников на вступление в сообщество, для моего
+              рассмотрения
             </Text>
           </div>
         </div>
@@ -197,7 +199,7 @@ export function AddMemberRequestsForMe({ communityId }: AddMemberRequestsForMePr
               fontWeight: 500,
               fontSize: '13px',
               height: '36px',
-              padding: '0 16px'
+              padding: '0 16px',
             }}
           >
             <Badge
@@ -206,7 +208,7 @@ export function AddMemberRequestsForMe({ communityId }: AddMemberRequestsForMePr
               offset={[8, -2]}
               style={{
                 backgroundColor: filters.length > 3 ? '#722ed1' : '#999',
-                fontSize: '10px'
+                fontSize: '10px',
               }}
             >
               <span style={{ marginLeft: filters.length > 3 ? '12px' : '0' }}>
@@ -226,9 +228,15 @@ export function AddMemberRequestsForMe({ communityId }: AddMemberRequestsForMePr
     const hasFilters = activeFiltersCount > 0;
 
     // Подсчет статистики по решениям
-    const approvedCount = dataSource.filter(item => item.decision === 'Одобрена').length;
-    const rejectedCount = dataSource.filter(item => item.decision === 'Отклонена').length;
-    const pendingCount = dataSource.filter(item => item.decision === 'Нет').length;
+    const approvedCount = dataSource.filter(
+      (item) => item.decision === 'Одобрена'
+    ).length;
+    const rejectedCount = dataSource.filter(
+      (item) => item.decision === 'Отклонена'
+    ).length;
+    const pendingCount = dataSource.filter(
+      (item) => item.decision === 'Нет'
+    ).length;
 
     return (
       <Card className="stats-card" size="small">
@@ -237,17 +245,29 @@ export function AddMemberRequestsForMe({ communityId }: AddMemberRequestsForMePr
             Всего: <Text strong>{total}</Text>
           </Text>
           <Text type="secondary">
-            Одобрено: <Text strong style={{ color: '#52c41a' }}>{approvedCount}</Text>
+            Одобрено:{' '}
+            <Text strong style={{ color: '#52c41a' }}>
+              {approvedCount}
+            </Text>
           </Text>
           <Text type="secondary">
-            Отклонено: <Text strong style={{ color: '#ff4d4f' }}>{rejectedCount}</Text>
+            Отклонено:{' '}
+            <Text strong style={{ color: '#ff4d4f' }}>
+              {rejectedCount}
+            </Text>
           </Text>
           <Text type="secondary">
-            Ожидает: <Text strong style={{ color: '#1890ff' }}>{pendingCount}</Text>
+            Ожидает:{' '}
+            <Text strong style={{ color: '#1890ff' }}>
+              {pendingCount}
+            </Text>
           </Text>
           {hasFilters && (
             <Text type="secondary">
-              Фильтров: <Text strong style={{ color: '#722ed1' }}>{activeFiltersCount}</Text>
+              Фильтров:{' '}
+              <Text strong style={{ color: '#722ed1' }}>
+                {activeFiltersCount}
+              </Text>
             </Text>
           )}
         </Space>
@@ -273,8 +293,8 @@ export function AddMemberRequestsForMe({ communityId }: AddMemberRequestsForMePr
           <Empty
             description={
               filters.length > 3
-                ? "По заданным фильтрам заявки не найдены"
-                : "Вы еще не создали ни одной заявки на рассмотрение"
+                ? 'По заданным фильтрам заявки не найдены'
+                : 'Вы еще не создали ни одной заявки на рассмотрение'
             }
             image={Empty.PRESENTED_IMAGE_SIMPLE}
           />

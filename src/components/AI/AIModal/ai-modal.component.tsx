@@ -84,7 +84,7 @@ export function AIModal(props: AiModalProps) {
       width={isFullscreen ? '95vw' : undefined}
       style={{
         top: isFullscreen ? 10 : 20,
-        maxWidth: isFullscreen ? 'none' : '800px'
+        maxWidth: isFullscreen ? 'none' : '800px',
       }}
       className="ai-summary-modal ai-modal-fade-in"
       destroyOnClose
@@ -93,9 +93,7 @@ export function AIModal(props: AiModalProps) {
       {loading ? (
         <div className="ai-modal-loading">
           <Spin size="large" />
-          <div className="ai-modal-loading-text">
-            Идёт обработка запроса...
-          </div>
+          <div className="ai-modal-loading-text">Идёт обработка запроса...</div>
         </div>
       ) : (
         <>
@@ -141,7 +139,7 @@ export function AIModal(props: AiModalProps) {
               readOnly
               autoSize={{
                 minRows: isFullscreen ? 25 : 12,
-                maxRows: isFullscreen ? 40 : 25
+                maxRows: isFullscreen ? 40 : 25,
               }}
               style={{
                 fontSize: `${fontSize}px`,

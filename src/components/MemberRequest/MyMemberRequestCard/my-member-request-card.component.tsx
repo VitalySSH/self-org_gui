@@ -1,5 +1,14 @@
 import { useState, useMemo } from 'react';
-import { Card, Button, Badge, Typography, Tag, Tooltip, Space, Divider } from 'antd';
+import {
+  Card,
+  Button,
+  Badge,
+  Typography,
+  Tag,
+  Tooltip,
+  Space,
+  Divider,
+} from 'antd';
 import {
   TeamOutlined,
   CalendarOutlined,
@@ -7,7 +16,7 @@ import {
   InfoCircleOutlined,
   DownOutlined,
   UpOutlined,
-  FileTextOutlined
+  FileTextOutlined,
 } from '@ant-design/icons';
 import {
   MemberRequestCardProps,
@@ -84,7 +93,7 @@ export function MyMemberRequestCard({
       case RequestSuccessfulCode:
         return (
           <>
-            <MemberRequestJoinButton item={item}/>
+            <MemberRequestJoinButton item={item} />
             <MemberRequestRemoveButton item={item} setLoading={setLoading} />
           </>
         );
@@ -128,7 +137,8 @@ export function MyMemberRequestCard({
 
   // Проверяем, нужно ли показывать кнопку "Развернуть"
   const shouldShowExpandButton = useMemo(() => {
-    const descriptionTooLong = item.communityDescription && item.communityDescription.length > 150;
+    const descriptionTooLong =
+      item.communityDescription && item.communityDescription.length > 150;
     const reasonTooLong = item.reason && item.reason.length > 100;
     return descriptionTooLong || reasonTooLong;
   }, [item.communityDescription, item.reason]);
@@ -139,7 +149,9 @@ export function MyMemberRequestCard({
   };
 
   return (
-    <div className={`member-request-card-wrapper ${isExpanded ? 'expanded' : ''}`}>
+    <div
+      className={`member-request-card-wrapper ${isExpanded ? 'expanded' : ''}`}
+    >
       <Card className="member-request-card" hoverable>
         {/* Заголовок с кнопками */}
         <div className="card-header">
@@ -180,8 +192,7 @@ export function MyMemberRequestCard({
               <Paragraph className="section-content">
                 {isExpanded
                   ? item.communityDescription
-                  : truncateText(item.communityDescription, 150)
-                }
+                  : truncateText(item.communityDescription, 150)}
               </Paragraph>
             </div>
           )}

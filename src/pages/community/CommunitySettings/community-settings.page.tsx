@@ -1,5 +1,24 @@
-import { Col, Form, Input, InputNumber, Row, Spin, Switch, Card, Typography, Tag, Space } from 'antd';
-import { CheckOutlined, CloseOutlined, InfoCircleOutlined, TeamOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  Col,
+  Form,
+  Input,
+  InputNumber,
+  Row,
+  Spin,
+  Switch,
+  Card,
+  Typography,
+  Tag,
+  Space,
+} from 'antd';
+import {
+  CheckOutlined,
+  CloseOutlined,
+  InfoCircleOutlined,
+  TeamOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import { CrudDataSourceService } from 'src/services';
 import { CommunityModel } from 'src/models';
@@ -61,8 +80,8 @@ export function CommunitySettings(props: any) {
         is_secret_ballot: Boolean(s.is_secret_ballot),
         is_can_offer: Boolean(s.is_can_offer),
         is_minority_not_participate: Boolean(s.is_minority_not_participate),
-        categories: (s.categories || []).map(c => c.name),
-        responsibilities: (s.responsibilities || []).map(r => r.name),
+        categories: (s.categories || []).map((c) => c.name),
+        responsibilities: (s.responsibilities || []).map((r) => r.name),
         creator: community.creator?.fullname || 'Не указан',
       };
 
@@ -115,7 +134,11 @@ export function CommunitySettings(props: any) {
         </Col>
         <Col xs={24} lg={12}>
           <Form.Item name="creator" label="Инициатор создания">
-            <Input readOnly className="readonly-input" prefix={<UserOutlined />} />
+            <Input
+              readOnly
+              className="readonly-input"
+              prefix={<UserOutlined />}
+            />
           </Form.Item>
         </Col>
         <Col xs={24}>
@@ -165,7 +188,10 @@ export function CommunitySettings(props: any) {
           </Form.Item>
         </Col>
         <Col xs={12} sm={8} md={6}>
-          <Form.Item name="significant_minority" label={SignificantMinorityLabel}>
+          <Form.Item
+            name="significant_minority"
+            label={SignificantMinorityLabel}
+          >
             <div className="number-display">
               <InputNumber
                 readOnly
@@ -234,7 +260,11 @@ export function CommunitySettings(props: any) {
     >
       <Row gutter={[24, 20]}>
         <Col xs={24} sm={12} lg={8}>
-          <Form.Item name="is_workgroup" label={IsWorkGroupLabel} valuePropName="checked">
+          <Form.Item
+            name="is_workgroup"
+            label={IsWorkGroupLabel}
+            valuePropName="checked"
+          >
             <div className="switch-display">
               <Switch
                 checkedChildren={<CheckOutlined />}
@@ -244,13 +274,19 @@ export function CommunitySettings(props: any) {
                 checked={formData.is_workgroup}
               />
               <Text type="secondary" className="switch-label">
-                {formData.is_workgroup ? 'Рабочая группа' : 'Обычное сообщество'}
+                {formData.is_workgroup
+                  ? 'Рабочая группа'
+                  : 'Обычное сообщество'}
               </Text>
             </div>
           </Form.Item>
         </Col>
         <Col xs={24} sm={12} lg={8}>
-          <Form.Item name="is_secret_ballot" label={IsSecretBallotLabel} valuePropName="checked">
+          <Form.Item
+            name="is_secret_ballot"
+            label={IsSecretBallotLabel}
+            valuePropName="checked"
+          >
             <div className="switch-display">
               <Switch
                 checkedChildren={<CheckOutlined />}
@@ -266,7 +302,11 @@ export function CommunitySettings(props: any) {
           </Form.Item>
         </Col>
         <Col xs={24} sm={12} lg={8}>
-          <Form.Item name="is_can_offer" label="Оказываем услуги другим сообществам" valuePropName="checked">
+          <Form.Item
+            name="is_can_offer"
+            label="Оказываем услуги другим сообществам"
+            valuePropName="checked"
+          >
             <div className="switch-display">
               <Switch
                 checkedChildren={<CheckOutlined />}
@@ -282,7 +322,11 @@ export function CommunitySettings(props: any) {
           </Form.Item>
         </Col>
         <Col xs={24} sm={12} lg={8}>
-          <Form.Item name="is_minority_not_participate" label={IsMinorityNotParticipateLabel} valuePropName="checked">
+          <Form.Item
+            name="is_minority_not_participate"
+            label={IsMinorityNotParticipateLabel}
+            valuePropName="checked"
+          >
             <div className="switch-display">
               <Switch
                 checkedChildren={<CheckOutlined />}
@@ -336,11 +380,13 @@ export function CommunitySettings(props: any) {
               <div className="tags-container">
                 {/* Используем данные из состояния */}
                 {formData.responsibilities?.length > 0 ? (
-                  formData.responsibilities.map((responsibility: string, index: number) => (
-                    <Tag key={index} className="responsibility-tag">
-                      {responsibility}
-                    </Tag>
-                  ))
+                  formData.responsibilities.map(
+                    (responsibility: string, index: number) => (
+                      <Tag key={index} className="responsibility-tag">
+                        {responsibility}
+                      </Tag>
+                    )
+                  )
                 ) : (
                   <Text type="secondary">Обязанности не указаны</Text>
                 )}

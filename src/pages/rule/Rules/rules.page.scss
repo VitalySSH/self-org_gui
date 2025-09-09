@@ -4,7 +4,11 @@
 // Переменные для страницы правил
 :root {
   --rules-max-width: 1200px;
-  --rules-header-bg: linear-gradient(135deg, rgba(114, 46, 209, 0.05) 0%, rgba(114, 46, 209, 0.02) 100%);
+  --rules-header-bg: linear-gradient(
+    135deg,
+    rgba(114, 46, 209, 0.05) 0%,
+    rgba(114, 46, 209, 0.02) 100%
+  );
   --rules-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   --rules-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   --rules-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -175,25 +179,25 @@
 
     // Цветные акценты для разных статусов
     strong {
-      &[style*="color: #722ed1"] {
+      &[style*='color: #722ed1'] {
         background: rgba(114, 46, 209, 0.1);
         padding: 2px 6px;
         border-radius: 4px;
       }
 
-      &[style*="color: #52c41a"] {
+      &[style*='color: #52c41a'] {
         background: rgba(82, 196, 26, 0.1);
         padding: 2px 6px;
         border-radius: 4px;
       }
 
-      &[style*="color: #1890ff"] {
+      &[style*='color: #1890ff'] {
         background: rgba(24, 144, 255, 0.1);
         padding: 2px 6px;
         border-radius: 4px;
       }
 
-      &[style*="color: #fa8c16"] {
+      &[style*='color: #fa8c16'] {
         background: rgba(250, 140, 22, 0.1);
         padding: 2px 6px;
         border-radius: 4px;
@@ -294,7 +298,11 @@
 
         .ant-card-body {
           padding: 24px;
-          background: linear-gradient(135deg, $background-color 0%, rgba($secondary-color, 0.5) 100%);
+          background: linear-gradient(
+            135deg,
+            $background-color 0%,
+            rgba($secondary-color, 0.5) 100%
+          );
 
           .rule-info {
             display: flex;
@@ -412,7 +420,11 @@
           left: 0;
           right: 0;
           height: 4px;
-          background: linear-gradient(90deg, #722ed1 0%, color.mix(black, #722ed1, 10%) 100%);
+          background: linear-gradient(
+            90deg,
+            #722ed1 0%,
+            color.mix(black, #722ed1, 10%) 100%
+          );
           transform: scaleX(0);
           transition: transform 0.3s ease;
         }
@@ -773,7 +785,11 @@
 // Темная тема
 .dark-theme {
   :root {
-    --rules-header-bg: linear-gradient(135deg, rgba(114, 46, 209, 0.1) 0%, rgba(114, 46, 209, 0.05) 100%);
+    --rules-header-bg: linear-gradient(
+      135deg,
+      rgba(114, 46, 209, 0.1) 0%,
+      rgba(114, 46, 209, 0.05) 100%
+    );
     --rules-stats-bg: rgba(114, 46, 209, 0.05);
   }
 

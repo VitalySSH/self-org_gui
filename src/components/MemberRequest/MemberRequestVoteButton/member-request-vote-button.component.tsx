@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Button, Checkbox, Form, message, Modal, Space } from 'antd';
-import { CheckCircleOutlined, CloseCircleOutlined, IdcardOutlined } from '@ant-design/icons';
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  IdcardOutlined,
+} from '@ant-design/icons';
 import { MemberRequestCardItem, SimpleVoting } from 'src/interfaces';
 import { CrudDataSourceService } from 'src/services';
 import { RequestMemberModel, StatusModel } from 'src/models';
@@ -13,7 +17,7 @@ interface MemberRequestVoteButtonProps {
 
 export function MemberRequestVoteButton({
   item,
-  setLoading
+  setLoading,
 }: MemberRequestVoteButtonProps) {
   const modalTitle = item ? `Голосование: ${item.member}` : '';
   const [messageApi, contextHolder] = message.useMessage();
@@ -24,17 +28,21 @@ export function MemberRequestVoteButton({
   const [voteForm] = Form.useForm();
 
   const successInfo = (content: string) => {
-    messageApi.open({
-      type: 'success',
-      content: content,
-    }).then();
+    messageApi
+      .open({
+        type: 'success',
+        content: content,
+      })
+      .then();
   };
 
   const errorInfo = (content: string) => {
-    messageApi.open({
-      type: 'error',
-      content: content,
-    }).then();
+    messageApi
+      .open({
+        type: 'error',
+        content: content,
+      })
+      .then();
   };
 
   const updateForm = useCallback(() => {
@@ -66,7 +74,9 @@ export function MemberRequestVoteButton({
   const onFinish = async (formData: SimpleVoting) => {
     try {
       const statusService = new CrudDataSourceService(StatusModel);
-      const requestMemberService = new CrudDataSourceService(RequestMemberModel);
+      const requestMemberService = new CrudDataSourceService(
+        RequestMemberModel
+      );
 
       const resp = await statusService.list([
         {
@@ -147,8 +157,8 @@ export function MemberRequestVoteButton({
           header: {
             borderBottom: '1px solid #f0f0f0',
             paddingBottom: '12px',
-            marginBottom: '20px'
-          }
+            marginBottom: '20px',
+          },
         }}
       >
         <Form
@@ -164,7 +174,11 @@ export function MemberRequestVoteButton({
             </p>
 
             <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-              <Form.Item name="yes" valuePropName="checked" style={{ margin: 0 }}>
+              <Form.Item
+                name="yes"
+                valuePropName="checked"
+                style={{ margin: 0 }}
+              >
                 <Checkbox style={{ fontSize: '14px' }}>
                   <Space>
                     <CheckCircleOutlined style={{ color: '#52c41a' }} />
@@ -173,7 +187,11 @@ export function MemberRequestVoteButton({
                 </Checkbox>
               </Form.Item>
 
-              <Form.Item name="no" valuePropName="checked" style={{ margin: 0 }}>
+              <Form.Item
+                name="no"
+                valuePropName="checked"
+                style={{ margin: 0 }}
+              >
                 <Checkbox style={{ fontSize: '14px' }}>
                   <Space>
                     <CloseCircleOutlined style={{ color: '#ff4d4f' }} />
@@ -218,7 +236,7 @@ export function MemberRequestVoteButton({
           ...(voteStatus && {
             borderColor: voteStatus.color,
             color: voteStatus.color,
-          })
+          }),
         }}
       >
         {voteStatus ? voteStatus.text : 'Голосовать'}

@@ -3,7 +3,11 @@
 // Переменные для страницы заявок для меня
 :root {
   --requests-for-me-max-width: 1200px;
-  --requests-for-me-header-bg: linear-gradient(135deg, rgba(114, 46, 209, 0.05) 0%, rgba(114, 46, 209, 0.02) 100%);
+  --requests-for-me-header-bg: linear-gradient(
+    135deg,
+    rgba(114, 46, 209, 0.05) 0%,
+    rgba(114, 46, 209, 0.02) 100%
+  );
   --requests-for-me-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   --requests-for-me-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --requests-for-me-grid-gap: 20px;
@@ -150,25 +154,25 @@
 
     // Цветные акценты для разных статусов
     strong {
-      &[style*="color: #52c41a"] {
+      &[style*='color: #52c41a'] {
         background: rgba(82, 196, 26, 0.1);
         padding: 2px 6px;
         border-radius: 4px;
       }
 
-      &[style*="color: #ff4d4f"] {
+      &[style*='color: #ff4d4f'] {
         background: rgba(255, 77, 79, 0.1);
         padding: 2px 6px;
         border-radius: 4px;
       }
 
-      &[style*="color: #1890ff"] {
+      &[style*='color: #1890ff'] {
         background: rgba(24, 144, 255, 0.1);
         padding: 2px 6px;
         border-radius: 4px;
       }
 
-      &[style*="color: #722ed1"] {
+      &[style*='color: #722ed1'] {
         background: rgba(114, 46, 209, 0.1);
         padding: 2px 6px;
         border-radius: 4px;
@@ -607,7 +611,11 @@
 // Темная тема
 .dark-theme {
   :root {
-    --requests-for-me-header-bg: linear-gradient(135deg, rgba(114, 46, 209, 0.1) 0%, rgba(114, 46, 209, 0.05) 100%);
+    --requests-for-me-header-bg: linear-gradient(
+      135deg,
+      rgba(114, 46, 209, 0.1) 0%,
+      rgba(114, 46, 209, 0.05) 100%
+    );
     --requests-for-me-stats-bg: rgba(114, 46, 209, 0.05);
     --requests-for-me-pagination-bg: rgba(114, 46, 209, 0.05);
   }

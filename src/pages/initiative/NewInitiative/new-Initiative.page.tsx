@@ -60,7 +60,8 @@ export function NewInitiative(props: NewInitiativeProps) {
   const [disabled, setDisabled] = useState(true);
   const [isOneDayEvent, setIsOneDayEvent] = useState(false);
   const [isExtraOptions, setIsExtraOptions] = useState(false);
-  const [isCheckingResponsibility, setIsCheckingResponsibility] = useState(false);
+  const [isCheckingResponsibility, setIsCheckingResponsibility] =
+    useState(false);
   const [isAIMode, setIsAIMode] = useState(false);
   const [formProgress, setFormProgress] = useState(0);
 
@@ -106,11 +107,13 @@ export function NewInitiative(props: NewInitiativeProps) {
 
     // Обновляем прогресс
     const requiredFields = ['title', 'question', 'content', 'category'];
-    const filledFields = requiredFields.filter(field => {
+    const filledFields = requiredFields.filter((field) => {
       const value = formData[field];
       return value && (typeof value === 'string' ? value.trim() : true);
     });
-    const progress = Math.round((filledFields.length / requiredFields.length) * 100);
+    const progress = Math.round(
+      (filledFields.length / requiredFields.length) * 100
+    );
     setFormProgress(progress);
   };
 
@@ -249,7 +252,8 @@ export function NewInitiative(props: NewInitiativeProps) {
         rules={[
           {
             required: true,
-            message: 'Пожалуйста, укажите вопрос, на который должны ответить при голосовании',
+            message:
+              'Пожалуйста, укажите вопрос, на который должны ответить при голосовании',
           },
           {
             max: 140,
@@ -282,7 +286,9 @@ export function NewInitiative(props: NewInitiativeProps) {
       <Form.List name="extra_options">
         {(fields, { add, remove }) => (
           <div style={{ width: '100%' }}>
-            <Text strong style={{ display: 'block', marginBottom: 16 }}>Варианты ответов:</Text>
+            <Text strong style={{ display: 'block', marginBottom: 16 }}>
+              Варианты ответов:
+            </Text>
 
             {fields.map(({ key, name, ...restField }) => (
               <div
@@ -292,13 +298,19 @@ export function NewInitiative(props: NewInitiativeProps) {
                   alignItems: 'center',
                   gap: 8,
                   marginBottom: 12,
-                  width: '100%'
+                  width: '100%',
                 }}
               >
                 <Form.Item
                   {...restField}
                   name={[name, 'name']}
-                  rules={[{ required: true, message: 'Пожалуйста, укажите дополнительный параметр для голосования' }]}
+                  rules={[
+                    {
+                      required: true,
+                      message:
+                        'Пожалуйста, укажите дополнительный параметр для голосования',
+                    },
+                  ]}
                   style={{ flex: 1, marginBottom: 0 }}
                 >
                   <Input
@@ -358,7 +370,9 @@ export function NewInitiative(props: NewInitiativeProps) {
             Создание новой инициативы
           </Title>
           <Text className="form-header-subtitle">
-            Создайте инициативу для сообщества, которая будет вынесена на голосование. Определите основные параметры, дату события и дополнительные опции
+            Создайте инициативу для сообщества, которая будет вынесена на
+            голосование. Определите основные параметры, дату события и
+            дополнительные опции
           </Text>
           <div className="header-actions">
             <Button
@@ -423,7 +437,8 @@ export function NewInitiative(props: NewInitiativeProps) {
               rules={[
                 {
                   required: true,
-                  message: 'Пожалуйста, укажите вопрос, на который должны ответить при голосовании',
+                  message:
+                    'Пожалуйста, укажите вопрос, на который должны ответить при голосовании',
                 },
                 {
                   max: 140,
@@ -448,7 +463,8 @@ export function NewInitiative(props: NewInitiativeProps) {
               rules={[
                 {
                   required: true,
-                  message: 'Пожалуйста, подробно опишите цель и содержание инициативы',
+                  message:
+                    'Пожалуйста, подробно опишите цель и содержание инициативы',
                 },
                 {
                   max: 1000,
@@ -574,7 +590,9 @@ export function NewInitiative(props: NewInitiativeProps) {
               Прогресс: <span className="info-highlight">{formProgress}%</span>
             </span>
           </div>
-          <div className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}>
+          <div
+            className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}
+          >
             <span className="status-icon">●</span>
             <span>{getFormStatus()}</span>
           </div>

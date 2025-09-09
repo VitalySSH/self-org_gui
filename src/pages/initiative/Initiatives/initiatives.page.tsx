@@ -8,7 +8,7 @@ import {
   Typography,
   Space,
   Spin,
-  Empty
+  Empty,
 } from 'antd';
 import {
   FilterOutlined,
@@ -18,7 +18,7 @@ import {
   TagOutlined,
   CalendarOutlined,
   ClockCircleOutlined,
-  SearchOutlined
+  SearchOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -218,23 +218,25 @@ export function Initiatives(props: InitiativesProps) {
   const hasFilters = activeFiltersCount > 0;
 
   // Статистика
-  const activeInitiatives = dataSource.filter(initiative =>
-    initiative.statusCode?.toLowerCase() === 'active' ||
-    initiative.statusCode?.toLowerCase() === 'published' ||
-    initiative.statusCode?.toLowerCase() === 'ongoing'
+  const activeInitiatives = dataSource.filter(
+    (initiative) =>
+      initiative.statusCode?.toLowerCase() === 'active' ||
+      initiative.statusCode?.toLowerCase() === 'published' ||
+      initiative.statusCode?.toLowerCase() === 'ongoing'
   ).length;
 
-  const draftInitiatives = dataSource.filter(initiative =>
-    initiative.statusCode?.toLowerCase() === 'draft'
+  const draftInitiatives = dataSource.filter(
+    (initiative) => initiative.statusCode?.toLowerCase() === 'draft'
   ).length;
 
-  const completedInitiatives = dataSource.filter(initiative =>
-    initiative.statusCode?.toLowerCase() === 'completed' ||
-    initiative.statusCode?.toLowerCase() === 'finished'
+  const completedInitiatives = dataSource.filter(
+    (initiative) =>
+      initiative.statusCode?.toLowerCase() === 'completed' ||
+      initiative.statusCode?.toLowerCase() === 'finished'
   ).length;
 
-  const oneDayEvents = dataSource.filter(initiative =>
-    initiative.isOneDayEvent
+  const oneDayEvents = dataSource.filter(
+    (initiative) => initiative.isOneDayEvent
   ).length;
 
   return (
@@ -290,11 +292,16 @@ export function Initiatives(props: InitiativesProps) {
                   size="small"
                   offset={[8, -2]}
                   style={{
-                    backgroundColor: activeFiltersCount > 0 ? '#52c41a' : '#999',
+                    backgroundColor:
+                      activeFiltersCount > 0 ? '#52c41a' : '#999',
                     fontSize: '10px',
                   }}
                 >
-                  <span style={{ marginLeft: activeFiltersCount > 0 ? '12px' : '0' }}>
+                  <span
+                    style={{
+                      marginLeft: activeFiltersCount > 0 ? '12px' : '0',
+                    }}
+                  >
                     Фильтры
                   </span>
                 </Badge>
@@ -316,32 +323,50 @@ export function Initiatives(props: InitiativesProps) {
                 </Text>
                 {hasFilters && (
                   <Text type="secondary">
-                    Найдено: <Text strong style={{ color: '#fa8c16' }}>{dataSource.length}</Text>
+                    Найдено:{' '}
+                    <Text strong style={{ color: '#fa8c16' }}>
+                      {dataSource.length}
+                    </Text>
                   </Text>
                 )}
                 {activeInitiatives > 0 && (
                   <Text type="secondary">
-                    Активных: <Text strong style={{ color: '#52c41a' }}>{activeInitiatives}</Text>
+                    Активных:{' '}
+                    <Text strong style={{ color: '#52c41a' }}>
+                      {activeInitiatives}
+                    </Text>
                   </Text>
                 )}
                 {completedInitiatives > 0 && (
                   <Text type="secondary">
-                    Завершено: <Text strong style={{ color: '#722ed1' }}>{completedInitiatives}</Text>
+                    Завершено:{' '}
+                    <Text strong style={{ color: '#722ed1' }}>
+                      {completedInitiatives}
+                    </Text>
                   </Text>
                 )}
                 {draftInitiatives > 0 && (
                   <Text type="secondary">
-                    Черновиков: <Text strong style={{ color: '#1890ff' }}>{draftInitiatives}</Text>
+                    Черновиков:{' '}
+                    <Text strong style={{ color: '#1890ff' }}>
+                      {draftInitiatives}
+                    </Text>
                   </Text>
                 )}
                 {oneDayEvents > 0 && (
                   <Text type="secondary">
-                    Одного дня: <Text strong style={{ color: '#f5222d' }}>{oneDayEvents}</Text>
+                    Одного дня:{' '}
+                    <Text strong style={{ color: '#f5222d' }}>
+                      {oneDayEvents}
+                    </Text>
                   </Text>
                 )}
                 {hasFilters && (
                   <Text type="secondary">
-                    Фильтров: <Text strong style={{ color: '#1890ff' }}>{activeFiltersCount}</Text>
+                    Фильтров:{' '}
+                    <Text strong style={{ color: '#1890ff' }}>
+                      {activeFiltersCount}
+                    </Text>
                   </Text>
                 )}
               </Space>
@@ -364,8 +389,8 @@ export function Initiatives(props: InitiativesProps) {
               <Empty
                 description={
                   hasFilters
-                    ? "По заданным фильтрам инициативы не найдены"
-                    : "В сообществе пока нет инициатив"
+                    ? 'По заданным фильтрам инициативы не найдены'
+                    : 'В сообществе пока нет инициатив'
                 }
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
                 style={{ padding: '20px 0' }}
@@ -405,7 +430,7 @@ export function Initiatives(props: InitiativesProps) {
                     key={item.id}
                     className="initiative-row-wrapper"
                     style={{
-                      animationDelay: `${0.1 + (index * 0.05)}s`
+                      animationDelay: `${0.1 + index * 0.05}s`,
                     }}
                   >
                     <List.Item>
@@ -417,13 +442,19 @@ export function Initiatives(props: InitiativesProps) {
                         <div className="initiative-info">
                           <div className="initiative-header">
                             <div className="initiative-main">
-                              <div className="initiative-title">{item.title}</div>
+                              <div className="initiative-title">
+                                {item.title}
+                              </div>
                               {item.description && (
-                                <div className="initiative-description">{item.description}</div>
+                                <div className="initiative-description">
+                                  {item.description}
+                                </div>
                               )}
                             </div>
                             <div className="initiative-status">
-                              <span className={`status-badge ${getStatusBadgeClass(item.statusCode)}`}>
+                              <span
+                                className={`status-badge ${getStatusBadgeClass(item.statusCode)}`}
+                              >
                                 {item.status}
                               </span>
                             </div>
@@ -433,19 +464,25 @@ export function Initiatives(props: InitiativesProps) {
                               {item.creator && (
                                 <div className="meta-item">
                                   <UserOutlined className="meta-icon" />
-                                  <span className="meta-value">{item.creator}</span>
+                                  <span className="meta-value">
+                                    {item.creator}
+                                  </span>
                                 </div>
                               )}
                               {item.category && (
                                 <div className="meta-item">
                                   <TagOutlined className="meta-icon" />
-                                  <span className="meta-value">{item.category}</span>
+                                  <span className="meta-value">
+                                    {item.category}
+                                  </span>
                                 </div>
                               )}
                               {item.eventDate && (
                                 <div className="meta-item event-date">
                                   <CalendarOutlined className="meta-icon" />
-                                  <span className="meta-value">{item.eventDate}</span>
+                                  <span className="meta-value">
+                                    {item.eventDate}
+                                  </span>
                                 </div>
                               )}
                               {item.isOneDayEvent && (

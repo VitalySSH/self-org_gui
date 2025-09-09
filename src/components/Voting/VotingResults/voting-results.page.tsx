@@ -19,11 +19,11 @@ export function VotingResults(props: VotingResultsProps) {
   };
 
   // Функция для сортировки и обработки опций голосования
-  const processVotingOptions = (data: VotingOptionData | {} | undefined): VotingOptionData[] => {
+  const processVotingOptions = (
+    data: VotingOptionData | {} | undefined
+  ): VotingOptionData[] => {
     if (!data) return [];
-    return Object.values(data).sort(
-      (a, b) => a.number - b.number
-    );
+    return Object.values(data).sort((a, b) => a.number - b.number);
   };
 
   // Проверка существования данных
@@ -59,7 +59,7 @@ export function VotingResults(props: VotingResultsProps) {
               style={{
                 width: `${props.yesPercent}%`,
                 minWidth: '2%',
-                transition: 'width 0.8s ease'
+                transition: 'width 0.8s ease',
               }}
             />
           </div>
@@ -81,7 +81,7 @@ export function VotingResults(props: VotingResultsProps) {
               style={{
                 width: `${props.noPercent}%`,
                 minWidth: '2%',
-                transition: 'width 0.8s ease'
+                transition: 'width 0.8s ease',
               }}
             />
           </div>
@@ -103,7 +103,7 @@ export function VotingResults(props: VotingResultsProps) {
               style={{
                 width: `${props.abstainPercent}%`,
                 minWidth: '2%',
-                transition: 'width 0.8s ease'
+                transition: 'width 0.8s ease',
               }}
             />
           </div>
@@ -117,31 +117,31 @@ export function VotingResults(props: VotingResultsProps) {
             <QuestionCircleOutlined />
             Результаты уточняющего вопроса
           </div>
-          <div className="extra-question-text">
-            {props.extraQuestion}
-          </div>
+          <div className="extra-question-text">{props.extraQuestion}</div>
 
           <div className="extra-options-results">
-            {processVotingOptions(props.selectedOptions).map((option, index) => (
-              <div key={index} className="extra-option-item">
-                <div className="option-header">
-                  <div className="option-label">
-                    <div className="option-number">{option.number}</div>
-                    <div className="option-value">{option.value}</div>
+            {processVotingOptions(props.selectedOptions).map(
+              (option, index) => (
+                <div key={index} className="extra-option-item">
+                  <div className="option-header">
+                    <div className="option-label">
+                      <div className="option-number">{option.number}</div>
+                      <div className="option-value">{option.value}</div>
+                    </div>
+                    <div className="option-percentage">{option.percent}%</div>
                   </div>
-                  <div className="option-percentage">{option.percent}%</div>
+                  <div className="option-progress-container">
+                    <Progress
+                      percent={option.percent}
+                      status="active"
+                      showInfo={false}
+                      className="extra-option-progress"
+                      size={['', 6]}
+                    />
+                  </div>
                 </div>
-                <div className="option-progress-container">
-                  <Progress
-                    percent={option.percent}
-                    status="active"
-                    showInfo={false}
-                    className="extra-option-progress"
-                    size={['', 6]}
-                  />
-                </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
         </div>
       )}
@@ -183,7 +183,8 @@ export function VotingResults(props: VotingResultsProps) {
       )}
 
       {/* Секция мнения меньшинства */}
-      {(hasData(props.minorityOptions) || hasData(props.minorityNoncompliance)) && (
+      {(hasData(props.minorityOptions) ||
+        hasData(props.minorityNoncompliance)) && (
         <div className="minority-section">
           <div className="minority-header">
             <div className="minority-info">
@@ -206,62 +207,80 @@ export function VotingResults(props: VotingResultsProps) {
             {/* Варианты общественно-значимого меньшинства */}
             {hasData(props.minorityOptions) && (
               <div className="minority-form-field">
-                <div className="minority-field-title">Варианты общественно-значимого меньшинства</div>
+                <div className="minority-field-title">
+                  Варианты общественно-значимого меньшинства
+                </div>
 
                 <div className="minority-options-results">
-                  {processVotingOptions(props.minorityOptions).map((option, index) => (
-                    <div key={index} className="minority-option-item">
-                      <div className="option-header">
-                        <div className="option-label">
-                          <div className="option-number">{option.number}</div>
-                          <div className="option-value">{option.value}</div>
+                  {processVotingOptions(props.minorityOptions).map(
+                    (option, index) => (
+                      <div key={index} className="minority-option-item">
+                        <div className="option-header">
+                          <div className="option-label">
+                            <div className="option-number">{option.number}</div>
+                            <div className="option-value">{option.value}</div>
+                          </div>
+                          <div className="option-percentage">
+                            {option.percent}%
+                          </div>
                         </div>
-                        <div className="option-percentage">{option.percent}%</div>
+                        <div className="option-progress-container">
+                          <Progress
+                            percent={option.percent}
+                            status="active"
+                            showInfo={false}
+                            className="minority-option-progress"
+                            size={['', 6]}
+                          />
+                        </div>
                       </div>
-                      <div className="option-progress-container">
-                        <Progress
-                          percent={option.percent}
-                          status="active"
-                          showInfo={false}
-                          className="minority-option-progress"
-                          size={['', 6]}
-                        />
-                      </div>
-                    </div>
-                  ))}
+                    )
+                  )}
                 </div>
               </div>
             )}
 
             {/* Варианты меньшинства последствий несоблюдения */}
-            {props.resource === 'rule' && hasData(props.minorityNoncompliance) && (
-              <div className="minority-form-field">
-                <div className="minority-field-title">Варианты меньшинства последствий несоблюдения</div>
+            {props.resource === 'rule' &&
+              hasData(props.minorityNoncompliance) && (
+                <div className="minority-form-field">
+                  <div className="minority-field-title">
+                    Варианты меньшинства последствий несоблюдения
+                  </div>
 
-                <div className="minority-noncompliance-results">
-                  {processVotingOptions(props.minorityNoncompliance).map((option, index) => (
-                    <div key={index} className="minority-noncompliance-item">
-                      <div className="option-header">
-                        <div className="option-label">
-                          <div className="option-number">{option.number}</div>
-                          <div className="option-value">{option.value}</div>
+                  <div className="minority-noncompliance-results">
+                    {processVotingOptions(props.minorityNoncompliance).map(
+                      (option, index) => (
+                        <div
+                          key={index}
+                          className="minority-noncompliance-item"
+                        >
+                          <div className="option-header">
+                            <div className="option-label">
+                              <div className="option-number">
+                                {option.number}
+                              </div>
+                              <div className="option-value">{option.value}</div>
+                            </div>
+                            <div className="option-percentage">
+                              {option.percent}%
+                            </div>
+                          </div>
+                          <div className="option-progress-container">
+                            <Progress
+                              percent={option.percent}
+                              status="active"
+                              showInfo={false}
+                              className="minority-noncompliance-progress"
+                              size={['', 6]}
+                            />
+                          </div>
                         </div>
-                        <div className="option-percentage">{option.percent}%</div>
-                      </div>
-                      <div className="option-progress-container">
-                        <Progress
-                          percent={option.percent}
-                          status="active"
-                          showInfo={false}
-                          className="minority-noncompliance-progress"
-                          size={['', 6]}
-                        />
-                      </div>
-                    </div>
-                  ))}
+                      )
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         </div>
       )}

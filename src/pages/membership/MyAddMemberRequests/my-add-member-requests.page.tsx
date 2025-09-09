@@ -8,7 +8,7 @@ import {
   HomeOutlined,
   TeamOutlined,
   UserAddOutlined,
-  ArrowLeftOutlined
+  ArrowLeftOutlined,
 } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
@@ -52,18 +52,21 @@ export function MyAddMemberRequests() {
     loadData();
   }, [loadData]);
 
-  const handleShowSubcommunities = useCallback((item: MyMemberRequestCardItem) => {
-    if (!item.children || item.children.length === 0) return;
+  const handleShowSubcommunities = useCallback(
+    (item: MyMemberRequestCardItem) => {
+      if (!item.children || item.children.length === 0) return;
 
-    setNavState((prev) => ({
-      currentLevel: prev.currentLevel + 1,
-      breadcrumbs: [
-        ...prev.breadcrumbs,
-        { id: item.key, name: item.communityName },
-      ],
-      currentData: item.children || [],
-    }));
-  }, []);
+      setNavState((prev) => ({
+        currentLevel: prev.currentLevel + 1,
+        breadcrumbs: [
+          ...prev.breadcrumbs,
+          { id: item.key, name: item.communityName },
+        ],
+        currentData: item.children || [],
+      }));
+    },
+    []
+  );
 
   const handleGoBack = useCallback(() => {
     setNavState({
@@ -73,35 +76,38 @@ export function MyAddMemberRequests() {
     });
   }, [dataSource]);
 
-  const handleBreadcrumbClick = useCallback((index: number) => {
-    if (index === 0) {
-      handleGoBack();
-      return;
-    }
-
-    const newBreadcrumbs = navState.breadcrumbs.slice(0, index);
-    const parentItem = newBreadcrumbs[newBreadcrumbs.length - 1];
-
-    const findData = (
-      items: MyMemberRequestCardItem[],
-      targetId: string
-    ): MyMemberRequestCardItem[] => {
-      for (const item of items) {
-        if (item.key === targetId) return item.children || [];
-        if (item.children) {
-          const found = findData(item.children, targetId);
-          if (found.length) return found;
-        }
+  const handleBreadcrumbClick = useCallback(
+    (index: number) => {
+      if (index === 0) {
+        handleGoBack();
+        return;
       }
-      return [];
-    };
 
-    setNavState({
-      currentLevel: index + 1,
-      breadcrumbs: newBreadcrumbs,
-      currentData: findData(dataSource, parentItem.id),
-    });
-  }, [navState.breadcrumbs, dataSource]);
+      const newBreadcrumbs = navState.breadcrumbs.slice(0, index);
+      const parentItem = newBreadcrumbs[newBreadcrumbs.length - 1];
+
+      const findData = (
+        items: MyMemberRequestCardItem[],
+        targetId: string
+      ): MyMemberRequestCardItem[] => {
+        for (const item of items) {
+          if (item.key === targetId) return item.children || [];
+          if (item.children) {
+            const found = findData(item.children, targetId);
+            if (found.length) return found;
+          }
+        }
+        return [];
+      };
+
+      setNavState({
+        currentLevel: index + 1,
+        breadcrumbs: newBreadcrumbs,
+        currentData: findData(dataSource, parentItem.id),
+      });
+    },
+    [navState.breadcrumbs, dataSource]
+  );
 
   const renderHeader = () => (
     <div className="page-header">
@@ -129,7 +135,8 @@ export function MyAddMemberRequests() {
                 title="Вернуться к корню"
               />
               <Text type="secondary">
-                Уровень {navState.currentLevel} из {navState.breadcrumbs.length + 1}
+                Уровень {navState.currentLevel} из{' '}
+                {navState.breadcrumbs.length + 1}
               </Text>
             </Space>
           </div>
@@ -211,8 +218,8 @@ export function MyAddMemberRequests() {
           <Empty
             description={
               navState.currentLevel > 1
-                ? "В этом сообществе нет подсообществ с заявками"
-                : "У вас нет заявок на вступление в сообщества"
+                ? 'В этом сообществе нет подсообществ с заявками'
+                : 'У вас нет заявок на вступление в сообщества'
             }
             image={Empty.PRESENTED_IMAGE_SIMPLE}
           />
@@ -238,8 +245,12 @@ export function MyAddMemberRequests() {
     if (loading || !dataSource.length) return null;
 
     const totalRequests = navState.currentData.length;
-    const hasSubcommunities = navState.currentData.some(item => item.children?.length);
-    const withSubcommunitiesCount = navState.currentData.filter(item => item.children?.length).length;
+    const hasSubcommunities = navState.currentData.some(
+      (item) => item.children?.length
+    );
+    const withSubcommunitiesCount = navState.currentData.filter(
+      (item) => item.children?.length
+    ).length;
 
     return (
       <Card className="stats-card" size="small">

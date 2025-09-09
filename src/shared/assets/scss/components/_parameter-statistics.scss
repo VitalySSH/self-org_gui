@@ -6,7 +6,11 @@
   --statistics-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   --statistics-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   --statistics-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --statistics-header-bg: linear-gradient(135deg, rgba(24, 144, 255, 0.02) 0%, rgba(24, 144, 255, 0.01) 100%);
+  --statistics-header-bg: linear-gradient(
+    135deg,
+    rgba(24, 144, 255, 0.02) 0%,
+    rgba(24, 144, 255, 0.01) 100%
+  );
 }
 
 // Основной контейнер статистики параметров
@@ -54,7 +58,11 @@
           transition: var(--statistics-transition);
 
           &:hover {
-            background: linear-gradient(135deg, rgba($primary-color, 0.02) 0%, rgba($primary-color, 0.01) 100%);
+            background: linear-gradient(
+              135deg,
+              rgba($primary-color, 0.02) 0%,
+              rgba($primary-color, 0.01) 100%
+            );
           }
 
           .ant-collapse-header-text {
@@ -75,7 +83,11 @@
         // Активное состояние
         &.ant-collapse-item-active {
           .ant-collapse-header {
-            background: linear-gradient(135deg, rgba($primary-color, 0.05) 0%, rgba($primary-color, 0.02) 100%);
+            background: linear-gradient(
+              135deg,
+              rgba($primary-color, 0.05) 0%,
+              rgba($primary-color, 0.02) 100%
+            );
             border-bottom: 1px solid rgba($primary-color, 0.1);
           }
         }
@@ -395,7 +407,11 @@
 // Темная тема
 .dark-theme {
   :root {
-    --statistics-header-bg: linear-gradient(135deg, rgba(24, 144, 255, 0.08) 0%, rgba(24, 144, 255, 0.03) 100%);
+    --statistics-header-bg: linear-gradient(
+      135deg,
+      rgba(24, 144, 255, 0.08) 0%,
+      rgba(24, 144, 255, 0.03) 100%
+    );
   }
 
   .parameter-statistics {
@@ -427,13 +443,21 @@
           color: #ffffff;
 
           &:hover {
-            background: linear-gradient(135deg, rgba($primary-color, 0.1) 0%, rgba($primary-color, 0.05) 100%);
+            background: linear-gradient(
+              135deg,
+              rgba($primary-color, 0.1) 0%,
+              rgba($primary-color, 0.05) 100%
+            );
           }
         }
 
         &.ant-collapse-item-active {
           .ant-collapse-header {
-            background: linear-gradient(135deg, rgba($primary-color, 0.15) 0%, rgba($primary-color, 0.08) 100%);
+            background: linear-gradient(
+              135deg,
+              rgba($primary-color, 0.15) 0%,
+              rgba($primary-color, 0.08) 100%
+            );
             border-bottom-color: rgba($primary-color, 0.3);
           }
         }

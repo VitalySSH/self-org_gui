@@ -48,7 +48,11 @@
 
   &--requested {
     border-color: rgba($info-color, 0.3);
-    background: linear-gradient(135deg, rgba($info-color, 0.02) 0%, rgba($info-color, 0.01) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba($info-color, 0.02) 0%,
+      rgba($info-color, 0.01) 100%
+    );
 
     &:hover {
       box-shadow: var(--community-card-hover-shadow);
@@ -59,7 +63,11 @@
 
   &--blocked {
     border-color: rgba($error-color, 0.3);
-    background: linear-gradient(135deg, rgba($error-color, 0.02) 0%, rgba($error-color, 0.01) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba($error-color, 0.02) 0%,
+      rgba($error-color, 0.01) 100%
+    );
 
     &:hover {
       box-shadow: 0 2px 8px rgba($error-color, 0.1);
@@ -521,7 +529,7 @@
           .action-text {
             color: #cccccc;
 
-            &[style*="color: #52c41a"] {
+            &[style*='color: #52c41a'] {
               color: #52c41a !important;
             }
           }

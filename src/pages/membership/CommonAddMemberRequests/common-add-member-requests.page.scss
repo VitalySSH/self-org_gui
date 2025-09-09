@@ -3,7 +3,11 @@
 // Переменные для страницы общих заявок
 :root {
   --common-requests-max-width: 1200px;
-  --common-requests-header-bg: linear-gradient(135deg, rgba(22, 119, 255, 0.05) 0%, rgba(22, 119, 255, 0.02) 100%);
+  --common-requests-header-bg: linear-gradient(
+    135deg,
+    rgba(22, 119, 255, 0.05) 0%,
+    rgba(22, 119, 255, 0.02) 100%
+  );
   --common-requests-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   --common-requests-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --common-requests-grid-gap: 20px;
@@ -533,7 +537,11 @@
 // Темная тема
 .dark-theme {
   :root {
-    --common-requests-header-bg: linear-gradient(135deg, rgba(22, 119, 255, 0.1) 0%, rgba(22, 119, 255, 0.05) 100%);
+    --common-requests-header-bg: linear-gradient(
+      135deg,
+      rgba(22, 119, 255, 0.1) 0%,
+      rgba(22, 119, 255, 0.05) 100%
+    );
     --common-requests-stats-bg: rgba(82, 196, 26, 0.05);
     --common-requests-pagination-bg: rgba(24, 144, 255, 0.05);
   }

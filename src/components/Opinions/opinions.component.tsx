@@ -242,9 +242,7 @@ export function Opinions(props: OpinionsProps) {
           ) : (
             <>
               <div className="input-mode-toggle">
-                <div className="mode-info">
-                  Поделитесь своим мнением
-                </div>
+                <div className="mode-info">Поделитесь своим мнением</div>
                 <Button
                   type="default"
                   icon={<BulbOutlined />}
@@ -285,19 +283,19 @@ export function Opinions(props: OpinionsProps) {
               opinion.creator?.id === authData.user?.id &&
               editingOpinionId !== opinion.id
                 ? [
-                  <EditOutlined
-                    key="edit"
-                    onClick={() => {
-                      setEditingOpinionId(opinion.id);
-                      setEditedText(opinion.text || '');
-                    }}
-                  />,
-                  <DeleteOutlined
-                    key="delete"
-                    onClick={() => handleDeleteOpinion(opinion.id)}
-                    className="delete-icon"
-                  />,
-                ]
+                    <EditOutlined
+                      key="edit"
+                      onClick={() => {
+                        setEditingOpinionId(opinion.id);
+                        setEditedText(opinion.text || '');
+                      }}
+                    />,
+                    <DeleteOutlined
+                      key="delete"
+                      onClick={() => handleDeleteOpinion(opinion.id)}
+                      className="delete-icon"
+                    />,
+                  ]
                 : []
             }
           >

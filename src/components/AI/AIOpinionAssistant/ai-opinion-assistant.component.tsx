@@ -6,7 +6,7 @@ import {
   UserOutlined,
   ArrowLeftOutlined,
   CheckOutlined,
-  CloseOutlined
+  CloseOutlined,
 } from '@ant-design/icons';
 import './ai-opinion-assistant.component.scss';
 
@@ -28,21 +28,23 @@ interface AIOpinionAssistantProps {
 
 const OPINION_QUESTIONS = [
   {
-    question: "Привет! Я помогу тебе сформулировать твоё мнение. Для начала расскажи: что ты думаешь об этом предложении в целом?",
-    followUp: "Отлично! Теперь поделись: какие положительные и отрицательные стороны ты видишь в этом предложении?"
+    question:
+      'Привет! Я помогу тебе сформулировать твоё мнение. Для начала расскажи: что ты думаешь об этом предложении в целом?',
+    followUp:
+      'Отлично! Теперь поделись: какие положительные и отрицательные стороны ты видишь в этом предложении?',
   },
   {
-    question: "Спасибо за развёрнутый ответ! Как, по твоему мнению, это может повлиять на сообщество? Какие последствия ты предвидишь?",
-    followUp: "И последний вопрос: есть ли у тебя альтернативные идеи или предложения по улучшению? Что бы ты изменил или добавил?"
-  }
+    question:
+      'Спасибо за развёрнутый ответ! Как, по твоему мнению, это может повлиять на сообщество? Какие последствия ты предвидишь?',
+    followUp:
+      'И последний вопрос: есть ли у тебя альтернативные идеи или предложения по улучшению? Что бы ты изменил или добавил?',
+  },
 ];
 
 // Исходный компонент без изменений
-const AIOpinionChat: React.FC<AIOpinionAssistantProps & { isMobile?: boolean }> = ({
-                                                                                     onComplete,
-                                                                                     onCancel,
-                                                                                     isMobile = false
-                                                                                   }) => {
+const AIOpinionChat: React.FC<
+  AIOpinionAssistantProps & { isMobile?: boolean }
+> = ({ onComplete, onCancel, isMobile = false }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentMessage, setCurrentMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -66,18 +68,26 @@ const AIOpinionChat: React.FC<AIOpinionAssistantProps & { isMobile?: boolean }> 
     }
   }, []);
 
-  const addMessage = (text: string, isUser: boolean, isQuestion: boolean = false) => {
+  const addMessage = (
+    text: string,
+    isUser: boolean,
+    isQuestion: boolean = false
+  ) => {
     const newMessage: Message = {
       id: Date.now().toString(),
       text,
       isUser,
       timestamp: new Date(),
-      isQuestion
+      isQuestion,
     };
-    setMessages(prev => [...prev, newMessage]);
+    setMessages((prev) => [...prev, newMessage]);
   };
 
-  const simulateTyping = (text: string, delay: number = 800, isQuestion: boolean = false) => {
+  const simulateTyping = (
+    text: string,
+    delay: number = 800,
+    isQuestion: boolean = false
+  ) => {
     setIsTyping(true);
     setTimeout(() => {
       setIsTyping(false);
@@ -87,7 +97,7 @@ const AIOpinionChat: React.FC<AIOpinionAssistantProps & { isMobile?: boolean }> 
 
   const generateOpinionText = (answers: string[]): string => {
     return answers
-      .filter(answer => answer.trim())
+      .filter((answer) => answer.trim())
       .join(' ')
       .replace(/\s+/g, ' ')
       .trim();
@@ -143,7 +153,9 @@ const AIOpinionChat: React.FC<AIOpinionAssistantProps & { isMobile?: boolean }> 
   };
 
   return (
-    <div className={`ai-opinion-container ${isMobile ? 'ai-opinion-mobile' : ''}`}>
+    <div
+      className={`ai-opinion-container ${isMobile ? 'ai-opinion-mobile' : ''}`}
+    >
       <div className="ai-opinion-header">
         <div className="ai-opinion-title">
           <RobotOutlined />
@@ -167,17 +179,13 @@ const AIOpinionChat: React.FC<AIOpinionAssistantProps & { isMobile?: boolean }> 
           >
             <div className="ai-message-avatar">
               <Avatar
-                icon={
-                  message.isUser
-                    ? <UserOutlined />
-                    : <RobotOutlined />
-                }
+                icon={message.isUser ? <UserOutlined /> : <RobotOutlined />}
                 style={{
                   backgroundColor: message.isUser
                     ? '#52c41a'
                     : message.isQuestion
                       ? '#fa8c16'
-                      : '#1890ff'
+                      : '#1890ff',
                 }}
               />
             </div>
@@ -191,7 +199,7 @@ const AIOpinionChat: React.FC<AIOpinionAssistantProps & { isMobile?: boolean }> 
               <div className="ai-message-time">
                 {message.timestamp.toLocaleTimeString('ru-RU', {
                   hour: '2-digit',
-                  minute: '2-digit'
+                  minute: '2-digit',
                 })}
               </div>
             </div>
@@ -201,7 +209,10 @@ const AIOpinionChat: React.FC<AIOpinionAssistantProps & { isMobile?: boolean }> 
         {isTyping && (
           <div className="ai-message ai-message-ai">
             <div className="ai-message-avatar">
-              <Avatar icon={<RobotOutlined />} style={{ backgroundColor: '#1890ff' }} />
+              <Avatar
+                icon={<RobotOutlined />}
+                style={{ backgroundColor: '#1890ff' }}
+              />
             </div>
             <div className="ai-message-content">
               <Card size="small" className="ai-message-card ai-message-card-ai">
@@ -258,7 +269,10 @@ const AIOpinionChat: React.FC<AIOpinionAssistantProps & { isMobile?: boolean }> 
 };
 
 // Главный компонент с простым условием
-export const AIOpinionAssistant: React.FC<AIOpinionAssistantProps> = ({ onComplete, onCancel }) => {
+export const AIOpinionAssistant: React.FC<AIOpinionAssistantProps> = ({
+  onComplete,
+  onCancel,
+}) => {
   // Простое определение мобильного устройства при загрузке
   const isMobile = window.innerWidth <= 768;
 
@@ -273,22 +287,32 @@ export const AIOpinionAssistant: React.FC<AIOpinionAssistantProps> = ({ onComple
         style={{
           top: 0,
           padding: 0,
-          maxWidth: '100vw'
+          maxWidth: '100vw',
         }}
         bodyStyle={{
           padding: 0,
           height: '100vh',
-          overflow: 'hidden'
+          overflow: 'hidden',
         }}
         className="ai-opinion-modal"
         closable={false}
         destroyOnClose={true}
       >
-        <AIOpinionChat onComplete={onComplete} onCancel={onCancel} isMobile={true} />
+        <AIOpinionChat
+          onComplete={onComplete}
+          onCancel={onCancel}
+          isMobile={true}
+        />
       </Modal>
     );
   }
 
   // Десктопная версия - без изменений
-  return <AIOpinionChat onComplete={onComplete} onCancel={onCancel} isMobile={false} />;
+  return (
+    <AIOpinionChat
+      onComplete={onComplete}
+      onCancel={onCancel}
+      isMobile={false}
+    />
+  );
 };

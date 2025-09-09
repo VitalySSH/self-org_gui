@@ -485,7 +485,6 @@
 
       .ant-tabs-nav-list {
         .ant-tabs-tab {
-
           .ant-tabs-tab-btn {
             padding: 10px 16px;
             font-size: 14px;
@@ -532,7 +531,12 @@
         right: 0;
         top: 0;
         height: 100%;
-        background: linear-gradient(90deg, transparent 0%, rgba($background-color, 0.9) 20%, rgba($background-color, 0.95) 100%);
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba($background-color, 0.9) 20%,
+          rgba($background-color, 0.95) 100%
+        );
         padding-left: 20px;
         z-index: 10;
 
@@ -769,7 +773,6 @@
 
   .workspace-tabs {
     .ant-tabs-nav {
-
       .ant-tabs-nav-list {
         .ant-tabs-tab {
           margin-right: -20px;
@@ -844,13 +847,14 @@
 @media (max-width: $breakpoint-sm) and (-webkit-min-device-pixel-ratio: 1) {
   .workspace-tabs {
     .ant-tabs-nav {
-
       .ant-tabs-nav-list {
         scroll-behavior: auto;
 
         .ant-tabs-tab {
           .ant-tabs-tab-btn {
-            transition: background-color 0.2s ease, color 0.2s ease;
+            transition:
+              background-color 0.2s ease,
+              color 0.2s ease;
 
             &:hover {
               transform: none;

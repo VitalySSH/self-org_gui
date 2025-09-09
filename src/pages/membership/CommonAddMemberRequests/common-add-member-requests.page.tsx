@@ -9,10 +9,7 @@ import {
   Typography,
   Spin,
 } from 'antd';
-import {
-  FilterOutlined,
-  UserAddOutlined,
-} from '@ant-design/icons';
+import { FilterOutlined, UserAddOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import {
   AuthContextProvider,
@@ -36,7 +33,9 @@ interface CommonAddMemberRequestsProps {
   communityId: string;
 }
 
-export function CommonAddMemberRequests({ communityId }: CommonAddMemberRequestsProps) {
+export function CommonAddMemberRequests({
+  communityId,
+}: CommonAddMemberRequestsProps) {
   const maxPageSize = 20;
   const navigate = useNavigate();
   const authData: AuthContextProvider = useAuth();
@@ -69,7 +68,9 @@ export function CommonAddMemberRequests({ communityId }: CommonAddMemberRequests
     if (!loading || !communityId) return;
 
     try {
-      const memberRequestService = new CrudDataSourceService(RequestMemberModel);
+      const memberRequestService = new CrudDataSourceService(
+        RequestMemberModel
+      );
       const resp = await memberRequestService.list(
         filters,
         undefined,
@@ -103,7 +104,15 @@ export function CommonAddMemberRequests({ communityId }: CommonAddMemberRequests
     } finally {
       setLoading(false);
     }
-  }, [currentUserId, communityId, loading, navigate, filters, currentPage, pageSize]);
+  }, [
+    currentUserId,
+    communityId,
+    loading,
+    navigate,
+    filters,
+    currentPage,
+    pageSize,
+  ]);
 
   useEffect(() => {
     loadData();
@@ -195,7 +204,7 @@ export function CommonAddMemberRequests({ communityId }: CommonAddMemberRequests
               fontWeight: 500,
               fontSize: '13px',
               height: '36px',
-              padding: '0 16px'
+              padding: '0 16px',
             }}
           >
             <Badge
@@ -204,7 +213,7 @@ export function CommonAddMemberRequests({ communityId }: CommonAddMemberRequests
               offset={[8, -2]}
               style={{
                 backgroundColor: filters.length > 2 ? '#cc0000' : '#999',
-                fontSize: '10px'
+                fontSize: '10px',
               }}
             >
               <span style={{ marginLeft: filters.length > 2 ? '12px' : '0' }}>
@@ -234,7 +243,10 @@ export function CommonAddMemberRequests({ communityId }: CommonAddMemberRequests
           </Text>
           {hasFilters && (
             <Text type="secondary">
-              Фильтров: <Text strong style={{ color: '#cc0000' }}>{activeFiltersCount}</Text>
+              Фильтров:{' '}
+              <Text strong style={{ color: '#cc0000' }}>
+                {activeFiltersCount}
+              </Text>
             </Text>
           )}
         </Space>
@@ -260,8 +272,8 @@ export function CommonAddMemberRequests({ communityId }: CommonAddMemberRequests
           <Empty
             description={
               filters.length > 2
-                ? "По заданным фильтрам заявки не найдены"
-                : "В сообществе пока нет заявок на вступление"
+                ? 'По заданным фильтрам заявки не найдены'
+                : 'В сообществе пока нет заявок на вступление'
             }
             image={Empty.PRESENTED_IMAGE_SIMPLE}
           />

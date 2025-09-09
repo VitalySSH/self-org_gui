@@ -4,7 +4,7 @@
 // const { Title, Paragraph, Text } = Typography;
 
 export function UserGuideDisputes() {
-  return (<></>);
+  return <></>;
   // return (
   //   <div className="content-container">
   //     <Card style={{ marginBottom: 24 }}>

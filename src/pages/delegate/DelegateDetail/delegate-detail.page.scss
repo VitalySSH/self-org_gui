@@ -299,7 +299,11 @@
       }
 
       .form-header-card {
-        background: linear-gradient(135deg, rgba($primary-color, 0.08) 0%, rgba($primary-color, 0.04) 100%);
+        background: linear-gradient(
+          135deg,
+          rgba($primary-color, 0.08) 0%,
+          rgba($primary-color, 0.04) 100%
+        );
         border-color: rgba($primary-color, 0.2);
       }
     }

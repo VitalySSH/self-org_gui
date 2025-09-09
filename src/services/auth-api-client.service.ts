@@ -47,8 +47,7 @@ export class AuthApiClientService {
   }
 
   async getCurrentUser() {
-    return this.http.get<UserInterface>('/auth/user/me')
-      .then((r) => {
+    return this.http.get<UserInterface>('/auth/user/me').then((r) => {
       return r.data;
     });
   }

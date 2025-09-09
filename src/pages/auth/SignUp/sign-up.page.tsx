@@ -1,5 +1,11 @@
 import { Button, Form, Image, Input, message, Steps } from 'antd';
-import { LockOutlined, UserAddOutlined, MailOutlined, ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import {
+  LockOutlined,
+  UserAddOutlined,
+  MailOutlined,
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
+} from '@ant-design/icons';
 import TextArea from 'antd/lib/input/TextArea';
 import { useState, useCallback } from 'react';
 import './sign-up.page.scss';
@@ -18,60 +24,68 @@ export function SignUp() {
 
   // Состояние для управления шагами
   const [currentStep, setCurrentStep] = useState(0);
-  const [step1Data, setStep1Data] = useState<Partial<SignUpFormDataInterface>>({});
+  const [step1Data, setStep1Data] = useState<Partial<SignUpFormDataInterface>>(
+    {}
+  );
   const [isLoadingNext, setIsLoadingNext] = useState(false);
   const [isLoadingSubmit, setIsLoadingSubmit] = useState(false);
 
   // Обработка завершения первого шага
-  const handleStep1Finish = useCallback(async (values: Partial<SignUpFormDataInterface>) => {
-    setIsLoadingNext(true);
-    try {
-      // Сохраняем данные первого шага
-      setStep1Data(values);
-      // Переходим ко второму шагу
-      setCurrentStep(1);
-      // Очищаем форму для второго шага
-      form.resetFields();
-    } finally {
-      setIsLoadingNext(false);
-    }
-  }, [form]);
+  const handleStep1Finish = useCallback(
+    async (values: Partial<SignUpFormDataInterface>) => {
+      setIsLoadingNext(true);
+      try {
+        // Сохраняем данные первого шага
+        setStep1Data(values);
+        // Переходим ко второму шагу
+        setCurrentStep(1);
+        // Очищаем форму для второго шага
+        form.resetFields();
+      } finally {
+        setIsLoadingNext(false);
+      }
+    },
+    [form]
+  );
 
   // Обработка завершения второго шага (финальная отправка)
-  const handleStep2Finish = useCallback(async (values: Partial<SignUpFormDataInterface>) => {
-    setIsLoadingSubmit(true);
-    try {
-      // Объединяем данные с обоих шагов
-      const completeFormData: SignUpFormDataInterface = {
-        ...step1Data,
-        ...values,
-      } as SignUpFormDataInterface;
+  const handleStep2Finish = useCallback(
+    async (values: Partial<SignUpFormDataInterface>) => {
+      setIsLoadingSubmit(true);
+      try {
+        // Объединяем данные с обоих шагов
+        const completeFormData: SignUpFormDataInterface = {
+          ...step1Data,
+          ...values,
+        } as SignUpFormDataInterface;
 
-      const userData: UserCreateInterface = {
-        firstname: completeFormData.firstname,
-        surname: completeFormData.surname,
-        about_me: completeFormData.about_me,
-        email: completeFormData.email,
-        secret_password: btoa(encryptPassword(completeFormData.password)),
-      };
+        const userData: UserCreateInterface = {
+          firstname: completeFormData.firstname,
+          surname: completeFormData.surname,
+          about_me: completeFormData.about_me,
+          email: completeFormData.email,
+          secret_password: btoa(encryptPassword(completeFormData.password)),
+        };
 
-      const resp = await authApiClientService.createUser(userData);
+        const resp = await authApiClientService.createUser(userData);
 
-      if (resp.ok) {
-        navigate('/sign-in', {
-          preventScrollReset: true,
-          state: { signUp: true },
-        });
-      } else if (resp.error) {
-        message.warning(resp.error);
+        if (resp.ok) {
+          navigate('/sign-in', {
+            preventScrollReset: true,
+            state: { signUp: true },
+          });
+        } else if (resp.error) {
+          message.warning(resp.error);
+        }
+      } catch (error) {
+        console.log(error);
+        message.error('Произошла ошибка при регистрации. Попробуйте еще раз.');
+      } finally {
+        setIsLoadingSubmit(false);
       }
-    } catch (error) {
-      console.log(error);
-      message.error('Произошла ошибка при регистрации. Попробуйте еще раз.');
-    } finally {
-      setIsLoadingSubmit(false);
-    }
-  }, [step1Data, authApiClientService, navigate]);
+    },
+    [step1Data, authApiClientService, navigate]
+  );
 
   // Возврат к первому шагу
   const handlePrevStep = useCallback(() => {
@@ -84,13 +98,16 @@ export function SignUp() {
     navigate('/', { preventScrollReset: true });
   }, [navigate]);
 
-  const handleSignIn = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    navigate(
-      '/sign-in',
-      { preventScrollReset: true, state: { signUp: true } },
-    );
-  }, [navigate]);
+  const handleSignIn = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      navigate('/sign-in', {
+        preventScrollReset: true,
+        state: { signUp: true },
+      });
+    },
+    [navigate]
+  );
 
   // Контент первого шага
   const renderStep1 = () => (
@@ -187,7 +204,10 @@ export function SignUp() {
           placeholder="Опишите ваши интересы, опыт или цели..."
           showCount
           maxLength={500}
-          autoSize={{ minRows: window.innerWidth <= 576 ? 2 : 3, maxRows: window.innerWidth <= 576 ? 3 : 4 }}
+          autoSize={{
+            minRows: window.innerWidth <= 576 ? 2 : 3,
+            maxRows: window.innerWidth <= 576 ? 3 : 4,
+          }}
         />
       </Form.Item>
 
@@ -276,8 +296,9 @@ export function SignUp() {
           // },
           {
             pattern: /^[\w!@#$%^&*()\-+=~`[\]{}|\\:;"'<>,.?/]+$/,
-            message: 'Можно использовать только латинские буквы, цифры и спецсимволы',
-          }
+            message:
+              'Можно использовать только латинские буквы, цифры и спецсимволы',
+          },
         ]}
         hasFeedback
       >
@@ -397,11 +418,7 @@ export function SignUp() {
         </div>
 
         <div className="auth-steps-container">
-          <Steps
-            current={currentStep}
-            size="small"
-            className="auth-steps"
-          >
+          <Steps current={currentStep} size="small" className="auth-steps">
             <Step title="Личные данные" description="Имя и информация" />
             <Step title="Аккаунт" description="Email и пароль" />
           </Steps>

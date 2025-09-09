@@ -1,5 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Button, Flex, Image, Layout, Menu, Tooltip, Card, Typography } from 'antd';
+import {
+  Button,
+  Flex,
+  Image,
+  Layout,
+  Menu,
+  Tooltip,
+  Card,
+  Typography,
+} from 'antd';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -312,7 +321,9 @@ export function SiderBar(props: SiderBarInterface) {
                 {renderCommunitiesNavigation()}
 
                 {/* Руководство пользователя */}
-                {(!collapsed || isMobile) && <div className="menu-header">Руководство пользователя</div>}
+                {(!collapsed || isMobile) && (
+                  <div className="menu-header">Руководство пользователя</div>
+                )}
                 {collapsed && !isMobile && (
                   <Tooltip title="Руководство пользователя" placement="right">
                     <BookOutlined className="menu-header-icon" />
@@ -335,7 +346,9 @@ export function SiderBar(props: SiderBarInterface) {
             {props.isCommunityWS && (
               <>
                 {renderCommunitiesNavigation()}
-                {(!collapsed || isMobile) && <div className="menu-header">Сообщество</div>}
+                {(!collapsed || isMobile) && (
+                  <div className="menu-header">Сообщество</div>
+                )}
                 {collapsed && !isMobile && (
                   <Tooltip title="Сообщество" placement="right">
                     <ApartmentOutlined className="menu-header-icon" />
@@ -418,10 +431,11 @@ export function SiderBar(props: SiderBarInterface) {
         {/* Overlay с backdrop */}
         {mobileMenuOpen && (
           <div className="mobile-sider-overlay">
-            <div className="mobile-sider">
-              {renderSiderContent()}
-            </div>
-            <div className="mobile-sider-backdrop" onClick={handleMobileMenuToggle} />
+            <div className="mobile-sider">{renderSiderContent()}</div>
+            <div
+              className="mobile-sider-backdrop"
+              onClick={handleMobileMenuToggle}
+            />
           </div>
         )}
       </>

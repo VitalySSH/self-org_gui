@@ -1,5 +1,9 @@
 import { Button, DatePicker, Form, Modal, Select } from 'antd';
-import { FilterOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import {
+  FilterOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+} from '@ant-design/icons';
 import { FilterModalProps, Pagination } from 'src/interfaces';
 import { AuthApiClientService, CrudDataSourceService } from 'src/services';
 import { StatusModel } from 'src/models';
@@ -33,7 +37,13 @@ export function MemberRequestFilterModal({
     newFilters.push({
       field: 'code',
       op: 'in',
-      val: [CommunityMemberCode, MemberExcludedCode, VotedCode, AbstainedCode, VotedByDefaultCode],
+      val: [
+        CommunityMemberCode,
+        MemberExcludedCode,
+        VotedCode,
+        AbstainedCode,
+        VotedByDefaultCode,
+      ],
     });
 
     return statusService.list(newFilters, undefined, pagination);
@@ -89,8 +99,8 @@ export function MemberRequestFilterModal({
         body: {
           maxHeight: 'calc(85vh - 108px)',
           overflowY: 'auto',
-          padding: 0
-        }
+          padding: 0,
+        },
       }}
     >
       <div className="filter-modal-content">
@@ -121,17 +131,17 @@ export function MemberRequestFilterModal({
             label="Решение по заявке"
             tooltip="Фильтрация по статусу одобрения заявки"
           >
-            <Select
-              placeholder="Выберите решение"
-              allowClear
-              size="large"
-            >
+            <Select placeholder="Выберите решение" allowClear size="large">
               <Select.Option value={true}>
-                <CheckCircleOutlined style={{ color: '#52c41a', marginRight: 8 }} />
+                <CheckCircleOutlined
+                  style={{ color: '#52c41a', marginRight: 8 }}
+                />
                 Одобрена
               </Select.Option>
               <Select.Option value={false}>
-                <CloseCircleOutlined style={{ color: '#ff4d4f', marginRight: 8 }} />
+                <CloseCircleOutlined
+                  style={{ color: '#ff4d4f', marginRight: 8 }}
+                />
                 Отклонена
               </Select.Option>
             </Select>

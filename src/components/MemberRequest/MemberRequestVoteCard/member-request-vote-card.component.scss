@@ -6,7 +6,11 @@
   --vote-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   --vote-card-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   --vote-card-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --vote-card-header-bg: linear-gradient(135deg, rgba(24, 144, 255, 0.02) 0%, rgba(24, 144, 255, 0.01) 100%);
+  --vote-card-header-bg: linear-gradient(
+    135deg,
+    rgba(24, 144, 255, 0.02) 0%,
+    rgba(24, 144, 255, 0.01) 100%
+  );
 }
 
 .member-request-vote-card {
@@ -311,7 +315,11 @@
 // Темная тема
 .dark-theme {
   :root {
-    --vote-card-header-bg: linear-gradient(135deg, rgba(24, 144, 255, 0.08) 0%, rgba(24, 144, 255, 0.03) 100%);
+    --vote-card-header-bg: linear-gradient(
+      135deg,
+      rgba(24, 144, 255, 0.08) 0%,
+      rgba(24, 144, 255, 0.03) 100%
+    );
   }
 
   .member-request-vote-card {

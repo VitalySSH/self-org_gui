@@ -39,8 +39,8 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "docker-compose.frontend.yml"
-          target: "/home/selforg/gui/"
+          source: 'docker-compose.frontend.yml'
+          target: '/home/selforg/gui/'
           rm: false
           overwrite: true
 
@@ -66,7 +66,7 @@ jobs:
             rm key.json
 
             cd /home/selforg/gui
-            
+
             docker-compose -f docker-compose.frontend.yml down
             docker-compose -f docker-compose.frontend.yml pull
             docker-compose -f docker-compose.frontend.yml up -d --force-recreate

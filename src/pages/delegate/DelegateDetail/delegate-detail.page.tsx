@@ -1,5 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Button, Card, Form, message, Select, Spin, Tooltip, Typography } from 'antd';
+import {
+  Button,
+  Card,
+  Form,
+  message,
+  Select,
+  Spin,
+  Tooltip,
+  Typography,
+} from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   QuestionCircleOutlined,
@@ -167,11 +176,7 @@ export function DelegateDetail(props: DelegateDetailProps) {
         <div className="form-page-container">
           <Card className="form-loading-card" variant="borderless">
             <Text className="loading-text">Настройки советника не найдены</Text>
-            <Button
-              type="primary"
-              onClick={onCancel}
-              style={{ marginTop: 16 }}
-            >
+            <Button type="primary" onClick={onCancel} style={{ marginTop: 16 }}>
               Вернуться назад
             </Button>
           </Card>
@@ -194,7 +199,8 @@ export function DelegateDetail(props: DelegateDetailProps) {
             Замена советника
           </Title>
           <Text className="form-header-subtitle">
-            Измените назначенного советника для выбранной категории. Новый советник будет представлять ваши интересы в дальнейших голосованиях
+            Измените назначенного советника для выбранной категории. Новый
+            советник будет представлять ваши интересы в дальнейших голосованиях
           </Text>
         </Card>
 
@@ -264,11 +270,13 @@ export function DelegateDetail(props: DelegateDetailProps) {
               <QuestionCircleOutlined />
             </div>
             <div className="info-text">
-              <Title level={5} className="info-title">Важная информация</Title>
+              <Title level={5} className="info-title">
+                Важная информация
+              </Title>
               <Text className="info-description">
-                При смене советника все будущие голосования по данной категории будут автоматически
-                учитывать голос нового советника вместо предыдущего. Уже завершенные голосования
-                не изменятся.
+                При смене советника все будущие голосования по данной категории
+                будут автоматически учитывать голос нового советника вместо
+                предыдущего. Уже завершенные голосования не изменятся.
               </Text>
             </div>
           </div>
@@ -311,7 +319,9 @@ export function DelegateDetail(props: DelegateDetailProps) {
               Прогресс: <span className="info-highlight">{formProgress}%</span>
             </span>
           </div>
-          <div className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}>
+          <div
+            className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}
+          >
             <span className="status-icon">●</span>
             <span>{getFormStatus()}</span>
           </div>
@@ -341,18 +351,18 @@ export function DelegateDetail(props: DelegateDetailProps) {
         </div>
 
         <div className="toolbar-info-right">
-        {/*  <div className="toolbar-info">*/}
-        {/*    <ClockCircleOutlined className="info-icon" />*/}
-        {/*    <span className="info-text">*/}
-        {/*      Операция: <span className="info-highlight">Замена</span>*/}
-        {/*    </span>*/}
-        {/*  </div>*/}
-        {/*  <div className="toolbar-meta">*/}
-        {/*    Категория: {getCategoryName()}*/}
-        {/*  </div>*/}
-        {/*  <div className="toolbar-meta">*/}
-        {/*    Советник: {getCurrentDelegate()}*/}
-        {/*  </div>*/}
+          {/*  <div className="toolbar-info">*/}
+          {/*    <ClockCircleOutlined className="info-icon" />*/}
+          {/*    <span className="info-text">*/}
+          {/*      Операция: <span className="info-highlight">Замена</span>*/}
+          {/*    </span>*/}
+          {/*  </div>*/}
+          {/*  <div className="toolbar-meta">*/}
+          {/*    Категория: {getCategoryName()}*/}
+          {/*  </div>*/}
+          {/*  <div className="toolbar-meta">*/}
+          {/*    Советник: {getCurrentDelegate()}*/}
+          {/*  </div>*/}
         </div>
       </div>
     </div>

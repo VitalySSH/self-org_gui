@@ -121,15 +121,28 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
       if (props.multiple) {
         if (Array.isArray(props.value)) {
           _initFieldValue = props.value
-            .filter(item => item && typeof item === 'object' && props.bindLabel in item)
+            .filter(
+              (item) =>
+                item && typeof item === 'object' && props.bindLabel in item
+            )
             .map((it) => (it as any)[props.bindLabel]);
         }
       } else {
         if (Array.isArray(props.value)) {
-          if (props.value.length > 0 && props.value[0] && typeof props.value[0] === 'object' && props.bindLabel in props.value[0]) {
+          if (
+            props.value.length > 0 &&
+            props.value[0] &&
+            typeof props.value[0] === 'object' &&
+            props.bindLabel in props.value[0]
+          ) {
             _initFieldValue = (props.value[0] as any)[props.bindLabel];
           }
-        } else if (props.value !== undefined && props.value && typeof props.value === 'object' && props.bindLabel in props.value) {
+        } else if (
+          props.value !== undefined &&
+          props.value &&
+          typeof props.value === 'object' &&
+          props.bindLabel in props.value
+        ) {
           _initFieldValue = (props.value as any)[props.bindLabel];
         }
       }
@@ -169,7 +182,9 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
           }
         }
       });
-      currentFieldValue = (currentValue || []).map((it) => (it as any)[props.bindLabel]);
+      currentFieldValue = (currentValue || []).map(
+        (it) => (it as any)[props.bindLabel]
+      );
     } else {
       if (option?.obj) {
         currentValue = option.obj;
@@ -198,45 +213,59 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   };
 
   // КРИТИЧНОЕ ИСПРАВЛЕНИЕ: Упрощенный обработчик добавления
-  const addOwnValue = useCallback((e: React.MouseEvent | React.KeyboardEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const addOwnValue = useCallback(
+    (e: React.MouseEvent | React.KeyboardEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-    // Не добавляем значения в readonly режиме
-    if (isReadonly || !newTextValue.trim()) return;
+      // Не добавляем значения в readonly режиме
+      if (isReadonly || !newTextValue.trim()) return;
 
-    const currentValues: string[] = [];
-    if (Array.isArray(value)) {
-      const _currentValues = value
-        .filter(item => item && typeof item === 'object' && props.bindLabel in item)
-        .map((it: any) => it[props.bindLabel]);
-      currentValues.push(..._currentValues);
-    } else if (value !== null && value && typeof value === 'object' && props.bindLabel in value) {
-      currentValues.push((value as any)[props.bindLabel]);
-    }
-
-    if (props.fieldService && !currentValues.includes(newTextValue.trim())) {
-      const newObj = props.fieldService.createRecord();
-      (newObj as any)[props.bindLabel] = newTextValue.trim();
-      const currentOptions = options || [];
-
-      if (props.saveOwnValue) {
-        props.fieldService
-          .save(newObj)
-          .then((resp) => {
-            setOptions([...currentOptions, resp]);
-            setNewTextValue('');
-          })
-          .catch((error) => {
-            console.error('Ошибка создания нового значения в селекторе:', error);
-            setOptions([]);
-          });
-      } else {
-        setOptions([...currentOptions, newObj]);
-        setNewTextValue('');
+      const currentValues: string[] = [];
+      if (Array.isArray(value)) {
+        const _currentValues = value
+          .filter(
+            (item) =>
+              item && typeof item === 'object' && props.bindLabel in item
+          )
+          .map((it: any) => it[props.bindLabel]);
+        currentValues.push(..._currentValues);
+      } else if (
+        value !== null &&
+        value &&
+        typeof value === 'object' &&
+        props.bindLabel in value
+      ) {
+        currentValues.push((value as any)[props.bindLabel]);
       }
-    }
-  }, [newTextValue, value, props, options, isReadonly]);
+
+      if (props.fieldService && !currentValues.includes(newTextValue.trim())) {
+        const newObj = props.fieldService.createRecord();
+        (newObj as any)[props.bindLabel] = newTextValue.trim();
+        const currentOptions = options || [];
+
+        if (props.saveOwnValue) {
+          props.fieldService
+            .save(newObj)
+            .then((resp) => {
+              setOptions([...currentOptions, resp]);
+              setNewTextValue('');
+            })
+            .catch((error) => {
+              console.error(
+                'Ошибка создания нового значения в селекторе:',
+                error
+              );
+              setOptions([]);
+            });
+        } else {
+          setOptions([...currentOptions, newObj]);
+          setNewTextValue('');
+        }
+      }
+    },
+    [newTextValue, value, props, options, isReadonly]
+  );
 
   // Обработчик закрытия dropdown для мобильных
   const handleMobileClose = useCallback((e: React.MouseEvent) => {
@@ -257,9 +286,10 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
 
   const selectOptions = useMemo(() => {
     return (options || []).map((item: T) => {
-      const labelValue = item && typeof item === 'object' && props.bindLabel in item
-        ? (item as any)[props.bindLabel]
-        : '';
+      const labelValue =
+        item && typeof item === 'object' && props.bindLabel in item
+          ? (item as any)[props.bindLabel]
+          : '';
 
       return {
         key: item?.id || Math.random().toString(36),
@@ -303,7 +333,9 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     }
 
     return (
-      <div className={`custom-select-dropdown-content ${isReadonly ? 'readonly-mode' : ''}`}>
+      <div
+        className={`custom-select-dropdown-content ${isReadonly ? 'readonly-mode' : ''}`}
+      >
         {/* Кнопка закрытия только для мобильных */}
         {isMobile && (
           <div className="mobile-close-button">
@@ -352,7 +384,11 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
                     value={newTextValue}
                     onKeyDown={(e) => {
                       e.stopPropagation();
-                      if (e.key === 'Enter' && !e.shiftKey && newTextValue.trim()) {
+                      if (
+                        e.key === 'Enter' &&
+                        !e.shiftKey &&
+                        newTextValue.trim()
+                      ) {
                         addOwnValue(e);
                       }
                     }}
@@ -436,10 +472,14 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         disabled={isReadonly}
         getPopupContainer={isMobile ? () => document.body : undefined}
         open={isReadonly ? false : isDropdownOpen}
-        dropdownStyle={isMobile ? {
-          position: 'fixed',
-          zIndex: 9999,
-        } : undefined}
+        dropdownStyle={
+          isMobile
+            ? {
+                position: 'fixed',
+                zIndex: 9999,
+              }
+            : undefined
+        }
       />
     </ConfigProvider>
   );

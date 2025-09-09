@@ -93,12 +93,22 @@ export function MyCommunitySettings(props: any) {
 
   const communityId = props?.communityId;
   const nameService = new CrudDataSourceService(CommunityNameModel);
-  const descriptionService = new CrudDataSourceService(CommunityDescriptionModel);
+  const descriptionService = new CrudDataSourceService(
+    CommunityDescriptionModel
+  );
   const categoryService = new CrudDataSourceService(CategoryModel);
   const responsibilityService = new CrudDataSourceService(ResponsibilityModel);
 
   const [form] = Form.useForm();
-  const requiredFields = ['names', 'descriptions', 'quorum', 'vote', 'significant_minority', 'decision_delay', 'dispute_time_limit'];
+  const requiredFields = [
+    'names',
+    'descriptions',
+    'quorum',
+    'vote',
+    'significant_minority',
+    'decision_delay',
+    'dispute_time_limit',
+  ];
 
   const successInfo = (content: string) => {
     messageApi.open({
@@ -121,7 +131,9 @@ export function MyCommunitySettings(props: any) {
     if (!authData.user || !communityId || settings.id) return;
 
     try {
-      const settingsService = new CrudDataSourceService(UserCommunitySettingsModel);
+      const settingsService = new CrudDataSourceService(
+        UserCommunitySettingsModel
+      );
       const resp = await settingsService.list(
         [
           {
@@ -169,7 +181,9 @@ export function MyCommunitySettings(props: any) {
           workgroup: settingsInst?.workgroup,
           is_secret_ballot: Boolean(settingsInst?.is_secret_ballot),
           is_can_offer: Boolean(settingsInst?.is_can_offer),
-          is_minority_not_participate: Boolean(settingsInst?.is_minority_not_participate),
+          is_minority_not_participate: Boolean(
+            settingsInst?.is_minority_not_participate
+          ),
           is_default_add_member: Boolean(settingsInst?.is_default_add_member),
           is_not_delegate: Boolean(settingsInst?.is_not_delegate),
         };
@@ -177,7 +191,9 @@ export function MyCommunitySettings(props: any) {
         setSwitchStates({
           is_secret_ballot: Boolean(settingsInst?.is_secret_ballot),
           is_can_offer: Boolean(settingsInst?.is_can_offer),
-          is_minority_not_participate: Boolean(settingsInst?.is_minority_not_participate),
+          is_minority_not_participate: Boolean(
+            settingsInst?.is_minority_not_participate
+          ),
           is_default_add_member: Boolean(settingsInst?.is_default_add_member),
           is_not_delegate: Boolean(settingsInst?.is_not_delegate),
         });
@@ -201,7 +217,10 @@ export function MyCommunitySettings(props: any) {
     }
   }, [authData.user, communityId, errorInfo, form, navigate, settings.id]);
 
-  const getCommunityNames = async (pagination?: Pagination, filters?: Filters) => {
+  const getCommunityNames = async (
+    pagination?: Pagination,
+    filters?: Filters
+  ) => {
     const newFilters: Filters = filters || [];
     newFilters.push({
       field: 'community_id',
@@ -211,7 +230,10 @@ export function MyCommunitySettings(props: any) {
     return await nameService.list(newFilters, undefined, pagination);
   };
 
-  const getCommunityDescriptions = async (pagination?: Pagination, filters?: Filters) => {
+  const getCommunityDescriptions = async (
+    pagination?: Pagination,
+    filters?: Filters
+  ) => {
     const newFilters: Filters = filters || [];
     newFilters.push({
       field: 'community_id',
@@ -221,7 +243,10 @@ export function MyCommunitySettings(props: any) {
     return await descriptionService.list(newFilters, undefined, pagination);
   };
 
-  const getResponsibilities = async (pagination?: Pagination, filters?: Filters) => {
+  const getResponsibilities = async (
+    pagination?: Pagination,
+    filters?: Filters
+  ) => {
     const newFilters: Filters = filters || [];
     newFilters.push({
       field: 'community_id',
@@ -250,38 +275,41 @@ export function MyCommunitySettings(props: any) {
     getUserCommunitySettings();
   }, [getUserCommunitySettings]);
 
-  const onCustomSelectChange = useCallback((fieldName: string, value: any) => {
-    // Проверяем, не находимся ли мы уже в процессе обновления
-    if (isUpdatingRef.current) return;
+  const onCustomSelectChange = useCallback(
+    (fieldName: string, value: any) => {
+      // Проверяем, не находимся ли мы уже в процессе обновления
+      if (isUpdatingRef.current) return;
 
-    // Используем requestIdleCallback для разрыва цикла или setTimeout как fallback
-    if (typeof requestIdleCallback !== 'undefined') {
-      requestIdleCallback(() => {
-        if (!isUpdatingRef.current) {
-          isUpdatingRef.current = true;
-          form.setFieldValue(fieldName, value);
-          if (value === null && requiredFields.includes(fieldName)) {
-            setDisabled(true)
+      // Используем requestIdleCallback для разрыва цикла или setTimeout как fallback
+      if (typeof requestIdleCallback !== 'undefined') {
+        requestIdleCallback(() => {
+          if (!isUpdatingRef.current) {
+            isUpdatingRef.current = true;
+            form.setFieldValue(fieldName, value);
+            if (value === null && requiredFields.includes(fieldName)) {
+              setDisabled(true);
+            }
+            // Сброс флага через короткий таймаут
+            setTimeout(() => {
+              isUpdatingRef.current = false;
+            }, 10);
           }
-          // Сброс флага через короткий таймаут
-          setTimeout(() => {
-            isUpdatingRef.current = false;
-          }, 10);
-        }
-      });
-    } else {
-      setTimeout(() => {
-        if (!isUpdatingRef.current) {
-          isUpdatingRef.current = true;
-          form.setFieldValue(fieldName, value);
-          // Сброс флага через короткий таймаут
-          setTimeout(() => {
-            isUpdatingRef.current = false;
-          }, 10);
-        }
-      }, 0);
-    }
-  }, [form]);
+        });
+      } else {
+        setTimeout(() => {
+          if (!isUpdatingRef.current) {
+            isUpdatingRef.current = true;
+            form.setFieldValue(fieldName, value);
+            // Сброс флага через короткий таймаут
+            setTimeout(() => {
+              isUpdatingRef.current = false;
+            }, 10);
+          }
+        }, 0);
+      }
+    },
+    [form]
+  );
 
   const handleFormChange = useCallback(() => {
     const formData = form.getFieldsValue();
@@ -304,41 +332,47 @@ export function MyCommunitySettings(props: any) {
     setDisabled(!isValid);
   }, [form, isWorkGroup]);
 
-  const handleWorkGroupChange = useCallback((checked: boolean) => {
-    setIsWorkGroup(checked);
+  const handleWorkGroupChange = useCallback(
+    (checked: boolean) => {
+      setIsWorkGroup(checked);
 
-    // Проверяем, не находимся ли мы уже в процессе обновления
-    if (isUpdatingRef.current) return;
+      // Проверяем, не находимся ли мы уже в процессе обновления
+      if (isUpdatingRef.current) return;
 
-    if (typeof requestIdleCallback !== 'undefined') {
-      requestIdleCallback(() => {
-        if (!isUpdatingRef.current) {
-          isUpdatingRef.current = true;
-          form.setFieldValue('is_workgroup', checked);
-          // Сброс флага через короткий таймаут
-          setTimeout(() => {
-            isUpdatingRef.current = false;
-          }, 10);
-        }
-      });
-    } else {
-      setTimeout(() => {
-        if (!isUpdatingRef.current) {
-          isUpdatingRef.current = true;
-          form.setFieldValue('is_workgroup', checked);
-          // Сброс флага через короткий таймаут
-          setTimeout(() => {
-            isUpdatingRef.current = false;
-          }, 10);
-        }
-      }, 0);
-    }
-  }, [form]);
+      if (typeof requestIdleCallback !== 'undefined') {
+        requestIdleCallback(() => {
+          if (!isUpdatingRef.current) {
+            isUpdatingRef.current = true;
+            form.setFieldValue('is_workgroup', checked);
+            // Сброс флага через короткий таймаут
+            setTimeout(() => {
+              isUpdatingRef.current = false;
+            }, 10);
+          }
+        });
+      } else {
+        setTimeout(() => {
+          if (!isUpdatingRef.current) {
+            isUpdatingRef.current = true;
+            form.setFieldValue('is_workgroup', checked);
+            // Сброс флага через короткий таймаут
+            setTimeout(() => {
+              isUpdatingRef.current = false;
+            }, 10);
+          }
+        }, 0);
+      }
+    },
+    [form]
+  );
 
-  const handleSwitchChange = useCallback((fieldName: string, checked: boolean) => {
-    setSwitchStates(prev => ({ ...prev, [fieldName]: checked }));
-    form.setFieldValue(fieldName, checked);
-  }, [form]);
+  const handleSwitchChange = useCallback(
+    (fieldName: string, checked: boolean) => {
+      setSwitchStates((prev) => ({ ...prev, [fieldName]: checked }));
+      form.setFieldValue(fieldName, checked);
+    },
+    [form]
+  );
 
   useEffect(() => {
     if (!isLoading) {
@@ -535,7 +569,8 @@ export function MyCommunitySettings(props: any) {
             rules={[
               {
                 required: true,
-                message: 'Пожалуйста, укажите кворум сообщества, значение от 1 до 100%.',
+                message:
+                  'Пожалуйста, укажите кворум сообщества, значение от 1 до 100%.',
               },
             ]}
           >
@@ -565,7 +600,8 @@ export function MyCommunitySettings(props: any) {
             rules={[
               {
                 required: true,
-                message: 'Пожалуйста, укажите процент голосов для принятия решения, значение от 51 до 100%.',
+                message:
+                  'Пожалуйста, укажите процент голосов для принятия решения, значение от 51 до 100%.',
               },
             ]}
           >
@@ -595,7 +631,8 @@ export function MyCommunitySettings(props: any) {
             rules={[
               {
                 required: true,
-                message: 'Пожалуйста, укажите процент общественно-значимого меньшинства, значение от 1 до 49%.',
+                message:
+                  'Пожалуйста, укажите процент общественно-значимого меньшинства, значение от 1 до 49%.',
               },
             ]}
           >
@@ -641,7 +678,8 @@ export function MyCommunitySettings(props: any) {
             rules={[
               {
                 required: true,
-                message: 'Пожалуйста, укажите количество дней отсрочки вступления решения в силу, значение от 1 до 30 дней.',
+                message:
+                  'Пожалуйста, укажите количество дней отсрочки вступления решения в силу, значение от 1 до 30 дней.',
               },
             ]}
           >
@@ -671,7 +709,8 @@ export function MyCommunitySettings(props: any) {
             rules={[
               {
                 required: true,
-                message: 'Пожалуйста, укажите количество дней для рассмотрения споров, значение от 1 до 30 дней.',
+                message:
+                  'Пожалуйста, укажите количество дней для рассмотрения споров, значение от 1 до 30 дней.',
               },
             ]}
           >
@@ -729,7 +768,9 @@ export function MyCommunitySettings(props: any) {
                 onChange={handleWorkGroupChange}
               />
               <Text type="secondary" className="switch-description">
-                {isWorkGroup ? 'Требуются рабочие группы' : 'Рабочие группы не требуются'}
+                {isWorkGroup
+                  ? 'Требуются рабочие группы'
+                  : 'Рабочие группы не требуются'}
               </Text>
             </div>
           </Form.Item>
@@ -745,7 +786,9 @@ export function MyCommunitySettings(props: any) {
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
                 checked={switchStates.is_secret_ballot}
-                onChange={(checked) => handleSwitchChange('is_secret_ballot', checked)}
+                onChange={(checked) =>
+                  handleSwitchChange('is_secret_ballot', checked)
+                }
               />
             </div>
           </Form.Item>
@@ -761,7 +804,9 @@ export function MyCommunitySettings(props: any) {
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
                 checked={switchStates.is_can_offer}
-                onChange={(checked) => handleSwitchChange('is_can_offer', checked)}
+                onChange={(checked) =>
+                  handleSwitchChange('is_can_offer', checked)
+                }
               />
             </div>
           </Form.Item>
@@ -784,7 +829,9 @@ export function MyCommunitySettings(props: any) {
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
                 checked={switchStates.is_minority_not_participate}
-                onChange={(checked) => handleSwitchChange('is_minority_not_participate', checked)}
+                onChange={(checked) =>
+                  handleSwitchChange('is_minority_not_participate', checked)
+                }
               />
             </div>
           </Form.Item>
@@ -800,7 +847,9 @@ export function MyCommunitySettings(props: any) {
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
                 checked={switchStates.is_default_add_member}
-                onChange={(checked) => handleSwitchChange('is_default_add_member', checked)}
+                onChange={(checked) =>
+                  handleSwitchChange('is_default_add_member', checked)
+                }
               />
             </div>
           </Form.Item>
@@ -816,7 +865,9 @@ export function MyCommunitySettings(props: any) {
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
                 checked={switchStates.is_not_delegate}
-                onChange={(checked) => handleSwitchChange('is_not_delegate', checked)}
+                onChange={(checked) =>
+                  handleSwitchChange('is_not_delegate', checked)
+                }
               />
             </div>
           </Form.Item>
@@ -896,46 +947,49 @@ export function MyCommunitySettings(props: any) {
     </Card>
   );
 
-  const onCommunitySelectChange = useCallback((value: any) => {
-    // Проверяем, не находимся ли мы уже в процессе обновления
-    if (isUpdatingRef.current) return;
+  const onCommunitySelectChange = useCallback(
+    (value: any) => {
+      // Проверяем, не находимся ли мы уже в процессе обновления
+      if (isUpdatingRef.current) return;
 
-    // Проверяем, изменилось ли значение
-    const currentValue = form.getFieldValue('sub_communities_settings');
+      // Проверяем, изменилось ли значение
+      const currentValue = form.getFieldValue('sub_communities_settings');
 
-    // Простое сравнение по количеству элементов и их id
-    const isEqual =
-      currentValue?.length === value?.length &&
-      currentValue?.every((item: any, index: number) =>
-        item?.id === value[index]?.id
-      );
+      // Простое сравнение по количеству элементов и их id
+      const isEqual =
+        currentValue?.length === value?.length &&
+        currentValue?.every(
+          (item: any, index: number) => item?.id === value[index]?.id
+        );
 
-    if (isEqual) return;
+      if (isEqual) return;
 
-    if (typeof requestIdleCallback !== 'undefined') {
-      requestIdleCallback(() => {
-        if (!isUpdatingRef.current) {
-          isUpdatingRef.current = true;
-          form.setFieldValue('sub_communities_settings', value);
-          // Сброс флага через короткий таймаут
-          setTimeout(() => {
-            isUpdatingRef.current = false;
-          }, 10);
-        }
-      });
-    } else {
-      setTimeout(() => {
-        if (!isUpdatingRef.current) {
-          isUpdatingRef.current = true;
-          form.setFieldValue('sub_communities_settings', value);
-          // Сброс флага через короткий таймаут
-          setTimeout(() => {
-            isUpdatingRef.current = false;
-          }, 10);
-        }
-      }, 0);
-    }
-  }, [form]);
+      if (typeof requestIdleCallback !== 'undefined') {
+        requestIdleCallback(() => {
+          if (!isUpdatingRef.current) {
+            isUpdatingRef.current = true;
+            form.setFieldValue('sub_communities_settings', value);
+            // Сброс флага через короткий таймаут
+            setTimeout(() => {
+              isUpdatingRef.current = false;
+            }, 10);
+          }
+        });
+      } else {
+        setTimeout(() => {
+          if (!isUpdatingRef.current) {
+            isUpdatingRef.current = true;
+            form.setFieldValue('sub_communities_settings', value);
+            // Сброс флага через короткий таймаут
+            setTimeout(() => {
+              isUpdatingRef.current = false;
+            }, 10);
+          }
+        }, 0);
+      }
+    },
+    [form]
+  );
 
   // Внутренние сообщества
   const renderSubCommunities = () => (
@@ -1052,7 +1106,9 @@ export function MyCommunitySettings(props: any) {
           {/*    Прогресс: <span className="info-highlight">{getFormProgress()}%</span>*/}
           {/*  </span>*/}
           {/*</div>*/}
-          <div className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}>
+          <div
+            className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}
+          >
             <span className="status-icon">●</span>
             <span>{getFormStatus()}</span>
           </div>

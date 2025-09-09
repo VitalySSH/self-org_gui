@@ -460,7 +460,6 @@
   }
 }
 
-
 .modules-timeline {
   .ant-timeline {
     padding: 0 20px;
@@ -644,7 +643,8 @@
 
 // Animations
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -653,7 +653,8 @@
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -748,11 +749,18 @@
       color: #ffffff;
     }
 
-    .hero-description, .section-description {
+    .hero-description,
+    .section-description {
       color: #e0e0e0;
     }
 
-    .overview-card, .principle-card, .module-card, .tech-card, .role-card, .join-card, .research-card {
+    .overview-card,
+    .principle-card,
+    .module-card,
+    .tech-card,
+    .role-card,
+    .join-card,
+    .research-card {
       background: #2d2d2d;
       color: #e0e0e0;
 
@@ -771,7 +779,8 @@
   .about-page {
     background: white;
 
-    .hero-visual, .network-visualization {
+    .hero-visual,
+    .network-visualization {
       display: none;
     }
 
@@ -779,7 +788,13 @@
       display: none;
     }
 
-    .overview-card, .principle-card, .module-card, .tech-card, .role-card, .join-card, .research-card {
+    .overview-card,
+    .principle-card,
+    .module-card,
+    .tech-card,
+    .role-card,
+    .join-card,
+    .research-card {
       box-shadow: none;
       border: 1px solid $border-color;
     }

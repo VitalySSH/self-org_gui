@@ -25,7 +25,11 @@
 
   // Заголовок формы
   .form-header-card {
-    background: linear-gradient(135deg, rgba($theme-color, 0.05) 0%, rgba($theme-color, 0.02) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba($theme-color, 0.05) 0%,
+      rgba($theme-color, 0.02) 100%
+    );
     border: 1px solid rgba($theme-color, 0.1);
     border-radius: var(--form-border-radius);
     padding: 32px;
@@ -172,7 +176,9 @@
   .form-page-container {
     max-width: none !important;
     margin: 0 !important;
-    padding: var(--form-mobile-padding) var(--form-mobile-padding) calc(var(--form-toolbar-height) + var(--form-mobile-padding)) var(--form-mobile-padding) !important;
+    padding: var(--form-mobile-padding) var(--form-mobile-padding)
+      calc(var(--form-toolbar-height) + var(--form-mobile-padding))
+      var(--form-mobile-padding) !important;
     gap: 12px !important;
     min-height: 100vh;
     box-sizing: border-box;
@@ -293,7 +299,13 @@
 @supports (padding: max(0px)) {
   @media (max-width: 768px) {
     .form-page-container {
-      padding-bottom: max(calc(var(--form-toolbar-height) + var(--form-mobile-padding)), calc(var(--form-toolbar-height) + var(--form-mobile-padding) + env(safe-area-inset-bottom))) !important;
+      padding-bottom: max(
+        calc(var(--form-toolbar-height) + var(--form-mobile-padding)),
+        calc(
+          var(--form-toolbar-height) + var(--form-mobile-padding) +
+            env(safe-area-inset-bottom)
+        )
+      ) !important;
     }
   }
 }

@@ -109,7 +109,9 @@ export const AuthProvider = (component: ProviderComponent) => {
         setUser(null);
 
         // Если последняя валидная страница не auth страница - значит следуем по ссылке
-        const isFollowingLink = !exemptedRoutes.includes(lastValidPageRef.current);
+        const isFollowingLink = !exemptedRoutes.includes(
+          lastValidPageRef.current
+        );
 
         navigate('/sign-in', {
           preventScrollReset: true,
@@ -133,5 +135,9 @@ export const AuthProvider = (component: ProviderComponent) => {
     };
   }, [navigate, user, setAvatarUrl, setUser]);
 
-  return <AuthContext.Provider value={value}>{component.children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {component.children}
+    </AuthContext.Provider>
+  );
 };

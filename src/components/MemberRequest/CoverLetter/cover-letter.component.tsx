@@ -16,14 +16,15 @@ export function CoverLetter({
   letter,
   maxLength = 150,
   showIcon = true,
-  size = 'default'
+  size = 'default',
 }: CoverLetterProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const shouldTruncate = letter.length > maxLength;
-  const displayText = isExpanded || !shouldTruncate
-    ? letter
-    : `${letter.substring(0, maxLength)}...`;
+  const displayText =
+    isExpanded || !shouldTruncate
+      ? letter
+      : `${letter.substring(0, maxLength)}...`;
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);

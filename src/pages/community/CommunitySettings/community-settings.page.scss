@@ -116,9 +116,14 @@
   }
 
   .ant-card-head {
-    background: linear-gradient(135deg, rgba(204, 0, 0, 0.03) 0%, rgba(204, 0, 0, 0.01) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(204, 0, 0, 0.03) 0%,
+      rgba(204, 0, 0, 0.01) 100%
+    );
     border-bottom: 1px solid rgba(204, 0, 0, 0.1);
-    border-radius: var(--community-settings-card-border-radius) var(--community-settings-card-border-radius) 0 0;
+    border-radius: var(--community-settings-card-border-radius)
+      var(--community-settings-card-border-radius) 0 0;
 
     .ant-card-head-title {
       color: $heading-color;
@@ -621,7 +626,11 @@
     border-color: #434343;
 
     .ant-card-head {
-      background: linear-gradient(135deg, rgba(204, 0, 0, 0.08) 0%, rgba(204, 0, 0, 0.03) 100%);
+      background: linear-gradient(
+        135deg,
+        rgba(204, 0, 0, 0.08) 0%,
+        rgba(204, 0, 0, 0.03) 100%
+      );
       border-bottom-color: rgba(204, 0, 0, 0.2);
 
       .ant-card-head-title {

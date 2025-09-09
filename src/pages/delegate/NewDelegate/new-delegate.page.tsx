@@ -73,8 +73,12 @@ export function NewDelegate(props: NewDelegateProps) {
 
     // Обновляем прогресс (2 обязательных поля: category и delegate)
     const requiredFields = ['category', 'delegate'];
-    const filledFields = requiredFields.filter(field => Boolean(formData[field]));
-    const progress = Math.round((filledFields.length / requiredFields.length) * 100);
+    const filledFields = requiredFields.filter((field) =>
+      Boolean(formData[field])
+    );
+    const progress = Math.round(
+      (filledFields.length / requiredFields.length) * 100
+    );
     setFormProgress(progress);
   };
 
@@ -178,7 +182,8 @@ export function NewDelegate(props: NewDelegateProps) {
             Назначение нового советника
           </Title>
           <Text className="form-header-subtitle">
-            Выберите категорию и назначьте доверенного советника, который будет представлять ваши интересы в голосованиях
+            Выберите категорию и назначьте доверенного советника, который будет
+            представлять ваши интересы в голосованиях
           </Text>
         </Card>
 
@@ -288,7 +293,9 @@ export function NewDelegate(props: NewDelegateProps) {
               Прогресс: <span className="info-highlight">{formProgress}%</span>
             </span>
           </div>
-          <div className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}>
+          <div
+            className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}
+          >
             <span className="status-icon">●</span>
             <span>{getFormStatus()}</span>
           </div>

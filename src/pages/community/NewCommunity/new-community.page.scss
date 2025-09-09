@@ -5,7 +5,11 @@
   --new-community-max-width: 1200px;
   --new-community-header-height: 200px;
   --new-community-footer-height: 120px;
-  --new-community-gradient: linear-gradient(135deg, rgba(204, 0, 0, 0.08) 0%, rgba(204, 0, 0, 0.02) 100%);
+  --new-community-gradient: linear-gradient(
+    135deg,
+    rgba(204, 0, 0, 0.08) 0%,
+    rgba(204, 0, 0, 0.02) 100%
+  );
   --new-community-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   --new-community-transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
@@ -329,7 +333,11 @@
 // Темная тема
 .dark-theme {
   :root {
-    --new-community-gradient: linear-gradient(135deg, rgba(204, 0, 0, 0.15) 0%, rgba(204, 0, 0, 0.05) 100%);
+    --new-community-gradient: linear-gradient(
+      135deg,
+      rgba(204, 0, 0, 0.15) 0%,
+      rgba(204, 0, 0, 0.05) 100%
+    );
   }
 
   .new-community-page {

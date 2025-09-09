@@ -1,7 +1,4 @@
-import {
-  UserOutlined,
-  MenuOutlined,
-} from '@ant-design/icons';
+import { UserOutlined, MenuOutlined } from '@ant-design/icons';
 import {
   Avatar,
   Button,
@@ -52,29 +49,32 @@ export function AuthHeaderIcons() {
     setDrawerOpen(false);
   }, []);
 
-  const handleFormSubmit = useCallback(async (formData: object) => {
-    if (!authData.user?.id) return;
+  const handleFormSubmit = useCallback(
+    async (formData: object) => {
+      if (!authData.user?.id) return;
 
-    setIsLoading(true);
-    try {
-      const submitData = Object.assign({}, formData);
-      const user = authData.user;
-      const userData: UserUpdateInterface = {};
+      setIsLoading(true);
+      try {
+        const submitData = Object.assign({}, formData);
+        const user = authData.user;
+        const userData: UserUpdateInterface = {};
 
-      for (const [key, value] of Object.entries(submitData)) {
-        userData[key as keyof UserUpdateInterface] = value;
-        user[key as keyof UserInterface] = value;
+        for (const [key, value] of Object.entries(submitData)) {
+          userData[key as keyof UserUpdateInterface] = value;
+          user[key as keyof UserInterface] = value;
+        }
+
+        authData.login(user, false);
+        await authApiClientService.updateUser(authData.user.id, userData);
+        setModalOpen(false);
+      } catch (error) {
+        console.error('Error updating user:', error);
+      } finally {
+        setIsLoading(false);
       }
-
-      authData.login(user, false);
-      await authApiClientService.updateUser(authData.user.id, userData);
-      setModalOpen(false);
-    } catch (error) {
-      console.error('Error updating user:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [authData, authApiClientService]);
+    },
+    [authData, authApiClientService]
+  );
 
   const handleModalCancel = useCallback(() => {
     setModalOpen(false);
@@ -102,7 +102,9 @@ export function AuthHeaderIcons() {
         </div>
 
         <div className="user-info" onClick={handleAvatarClick}>
-          <Text strong className="user-name">{userDisplayName}</Text>
+          <Text strong className="user-name">
+            {userDisplayName}
+          </Text>
           {/*<Text className="user-status">В сети</Text>*/}
         </div>
 
@@ -126,11 +128,7 @@ export function AuthHeaderIcons() {
         onCancel={handleModalCancel}
         footer={
           <div className="modal-footer">
-            <Button
-              danger
-              onClick={handleLogout}
-              className="logout-button"
-            >
+            <Button danger onClick={handleLogout} className="logout-button">
               Выйти
             </Button>
             <Button
@@ -149,7 +147,7 @@ export function AuthHeaderIcons() {
           body: {
             maxHeight: 'calc(90vh - 128px)',
             overflowY: 'scroll',
-          }
+          },
         }}
         centered
         destroyOnClose
@@ -187,10 +185,7 @@ export function AuthHeaderIcons() {
                 ]}
                 className="form-item-half"
               >
-                <Input
-                  placeholder="Введите ваше имя"
-                  size="large"
-                />
+                <Input placeholder="Введите ваше имя" size="large" />
               </Form.Item>
 
               <Form.Item
@@ -204,10 +199,7 @@ export function AuthHeaderIcons() {
                 ]}
                 className="form-item-half"
               >
-                <Input
-                  placeholder="Введите вашу фамилию"
-                  size="large"
-                />
+                <Input placeholder="Введите вашу фамилию" size="large" />
               </Form.Item>
             </div>
 
@@ -221,20 +213,15 @@ export function AuthHeaderIcons() {
                 },
                 {
                   type: 'email',
-                  message: 'Пожалуйста, введите корректный адрес электронной почты',
+                  message:
+                    'Пожалуйста, введите корректный адрес электронной почты',
                 },
               ]}
             >
-              <Input
-                placeholder="example@domain.com"
-                size="large"
-              />
+              <Input placeholder="example@domain.com" size="large" />
             </Form.Item>
 
-            <Form.Item
-              name="about_me"
-              label="Обо мне"
-            >
+            <Form.Item name="about_me" label="Обо мне">
               <TextArea
                 placeholder="Расскажите о себе"
                 rows={4}

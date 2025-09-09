@@ -1,5 +1,9 @@
 import { Button, DatePicker, Form, Input, Modal, Switch } from 'antd';
-import { FilterOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import {
+  FilterOutlined,
+  CheckOutlined,
+  CloseOutlined,
+} from '@ant-design/icons';
 import { FilterModalProps, Pagination } from 'src/interfaces';
 import { AuthApiClientService, CrudDataSourceService } from 'src/services';
 import { StatusModel } from 'src/models';
@@ -114,8 +118,8 @@ export function ResourceFilterModal({
         body: {
           maxHeight: 'calc(85vh - 108px)',
           overflowY: 'auto',
-          padding: 0
-        }
+          padding: 0,
+        },
       }}
     >
       <div className="filter-modal-content">
@@ -192,5 +196,5 @@ export function ResourceFilterModal({
         </Form>
       </div>
     </Modal>
-);
+  );
 }

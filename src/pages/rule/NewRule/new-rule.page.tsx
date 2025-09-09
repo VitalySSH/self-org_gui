@@ -1,5 +1,14 @@
 import { useState } from 'react';
-import { Button, Card, Form, Input, message, Switch, Tooltip, Typography } from 'antd';
+import {
+  Button,
+  Card,
+  Form,
+  Input,
+  message,
+  Switch,
+  Tooltip,
+  Typography,
+} from 'antd';
 import {
   MinusCircleOutlined,
   PlusOutlined,
@@ -45,7 +54,8 @@ export function NewRule(props: NewRuleProps) {
   const [buttonLoading, setButtonLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [isExtraOptions, setIsExtraOptions] = useState(false);
-  const [isCheckingResponsibility, setIsCheckingResponsibility] = useState(false);
+  const [isCheckingResponsibility, setIsCheckingResponsibility] =
+    useState(false);
   const [isAIMode, setIsAIMode] = useState(false);
   const [formProgress, setFormProgress] = useState(0);
 
@@ -55,17 +65,21 @@ export function NewRule(props: NewRuleProps) {
   const [form] = Form.useForm();
 
   const successInfo = (content: string) => {
-    messageApi.open({
-      type: 'success',
-      content: content,
-    }).then();
+    messageApi
+      .open({
+        type: 'success',
+        content: content,
+      })
+      .then();
   };
 
   const errorInfo = (content: string) => {
-    messageApi.open({
-      type: 'error',
-      content: content,
-    }).then();
+    messageApi
+      .open({
+        type: 'error',
+        content: content,
+      })
+      .then();
   };
 
   const onCustomSelectChange = (fieldName: string, value: any) => {
@@ -90,11 +104,13 @@ export function NewRule(props: NewRuleProps) {
 
     // Обновляем прогресс
     const requiredFields = ['title', 'question', 'content', 'category'];
-    const filledFields = requiredFields.filter(field => {
+    const filledFields = requiredFields.filter((field) => {
       const value = formData[field];
       return value && (typeof value === 'string' ? value.trim() : true);
     });
-    const progress = Math.round((filledFields.length / requiredFields.length) * 100);
+    const progress = Math.round(
+      (filledFields.length / requiredFields.length) * 100
+    );
     setFormProgress(progress);
   };
 
@@ -200,7 +216,8 @@ export function NewRule(props: NewRuleProps) {
         rules={[
           {
             required: true,
-            message: 'Пожалуйста, укажите вопрос, на который должны ответить при голосовании',
+            message:
+              'Пожалуйста, укажите вопрос, на который должны ответить при голосовании',
           },
           {
             max: 140,
@@ -233,7 +250,9 @@ export function NewRule(props: NewRuleProps) {
       <Form.List name="extra_options">
         {(fields, { add, remove }) => (
           <div style={{ width: '100%' }}>
-            <Text strong style={{ display: 'block', marginBottom: 16 }}>Варианты ответов:</Text>
+            <Text strong style={{ display: 'block', marginBottom: 16 }}>
+              Варианты ответов:
+            </Text>
 
             {fields.map(({ key, name, ...restField }) => (
               <div
@@ -243,13 +262,19 @@ export function NewRule(props: NewRuleProps) {
                   alignItems: 'center',
                   gap: 8,
                   marginBottom: 12,
-                  width: '100%'
+                  width: '100%',
                 }}
               >
                 <Form.Item
                   {...restField}
                   name={[name, 'name']}
-                  rules={[{ required: true, message: 'Пожалуйста, укажите дополнительный параметр для голосования' }]}
+                  rules={[
+                    {
+                      required: true,
+                      message:
+                        'Пожалуйста, укажите дополнительный параметр для голосования',
+                    },
+                  ]}
                   style={{ flex: 1, marginBottom: 0 }}
                 >
                   <Input
@@ -314,7 +339,8 @@ export function NewRule(props: NewRuleProps) {
             Создание нового правила
           </Title>
           <Text className="form-header-subtitle">
-            Создайте правило для сообщества, которое будет вынесено на голосование. Определите основные параметры и дополнительные опции
+            Создайте правило для сообщества, которое будет вынесено на
+            голосование. Определите основные параметры и дополнительные опции
           </Text>
           <div className="header-actions">
             <Button
@@ -378,7 +404,8 @@ export function NewRule(props: NewRuleProps) {
               rules={[
                 {
                   required: true,
-                  message: 'Пожалуйста, укажите вопрос, на который должны ответить при голосовании',
+                  message:
+                    'Пожалуйста, укажите вопрос, на который должны ответить при голосовании',
                 },
                 {
                   max: 140,
@@ -403,11 +430,13 @@ export function NewRule(props: NewRuleProps) {
               rules={[
                 {
                   required: true,
-                  message: 'Пожалуйста, подробно опишите цель и содержание правила',
+                  message:
+                    'Пожалуйста, подробно опишите цель и содержание правила',
                 },
                 {
                   max: 1000,
-                  message: 'Текст описания правила не должен превышать 1000 символов',
+                  message:
+                    'Текст описания правила не должен превышать 1000 символов',
                 },
               ]}
               hasFeedback
@@ -509,7 +538,9 @@ export function NewRule(props: NewRuleProps) {
               Прогресс: <span className="info-highlight">{formProgress}%</span>
             </span>
           </div>
-          <div className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}>
+          <div
+            className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}
+          >
             <span className="status-icon">●</span>
             <span>{getFormStatus()}</span>
           </div>

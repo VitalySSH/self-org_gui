@@ -7,8 +7,16 @@
   --my-settings-section-gap: 24px;
   --my-settings-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   --my-settings-card-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  --my-settings-header-bg: linear-gradient(135deg, rgba(204, 0, 0, 0.05) 0%, rgba(204, 0, 0, 0.02) 100%);
-  --my-settings-voting-card-bg: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 215, 0, 0.02) 100%);
+  --my-settings-header-bg: linear-gradient(
+    135deg,
+    rgba(204, 0, 0, 0.05) 0%,
+    rgba(204, 0, 0, 0.02) 100%
+  );
+  --my-settings-voting-card-bg: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.05) 0%,
+    rgba(255, 215, 0, 0.02) 100%
+  );
   --my-settings-transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   --my-settings-input-width: 120px;
 }
@@ -113,9 +121,14 @@
   }
 
   .ant-card-head {
-    background: linear-gradient(135deg, rgba(204, 0, 0, 0.03) 0%, rgba(204, 0, 0, 0.01) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(204, 0, 0, 0.03) 0%,
+      rgba(204, 0, 0, 0.01) 100%
+    );
     border-bottom: 1px solid rgba(204, 0, 0, 0.1);
-    border-radius: var(--my-settings-card-border-radius) var(--my-settings-card-border-radius) 0 0;
+    border-radius: var(--my-settings-card-border-radius)
+      var(--my-settings-card-border-radius) 0 0;
 
     .ant-card-head-title {
       color: $heading-color;
@@ -285,7 +298,6 @@
         font-size: 14px;
       }
     }
-
   }
 
   .settings-section {
@@ -361,7 +373,6 @@
         font-size: 13px;
       }
     }
-
   }
 
   .settings-section {
@@ -443,8 +454,16 @@
 // Темная тема
 .dark-theme {
   :root {
-    --my-settings-header-bg: linear-gradient(135deg, rgba(204, 0, 0, 0.1) 0%, rgba(204, 0, 0, 0.05) 100%);
-    --my-settings-voting-card-bg: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+    --my-settings-header-bg: linear-gradient(
+      135deg,
+      rgba(204, 0, 0, 0.1) 0%,
+      rgba(204, 0, 0, 0.05) 100%
+    );
+    --my-settings-voting-card-bg: linear-gradient(
+      135deg,
+      rgba(255, 215, 0, 0.1) 0%,
+      rgba(255, 215, 0, 0.05) 100%
+    );
   }
 
   .my-community-settings-container {
@@ -464,7 +483,11 @@
     border-color: #434343;
 
     .ant-card-head {
-      background: linear-gradient(135deg, rgba(204, 0, 0, 0.08) 0%, rgba(204, 0, 0, 0.03) 100%);
+      background: linear-gradient(
+        135deg,
+        rgba(204, 0, 0, 0.08) 0%,
+        rgba(204, 0, 0, 0.03) 100%
+      );
       border-bottom-color: rgba(204, 0, 0, 0.2);
 
       .ant-card-head-title {
@@ -562,7 +585,6 @@
         font-size: 14px;
       }
     }
-
   }
 
   .settings-section {

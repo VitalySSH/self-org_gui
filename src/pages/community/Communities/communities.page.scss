@@ -3,7 +3,11 @@
 // Переменные для страницы сообществ
 :root {
   --communities-max-width: 1200px;
-  --communities-header-bg: linear-gradient(135deg, rgba(82, 196, 26, 0.05) 0%, rgba(82, 196, 26, 0.02) 100%);
+  --communities-header-bg: linear-gradient(
+    135deg,
+    rgba(82, 196, 26, 0.05) 0%,
+    rgba(82, 196, 26, 0.02) 100%
+  );
   --communities-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   --communities-hover-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   --communities-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -212,13 +216,13 @@
 
     // Цветные акценты для разных статусов
     strong {
-      &[style*="color: #52c41a"] {
+      &[style*='color: #52c41a'] {
         background: rgba(82, 196, 26, 0.1);
         padding: 2px 6px;
         border-radius: 4px;
       }
 
-      &[style*="color: #ff4d4f"] {
+      &[style*='color: #ff4d4f'] {
         background: rgba(255, 77, 79, 0.1);
         padding: 2px 6px;
         border-radius: 4px;
@@ -708,7 +712,11 @@
 // Темная тема
 .dark-theme {
   :root {
-    --communities-header-bg: linear-gradient(135deg, rgba(82, 196, 26, 0.1) 0%, rgba(82, 196, 26, 0.05) 100%);
+    --communities-header-bg: linear-gradient(
+      135deg,
+      rgba(82, 196, 26, 0.1) 0%,
+      rgba(82, 196, 26, 0.05) 100%
+    );
     --communities-stats-bg: rgba(82, 196, 26, 0.05);
     --communities-pagination-bg: rgba(24, 144, 255, 0.05);
     --communities-switcher-bg: rgba(31, 31, 31, 0.9);
@@ -922,7 +930,7 @@
 // Динамические цвета для разных режимов
 .communities-page {
   // Режим "Все сообщества"
-  &[data-mode="all"] {
+  &[data-mode='all'] {
     .page-header {
       .header-main {
         .header-icon {
@@ -938,7 +946,7 @@
   }
 
   // Режим "Мои сообщества"
-  &[data-mode="my"] {
+  &[data-mode='my'] {
     .page-header {
       .header-main {
         .header-icon {

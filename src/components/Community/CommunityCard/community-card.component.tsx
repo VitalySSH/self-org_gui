@@ -1,19 +1,25 @@
 import { useState } from 'react';
-import { Button, Card, Form, message, Modal, Space, Typography, Tooltip } from 'antd';
+import {
+  Button,
+  Card,
+  Form,
+  message,
+  Modal,
+  Space,
+  Typography,
+  Tooltip,
+} from 'antd';
 import {
   SolutionOutlined,
   StopOutlined,
   TeamOutlined,
   UserOutlined,
   SendOutlined,
-  CheckCircleOutlined
+  CheckCircleOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import TextArea from 'antd/lib/input/TextArea';
-import {
-  AuthContextProvider,
-  CommunityCardProps,
-} from 'src/interfaces';
+import { AuthContextProvider, CommunityCardProps } from 'src/interfaces';
 import { useAuth } from 'src/hooks';
 import { CrudDataSourceService } from 'src/services';
 import { CommunityModel, RequestMemberModel, StatusModel } from 'src/models';
@@ -29,20 +35,26 @@ export function CommunityCard({ item, actions }: CommunityCardProps) {
   const [messageApi, contextHolder] = message.useMessage();
   const [modalOpen, setModalOpen] = useState(false);
   const [disabled, setDisabled] = useState(false);
-  const [isSentRequest, setIsSentRequest] = useState(Boolean(item.isAddRequest));
+  const [isSentRequest, setIsSentRequest] = useState(
+    Boolean(item.isAddRequest)
+  );
 
   const successInfo = (content: string) => {
-    messageApi.open({
-      type: 'success',
-      content: content,
-    }).then();
+    messageApi
+      .open({
+        type: 'success',
+        content: content,
+      })
+      .then();
   };
 
   const errorInfo = (content: string) => {
-    messageApi.open({
-      type: 'error',
-      content: content,
-    }).then();
+    messageApi
+      .open({
+        type: 'error',
+        content: content,
+      })
+      .then();
   };
 
   const handleCancel = () => {
@@ -53,7 +65,9 @@ export function CommunityCard({ item, actions }: CommunityCardProps) {
     try {
       setDisabled(true);
       const statusService = new CrudDataSourceService(StatusModel);
-      const requestMemberService = new CrudDataSourceService(RequestMemberModel);
+      const requestMemberService = new CrudDataSourceService(
+        RequestMemberModel
+      );
       const communityService = new CrudDataSourceService(CommunityModel);
 
       const requestMember = new RequestMemberModel();
@@ -114,7 +128,7 @@ export function CommunityCard({ item, actions }: CommunityCardProps) {
             <Text className="action-text" type="secondary">
               Заблокировано голосованием
             </Text>
-          </div>
+          </div>,
         ];
 
       case 'member':
@@ -127,7 +141,7 @@ export function CommunityCard({ item, actions }: CommunityCardProps) {
             <Text className="action-text" style={{ color: '#52c41a' }}>
               Заявка отправлена
             </Text>
-          </div>
+          </div>,
         ];
 
       case 'available':
@@ -143,11 +157,11 @@ export function CommunityCard({ item, actions }: CommunityCardProps) {
               fontWeight: 500,
               fontSize: '13px',
               height: '36px',
-              width: '100%'
+              width: '100%',
             }}
           >
             Подать заявку
-          </Button>
+          </Button>,
         ];
 
       default:
@@ -186,8 +200,8 @@ export function CommunityCard({ item, actions }: CommunityCardProps) {
         header: {
           borderBottom: '1px solid #f0f0f0',
           paddingBottom: '12px',
-          marginBottom: '20px'
-        }
+          marginBottom: '20px',
+        },
       }}
     >
       <div style={{ marginBottom: '16px' }}>
@@ -214,10 +228,7 @@ export function CommunityCard({ item, actions }: CommunityCardProps) {
 
         <Form.Item style={{ margin: 0 }}>
           <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Button
-              onClick={handleCancel}
-              style={{ borderRadius: '6px' }}
-            >
+            <Button onClick={handleCancel} style={{ borderRadius: '6px' }}>
               Отменить
             </Button>
             <Button
@@ -270,7 +281,8 @@ export function CommunityCard({ item, actions }: CommunityCardProps) {
               <Space size="small">
                 <TeamOutlined className="members-icon" />
                 <Text className="members-count" type="secondary">
-                  {item.members} {item.members === 1 ? 'участник' : 'участников'}
+                  {item.members}{' '}
+                  {item.members === 1 ? 'участник' : 'участников'}
                 </Text>
               </Space>
             </div>
@@ -283,7 +295,7 @@ export function CommunityCard({ item, actions }: CommunityCardProps) {
                     style={{
                       fontSize: '11px',
                       fontWeight: 500,
-                      color: item.isBlocked ? '#ff4d4f' : '#52c41a'
+                      color: item.isBlocked ? '#ff4d4f' : '#52c41a',
                     }}
                   >
                     {item.isBlocked ? 'Заблокирован' : 'Участник'}

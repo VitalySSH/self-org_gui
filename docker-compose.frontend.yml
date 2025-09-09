@@ -5,7 +5,7 @@ services:
     image: ${YCR_REGISTRY}/${YCR_FRONT_IMAGE_NAME}:${IMAGE_TAG}
     container_name: selforg_frontend
     ports:
-      - "80:80"
+      - '80:80'
     environment:
       NODE_ENV: production
     restart: always

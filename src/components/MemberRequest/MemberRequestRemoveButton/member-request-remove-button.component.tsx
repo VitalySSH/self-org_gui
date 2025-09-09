@@ -1,5 +1,9 @@
 import { Button, Popconfirm, message } from 'antd';
-import { DeleteOutlined, LogoutOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  LogoutOutlined,
+  QuestionCircleOutlined,
+} from '@ant-design/icons';
 import { CrudDataSourceService } from 'src/services';
 import { RequestMemberModel } from 'src/models';
 import { CommunityMemberCode, MemberExcludedCode } from 'src/consts';
@@ -14,7 +18,7 @@ interface MemberRequestRemoveButtonProps {
 
 export function MemberRequestRemoveButton({
   item,
-  setLoading
+  setLoading,
 }: MemberRequestRemoveButtonProps) {
   const [messageApi, contextHolder] = message.useMessage();
   const statusCodes = [CommunityMemberCode, MemberExcludedCode];
@@ -36,7 +40,9 @@ export function MemberRequestRemoveButton({
 
   const removeMemberRequest = async () => {
     try {
-      const requestMemberService = new CrudDataSourceService(RequestMemberModel);
+      const requestMemberService = new CrudDataSourceService(
+        RequestMemberModel
+      );
       await requestMemberService.delete(item.key);
       successInfo('Заявка удалена');
       if (setLoading) setLoading(true);
@@ -60,7 +66,9 @@ export function MemberRequestRemoveButton({
         description={confirmDescription}
         okText="Да"
         cancelText="Отменить"
-        icon={<QuestionCircleOutlined style={{ fontSize: 16, color: '#ff4d4f' }} />}
+        icon={
+          <QuestionCircleOutlined style={{ fontSize: 16, color: '#ff4d4f' }} />
+        }
         onConfirm={removeMemberRequest}
         overlayClassName="danger-popconfirm"
         okButtonProps={{
@@ -69,16 +77,16 @@ export function MemberRequestRemoveButton({
             borderRadius: '6px',
             fontWeight: 500,
             fontSize: '13px',
-            minWidth: '70px'
-          }
+            minWidth: '70px',
+          },
         }}
         cancelButtonProps={{
           style: {
             borderRadius: '6px',
             fontWeight: 500,
             fontSize: '13px',
-            minWidth: '70px'
-          }
+            minWidth: '70px',
+          },
         }}
       >
         <Button

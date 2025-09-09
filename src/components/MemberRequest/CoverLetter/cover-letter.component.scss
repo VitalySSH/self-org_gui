@@ -126,7 +126,11 @@
           right: 0;
           width: 30px;
           height: 1.2em;
-          background: linear-gradient(to right, transparent, var(--cover-letter-bg));
+          background: linear-gradient(
+            to right,
+            transparent,
+            var(--cover-letter-bg)
+          );
           pointer-events: none;
         }
       }
@@ -341,7 +345,11 @@
         color: #cccccc;
 
         &.collapsed::after {
-          background: linear-gradient(to right, transparent, rgba(24, 144, 255, 0.05));
+          background: linear-gradient(
+            to right,
+            transparent,
+            rgba(24, 144, 255, 0.05)
+          );
         }
       }
     }

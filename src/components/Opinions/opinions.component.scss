@@ -13,7 +13,11 @@
       align-items: center;
       margin-bottom: 16px;
       padding: 24px;
-      background: linear-gradient(135deg, $secondary-color 0%, rgba($sider-background-color, 0.6) 100%);
+      background: linear-gradient(
+        135deg,
+        $secondary-color 0%,
+        rgba($sider-background-color, 0.6) 100%
+      );
       border: 1px solid $border-color;
       border-radius: 16px;
       box-shadow: 0 2px 8px $card-shadow;
@@ -44,7 +48,11 @@
       }
 
       .ai-button-primary {
-        background: linear-gradient(135deg, $gradient-start 0%, $gradient-end 100%);
+        background: linear-gradient(
+          135deg,
+          $gradient-start 0%,
+          $gradient-end 100%
+        );
         border: none;
         border-radius: 12px;
         padding: 8px 20px;
@@ -117,7 +125,11 @@
   .add-comment-section {
     margin-bottom: 24px;
     padding: 24px;
-    background: linear-gradient(135deg, rgba($success-color, 0.02) 0%, rgba($success-color, 0.01) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba($success-color, 0.02) 0%,
+      rgba($success-color, 0.01) 100%
+    );
     border: 1px solid rgba($success-color, 0.15);
     border-radius: 16px;
     transition: all 0.3s ease;
@@ -222,7 +234,11 @@
 
   .notice {
     padding: 20px;
-    background: linear-gradient(135deg, rgba($accent-yellow, 0.1) 0%, rgba($accent-yellow, 0.05) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba($accent-yellow, 0.1) 0%,
+      rgba($accent-yellow, 0.05) 100%
+    );
     border: 1px solid rgba($accent-yellow, 0.3);
     border-radius: 12px;
     margin-bottom: 20px;
@@ -249,7 +265,11 @@
       }
 
       &.user-comment {
-        background: linear-gradient(135deg, rgba($info-color, 0.05) 0%, rgba($info-color, 0.02) 100%);
+        background: linear-gradient(
+          135deg,
+          rgba($info-color, 0.05) 0%,
+          rgba($info-color, 0.02) 100%
+        );
         border-color: rgba($info-color, 0.2);
         position: relative;
         border-left: 4px solid #667eea;
@@ -615,7 +635,11 @@
   .comments-section {
     .header-section {
       .header-top {
-        background: linear-gradient(135deg, #1a1a1a 0%, rgba(#2a2a2a, 0.8) 100%);
+        background: linear-gradient(
+          135deg,
+          #1a1a1a 0%,
+          rgba(#2a2a2a, 0.8) 100%
+        );
         border-color: #434343;
 
         &:hover {
@@ -663,7 +687,11 @@
     }
 
     .add-comment-section {
-      background: linear-gradient(135deg, rgba($success-color, 0.05) 0%, rgba($success-color, 0.02) 100%);
+      background: linear-gradient(
+        135deg,
+        rgba($success-color, 0.05) 0%,
+        rgba($success-color, 0.02) 100%
+      );
       border-color: rgba($success-color, 0.2);
 
       &.ai-mode {
@@ -704,7 +732,11 @@
     }
 
     .notice {
-      background: linear-gradient(135deg, rgba($accent-yellow, 0.15) 0%, rgba($accent-yellow, 0.08) 100%);
+      background: linear-gradient(
+        135deg,
+        rgba($accent-yellow, 0.15) 0%,
+        rgba($accent-yellow, 0.08) 100%
+      );
       border-color: rgba($accent-yellow, 0.4);
       color: color.mix($accent-yellow, white, 80%);
     }
@@ -719,7 +751,11 @@
         }
 
         &.user-comment {
-          background: linear-gradient(135deg, rgba($info-color, 0.08) 0%, rgba($info-color, 0.04) 100%);
+          background: linear-gradient(
+            135deg,
+            rgba($info-color, 0.08) 0%,
+            rgba($info-color, 0.04) 100%
+          );
           border-color: rgba($info-color, 0.3);
 
           &::before {

@@ -20,7 +20,8 @@ import {
 } from 'src/models';
 import { Opinions, UserVoting, VotingResults } from 'src/components';
 import {
-  AuthContextProvider, ResponsibilityData,
+  AuthContextProvider,
+  ResponsibilityData,
   VoteInPercent,
   VotingOptionData,
 } from 'src/interfaces';
@@ -47,10 +48,18 @@ export function RuleDetail() {
   const [userVote, setUserVote] = useState<boolean | undefined>(undefined);
   const [userOption, setUserOption] = useState<VotingOptionModel[]>([]);
   const [noncompliance, setNoncompliance] = useState<NoncomplianceModel[]>([]);
-  const [selectedOptions, setSelectedOptions] = useState<VotingOptionData | {}>({});
-  const [minorityOptions, setMinorityOptions] = useState<VotingOptionData | {}>({});
-  const [selectedNoncompliance, setSelectedNoncompliance] = useState<ResponsibilityData | {}>({});
-  const [minorityNoncompliance, setMinorityNoncompliance] = useState<ResponsibilityData | {}>({});
+  const [selectedOptions, setSelectedOptions] = useState<VotingOptionData | {}>(
+    {}
+  );
+  const [minorityOptions, setMinorityOptions] = useState<VotingOptionData | {}>(
+    {}
+  );
+  const [selectedNoncompliance, setSelectedNoncompliance] = useState<
+    ResponsibilityData | {}
+  >({});
+  const [minorityNoncompliance, setMinorityNoncompliance] = useState<
+    ResponsibilityData | {}
+  >({});
   const [loading, setLoading] = useState<boolean>(true);
   const [disabled, setDisabled] = useState(true);
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -96,8 +105,12 @@ export function RuleDetail() {
             }
             setSelectedOptions(ruleInst.voting_result?.options || {});
             setMinorityOptions(ruleInst.voting_result?.minority_options || {});
-            setSelectedNoncompliance(ruleInst.voting_result?.noncompliance || {});
-            setMinorityNoncompliance(ruleInst.voting_result?.minority_noncompliance || {});
+            setSelectedNoncompliance(
+              ruleInst.voting_result?.noncompliance || {}
+            );
+            setMinorityNoncompliance(
+              ruleInst.voting_result?.minority_noncompliance || {}
+            );
             setRuleStatus(ruleInst.status?.name || '');
             setRuleStatusCode(ruleInst.status?.code || '');
           })
@@ -299,14 +312,26 @@ export function RuleDetail() {
 
   // Вычисляем статистику для отображения
   const totalVotes = useMemo(() => {
-    if (!voteInPercent.yes && !voteInPercent.no && !voteInPercent.abstain) return 0;
+    if (!voteInPercent.yes && !voteInPercent.no && !voteInPercent.abstain)
+      return 0;
     // Предполагаем, что проценты уже рассчитаны от общего количества голосов
-    return Math.round(100 / Math.max(voteInPercent.yes || 0.01, voteInPercent.no || 0.01, voteInPercent.abstain || 0.01));
+    return Math.round(
+      100 /
+        Math.max(
+          voteInPercent.yes || 0.01,
+          voteInPercent.no || 0.01,
+          voteInPercent.abstain || 0.01
+        )
+    );
   }, [voteInPercent]);
 
   const getUserVoteStatus = () => {
     if (!userVotingResult) return 'Не проголосовано';
-    if (!userVotingResult.is_voted_myself && userVotingResult.vote !== null && !userVotingResult.is_voted_by_default) {
+    if (
+      !userVotingResult.is_voted_myself &&
+      userVotingResult.vote !== null &&
+      !userVotingResult.is_voted_by_default
+    ) {
       return 'Делегированный голос';
     }
     if (userVotingResult.is_voted_by_default) {
@@ -400,9 +425,7 @@ export function RuleDetail() {
                 {rule.content}
               </div>
 
-              <div className="rule-question">
-                {rule.question}
-              </div>
+              <div className="rule-question">{rule.question}</div>
             </div>
           </Card>
 
@@ -464,11 +487,17 @@ export function RuleDetail() {
               Участников: <span className="info-highlight">{totalVotes}</span>
             </span>
           </div>
-          <div className={`toolbar-status ${
-            userVotingResult?.vote === true ? 'status-success' :
-              userVotingResult?.vote === false ? 'status-error' :
-                userVotingResult?.vote === null ? 'status-warning' : ''
-          }`}>
+          <div
+            className={`toolbar-status ${
+              userVotingResult?.vote === true
+                ? 'status-success'
+                : userVotingResult?.vote === false
+                  ? 'status-error'
+                  : userVotingResult?.vote === null
+                    ? 'status-warning'
+                    : ''
+            }`}
+          >
             <span className="status-icon">●</span>
             <span>{getUserVoteStatus()}</span>
           </div>

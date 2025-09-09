@@ -82,10 +82,13 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
     props.form.setFieldValue('is_workgroup', checked);
   };
 
-  const handleSwitchChange = useCallback((fieldName: string, checked: boolean) => {
-    setSwitchStates(prev => ({ ...prev, [fieldName]: checked }));
-    props.form.setFieldValue(fieldName, checked);
-  }, [props.form]);
+  const handleSwitchChange = useCallback(
+    (fieldName: string, checked: boolean) => {
+      setSwitchStates((prev) => ({ ...prev, [fieldName]: checked }));
+      props.form.setFieldValue(fieldName, checked);
+    },
+    [props.form]
+  );
 
   // Компонент поля рабочей группы
   const WorkgroupField = () => (
@@ -289,7 +292,8 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
             rules={[
               {
                 required: true,
-                message: 'Пожалуйста, укажите процент общественно-значимого меньшинства, значение от 1 до 50%.',
+                message:
+                  'Пожалуйста, укажите процент общественно-значимого меньшинства, значение от 1 до 50%.',
               },
             ]}
           >
@@ -335,7 +339,8 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
             rules={[
               {
                 required: true,
-                message: 'Пожалуйста, укажите количество дней отсрочки вступления решения в силу, значение от 1 до 30 дней.',
+                message:
+                  'Пожалуйста, укажите количество дней отсрочки вступления решения в силу, значение от 1 до 30 дней.',
               },
             ]}
           >
@@ -365,7 +370,8 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
             rules={[
               {
                 required: true,
-                message: 'Пожалуйста, укажите количество дней для рассмотрения споров, значение от 1 до 30 дней.',
+                message:
+                  'Пожалуйста, укажите количество дней для рассмотрения споров, значение от 1 до 30 дней.',
               },
             ]}
           >
@@ -423,7 +429,9 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
                 onChange={handleWorkGroupChange}
               />
               <Text type="secondary" className="switch-description">
-                {isWorkGroup ? 'Требуются рабочие группы' : 'Рабочие группы не требуются'}
+                {isWorkGroup
+                  ? 'Требуются рабочие группы'
+                  : 'Рабочие группы не требуются'}
               </Text>
             </div>
           </Form.Item>
@@ -439,7 +447,9 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
                 checked={switchStates.is_secret_ballot}
-                onChange={(checked) => handleSwitchChange('is_secret_ballot', checked)}
+                onChange={(checked) =>
+                  handleSwitchChange('is_secret_ballot', checked)
+                }
               />
             </div>
           </Form.Item>
@@ -455,7 +465,9 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
                 checked={switchStates.is_can_offer}
-                onChange={(checked) => handleSwitchChange('is_can_offer', checked)}
+                onChange={(checked) =>
+                  handleSwitchChange('is_can_offer', checked)
+                }
               />
             </div>
           </Form.Item>
@@ -478,7 +490,9 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
                 checked={switchStates.is_minority_not_participate}
-                onChange={(checked) => handleSwitchChange('is_minority_not_participate', checked)}
+                onChange={(checked) =>
+                  handleSwitchChange('is_minority_not_participate', checked)
+                }
               />
             </div>
           </Form.Item>
@@ -494,7 +508,9 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
                 checked={switchStates.is_default_add_member}
-                onChange={(checked) => handleSwitchChange('is_default_add_member', checked)}
+                onChange={(checked) =>
+                  handleSwitchChange('is_default_add_member', checked)
+                }
               />
             </div>
           </Form.Item>
@@ -510,7 +526,9 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
                 checkedChildren={<CheckOutlined />}
                 unCheckedChildren={<CloseOutlined />}
                 checked={switchStates.is_not_delegate}
-                onChange={(checked) => handleSwitchChange('is_not_delegate', checked)}
+                onChange={(checked) =>
+                  handleSwitchChange('is_not_delegate', checked)
+                }
               />
             </div>
           </Form.Item>
@@ -579,7 +597,9 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
               ))}
             </Space>
 
-            <Form.Item style={{ marginTop: fields.length > 0 ? 16 : 0, marginBottom: 0 }}>
+            <Form.Item
+              style={{ marginTop: fields.length > 0 ? 16 : 0, marginBottom: 0 }}
+            >
               <Button
                 type="dashed"
                 onClick={() => add()}

@@ -4,7 +4,9 @@
 
 :root {
   --custom-select-border-radius: 8px;
-  --custom-select-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  --custom-select-shadow:
+    0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 9px 28px 8px rgba(0, 0, 0, 0.05);
   --custom-select-border-color: #{$border-color};
   --custom-select-hover-border: #b0b0b0;
   --custom-select-focus-border: #{$primary-color};

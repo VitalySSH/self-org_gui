@@ -57,7 +57,6 @@ export function NewCommunity() {
       setTimeout(() => {
         navigate('/communities', { preventScrollReset: true });
       }, 1000);
-
     } catch (error) {
       console.error('Error creating community:', error);
       errorInfo(`Ошибка создания сообщества: ${error}`);
@@ -125,8 +124,18 @@ export function NewCommunity() {
   // Получаем количество заполненных полей для отображения прогресса
   const getFormProgress = () => {
     const formData = form.getFieldsValue();
-    const requiredFields = ['name', 'description', 'quorum', 'vote', 'significant_minority', 'decision_delay', 'dispute_time_limit'];
-    const filledFields = requiredFields.filter(field => formData[field] && formData[field] !== '');
+    const requiredFields = [
+      'name',
+      'description',
+      'quorum',
+      'vote',
+      'significant_minority',
+      'decision_delay',
+      'dispute_time_limit',
+    ];
+    const filledFields = requiredFields.filter(
+      (field) => formData[field] && formData[field] !== ''
+    );
     return Math.round((filledFields.length / requiredFields.length) * 100);
   };
 
@@ -146,10 +155,7 @@ export function NewCommunity() {
           {renderInfoCard()}
 
           <div className="form-container">
-            <NewCommunityForm
-              form={form}
-              setDisabledButton={setDisabled}
-            />
+            <NewCommunityForm form={form} setDisabledButton={setDisabled} />
           </div>
         </div>
       </div>
@@ -160,10 +166,13 @@ export function NewCommunity() {
           <div className="toolbar-info">
             <SettingOutlined className="info-icon" />
             <span className="info-text">
-              Прогресс: <span className="info-highlight">{getFormProgress()}%</span>
+              Прогресс:{' '}
+              <span className="info-highlight">{getFormProgress()}%</span>
             </span>
           </div>
-          <div className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}>
+          <div
+            className={`toolbar-status ${disabled ? 'status-warning' : 'status-success'}`}
+          >
             <span className="status-icon">●</span>
             <span>{getFormStatus()}</span>
           </div>

@@ -13,7 +13,11 @@
       margin-top: 16px;
 
       .ai-button {
-        background: linear-gradient(135deg, #722ed1 0%, color.mix(#722ed1, black, 90%) 100%);
+        background: linear-gradient(
+          135deg,
+          #722ed1 0%,
+          color.mix(#722ed1, black, 90%) 100%
+        );
         border: none;
         color: white;
         font-weight: 600;
@@ -23,7 +27,11 @@
         transition: all 0.2s ease;
 
         &:hover {
-          background: linear-gradient(135deg, color.mix(#722ed1, white, 95%) 0%, #722ed1 100%);
+          background: linear-gradient(
+            135deg,
+            color.mix(#722ed1, white, 95%) 0%,
+            #722ed1 100%
+          );
           transform: translateY(-1px);
         }
 
@@ -36,7 +44,11 @@
 
   // Секция дополнительных опций
   .extra-options-section {
-    background: linear-gradient(135deg, rgba(24, 144, 255, 0.05) 0%, rgba(24, 144, 255, 0.02) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(24, 144, 255, 0.05) 0%,
+      rgba(24, 144, 255, 0.02) 100%
+    );
     border: 1px solid rgba(24, 144, 255, 0.1);
     border-radius: 8px;
     padding: 24px;
@@ -336,7 +348,11 @@
       }
 
       .form-header-card {
-        background: linear-gradient(135deg, rgba(#722ed1, 0.08) 0%, rgba(#722ed1, 0.04) 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(#722ed1, 0.08) 0%,
+          rgba(#722ed1, 0.04) 100%
+        );
         border-color: rgba(#722ed1, 0.2);
       }
     }
@@ -367,7 +383,10 @@
       }
 
       .toolbar {
-        padding-bottom: max(8px, calc(8px + env(safe-area-inset-bottom))) !important;
+        padding-bottom: max(
+          8px,
+          calc(8px + env(safe-area-inset-bottom))
+        ) !important;
       }
     }
   }

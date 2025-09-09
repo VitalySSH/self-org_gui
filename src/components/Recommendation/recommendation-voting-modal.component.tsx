@@ -4,9 +4,9 @@ import { RecommendationModalProps } from 'src/interfaces';
 import './recommendation-voting-modal.component.scss';
 
 export const RecommendationVotingModal = ({
-                                            open,
-                                            onCancel,
-                                          }: RecommendationModalProps) => {
+  open,
+  onCancel,
+}: RecommendationModalProps) => {
   const [isMobile, setIsMobile] = useState(false);
 
   // Определение мобильного устройства
@@ -38,7 +38,7 @@ export const RecommendationVotingModal = ({
           flexDirection: 'column',
         },
       }}
-      width={isMobile ? "100%" : "60%"}
+      width={isMobile ? '100%' : '60%'}
       className="recommendation-modal"
       centered={!isMobile}
       destroyOnClose
@@ -162,8 +162,9 @@ export const RecommendationVotingModal = ({
             настройки, а инструменты формирования культуры вашего сообщества.
           </p>
           <div className="warning-note">
-            <strong>⚠️ Важно:</strong> Любые изменения мгновенно влияют на все текущие голосования.
-            Особенно осторожно меняйте параметры в процессе важных обсуждений!
+            <strong>⚠️ Важно:</strong> Любые изменения мгновенно влияют на все
+            текущие голосования. Особенно осторожно меняйте параметры в процессе
+            важных обсуждений!
           </div>
         </div>
       </div>

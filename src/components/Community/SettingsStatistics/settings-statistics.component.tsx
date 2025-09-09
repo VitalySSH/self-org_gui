@@ -1,5 +1,9 @@
 import { Card, List, Progress, Space, Empty } from 'antd';
-import { BarChartOutlined, TrophyOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  BarChartOutlined,
+  TrophyOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { SettingsStatisticsInterface } from 'src/interfaces';
 
 interface SettingsStatisticsProps {
@@ -7,7 +11,10 @@ interface SettingsStatisticsProps {
   loading?: boolean;
 }
 
-export function SettingsStatistics({ data, loading = false }: SettingsStatisticsProps) {
+export function SettingsStatistics({
+  data,
+  loading = false,
+}: SettingsStatisticsProps) {
   // Функция для определения цвета прогресс-бара
   const getProgressColor = (percent: number, index: number) => {
     const colors = ['#52c41a', '#1890ff', '#722ed1', '#eb2f96', '#fa8c16'];
@@ -61,36 +68,46 @@ export function SettingsStatistics({ data, loading = false }: SettingsStatistics
                   border: '1px solid #f0f0f0',
                   boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
                   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  marginBottom: '4px'
+                  marginBottom: '4px',
                 }}
                 styles={{ body: { padding: '12px 16px' } }}
               >
-                <Space direction="vertical" style={{ width: '100%' }} size="small">
+                <Space
+                  direction="vertical"
+                  style={{ width: '100%' }}
+                  size="small"
+                >
                   {/* Заголовок с иконкой и процентом */}
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginBottom: '8px'
-                  }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '8px',
+                    }}
+                  >
                     <Space size="small">
                       {icon}
-                      <span style={{
-                        fontWeight: 500,
-                        fontSize: '13px',
-                        color: '#333',
-                        lineHeight: 1.4
-                      }}>
+                      <span
+                        style={{
+                          fontWeight: 500,
+                          fontSize: '13px',
+                          color: '#333',
+                          lineHeight: 1.4,
+                        }}
+                      >
                         {item.name}
                       </span>
                     </Space>
-                    <span style={{
-                      fontWeight: 600,
-                      fontSize: '14px',
-                      color: progressColor,
-                      minWidth: '40px',
-                      textAlign: 'right'
-                    }}>
+                    <span
+                      style={{
+                        fontWeight: 600,
+                        fontSize: '14px',
+                        color: progressColor,
+                        minWidth: '40px',
+                        textAlign: 'right',
+                      }}
+                    >
                       {item.percent}%
                     </span>
                   </div>
@@ -106,11 +123,13 @@ export function SettingsStatistics({ data, loading = false }: SettingsStatistics
                   />
 
                   {/* Дополнительная информация */}
-                  <div style={{
-                    fontSize: '11px',
-                    color: '#666',
-                    marginTop: '4px'
-                  }}>
+                  <div
+                    style={{
+                      fontSize: '11px',
+                      color: '#666',
+                      marginTop: '4px',
+                    }}
+                  >
                     Голосов: {item.percent}%
                   </div>
                 </Space>
@@ -122,19 +141,26 @@ export function SettingsStatistics({ data, loading = false }: SettingsStatistics
 
       {/* Итоговая статистика */}
       {sortedData.length > 1 && (
-        <div className="statistics-summary" style={{
-          marginTop: '12px',
-          padding: '12px',
-          background: 'rgba(24, 144, 255, 0.05)',
-          borderRadius: '6px',
-          border: '1px solid rgba(24, 144, 255, 0.1)'
-        }}>
+        <div
+          className="statistics-summary"
+          style={{
+            marginTop: '12px',
+            padding: '12px',
+            background: 'rgba(24, 144, 255, 0.05)',
+            borderRadius: '6px',
+            border: '1px solid rgba(24, 144, 255, 0.1)',
+          }}
+        >
           <Space size="middle">
             <span style={{ fontSize: '12px', color: '#666' }}>
-              Всего вариантов: <strong style={{ color: '#333' }}>{sortedData.length}</strong>
+              Всего вариантов:{' '}
+              <strong style={{ color: '#333' }}>{sortedData.length}</strong>
             </span>
             <span style={{ fontSize: '12px', color: '#666' }}>
-              Лидер: <strong style={{ color: '#52c41a' }}>{sortedData[0]?.name}</strong>
+              Лидер:{' '}
+              <strong style={{ color: '#52c41a' }}>
+                {sortedData[0]?.name}
+              </strong>
             </span>
           </Space>
         </div>

@@ -7,25 +7,25 @@ import { ThemeProvider } from 'src/contexts/ThemeContext.tsx';
 function App() {
   return (
     <ThemeProvider>
-    <AuthProvider>
-      <Routes>
-        <Route path="/*" element={<MainApp />} />
-        <Route path="/verify-2fa" element={<Verify2FA />} />
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
+      <AuthProvider>
+        <Routes>
+          <Route path="/*" element={<MainApp />} />
+          <Route path="/verify-2fa" element={<Verify2FA />} />
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
 
-        <Route
-          path="communities/:id/*"
-          element={
-            <ProtectedRoute>
-              <CommunityWorkSpace />
-            </ProtectedRoute>
-          }
-        ></Route>
+          <Route
+            path="communities/:id/*"
+            element={
+              <ProtectedRoute>
+                <CommunityWorkSpace />
+              </ProtectedRoute>
+            }
+          ></Route>
 
-        <Route path="/no-much-page" element={<NoMatchPage />} />
-      </Routes>
-    </AuthProvider>
+          <Route path="/no-much-page" element={<NoMatchPage />} />
+        </Routes>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

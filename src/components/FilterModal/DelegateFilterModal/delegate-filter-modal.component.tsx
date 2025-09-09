@@ -94,8 +94,8 @@ export function DelegateFilterModal({
         body: {
           maxHeight: 'calc(85vh - 108px)',
           overflowY: 'auto',
-          padding: 0
-        }
+          padding: 0,
+        },
       }}
     >
       <div className="filter-modal-content">

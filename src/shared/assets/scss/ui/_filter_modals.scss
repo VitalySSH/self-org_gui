@@ -11,8 +11,8 @@
       border-radius: calc($border-radius * 1.5);
       overflow: hidden;
       box-shadow:
-              0 16px 48px rgba($card-shadow, 0.15),
-              0 4px 16px rgba($card-shadow, 0.1);
+        0 16px 48px rgba($card-shadow, 0.15),
+        0 4px 16px rgba($card-shadow, 0.1);
       max-height: 85vh;
       display: flex;
       flex-direction: column;
@@ -21,9 +21,11 @@
     &-header {
       border-bottom: 1px solid rgba($border-color, 0.4);
       padding: 20px 24px;
-      background: linear-gradient(135deg,
-              rgba($background-color, 0.98) 0%,
-              rgba($secondary-color, 0.95) 100%);
+      background: linear-gradient(
+        135deg,
+        rgba($background-color, 0.98) 0%,
+        rgba($secondary-color, 0.95) 100%
+      );
       backdrop-filter: blur(10px);
       flex-shrink: 0;
       position: relative;
@@ -36,10 +38,12 @@
         left: 20%;
         right: 20%;
         height: 2px;
-        background: linear-gradient(90deg,
-                transparent 0%,
-                rgba($primary-color, 0.3) 50%,
-                transparent 100%);
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba($primary-color, 0.3) 50%,
+          transparent 100%
+        );
       }
     }
 
@@ -88,9 +92,11 @@
     &-footer {
       padding: 16px 24px;
       border-top: 1px solid rgba($border-color, 0.4);
-      background: linear-gradient(135deg,
-              rgba($secondary-color, 0.9) 0%,
-              rgba($background-color, 0.95) 100%);
+      background: linear-gradient(
+        135deg,
+        rgba($secondary-color, 0.9) 0%,
+        rgba($background-color, 0.95) 100%
+      );
       flex-shrink: 0;
       display: flex;
       gap: 12px;
@@ -297,9 +303,11 @@
   .filter-modal {
     .ant-modal {
       &-header {
-        background: linear-gradient(135deg,
-                rgba(color.mix($background-color, black, 80%), 0.98) 0%,
-                rgba(color.mix($secondary-color, black, 85%), 0.95) 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(color.mix($background-color, black, 80%), 0.98) 0%,
+          rgba(color.mix($secondary-color, black, 85%), 0.95) 100%
+        );
         border-color: rgba(white, 0.1);
       }
 
@@ -312,9 +320,11 @@
       }
 
       &-footer {
-        background: linear-gradient(135deg,
-                rgba(color.mix($secondary-color, black, 85%), 0.9) 0%,
-                rgba(color.mix($background-color, black, 80%), 0.95) 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(color.mix($secondary-color, black, 85%), 0.9) 0%,
+          rgba(color.mix($background-color, black, 80%), 0.95) 100%
+        );
         border-color: rgba(white, 0.1);
 
         .ant-btn {
