@@ -48,16 +48,33 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
     const settingsService = new CrudDataSourceService(
       UserCommunitySettingsModel
     );
-    const names = await Promise.all(
-      formData.names?.map((name) =>
-        this._getOrCreateName(name, communityId, user.id)
-      )
-    );
-    const descriptions = await Promise.all(
-      formData.descriptions.map((description) =>
-        this._getOrCreateDescription(description, communityId, user.id)
-      )
-    );
+
+    const names: CommunityNameModel[] = [];
+    for (const name of formData.names || []) {
+      const result = await this._getOrCreateName(name, communityId, user.id);
+      names.push(result);
+    }
+
+    const descriptions: CommunityDescriptionModel[] = [];
+    for (const description of formData.descriptions || []) {
+      const result = await this._getOrCreateDescription(
+        description,
+        communityId,
+        user.id
+      );
+      descriptions.push(result);
+    }
+
+    const responsibilities: ResponsibilityModel[] = [];
+    for (const responsibility of formData.responsibilities || []) {
+      const result = await this._getOrCreateResponsibility(
+        responsibility,
+        communityId,
+        user.id
+      );
+      responsibilities.push(result);
+    }
+
     const categories = await this._getOrCreateCategories(
       formData.categories || [],
       communityId,
@@ -71,11 +88,7 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
       );
       subSettings.push(_subSettings);
     }
-    const responsibilities = await Promise.all(
-      (formData.responsibilities || []).map((responsibility) =>
-        this._getOrCreateResponsibility(responsibility, communityId, user.id)
-      )
-    );
+
     settings.sub_communities_settings = subSettings;
     settings.names = names;
     settings.descriptions = descriptions;
@@ -216,8 +229,6 @@ export class UserSettingsAoService extends CrudDataSourceService<UserCommunitySe
 
     return descriptionService.save(descriptionObj, true);
   }
-
-  responsibility;
 
   private async _getOrCreateCategories(
     categoriesInst: CategoryModel[],

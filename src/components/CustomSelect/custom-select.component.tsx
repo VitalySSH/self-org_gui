@@ -94,7 +94,7 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
         .catch(() => setOptions([]))
         .finally(() => setIsLoading(false));
     },
-    [props, searchQuery, options, totalOptions, props.enableSearch]
+    [props, searchQuery, options, totalOptions]
   );
 
   const { run: handleSearch } = useDebounceFn(
@@ -212,13 +212,11 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
     setNewTextValue(text);
   };
 
-  // КРИТИЧНОЕ ИСПРАВЛЕНИЕ: Упрощенный обработчик добавления
   const addOwnValue = useCallback(
     (e: React.MouseEvent | React.KeyboardEvent) => {
       e.preventDefault();
       e.stopPropagation();
 
-      // Не добавляем значения в readonly режиме
       if (isReadonly || !newTextValue.trim()) return;
 
       const currentValues: string[] = [];
@@ -285,14 +283,16 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   };
 
   const selectOptions = useMemo(() => {
-    return (options || []).map((item: T) => {
+    return (options || []).map((item: T, index: number) => {
       const labelValue =
         item && typeof item === 'object' && props.bindLabel in item
           ? (item as any)[props.bindLabel]
           : '';
 
+      const key = item?.id || `temp-${labelValue}-${index}`;
+
       return {
-        key: item?.id || Math.random().toString(36),
+        key,
         value: labelValue,
         label: labelValue,
         obj: item,
@@ -411,7 +411,6 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
                       }
                     }}
                     maxLength={props.ownValueMaxLength}
-                    // КРИТИЧНЫЕ НАСТРОЙКИ ДЛЯ МОБИЛЬНЫХ
                     onMouseDown={(e) => e.stopPropagation()}
                     onTouchStart={(e) => e.stopPropagation()}
                     autoComplete="off"
