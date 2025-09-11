@@ -1,29 +1,15 @@
 import { useState } from 'react';
-import {
-  Button,
-  Card,
-  Form,
-  message,
-  Modal,
-  Space,
-  Typography,
-  Tooltip,
-} from 'antd';
+import { Button, Card, Space, Typography, Tooltip } from 'antd';
 import {
   SolutionOutlined,
   StopOutlined,
   TeamOutlined,
   UserOutlined,
-  SendOutlined,
   CheckCircleOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import TextArea from 'antd/lib/input/TextArea';
-import { AuthContextProvider, CommunityCardProps } from 'src/interfaces';
-import { useAuth } from 'src/hooks';
-import { CrudDataSourceService } from 'src/services';
-import { CommunityModel, RequestMemberModel, StatusModel } from 'src/models';
-import { OnConsiderationCode } from 'src/consts';
+import { CommunityCardProps } from 'src/interfaces';
+import { CommunityCardRequestModal } from 'src/components';
 import './community-card.component.scss';
 
 const { Meta } = Card;
@@ -31,77 +17,17 @@ const { Text, Paragraph } = Typography;
 
 export function CommunityCard({ item, actions }: CommunityCardProps) {
   const navigate = useNavigate();
-  const authData: AuthContextProvider = useAuth();
-  const [messageApi, contextHolder] = message.useMessage();
   const [modalOpen, setModalOpen] = useState(false);
-  const [disabled, setDisabled] = useState(false);
   const [isSentRequest, setIsSentRequest] = useState(
     Boolean(item.isAddRequest)
   );
 
-  const successInfo = (content: string) => {
-    messageApi
-      .open({
-        type: 'success',
-        content: content,
-      })
-      .then();
-  };
-
-  const errorInfo = (content: string) => {
-    messageApi
-      .open({
-        type: 'error',
-        content: content,
-      })
-      .then();
-  };
-
-  const handleCancel = () => {
+  const handleModalClose = () => {
     setModalOpen(false);
   };
 
-  const onFinish = async (formData: { reason?: string }) => {
-    try {
-      setDisabled(true);
-      const statusService = new CrudDataSourceService(StatusModel);
-      const requestMemberService = new CrudDataSourceService(
-        RequestMemberModel
-      );
-      const communityService = new CrudDataSourceService(CommunityModel);
-
-      const requestMember = new RequestMemberModel();
-      requestMember.creator_id = authData.user?.id;
-      if (formData.reason) {
-        requestMember.reason = formData.reason;
-      }
-
-      const statusResp = await statusService.list([
-        {
-          field: 'code',
-          op: 'equals',
-          val: OnConsiderationCode,
-        },
-      ]);
-
-      if (statusResp.data.length) {
-        const status = statusResp.data[0];
-        requestMember.member = authData.getUserRelation();
-        const communityRelation = communityService.createRecord();
-        communityRelation.id = item.id;
-        requestMember.community = communityRelation;
-        requestMember.status = status;
-
-        await requestMemberService.save(requestMember);
-        successInfo('Заявка успешно отправлена');
-        setIsSentRequest(true);
-      }
-    } catch (error) {
-      errorInfo(`Ошибка отправки запроса: ${error}`);
-    } finally {
-      setDisabled(false);
-      setModalOpen(false);
-    }
+  const handleRequestSuccess = () => {
+    setIsSentRequest(true);
   };
 
   const getCardStatus = () => {
@@ -183,73 +109,15 @@ export function CommunityCard({ item, actions }: CommunityCardProps) {
     return `${baseClass} ${baseClass}--${status}`;
   };
 
-  const renderModal = () => (
-    <Modal
-      open={modalOpen}
-      title={
-        <Space>
-          <SolutionOutlined style={{ color: '#1890ff' }} />
-          <span>Заявка на вступление</span>
-        </Space>
-      }
-      onCancel={handleCancel}
-      footer={null}
-      width={500}
-      centered
-      styles={{
-        header: {
-          borderBottom: '1px solid #f0f0f0',
-          paddingBottom: '12px',
-          marginBottom: '20px',
-        },
-      }}
-    >
-      <div style={{ marginBottom: '16px' }}>
-        <Text type="secondary">
-          Сообщество: <Text strong>{item.title}</Text>
-        </Text>
-      </div>
-
-      <Form name="join-community" onFinish={onFinish} layout="vertical">
-        <Form.Item
-          name="reason"
-          label="Сопроводительное письмо"
-          extra="Расскажите о себе и причинах, по которым хотели бы вступить в сообщество"
-          className="join-community-reason"
-        >
-          <TextArea
-            rows={5}
-            placeholder="Введите текст сопроводительного письма..."
-            showCount
-            maxLength={1000}
-            style={{ borderRadius: '6px' }}
-          />
-        </Form.Item>
-
-        <Form.Item style={{ margin: 0 }}>
-          <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Button onClick={handleCancel} style={{ borderRadius: '6px' }}>
-              Отменить
-            </Button>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={disabled}
-              icon={<SendOutlined />}
-              style={{ borderRadius: '6px', fontWeight: 500 }}
-            >
-              Отправить заявку
-            </Button>
-          </Space>
-        </Form.Item>
-      </Form>
-    </Modal>
-  );
-
   return (
     <>
-      {contextHolder}
-      {renderModal()}
+      <CommunityCardRequestModal
+        open={modalOpen}
+        communityTitle={item.title}
+        communityId={item.id}
+        onClose={handleModalClose}
+        onSuccess={handleRequestSuccess}
+      />
 
       <Card
         className={getCardClassName()}

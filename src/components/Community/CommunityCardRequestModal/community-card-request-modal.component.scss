@@ -1,0 +1,170 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+// Стили для модального окна заявки на вступление
+.join-community-reason {
+  .ant-form-item-extra {
+    margin-top: 8px;
+    font-size: 12px;
+    color: $text-color;
+    line-height: 1.4;
+  }
+}
+
+// Адаптивные стили для модального окна
+@media (max-width: 768px) {
+  .ant-modal {
+    width: 90% !important;
+    margin: 20px auto;
+  }
+
+  .join-community-reason {
+    .ant-form-item-extra {
+      font-size: 11px;
+    }
+  }
+
+  .ant-form-item {
+    .ant-input {
+      font-size: 14px;
+    }
+  }
+
+  .ant-btn {
+    height: 34px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ant-modal {
+    width: 95% !important;
+    margin: 10px auto;
+  }
+
+  .ant-form-item {
+    margin-bottom: 16px;
+
+    .ant-input {
+      font-size: 14px;
+    }
+  }
+
+  .ant-btn {
+    height: 32px;
+    font-size: 13px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+// Высококонтрастный режим
+@media (prefers-contrast: more) {
+  .ant-modal-content {
+    border: 2px solid $text-color;
+  }
+
+  .ant-form-item {
+    .ant-input {
+      border: 2px solid $border-color;
+
+      &:hover,
+      &:focus,
+      &.ant-input-focused {
+        border: 2px solid $primary-color;
+      }
+    }
+  }
+
+  .ant-btn {
+    border: 2px solid currentColor;
+    font-weight: 600;
+
+    &.ant-btn-primary {
+      border: 2px solid $primary-color;
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  .ant-modal-content {
+    background-color: #1f1f1f;
+    color: #ffffff;
+  }
+
+  .ant-modal-header {
+    background-color: #1f1f1f;
+    border-bottom-color: #434343;
+
+    .ant-modal-title {
+      color: #ffffff;
+    }
+  }
+
+  .ant-form-item {
+    .ant-form-item-label {
+      > label {
+        color: #ffffff;
+      }
+    }
+
+    .ant-form-item-extra {
+      color: #cccccc;
+    }
+
+    .ant-input {
+      background-color: #2a2a2a;
+      border-color: #434343;
+      color: #ffffff;
+
+      &::placeholder {
+        color: #999999;
+      }
+
+      &:hover {
+        border-color: $primary-color;
+        background-color: #333333;
+      }
+
+      &:focus,
+      &.ant-input-focused {
+        border-color: $primary-color;
+        background-color: #333333;
+        box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
+      }
+    }
+  }
+
+  .ant-btn {
+    &.ant-btn-primary {
+      background: $primary-color;
+      border-color: $primary-color;
+
+      &:hover {
+        background: #cc0000;
+        border-color: #cc0000;
+      }
+    }
+
+    &.ant-btn-default {
+      background-color: transparent;
+      border-color: #434343;
+      color: #ffffff;
+
+      &:hover {
+        border-color: $primary-color;
+        color: $primary-color;
+        background-color: rgba($primary-color, 0.1);
+      }
+    }
+
+    &.ant-btn-link {
+      color: #52c41a !important;
+
+      &:hover,
+      &:focus {
+        color: #73d13d !important;
+      }
+    }
+  }
+}
