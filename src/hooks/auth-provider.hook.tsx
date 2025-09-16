@@ -22,9 +22,15 @@ export const AuthProvider = (component: ProviderComponent) => {
   // храним последнюю валидную страницу (не auth страницы)
   const lastValidPageRef = useRef<string>('/');
 
-  const login = (user: UserInterface, toMainPage: boolean = false) => {
+  const login = (
+    user: UserInterface,
+    toMainPage: boolean = false,
+    isDemo: boolean = false
+  ) => {
     setUser(user);
     changeAvatarUrl(user.foto_id);
+    if (isDemo) return;
+
     if (toMainPage) {
       navigate('/', { preventScrollReset: true });
     } else {

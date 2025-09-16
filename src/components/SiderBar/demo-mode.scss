@@ -1,0 +1,328 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+// ДЕМО-РЕЖИМ: Стили для демо-режима в сайдбаре (легко удаляется в будущем)
+.sider-demo-mode {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+
+  .demo-welcome {
+    margin-bottom: 24px;
+    text-align: center;
+
+    .welcome-icon {
+      margin-bottom: 12px;
+
+      .anticon {
+        font-size: 32px;
+        color: $gradient-start;
+      }
+    }
+
+    .welcome-text {
+      .welcome-title {
+        display: block;
+        font-size: 16px;
+        font-weight: 600;
+        color: $text-color;
+        margin-bottom: 4px;
+      }
+
+      .welcome-subtitle {
+        font-size: 12px;
+        line-height: 1.4;
+        color: $text-color;
+      }
+    }
+  }
+}
+
+// ДЕМО-РЕЖИМ: Стили для кнопок демо-режима (легко удаляется в будущем)
+.demo-enter-btn {
+  background: linear-gradient(135deg, $gradient-start 0%, $gradient-end 100%);
+  border: none;
+  color: white;
+  border-radius: 8px;
+  height: 44px;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba($gradient-start, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+
+  // Декоративный блик
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(white, 0.2),
+                    transparent
+    );
+    transition: left 0.6s ease;
+  }
+
+  .anticon {
+    font-size: 16px;
+    margin-right: 8px;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, #7c8ff0 0%, #8a5faf 100%);
+    transform: translateY(-2px);
+    box-shadow:
+            0 6px 20px rgba($gradient-start, 0.4),
+            0 2px 6px rgba($gradient-start, 0.2);
+    color: white;
+    border: none;
+
+    &::before {
+      left: 100%;
+    }
+
+    .anticon {
+      transform: scale(1.1);
+    }
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+
+  &:focus {
+    background: linear-gradient(135deg, $gradient-start 0%, $gradient-end 100%);
+    color: white;
+    border: none;
+    box-shadow:
+            0 4px 12px rgba($gradient-start, 0.3),
+            0 0 0 2px rgba($gradient-start, 0.3);
+  }
+
+  // Состояние загрузки
+  &.ant-btn-loading {
+    background: linear-gradient(135deg, rgba($gradient-start, 0.8) 0%, rgba($gradient-end, 0.8) 100%);
+
+    .anticon {
+      color: white;
+    }
+  }
+}
+
+.demo-exit-btn {
+  background: linear-gradient(135deg, $primary-color 0%, #b30000 100%);
+  border: none;
+  color: white;
+  border-radius: 8px;
+  height: 44px;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+
+  // Декоративный блик
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(white, 0.2),
+                    transparent
+    );
+    transition: left 0.6s ease;
+  }
+
+  .anticon {
+    font-size: 16px;
+    margin-right: 8px;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, #e60000 0%, $primary-color 100%);
+    transform: translateY(-2px);
+    box-shadow:
+            0 6px 20px rgba($primary-color, 0.4),
+            0 2px 6px rgba($primary-color, 0.2);
+    color: white;
+    border: none;
+
+    &::before {
+      left: 100%;
+    }
+
+    .anticon {
+      transform: scale(1.1);
+    }
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+
+  &:focus {
+    background: linear-gradient(135deg, $primary-color 0%, #b30000 100%);
+    color: white;
+    border: none;
+    box-shadow:
+            0 4px 12px rgba($primary-color, 0.3),
+            0 0 0 2px rgba($primary-color, 0.3);
+  }
+
+  // Состояние загрузки
+  &.ant-btn-loading {
+    background: linear-gradient(135deg, rgba($primary-color, 0.8) 0%, rgba($primary-color, 0.6) 100%);
+
+    .anticon {
+      color: white;
+    }
+  }
+}
+
+// ДЕМО-РЕЖИМ: Адаптивные стили для мобильных устройств (легко удаляется в будущем)
+@media (max-width: 768px) {
+  .sider-demo-mode {
+    padding: 12px;
+
+    .demo-welcome {
+      margin-bottom: 20px;
+
+      .welcome-icon {
+        margin-bottom: 10px;
+
+        .anticon {
+          font-size: 28px;
+        }
+      }
+
+      .welcome-text {
+        .welcome-title {
+          font-size: 15px;
+        }
+
+        .welcome-subtitle {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+
+  .demo-enter-btn,
+  .demo-exit-btn {
+    height: 40px;
+    font-size: 13px;
+
+    .anticon {
+      font-size: 15px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .sider-demo-mode {
+    padding: 10px;
+
+    .demo-welcome {
+      margin-bottom: 16px;
+
+      .welcome-icon {
+        margin-bottom: 8px;
+
+        .anticon {
+          font-size: 24px;
+        }
+      }
+
+      .welcome-text {
+        .welcome-title {
+          font-size: 14px;
+        }
+
+        .welcome-subtitle {
+          font-size: 10px;
+        }
+      }
+    }
+  }
+
+  .demo-enter-btn,
+  .demo-exit-btn {
+    height: 38px;
+    font-size: 12px;
+    border-radius: 6px;
+
+    .anticon {
+      font-size: 14px;
+      margin-right: 6px;
+    }
+  }
+}
+
+// ДЕМО-РЕЖИМ: Темная тема (легко удаляется в будущем)
+.dark-theme {
+  .sider-demo-mode {
+    .demo-welcome {
+      .welcome-text {
+        .welcome-title {
+          color: #ffffff;
+        }
+
+        .welcome-subtitle {
+          color: #cccccc;
+        }
+      }
+    }
+  }
+
+  .demo-enter-btn {
+    background: linear-gradient(135deg, $gradient-start 0%, $gradient-end 100%);
+    box-shadow: 0 4px 12px rgba($gradient-start, 0.4);
+
+    &:hover {
+      background: linear-gradient(135deg, #7c8ff0 0%, #8a5faf 100%);
+      box-shadow:
+              0 6px 20px rgba($gradient-start, 0.5),
+              0 2px 6px rgba($gradient-start, 0.3);
+    }
+  }
+
+  .demo-exit-btn {
+    background: linear-gradient(135deg, $primary-color 0%, #b30000 100%);
+    box-shadow: 0 4px 12px rgba($primary-color, 0.4);
+
+    &:hover {
+      background: linear-gradient(135deg, #e60000 0%, $primary-color 100%);
+      box-shadow:
+              0 6px 20px rgba($primary-color, 0.5),
+              0 2px 6px rgba($primary-color, 0.3);
+    }
+  }
+}
+
+// ДЕМО-РЕЖИМ: Дополнительные эффекты для привлечения внимания (легко удаляется в будущем)
+.demo-enter-btn {
+  animation: demoEnterPulse 3s ease-in-out infinite;
+}
+
+@keyframes demoEnterPulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba($gradient-start, 0.3);
+  }
+  50% {
+    box-shadow:
+            0 4px 12px rgba($gradient-start, 0.3),
+            0 0 20px rgba($gradient-start, 0.2);
+  }
+}

@@ -30,12 +30,19 @@ import {
   UserOutlined,
   HomeOutlined,
   CloseOutlined,
+  PlayCircleOutlined,
+  PoweroffOutlined,
 } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { SiderBarInterface } from 'src/interfaces';
+import { AuthContextProvider, SiderBarInterface } from 'src/interfaces';
 import { AuthCard } from 'src/components';
 import { MenuItem } from 'src/shared/types.ts';
 import { SubCommunitiesLabel } from 'src/consts';
+import { AuthApiClientService } from 'src/services';
+import './demo-mode.scss';
+import { DEMO_CONFIG } from 'src/config/configuration.ts';
+import { encryptPassword } from 'src/utils';
+import { useAuth } from 'src/hooks';
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -59,7 +66,7 @@ const userGuideMenuItems: MenuItem[] = [
   {
     key: 'test4',
     icon: <BulbOutlined />,
-    label: 'Инициатвы',
+    label: 'Инициативы',
   },
   {
     key: 'user-guide/disputes',
@@ -134,6 +141,8 @@ const communityWSMenuItems: MenuItem[] = [
 export function SiderBar(props: SiderBarInterface) {
   const location = useLocation();
   const navigate = useNavigate();
+  const authApiClientService = new AuthApiClientService();
+  const authData: AuthContextProvider = useAuth();
 
   const [collapsed, setCollapsed] = useState(false);
   const [logoPath, setLogoPath] = useState('/utu_logo.png');
@@ -142,6 +151,12 @@ export function SiderBar(props: SiderBarInterface) {
   const [communityWSMenuKeys, setCommunityWSMenuKeys] = useState<string[]>([]);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // ДЕМО-РЕЖИМ: Состояние (легко удаляется в будущем)
+  const [isDemoMode, setIsDemoMode] = useState(() => {
+    return localStorage.getItem(DEMO_CONFIG.storageKey) === 'true';
+  });
+  const [isDemoLoading, setIsDemoLoading] = useState(false);
 
   // Определяем мобильное устройство
   useEffect(() => {
@@ -174,6 +189,20 @@ export function SiderBar(props: SiderBarInterface) {
     };
   }, [isMobile, mobileMenuOpen]);
 
+  // ДЕМО-РЕЖИМ: Блокировка перехода (легко удаляется в будущем)
+  useEffect(() => {
+    if (isDemoMode) {
+      // Разрешаем только демо-сообщество и главную страницу
+      const isAllowedPath =
+        location.pathname === '/' ||
+        location.pathname.startsWith(`/communities/${DEMO_CONFIG.communityId}`);
+
+      if (!isAllowedPath) {
+        navigate(-1);
+      }
+    }
+  }, [location.pathname, isDemoMode, navigate]);
+
   const cleanKeys = () => {
     setCommunitiesActive(false);
     setUserGuideMenuKeys([]);
@@ -189,6 +218,11 @@ export function SiderBar(props: SiderBarInterface) {
   };
 
   const onClickCommunities = () => {
+    // ДЕМО-РЕЖИМ: Блокируем переход на сообщества (легко удаляется в будущем)
+    if (isDemoMode) {
+      return;
+    }
+
     cleanKeys();
     setCommunitiesActive(true);
     navigate('/communities');
@@ -199,6 +233,56 @@ export function SiderBar(props: SiderBarInterface) {
 
   const handleMobileMenuToggle = () => {
     setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  // ДЕМО-РЕЖИМ: Вход в демо-режим (легко удаляется в будущем)
+  const handleEnterDemoMode = async () => {
+    try {
+      setIsDemoLoading(true);
+
+      await authApiClientService.asyncLogin(
+        DEMO_CONFIG.email,
+        btoa(encryptPassword(DEMO_CONFIG.password))
+      );
+      const currentUser = await authApiClientService.getCurrentUser();
+      authData.login(currentUser, false, true);
+
+      localStorage.setItem(DEMO_CONFIG.storageKey, 'true');
+      setIsDemoMode(true);
+
+      navigate(`/communities/${DEMO_CONFIG.communityId}`);
+
+      if (isMobile) {
+        setMobileMenuOpen(false);
+      }
+    } catch (error) {
+      console.error('Ошибка входа в демо-режим:', error);
+    } finally {
+      setIsDemoLoading(false);
+    }
+  };
+
+  // ДЕМО-РЕЖИМ: Выход из демо-режима (легко удаляется в будущем)
+  const handleExitDemoMode = async () => {
+    try {
+      setIsDemoLoading(true);
+
+      await authApiClientService.logout();
+
+      localStorage.removeItem(DEMO_CONFIG.storageKey);
+      setIsDemoMode(false);
+      authData.logout();
+
+      navigate('/');
+
+      if (isMobile) {
+        setMobileMenuOpen(false);
+      }
+    } catch (error) {
+      console.error('Ошибка выхода из демо-режима:', error);
+    } finally {
+      setIsDemoLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -220,12 +304,13 @@ export function SiderBar(props: SiderBarInterface) {
         cleanKeys();
         const currentKey = pathname[1];
 
-        // Проверяем, находимся ли мы на странице сообществ
         if (currentKey === 'communities') {
           setCommunitiesActive(true);
-        } else if (props.isNotAuthorized) {
+        } else if (props.isNotAuthorized && !isDemoMode) {
+          // ДЕМО-РЕЖИМ: Добавлена проверка
           setUserGuideMenuKeys([currentKey]);
-        } else {
+        } else if (!isDemoMode) {
+          // ДЕМО-РЕЖИМ: Добавлена проверка
           const isFindUserGuide = userGuideMenuItems.find(
             (it) => it?.key === currentKey
           );
@@ -235,9 +320,21 @@ export function SiderBar(props: SiderBarInterface) {
         }
       }
     }
-  }, [location.pathname, navigate, props.isCommunityWS, props.isNotAuthorized]);
+  }, [
+    location.pathname,
+    navigate,
+    props.isCommunityWS,
+    props.isNotAuthorized,
+    isDemoMode,
+    props.isBlocked,
+  ]);
 
   const renderCommunitiesNavigation = () => {
+    // ДЕМО-РЕЖИМ: Скрываем навигацию к сообществам (легко удаляется в будущем)
+    if (isDemoMode && !props.isCommunityWS) {
+      return null;
+    }
+
     if (collapsed && !isMobile) {
       return (
         <Tooltip title="Сообщества" placement="right">
@@ -292,13 +389,79 @@ export function SiderBar(props: SiderBarInterface) {
       </div>
       <div className="sider-auth-container">
         <AuthCard />
+
+        {/* ДЕМО-РЕЖИМ: Кнопка демо-режима (легко удаляется в будущем) */}
+        <div style={{ marginTop: '32px' }}>
+          <Button
+            type="default"
+            icon={<PlayCircleOutlined />}
+            onClick={handleEnterDemoMode}
+            loading={isDemoLoading}
+            block
+            className="demo-enter-btn"
+          >
+            Демо-режим
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // ДЕМО-РЕЖИМ: Контент для демо-режима (легко удаляется в будущем)
+  const renderDemoModeContent = () => (
+    <div className="sider-demo-mode">
+      <div className="demo-welcome">
+        <div className="welcome-icon">
+          <PlayCircleOutlined style={{ color: '#cc0000' }} />
+        </div>
+        <div className="welcome-text">
+          <Text className="welcome-title">Демо-режим</Text>
+        </div>
+      </div>
+
+      <div style={{ marginTop: 'auto', padding: '16px' }}>
+        <Button
+          type="primary"
+          danger
+          icon={<PoweroffOutlined />}
+          onClick={handleExitDemoMode}
+          loading={isDemoLoading}
+          block
+          className="demo-exit-btn"
+        >
+          Выйти из демо-режима
+        </Button>
+      </div>
+
+      {/* ДЕМО-РЕЖИМ: Меню сообщества */}
+      <div style={{ marginBottom: '16px' }}>
+        {(!collapsed || isMobile) && (
+          <div className="menu-header">Сообщество</div>
+        )}
+        {collapsed && !isMobile && (
+          <Tooltip title="Сообщество" placement="right">
+            <ApartmentOutlined className="menu-header-icon" />
+          </Tooltip>
+        )}
+        <Menu
+          mode="inline"
+          items={communityWSMenuItems}
+          onClick={(item) => {
+            setCommunityWSMenuKeys([item.key]);
+            navigate(item.key);
+            if (isMobile) {
+              setMobileMenuOpen(false);
+            }
+          }}
+          selectedKeys={communityWSMenuKeys}
+          className="sider-menu"
+        />
       </div>
     </div>
   );
 
   const renderSiderContent = () => (
     <>
-      {/* Основной контент сайдбара */}
       <div className="sider-content">
         <Flex align="center" justify="center" className="sider-logo">
           <Image
@@ -311,16 +474,17 @@ export function SiderBar(props: SiderBarInterface) {
           />
         </Flex>
 
-        {props.isNotAuthorized ? (
+        {/* ДЕМО-РЕЖИМ: Условное отображение контента (легко удаляется в будущем) */}
+        {isDemoMode ? (
+          (!collapsed || isMobile) && renderDemoModeContent()
+        ) : props.isNotAuthorized ? (
           (!collapsed || isMobile) && renderUnauthorizedContent()
         ) : (
           <>
             {!props.isCommunityWS && (
               <>
-                {/* Навигация к сообществам */}
                 {renderCommunitiesNavigation()}
 
-                {/* Руководство пользователя */}
                 {(!collapsed || isMobile) && (
                   <div className="menu-header">Руководство пользователя</div>
                 )}
@@ -332,7 +496,7 @@ export function SiderBar(props: SiderBarInterface) {
                 <Menu
                   mode="inline"
                   items={userGuideMenuItems}
-                  onClick={(_item) => {
+                  onClick={() => {
                     if (isMobile) {
                       setMobileMenuOpen(false);
                     }
@@ -373,7 +537,6 @@ export function SiderBar(props: SiderBarInterface) {
         )}
       </div>
 
-      {/* Нижняя часть с кнопкой и футером */}
       <div className="sider-bottom">
         {isMobile ? (
           <Button
@@ -418,7 +581,6 @@ export function SiderBar(props: SiderBarInterface) {
   if (isMobile) {
     return (
       <>
-        {/* Плавающая кнопка меню */}
         <Button
           type="primary"
           shape="circle"
@@ -428,7 +590,6 @@ export function SiderBar(props: SiderBarInterface) {
           className={`mobile-fab-menu ${mobileMenuOpen ? 'menu-open' : ''}`}
         />
 
-        {/* Overlay с backdrop */}
         {mobileMenuOpen && (
           <div className="mobile-sider-overlay">
             <div className="mobile-sider">{renderSiderContent()}</div>

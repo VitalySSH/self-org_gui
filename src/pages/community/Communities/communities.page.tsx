@@ -57,8 +57,8 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
   const [showFilters, setShowFilters] = useState(false);
 
   // Получение базовых фильтров в зависимости от режима
-  const getBaseFilters = useCallback((): Filters => {
-    if (mode === 'all') {
+  const getBaseFilters = useCallback((currentMode: CommunityMode): Filters => {
+    if (currentMode === 'all') {
       return [
         {
           field: 'parent_id',
@@ -68,117 +68,143 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
       ];
     }
     return []; // Для "my" режима базовых фильтров нет
-  }, [mode]);
+  }, []);
 
   // Загрузка всех сообществ
-  const loadAllCommunities = useCallback(async () => {
-    const communityService = new CrudDataSourceService(CommunityModel);
-    const resp = await communityService.list(
-      filters,
-      undefined,
-      { skip: currentPage, limit: pageSize },
-      ['user_settings.user', 'main_settings.name', 'main_settings.description']
-    );
+  const loadAllCommunities = useCallback(
+    async (currentFilters: Filters) => {
+      const communityService = new CrudDataSourceService(CommunityModel);
+      const resp = await communityService.list(
+        currentFilters,
+        undefined,
+        { skip: currentPage, limit: pageSize },
+        [
+          'user_settings.user',
+          'main_settings.name',
+          'main_settings.description',
+        ]
+      );
 
-    setTotal(resp.total);
-    const items: CommunityCardInterface[] = [];
-    const communityIds = resp.data.map((com) => com.id);
+      setTotal(resp.total);
+      const items: CommunityCardInterface[] = [];
+      const communityIds = resp.data.map((com) => com.id);
 
-    const requestMemberService = new CrudDataSourceService(RequestMemberModel);
-    const memberRequests = await requestMemberService.list(
-      [
-        {
-          field: 'community_id',
-          op: 'in',
-          val: communityIds,
-        },
-        {
-          field: 'member_id',
-          op: 'equals',
-          val: currentUserId,
-        },
-        {
-          field: 'parent_id',
-          op: 'null',
-          val: true,
-        },
-      ],
-      undefined,
-      { skip: 1, limit: pageSize },
-      ['community']
-    );
+      const requestMemberService = new CrudDataSourceService(
+        RequestMemberModel
+      );
+      const memberRequests = await requestMemberService.list(
+        [
+          {
+            field: 'community_id',
+            op: 'in',
+            val: communityIds,
+          },
+          {
+            field: 'member_id',
+            op: 'equals',
+            val: currentUserId,
+          },
+          {
+            field: 'parent_id',
+            op: 'null',
+            val: true,
+          },
+        ],
+        undefined,
+        { skip: 1, limit: pageSize },
+        ['community']
+      );
 
-    resp.data.forEach((community) => {
-      const isMyCommunity =
-        (community.user_settings || []).filter(
-          (ucs) => ucs.user?.id === currentUserId
-        ).length > 0;
-      const isAddRequest =
-        memberRequests.data.filter((rm) => rm.community?.id === community.id)
-          .length > 0;
+      resp.data.forEach((community) => {
+        const isMyCommunity =
+          (community.user_settings || []).filter(
+            (ucs) => ucs.user?.id === currentUserId
+          ).length > 0;
+        const isAddRequest =
+          memberRequests.data.filter((rm) => rm.community?.id === community.id)
+            .length > 0;
 
-      const item = {
-        id: community.id || '',
-        title: community.main_settings?.name?.name || '',
-        description: community.main_settings?.description?.value || '',
-        members: (community.user_settings || []).length,
-        isMyCommunity: isMyCommunity,
-        isAddRequest: isAddRequest,
-      };
-      items.push(item);
-    });
+        const item = {
+          id: community.id || '',
+          title: community.main_settings?.name?.name || '',
+          description: community.main_settings?.description?.value || '',
+          members: (community.user_settings || []).length,
+          isMyCommunity: isMyCommunity,
+          isAddRequest: isAddRequest,
+        };
+        items.push(item);
+      });
 
-    setDataSource(items);
-  }, [currentUserId, currentPage, pageSize, filters]);
+      setDataSource(items);
+    },
+    [currentUserId, currentPage, pageSize]
+  );
 
   // Загрузка моих сообществ
-  const loadMyCommunities = useCallback(async () => {
-    const communityService = new CommunityAOService();
-    const resp = await communityService.myList(
-      filters,
-      undefined,
-      { skip: currentPage, limit: pageSize },
-      ['user_settings.user', 'main_settings.name', 'main_settings.description']
-    );
-
-    setTotal(resp.total);
-    const communities: CommunityCardInterface[] = [];
-
-    resp.data.forEach((community) => {
-      const settings = (community.user_settings || []).filter(
-        (settings) => settings.user?.id === authData.user?.id
+  const loadMyCommunities = useCallback(
+    async (currentFilters: Filters) => {
+      const communityService = new CommunityAOService();
+      const resp = await communityService.myList(
+        currentFilters,
+        undefined,
+        { skip: currentPage, limit: pageSize },
+        [
+          'user_settings.user',
+          'main_settings.name',
+          'main_settings.description',
+        ]
       );
-      const isBlocked = settings.length ? settings[0].is_blocked : false;
-      const communityItem = {
-        id: community.id,
-        title: community.main_settings?.name?.name || '',
-        description: community.main_settings?.description?.value || '',
-        members: (community.user_settings || []).length,
-        isBlocked: isBlocked,
-        isMyCommunity: true,
-      };
-      communities.push(communityItem);
-    });
 
-    setDataSource(communities);
-  }, [authData.user?.id, currentPage, pageSize, filters]);
+      setTotal(resp.total);
+      const communities: CommunityCardInterface[] = [];
+
+      resp.data.forEach((community) => {
+        const settings = (community.user_settings || []).filter(
+          (settings) => settings.user?.id === authData.user?.id
+        );
+        const isBlocked = settings.length ? settings[0].is_blocked : false;
+        const communityItem = {
+          id: community.id,
+          title: community.main_settings?.name?.name || '',
+          description: community.main_settings?.description?.value || '',
+          members: (community.user_settings || []).length,
+          isBlocked: isBlocked,
+          isMyCommunity: true,
+        };
+        communities.push(communityItem);
+      });
+
+      setDataSource(communities);
+    },
+    [authData.user?.id, currentPage, pageSize]
+  );
 
   // Основная функция загрузки данных
   const loadData = useCallback(async () => {
     if (!loading) return;
 
     try {
+      const currentFilters =
+        filters.length > 0 ? filters : getBaseFilters(mode);
+
       if (mode === 'all') {
-        await loadAllCommunities();
+        await loadAllCommunities(currentFilters);
       } else {
-        await loadMyCommunities();
+        await loadMyCommunities(currentFilters);
       }
     } catch (error) {
       console.error('Error loading communities:', error);
     } finally {
       setLoading(false);
     }
-  }, [loading, mode, loadAllCommunities, loadMyCommunities]);
+  }, [
+    loading,
+    mode,
+    filters,
+    loadAllCommunities,
+    loadMyCommunities,
+    getBaseFilters,
+  ]);
 
   useEffect(() => {
     loadData();
@@ -187,7 +213,8 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
   // Сброс состояния при смене режима
   useEffect(() => {
     setCurrentPage(1);
-    setFilters(getBaseFilters());
+    const baseFilters = getBaseFilters(mode);
+    setFilters(baseFilters);
     setLoading(true);
   }, [mode, getBaseFilters]);
 
@@ -202,7 +229,8 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
   };
 
   const handleApplyFilters = (values: FilterValues) => {
-    const newFilters: Filters = getBaseFilters();
+    const baseFilters = getBaseFilters(mode);
+    const newFilters: Filters = [...baseFilters];
 
     if (values.title) {
       newFilters.push({
@@ -220,7 +248,7 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
       });
     }
 
-    const baseFiltersCount = getBaseFilters().length;
+    const baseFiltersCount = baseFilters.length;
     if (newFilters.length > baseFiltersCount) {
       setFilters(newFilters);
       setCurrentPage(1);
@@ -230,7 +258,8 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
   };
 
   const handleResetFilters = () => {
-    setFilters(getBaseFilters());
+    const baseFilters = getBaseFilters(mode);
+    setFilters(baseFilters);
     setCurrentPage(1);
     setLoading(true);
     setShowFilters(false);
@@ -242,7 +271,7 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
 
   const renderHeader = () => {
     const isMyMode = mode === 'my';
-    const baseFiltersCount = getBaseFilters().length;
+    const baseFiltersCount = getBaseFilters(mode).length;
     const activeFiltersCount = filters.length - baseFiltersCount;
 
     return (
@@ -359,7 +388,7 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
   const renderStats = () => {
     if (loading) return null;
 
-    const baseFiltersCount = getBaseFilters().length;
+    const baseFiltersCount = getBaseFilters(mode).length;
     const activeFiltersCount = filters.length - baseFiltersCount;
     const hasFilters = activeFiltersCount > 0;
     const isMyMode = mode === 'my';
@@ -430,7 +459,7 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
 
     if (!dataSource.length) {
       const isMyMode = mode === 'my';
-      const baseFiltersCount = getBaseFilters().length;
+      const baseFiltersCount = getBaseFilters(mode).length;
       const hasFilters = filters.length > baseFiltersCount;
 
       return (
@@ -534,7 +563,3 @@ export function Communities({ defaultMode = 'all' }: CommunitiesProps) {
     </div>
   );
 }
-
-// Экспорт с алиасами для обратной совместимости
-// export const AllCommunities = () => <Communities defaultMode="all" />;
-// export const MyCommunities = () => <Communities defaultMode="my" />;
