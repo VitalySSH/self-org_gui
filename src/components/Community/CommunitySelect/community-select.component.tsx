@@ -189,8 +189,6 @@ export function CommunitySelect(props: CommunitySelectProps) {
       newSettings.is_default_add_member = Boolean(
         formData.is_default_add_member
       );
-
-      // ИСПРАВЛЕНИЕ: используем индекс как уникальный идентификатор
       const updatedOptions = options
         ? [...options, newSettings]
         : [newSettings];

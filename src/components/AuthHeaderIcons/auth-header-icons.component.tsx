@@ -64,7 +64,7 @@ export function AuthHeaderIcons() {
           user[key as keyof UserInterface] = value;
         }
 
-        authData.login(user, false);
+        authData.login(user, false, false);
         await authApiClientService.updateUser(authData.user.id, userData);
         setModalOpen(false);
       } catch (error) {

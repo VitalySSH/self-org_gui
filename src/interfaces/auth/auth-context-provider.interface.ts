@@ -5,7 +5,7 @@ export interface AuthContextProvider {
   user?: UserInterface;
   avatarUrl: string | null;
   is2FAVerified?: boolean;
-  login: (user: UserInterface, toMainPage: boolean) => void;
+  login: (user: UserInterface, toMainPage: boolean, isDemo: boolean) => void;
   logout: () => void;
   getUserRelation: () => UserModel;
   changeFotoId: (fotoId: string | null) => void;

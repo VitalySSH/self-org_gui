@@ -31,7 +31,7 @@ export function SignIn() {
         if (!authData.user) {
           const currentUser = await authApiClientService.getCurrentUser();
           currentUser.secret_password = secret_password;
-          authData.login(currentUser, toMainPage);
+          authData.login(currentUser, toMainPage, false);
         } else {
           if (toMainPage) {
             navigate('/', { preventScrollReset: true });
