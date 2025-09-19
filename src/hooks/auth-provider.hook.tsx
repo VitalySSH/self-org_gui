@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { UserModel } from 'src/models';
 import { FileStorageService } from 'src/services';
 import { useEffect, useRef } from 'react';
+import { DEMO_CONFIG } from 'src/config/configuration.ts';
 
 const exemptedRoutes = ['/sign-in', '/sign-up'];
 
@@ -113,6 +114,11 @@ export const AuthProvider = (component: ProviderComponent) => {
       timeoutRef.current = setTimeout(() => {
         setAvatarUrl(null);
         setUser(null);
+
+        const isDemo = localStorage.getItem(DEMO_CONFIG.storageKey);
+        if (isDemo === 'true') {
+          localStorage.removeItem(DEMO_CONFIG.storageKey);
+        }
 
         // Если последняя валидная страница не auth страница - значит следуем по ссылке
         const isFollowingLink = !exemptedRoutes.includes(
