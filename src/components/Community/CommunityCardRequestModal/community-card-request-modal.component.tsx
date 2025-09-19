@@ -121,12 +121,11 @@ export function CommunityCardRequestModal({
         <Form.Item
           name="reason"
           label="Сопроводительное письмо"
-          extra="Расскажите о себе и причинах, по которым хотели бы вступить в сообщество"
           className="join-community-reason"
         >
           <TextArea
             rows={5}
-            placeholder="Введите текст сопроводительного письма..."
+            placeholder="Расскажите немного о себе и причинах, по которым хотели бы вступить в сообщество."
             showCount
             maxLength={1000}
             style={{ borderRadius: '6px' }}

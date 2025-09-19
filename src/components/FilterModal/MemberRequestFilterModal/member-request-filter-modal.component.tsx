@@ -5,8 +5,8 @@ import {
   CloseCircleOutlined,
 } from '@ant-design/icons';
 import { FilterModalProps, Pagination } from 'src/interfaces';
-import { AuthApiClientService, CrudDataSourceService } from 'src/services';
-import { StatusModel } from 'src/models';
+import { CrudDataSourceService } from 'src/services';
+import { RequestMemberModel, StatusModel } from 'src/models';
 import { Filters } from 'src/shared/types.ts';
 import { CustomSelect } from 'src/components';
 import {
@@ -26,11 +26,13 @@ export function MemberRequestFilterModal({
   onCancel,
   onApply,
   onReset,
+  currentUserId,
+  withoutCurrentUser = false,
 }: FilterModalProps) {
   const [form] = Form.useForm();
 
   const statusService = new CrudDataSourceService(StatusModel);
-  const authApiClientService = new AuthApiClientService();
+  const memberRequestService = new CrudDataSourceService(RequestMemberModel);
 
   const loadStatuses = async (pagination?: Pagination, filters?: Filters) => {
     const newFilters: Filters = filters || [];
@@ -49,14 +51,34 @@ export function MemberRequestFilterModal({
     return statusService.list(newFilters, undefined, pagination);
   };
 
-  const loadUsers = async (pagination?: Pagination, filters?: Filters) => {
+  const loadRequestMembers = async (
+    pagination?: Pagination,
+    filters?: Filters
+  ) => {
     const newFilters: Filters = filters || [];
-    return authApiClientService.communityListUsers(
-      communityId,
-      newFilters,
-      undefined,
-      pagination
-    );
+    const baseFilters: Filters = [
+      {
+        field: 'community_id',
+        op: 'equals',
+        val: communityId,
+      },
+      {
+        field: 'parent_id',
+        op: 'null',
+        val: true,
+      },
+    ];
+    if (withoutCurrentUser && currentUserId) {
+      newFilters.push({
+        field: 'member.id',
+        op: 'ne',
+        val: currentUserId,
+      });
+    }
+    newFilters.push(...baseFilters);
+    return memberRequestService.list(newFilters, undefined, pagination, [
+      'member',
+    ]);
   };
 
   const onCustomSelectChange = (fieldName: string, value: any) => {
@@ -113,13 +135,13 @@ export function MemberRequestFilterModal({
         >
           <Form.Item
             label="Участник сообщества"
-            name="member"
+            name="requestMember"
             tooltip="Выберите участника сообщества для фильтрации заявок"
           >
             <CustomSelect
-              bindLabel="fullname"
-              formField="member"
-              requestOptions={loadUsers}
+              bindLabel="member.fullname"
+              formField="requestMember"
+              requestOptions={loadRequestMembers}
               onChange={onCustomSelectChange}
               label="Выберите участника"
               enableSearch={true}

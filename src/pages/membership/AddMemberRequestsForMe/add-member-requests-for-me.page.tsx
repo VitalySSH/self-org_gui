@@ -56,6 +56,11 @@ export function AddMemberRequestsForMe({
         op: 'equals',
         val: currentUserId,
       },
+      {
+        field: 'member_id',
+        op: 'ne',
+        val: currentUserId,
+      },
     ];
   };
 
@@ -123,11 +128,11 @@ export function AddMemberRequestsForMe({
       });
     }
 
-    if (values.member) {
+    if (values.requestMember) {
       newFilters.push({
         field: 'member.id',
         op: 'equals',
-        val: values.member.id,
+        val: values.requestMember.member?.id,
       });
     }
 
@@ -203,15 +208,15 @@ export function AddMemberRequestsForMe({
             }}
           >
             <Badge
-              count={filters.length - 3}
+              count={filters.length - 4}
               size="small"
               offset={[8, -2]}
               style={{
-                backgroundColor: filters.length > 3 ? '#722ed1' : '#999',
+                backgroundColor: filters.length > 4 ? '#722ed1' : '#999',
                 fontSize: '10px',
               }}
             >
-              <span style={{ marginLeft: filters.length > 3 ? '12px' : '0' }}>
+              <span style={{ marginLeft: filters.length > 4 ? '12px' : '0' }}>
                 Фильтры
               </span>
             </Badge>
@@ -224,7 +229,7 @@ export function AddMemberRequestsForMe({
   const renderStats = () => {
     if (loading) return null;
 
-    const activeFiltersCount = filters.length - 3;
+    const activeFiltersCount = filters.length - 4;
     const hasFilters = activeFiltersCount > 0;
 
     // Подсчет статистики по решениям
@@ -292,9 +297,9 @@ export function AddMemberRequestsForMe({
         <Card className="empty-state-card">
           <Empty
             description={
-              filters.length > 3
+              filters.length > 4
                 ? 'По заданным фильтрам заявки не найдены'
-                : 'Вы еще не создали ни одной заявки на рассмотрение'
+                : 'Вы еще не получили ни одной заявки на рассмотрение'
             }
             image={Empty.PRESENTED_IMAGE_SIMPLE}
           />
@@ -372,6 +377,8 @@ export function AddMemberRequestsForMe({
         onCancel={() => setShowFilters(false)}
         onApply={handleApplyFilters}
         onReset={handleResetFilters}
+        currentUserId={currentUserId}
+        withoutCurrentUser={true}
       />
     </div>
   );

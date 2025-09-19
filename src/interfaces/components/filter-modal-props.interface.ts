@@ -7,4 +7,6 @@ export interface FilterModalProps {
   onApply: (values: any) => void;
   onReset: () => void;
   resource?: Resource;
+  currentUserId?: string;
+  withoutCurrentUser?: boolean;
 }

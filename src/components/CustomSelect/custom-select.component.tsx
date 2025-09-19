@@ -25,6 +25,38 @@ import { useDebounceFn } from 'ahooks';
 import { Filters } from 'src/shared/types.ts';
 import './custom-select.component.scss';
 
+const getNestedValue = (obj: any, path: string): any => {
+  if (!obj || !path) return undefined;
+
+  const keys = path.split('.');
+  let current = obj;
+
+  for (let i = 0; i < keys.length && i < 5; i++) {
+    if (current == null) return undefined;
+    current = current[keys[i]];
+  }
+
+  return current;
+};
+
+const setNestedValue = (obj: any, path: string, value: any): void => {
+  if (!obj || !path) return;
+
+  const keys = path.split('.');
+  let current = obj;
+
+  for (let i = 0; i < keys.length - 1 && i < 4; i++) {
+    if (current[keys[i]] == null || typeof current[keys[i]] !== 'object') {
+      current[keys[i]] = {};
+    }
+    current = current[keys[i]];
+  }
+
+  if (keys.length <= 5) {
+    current[keys[keys.length - 1]] = value;
+  }
+};
+
 export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const inputRef = useRef<InputRef>(null);
   const textAreaRef = useRef<TextAreaRef>(null);
@@ -121,32 +153,30 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
       if (props.multiple) {
         if (Array.isArray(props.value)) {
           _initFieldValue = props.value
-            .filter(
-              (item) =>
-                item && typeof item === 'object' && props.bindLabel in item
-            )
-            .map((it) => (it as any)[props.bindLabel]);
+            .filter((item) => item && typeof item === 'object')
+            .map((it) => getNestedValue(it, props.bindLabel))
+            .filter((val) => val !== undefined);
         }
       } else {
         if (Array.isArray(props.value)) {
           if (
             props.value.length > 0 &&
             props.value[0] &&
-            typeof props.value[0] === 'object' &&
-            props.bindLabel in props.value[0]
+            typeof props.value[0] === 'object'
           ) {
-            _initFieldValue = (props.value[0] as any)[props.bindLabel];
+            _initFieldValue = getNestedValue(props.value[0], props.bindLabel);
           }
         } else if (
           props.value !== undefined &&
           props.value &&
-          typeof props.value === 'object' &&
-          props.bindLabel in props.value
+          typeof props.value === 'object'
         ) {
-          _initFieldValue = (props.value as any)[props.bindLabel];
+          _initFieldValue = getNestedValue(props.value, props.bindLabel);
         }
       }
-      if (_initFieldValue !== null) setUploadedFieldValue(true);
+      if (_initFieldValue !== null && _initFieldValue !== undefined) {
+        setUploadedFieldValue(true);
+      }
       setFieldValue(_initFieldValue);
     }
   }, [
@@ -182,13 +212,13 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
           }
         }
       });
-      currentFieldValue = (currentValue || []).map(
-        (it) => (it as any)[props.bindLabel]
+      currentFieldValue = (currentValue || []).map((it) =>
+        getNestedValue(it, props.bindLabel)
       );
     } else {
       if (option?.obj) {
         currentValue = option.obj;
-        currentFieldValue = (option.obj as any)[props.bindLabel];
+        currentFieldValue = getNestedValue(option.obj, props.bindLabel);
       }
     }
 
@@ -222,24 +252,20 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
       const currentValues: string[] = [];
       if (Array.isArray(value)) {
         const _currentValues = value
-          .filter(
-            (item) =>
-              item && typeof item === 'object' && props.bindLabel in item
-          )
-          .map((it: any) => it[props.bindLabel]);
+          .filter((item) => item && typeof item === 'object')
+          .map((it: any) => getNestedValue(it, props.bindLabel))
+          .filter((val) => val !== undefined);
         currentValues.push(..._currentValues);
-      } else if (
-        value !== null &&
-        value &&
-        typeof value === 'object' &&
-        props.bindLabel in value
-      ) {
-        currentValues.push((value as any)[props.bindLabel]);
+      } else if (value !== null && value && typeof value === 'object') {
+        const val = getNestedValue(value, props.bindLabel);
+        if (val !== undefined) {
+          currentValues.push(val);
+        }
       }
 
       if (props.fieldService && !currentValues.includes(newTextValue.trim())) {
         const newObj = props.fieldService.createRecord();
-        (newObj as any)[props.bindLabel] = newTextValue.trim();
+        setNestedValue(newObj, props.bindLabel, newTextValue.trim());
         const currentOptions = options || [];
 
         if (props.saveOwnValue) {
@@ -285,8 +311,8 @@ export function CustomSelect<T extends ApiModel>(props: SelectInterface<T>) {
   const selectOptions = useMemo(() => {
     return (options || []).map((item: T, index: number) => {
       const labelValue =
-        item && typeof item === 'object' && props.bindLabel in item
-          ? (item as any)[props.bindLabel]
+        item && typeof item === 'object'
+          ? getNestedValue(item, props.bindLabel)
           : '';
 
       const key = item?.id || `temp-${labelValue}-${index}`;

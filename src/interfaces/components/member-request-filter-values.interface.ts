@@ -1,9 +1,9 @@
-import { StatusModel, UserModel } from 'src/models';
+import { RequestMemberModel, StatusModel } from 'src/models';
 import { Dayjs } from 'dayjs';
 
 export interface MemberRequestFilterValues {
   status?: StatusModel;
-  member?: UserModel;
+  requestMember?: RequestMemberModel;
   decision?: boolean;
   created?: Dayjs[];
 }

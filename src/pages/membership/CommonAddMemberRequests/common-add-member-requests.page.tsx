@@ -129,11 +129,11 @@ export function CommonAddMemberRequests({
       });
     }
 
-    if (values.member) {
+    if (values.requestMember) {
       newFilters.push({
         field: 'member.id',
         op: 'equals',
-        val: values.member.id,
+        val: values.requestMember.member?.id,
       });
     }
 
@@ -351,6 +351,7 @@ export function CommonAddMemberRequests({
         onCancel={() => setShowFilters(false)}
         onApply={handleApplyFilters}
         onReset={handleResetFilters}
+        currentUserId={currentUserId}
       />
     </div>
   );
