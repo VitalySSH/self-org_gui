@@ -191,6 +191,27 @@
   }
 }
 
+.demo-community-btn {
+  border-color: $info-color;
+  color: $info-color;
+  border-radius: 6px;
+  font-weight: 500;
+  height: 40px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #40a9ff;
+    color: #40a9ff;
+    background-color: rgba($info-color, 0.05);
+  }
+
+  &:focus {
+    border-color: $info-color;
+    color: $info-color;
+    box-shadow: 0 0 0 2px rgba($info-color, 0.2);
+  }
+}
+
 // ДЕМО-РЕЖИМ: Адаптивные стили для мобильных устройств (легко удаляется в будущем)
 @media (max-width: 768px) {
   .sider-demo-mode {

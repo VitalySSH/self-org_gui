@@ -434,29 +434,50 @@ export function SiderBar(props: SiderBarInterface) {
       </div>
 
       {/* ДЕМО-РЕЖИМ: Меню сообщества */}
-      <div style={{ marginBottom: '16px' }}>
-        {(!collapsed || isMobile) && (
-          <div className="menu-header">Сообщество</div>
-        )}
-        {collapsed && !isMobile && (
-          <Tooltip title="Сообщество" placement="right">
-            <ApartmentOutlined className="menu-header-icon" />
-          </Tooltip>
-        )}
-        <Menu
-          mode="inline"
-          items={communityWSMenuItems}
-          onClick={(item) => {
-            setCommunityWSMenuKeys([item.key]);
-            navigate(item.key);
-            if (isMobile) {
-              setMobileMenuOpen(false);
-            }
-          }}
-          selectedKeys={communityWSMenuKeys}
-          className="sider-menu"
-        />
-      </div>
+      {location.pathname.startsWith(
+        `/communities/${DEMO_CONFIG.communityId}`
+      ) ? (
+        <div style={{ marginBottom: '16px' }}>
+          {(!collapsed || isMobile) && (
+            <div className="menu-header">Сообщество</div>
+          )}
+          {collapsed && !isMobile && (
+            <Tooltip title="Сообщество" placement="right">
+              <ApartmentOutlined className="menu-header-icon" />
+            </Tooltip>
+          )}
+          <Menu
+            mode="inline"
+            items={communityWSMenuItems}
+            onClick={(item) => {
+              setCommunityWSMenuKeys([item.key]);
+              navigate(item.key);
+              if (isMobile) {
+                setMobileMenuOpen(false);
+              }
+            }}
+            selectedKeys={communityWSMenuKeys}
+            className="sider-menu"
+          />
+        </div>
+      ) : (
+        <div style={{ marginBottom: '16px', padding: '0 16px' }}>
+          <Button
+            type="default"
+            icon={<ApartmentOutlined />}
+            onClick={() => {
+              navigate(`/communities/${DEMO_CONFIG.communityId}`);
+              if (isMobile) {
+                setMobileMenuOpen(false);
+              }
+            }}
+            block
+            className="demo-community-btn"
+          >
+            Демо-сообщество
+          </Button>
+        </div>
+      )}
     </div>
   );
 
