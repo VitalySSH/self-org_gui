@@ -70,7 +70,12 @@ import './my-community-settings.page.scss';
 
 const { Title, Text } = Typography;
 
-export function MyCommunitySettings(props: any) {
+interface MyCommunitySettingsProps {
+  communityId: string;
+  onSettingsSaved?: () => void;
+}
+
+export function MyCommunitySettings(props: MyCommunitySettingsProps) {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
   const authData: AuthContextProvider = useAuth();
@@ -90,8 +95,8 @@ export function MyCommunitySettings(props: any) {
   });
 
   const isUpdatingRef = useRef(false);
+  const { communityId, onSettingsSaved } = props;
 
-  const communityId = props?.communityId;
   const nameService = new CrudDataSourceService(CommunityNameModel);
   const descriptionService = new CrudDataSourceService(
     CommunityDescriptionModel
@@ -397,6 +402,11 @@ export function MyCommunitySettings(props: any) {
       );
 
       successInfo('Настройки сохранены');
+
+      // Вызываем callback для обновления данных в родительском компоненте
+      if (onSettingsSaved) {
+        setTimeout(() => onSettingsSaved(), 3000);
+      }
     } catch (error) {
       console.error('Error saving settings:', error);
       errorInfo(`Ошибка сохранения настроек: ${error}`);
@@ -459,7 +469,7 @@ export function MyCommunitySettings(props: any) {
             label={
               <span>
                 {CommunityNameLabel}&nbsp;
-                <Tooltip title="Выберите из доступных вариантов понравившееся название для сообщества или предложите своё.">
+                <Tooltip title="Выберите из доступных вариантов понравившееся название для сообщества или предложите свое.">
                   <QuestionCircleOutlined />
                 </Tooltip>
               </span>

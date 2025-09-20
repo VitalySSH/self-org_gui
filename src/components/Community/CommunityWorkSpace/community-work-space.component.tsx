@@ -31,44 +31,58 @@ export function CommunityWorkSpace() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [communityData, setCommunityData] = useState(
-    null as CommunityWorkSpaceData | null
-  );
+  const [communityData, setCommunityData] =
+    useState<CommunityWorkSpaceData | null>(null);
   const [isBlocked, setIsBlocked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const loadCommunityData = useCallback(
+    async (communityId: string, showLoading = false) => {
+      if (showLoading) {
+        setIsLoading(true);
+      }
+
+      try {
+        const communityService = new CommunityAOService();
+        const resp = await communityService.getNameData(communityId);
+
+        setIsBlocked(resp.is_blocked);
+        if (resp.is_blocked) {
+          navigate('/no-much-page');
+          return;
+        }
+
+        setCommunityData({
+          id: communityId,
+          name: resp.name,
+          menuItems: resp.parent_data.map((it) => ({
+            key: `/communities/${it.id}`,
+            label: it.name,
+          })),
+        });
+      } catch (error) {
+        console.error('Failed to load community data:', error);
+      } finally {
+        if (showLoading) {
+          setIsLoading(false);
+        }
+      }
+    },
+    [navigate]
+  );
+
   const getCommunity = useCallback(() => {
     if (id && communityData?.id !== id) {
-      setIsLoading(true);
-      const communityService = new CommunityAOService();
-      communityService
-        .getNameData(id)
-        .then((resp) => {
-          setIsBlocked(resp.is_blocked);
-          if (resp.is_blocked) {
-            navigate('/no-much-page');
-            return;
-          }
-          setCommunityData({
-            id: id,
-            name: resp.name,
-            menuItems: resp.parent_data.map((it) => {
-              return {
-                key: `/communities/${it.id}`,
-                label: it.name,
-              };
-            }),
-          });
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error('Failed to load community data:', error);
-          setIsLoading(false);
-        });
+      loadCommunityData(id, true);
     } else if (id && communityData?.id === id) {
       setIsLoading(false);
     }
-  }, [communityData?.id, id, navigate]);
+  }, [communityData?.id, id, loadCommunityData]);
+
+  const refreshCommunityData = useCallback(() => {
+    if (!id) return;
+    loadCommunityData(id, false);
+  }, [id, loadCommunityData]);
 
   useEffect(() => {
     getCommunity();
@@ -170,7 +184,12 @@ export function CommunityWorkSpace() {
               />
               <Route
                 path="my-settings"
-                element={<MyCommunitySettings communityId={id || ''} />}
+                element={
+                  <MyCommunitySettings
+                    communityId={id || ''}
+                    onSettingsSaved={refreshCommunityData}
+                  />
+                }
               />
               <Route
                 path="my-delegates"

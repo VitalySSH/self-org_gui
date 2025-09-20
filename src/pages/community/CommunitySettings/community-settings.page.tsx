@@ -161,7 +161,7 @@ export function CommunitySettings(props: any) {
       className="settings-section"
     >
       <Row gutter={[24, 16]}>
-        <Col xs={12} sm={8} md={6}>
+        <Col xs={24} sm={12} lg={8}>
           <Form.Item name="quorum" label={QuorumLabel}>
             <div className="number-display">
               <InputNumber
@@ -174,7 +174,7 @@ export function CommunitySettings(props: any) {
             </div>
           </Form.Item>
         </Col>
-        <Col xs={12} sm={8} md={6}>
+        <Col xs={24} sm={12} lg={8}>
           <Form.Item name="vote" label={VoteLabel}>
             <div className="number-display">
               <InputNumber
@@ -187,7 +187,7 @@ export function CommunitySettings(props: any) {
             </div>
           </Form.Item>
         </Col>
-        <Col xs={12} sm={8} md={6}>
+        <Col xs={24} sm={12} lg={8}>
           <Form.Item
             name="significant_minority"
             label={SignificantMinorityLabel}
@@ -203,7 +203,22 @@ export function CommunitySettings(props: any) {
             </div>
           </Form.Item>
         </Col>
-        <Col xs={12} sm={8} md={6}>
+      </Row>
+    </Card>
+  );
+
+  const renderTimeSettings = () => (
+    <Card
+      title={
+        <Space>
+          <InfoCircleOutlined />
+          <span>Количественные настройки</span>
+        </Space>
+      }
+      className="settings-section"
+    >
+      <Row gutter={[24, 20]}>
+        <Col xs={24} sm={12} lg={8}>
           <Form.Item name="decision_delay" label={DecisionDelayLabel}>
             <div className="number-display">
               <InputNumber
@@ -216,7 +231,7 @@ export function CommunitySettings(props: any) {
             </div>
           </Form.Item>
         </Col>
-        <Col xs={12} sm={8} md={6}>
+        <Col xs={24} sm={12} lg={8}>
           <Form.Item name="dispute_time_limit" label={DisputeTimeLimitLabel}>
             <div className="number-display">
               <InputNumber
@@ -230,7 +245,7 @@ export function CommunitySettings(props: any) {
           </Form.Item>
         </Col>
         {isWorkGroup && (
-          <Col xs={12} sm={8} md={6}>
+          <Col xs={24} sm={12} lg={8}>
             <Form.Item name="workgroup" label={WorkGroupLabel}>
               <div className="number-display">
                 <InputNumber
@@ -430,6 +445,7 @@ export function CommunitySettings(props: any) {
         <Space direction="vertical" size="large" style={{ width: '100%' }}>
           {renderBasicInfo()}
           {renderVotingSettings()}
+          {renderTimeSettings()}
           {renderBooleanSettings()}
           {renderCategoriesAndResponsibilities()}
         </Space>

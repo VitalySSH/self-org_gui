@@ -319,7 +319,7 @@ export function NewCommunityForm(props: NewCommunityFormProps) {
       title={
         <Space>
           <InfoCircleOutlined />
-          <span>Временные параметры</span>
+          <span>Количественные параметры</span>
         </Space>
       }
       className="form-section"
