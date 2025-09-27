@@ -1,9 +1,5 @@
-import { Button, DatePicker, Form, Input, Modal, Switch } from 'antd';
-import {
-  FilterOutlined,
-  CheckOutlined,
-  CloseOutlined,
-} from '@ant-design/icons';
+import { Button, Form, Input, Modal } from 'antd';
+import { FilterOutlined } from '@ant-design/icons';
 import { FilterModalProps, Pagination } from 'src/interfaces';
 import { AuthApiClientService, CrudDataSourceService } from 'src/services';
 import { CategoryModel, StatusModel } from 'src/models';
@@ -11,61 +7,32 @@ import { Filters } from 'src/shared/types.ts';
 import { CustomSelect } from 'src/components';
 import {
   CategorySelectedCode,
-  EventCompletedCode,
-  InitiativeApprovedCode,
-  InitiativeRevokedCode,
-  OnConsiderationCode,
-  PrincipalAgreementCode,
-  RuleApprovedCode,
-  RuleRevokedCode,
+  ChallengeAtWorkCode,
+  ChallengeSolvedCode,
+  NewChallengeCode,
   SystemCategoryCode,
 } from 'src/consts';
-import { useState } from 'react';
 
-export function ResourceFilterModal({
+export function ChallengeFilterModal({
   communityId,
   visible,
   onCancel,
   onApply,
   onReset,
-  resource,
 }: FilterModalProps) {
   const [form] = Form.useForm();
 
   const statusService = new CrudDataSourceService(StatusModel);
   const categoryService = new CrudDataSourceService(CategoryModel);
   const authApiClientService = new AuthApiClientService();
-  const [isOneDayEvent, setIsOneDayEvent] = useState(false);
 
   const loadStatuses = async (pagination?: Pagination, filters?: Filters) => {
     const newFilters: Filters = filters || [];
-    switch (resource) {
-      case 'rule':
-        newFilters.push({
-          field: 'code',
-          op: 'in',
-          val: [
-            OnConsiderationCode,
-            PrincipalAgreementCode,
-            RuleApprovedCode,
-            RuleRevokedCode,
-          ],
-        });
-        break;
-      case 'initiative':
-        newFilters.push({
-          field: 'code',
-          op: 'in',
-          val: [
-            OnConsiderationCode,
-            PrincipalAgreementCode,
-            InitiativeApprovedCode,
-            InitiativeRevokedCode,
-            EventCompletedCode,
-          ],
-        });
-        break;
-    }
+    newFilters.push({
+      field: 'code',
+      op: 'in',
+      val: [NewChallengeCode, ChallengeAtWorkCode, ChallengeSolvedCode],
+    });
 
     return statusService.list(newFilters, undefined, pagination);
   };
@@ -107,7 +74,6 @@ export function ResourceFilterModal({
 
   const onClearForm = () => {
     form.resetFields();
-    setIsOneDayEvent(false);
     onCancel();
   };
 
@@ -143,45 +109,19 @@ export function ResourceFilterModal({
     >
       <div className="filter-modal-content">
         <Form
-          name="resourceFilterModalForm"
+          name="challengeFilterModalForm"
           form={form}
           onFinish={onApply}
           layout="vertical"
           className="filter-form"
         >
           <Form.Item
-            label="Наименование"
+            label="Название задачи"
             name="title"
-            tooltip="Поиск будет выполнен по названию"
+            tooltip="Поиск будет выполнен по названию задачи"
           >
             <Input placeholder="Поиск по названию" />
           </Form.Item>
-
-          <Form.Item
-            label="Описание"
-            name="content"
-            tooltip="Поиск будет выполнен по фрагменту описания"
-          >
-            <Input.TextArea placeholder="Поиск по описанию" />
-          </Form.Item>
-
-          {resource === 'initiative' && (
-            <>
-              <Form.Item label="Однодневное событие" name="isOneDayEvent">
-                <Switch
-                  checkedChildren={<CheckOutlined />}
-                  unCheckedChildren={<CloseOutlined />}
-                  value={isOneDayEvent}
-                  onChange={(value) => setIsOneDayEvent(value)}
-                />
-              </Form.Item>
-              {isOneDayEvent && (
-                <Form.Item label="Дата события" name="eventDate">
-                  <DatePicker format="DD.MM.YYYY" />
-                </Form.Item>
-              )}
-            </>
-          )}
 
           <Form.Item
             label="Статус"
@@ -201,7 +141,7 @@ export function ResourceFilterModal({
           <Form.Item
             label="Категория"
             name="category"
-            tooltip="Выберите категорию для фильтрации"
+            tooltip="Выберите категорию для фильтрации задач"
           >
             <CustomSelect
               bindLabel="name"
@@ -226,6 +166,14 @@ export function ResourceFilterModal({
               label="Выберите автора"
               enableSearch={true}
             />
+          </Form.Item>
+
+          <Form.Item
+            label="Описание задачи"
+            name="description"
+            tooltip="Поиск будет выполнен по фрагменту описания"
+          >
+            <Input.TextArea placeholder="Поиск по описанию" />
           </Form.Item>
         </Form>
       </div>

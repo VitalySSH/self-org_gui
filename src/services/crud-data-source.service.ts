@@ -25,6 +25,15 @@ import {
   RuleModel,
   ResponsibilityModel,
   NoncomplianceModel,
+  ChallengeModel,
+  SolutionModel,
+  CollectiveInteractionModel,
+  CombinationSourceElementModel,
+  InteractionCombinationModel,
+  InteractionCriticismModel,
+  InteractionSuggestionModel,
+  SolutionVersionModel,
+  VersionInteractionInfluenceModel,
 } from 'src/models';
 import * as types from 'src/shared/types';
 import { dataSourceConfig } from 'src/annotations';
@@ -50,6 +59,15 @@ import { baseApiUrl } from 'src/config/configuration';
     rule: RuleModel,
     responsibility: ResponsibilityModel,
     noncompliance: NoncomplianceModel,
+    challenge: ChallengeModel,
+    solution: SolutionModel,
+    solution_version: SolutionVersionModel,
+    collective_interaction: CollectiveInteractionModel,
+    combination_source_element: CombinationSourceElementModel,
+    interaction_combination: InteractionCombinationModel,
+    interaction_criticism: InteractionCriticismModel,
+    interaction_suggestion: InteractionSuggestionModel,
+    version_interaction_influence: VersionInteractionInfluenceModel,
   },
 })
 export class CrudDataSourceService<

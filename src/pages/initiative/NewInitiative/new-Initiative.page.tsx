@@ -581,7 +581,6 @@ export function NewInitiative(props: NewInitiativeProps) {
         */}
       </div>
 
-      {/* НОВЫЙ TOOLBAR С ЦЕНТРИРОВАННЫМИ КНОПКАМИ */}
       <div className="toolbar">
         <div className="toolbar-info-left">
           <div className="toolbar-info">

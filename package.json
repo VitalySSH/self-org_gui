@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/katex": "^0.16.7",
     "ahooks": "^3.8.4",
     "antd": "^5.24.3",
     "axios": "^1.6.8",
     "dayjs": "^1.11.13",
+    "katex": "^0.16.22",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",

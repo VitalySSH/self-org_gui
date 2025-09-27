@@ -38,3 +38,5 @@ export * from './AI/ResponsibilityCheckModal/responsibility-check-modal.componen
 export * from './Recommendation/recommendation-voting-modal.component';
 export * from './AI/AIChat/ai-chat.component';
 export * from './AI/AIOpinionAssistant/ai-opinion-assistant.component';
+export * from './AdvancedEditor/advanced-editor.component';
+export * from './FilterModal/ChallengeFilterModal/challenge-filter-modal.component';

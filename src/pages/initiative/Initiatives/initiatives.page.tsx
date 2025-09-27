@@ -157,6 +157,14 @@ export function Initiatives(props: InitiativesProps) {
       });
     }
 
+    if (values.category) {
+      newFilters.push({
+        field: 'category.id',
+        op: 'equals',
+        val: values.category.id,
+      });
+    }
+
     if (values.status) {
       newFilters.push({
         field: 'status.id',

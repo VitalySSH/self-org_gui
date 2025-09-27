@@ -16,6 +16,7 @@ import {
   InitiativeDetail,
   NewDelegate,
   DelegateDetail,
+  NewChallenge,
 } from 'src/pages';
 import { DownOutlined } from '@ant-design/icons';
 import { AuthHeaderIcons, SiderBar } from 'src/components';
@@ -221,6 +222,10 @@ export function CommunityWorkSpace() {
               <Route
                 path="challenges"
                 element={<Challenges communityId={id || ''} />}
+              />
+              <Route
+                path="challenges/new"
+                element={<NewChallenge communityId={id || ''} />}
               />
               <Route
                 path="disputes"

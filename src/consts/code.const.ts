@@ -14,3 +14,6 @@ export const InitiativeApprovedCode = 'initiative_approved';
 export const InitiativeRevokedCode = 'initiative_revoked';
 export const CategorySelectedCode = 'category_selected';
 export const EventCompletedCode = 'event_completed';
+export const NewChallengeCode = 'new_challenge';
+export const ChallengeAtWorkCode = 'challenge_at_work';
+export const ChallengeSolvedCode = 'challenge_solved';
