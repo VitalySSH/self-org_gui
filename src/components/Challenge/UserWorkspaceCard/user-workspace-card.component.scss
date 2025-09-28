@@ -1,0 +1,628 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+.user-workspace-card {
+  border: 2px solid rgba($primary-color, 0.1);
+
+  .card-header {
+    background: linear-gradient(135deg, rgba($primary-color, 0.05) 0%, rgba($primary-color, 0.02) 100%);
+    margin: -24px -24px 16px -24px;
+    padding: 16px 24px;
+    border-radius: 12px 12px 0 0;
+    border-bottom: 1px solid rgba($primary-color, 0.1);
+
+    .card-title {
+      .card-icon {
+        background: linear-gradient(135deg, $primary-color 0%, rgba($primary-color, 0.8) 100%);
+      }
+    }
+  }
+
+  // Состояние без решения
+  &.no-solution {
+    .no-solution-content {
+      text-align: center;
+      padding: 40px 20px;
+
+      .no-solution-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 24px;
+        background: linear-gradient(135deg, rgba($primary-color, 0.1) 0%, rgba($primary-color, 0.05) 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .anticon {
+          font-size: 32px;
+          color: $primary-color;
+        }
+      }
+
+      h3 {
+        font-size: 24px;
+        font-weight: 600;
+        color: $heading-color;
+        margin: 0 0 16px 0;
+      }
+
+      p {
+        font-size: 16px;
+        color: $text-color;
+        line-height: 1.6;
+        margin: 0 0 32px 0;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .participate-button {
+        height: 48px;
+        padding: 0 32px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 8px;
+      }
+    }
+  }
+
+  // Контролы версий
+  .version-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: rgba($background-color, 0.3);
+    border-radius: 8px;
+    border: 1px solid $border-color;
+
+    .version-selector {
+      .version-select {
+        min-width: 200px;
+
+        .version-date {
+          color: rgba($text-color, 0.6);
+          font-size: 12px;
+        }
+      }
+
+      .version-divider {
+        height: 1px;
+        background: $border-color;
+        margin: 8px 0;
+      }
+    }
+
+    .version-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+
+      .save-buttons {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+
+        .save-current-button {
+          background: #52c41a;
+          border-color: #52c41a;
+          color: white;
+          font-size: 12px;
+          height: 28px;
+          padding: 0 12px;
+          border-radius: 4px;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background: rgba(#52c41a, 0.9);
+            border-color: rgba(#52c41a, 0.9);
+            transform: translateY(-1px);
+          }
+
+          .anticon {
+            font-size: 12px;
+          }
+        }
+
+        .save-new-version-button {
+          background: linear-gradient(135deg, #fa8c16 0%, #d46b08 100%);
+          border-color: #fa8c16;
+          color: white;
+          font-size: 12px;
+          height: 28px;
+          padding: 0 12px;
+          border-radius: 4px;
+          transition: all 0.2s ease;
+          box-shadow: 0 2px 4px rgba(#fa8c16, 0.2);
+
+          &:hover {
+            background: linear-gradient(135deg, rgba(#fa8c16, 0.9) 0%, rgba(#d46b08, 0.9) 100%);
+            border-color: rgba(#fa8c16, 0.9);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(#fa8c16, 0.3);
+          }
+
+          .anticon {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+
+  // Секция редактора
+  .solution-editor-section {
+    margin-bottom: 24px;
+  }
+
+  // ИИ действия
+  .ai-actions-section {
+    .ai-actions-header {
+      text-align: center;
+      margin-bottom: 20px;
+
+      h4 {
+        font-size: 18px;
+        font-weight: 600;
+        color: $heading-color;
+        margin: 0 0 8px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+
+        &:before {
+          content: '🤖';
+          font-size: 20px;
+        }
+      }
+
+      p {
+        font-size: 14px;
+        color: $text-color;
+        margin: 0;
+      }
+    }
+
+    .ai-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      .ai-button {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+        border: none;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 44px;
+        flex: 1;
+        min-width: 180px;
+        justify-content: center;
+
+        &:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(#6366f1, 0.3);
+        }
+
+        &:disabled {
+          background: #ccc;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
+        }
+
+        &.ideas-button {
+          background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+
+          &:hover:not(:disabled) {
+            box-shadow: 0 4px 12px rgba(#f59e0b, 0.3);
+          }
+        }
+
+        &.improvements-button {
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+
+          &:hover:not(:disabled) {
+            box-shadow: 0 4px 12px rgba(#10b981, 0.3);
+          }
+        }
+
+        &.criticism-button {
+          background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+
+          &:hover:not(:disabled) {
+            box-shadow: 0 4px 12px rgba(#ef4444, 0.3);
+          }
+        }
+
+        .anticon {
+          font-size: 16px;
+        }
+      }
+    }
+
+    .ai-processing {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 12px;
+      background: rgba($primary-color, 0.05);
+      border-radius: 6px;
+      color: $text-color;
+      font-size: 14px;
+    }
+  }
+
+  // История версий
+  .version-history {
+    margin-top: 24px;
+    padding: 20px;
+    background: rgba($background-color, 0.5);
+    border-radius: 8px;
+    border: 1px solid $border-color;
+
+    h4 {
+      font-size: 16px;
+      font-weight: 600;
+      color: $heading-color;
+      margin: 0 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      &:before {
+        content: '📚';
+        font-size: 16px;
+      }
+    }
+
+    .version-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .version-item {
+        padding: 12px 16px;
+        border: 1px solid $border-color;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: white;
+
+        &:hover {
+          border-color: $primary-color;
+          background: rgba($primary-color, 0.02);
+        }
+
+        &.active {
+          border-color: $primary-color;
+          background: rgba($primary-color, 0.05);
+        }
+
+        .version-info {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 4px;
+
+          .version-number {
+            font-weight: 600;
+            color: $primary-color;
+            font-size: 14px;
+          }
+
+          .version-date {
+            font-size: 12px;
+            color: rgba($text-color, 0.6);
+          }
+        }
+
+        .version-description {
+          font-size: 13px;
+          color: $text-color;
+          font-style: italic;
+        }
+      }
+    }
+  }
+}
+
+// Мобильная адаптация
+@media (max-width: 768px) {
+  .user-workspace-card {
+    .card-header {
+      margin: -16px -16px 12px -16px;
+      padding: 12px 16px;
+    }
+
+    &.no-solution {
+      .no-solution-content {
+        padding: 32px 16px;
+
+        .no-solution-icon {
+          width: 60px;
+          height: 60px;
+          margin-bottom: 20px;
+
+          .anticon {
+            font-size: 24px;
+          }
+        }
+
+        h3 {
+          font-size: 20px;
+          margin-bottom: 12px;
+        }
+
+        p {
+          font-size: 15px;
+          margin-bottom: 24px;
+        }
+
+        .participate-button {
+          height: 44px;
+          padding: 0 24px;
+          font-size: 15px;
+        }
+      }
+    }
+
+    .version-controls {
+      flex-direction: column;
+      gap: 12px;
+      align-items: stretch;
+      margin-bottom: 16px;
+      padding: 12px;
+
+      .version-selector {
+        .version-select {
+          min-width: auto;
+          width: 100%;
+        }
+      }
+
+      .version-actions {
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+
+        .save-buttons {
+          display: flex;
+          gap: 6px;
+          width: 100%;
+
+          .save-current-button,
+          .save-new-version-button {
+            flex: 1;
+            height: 36px;
+            font-size: 13px;
+            padding: 0 12px;
+          }
+        }
+      }
+    }
+
+    .ai-actions-section {
+      .ai-actions-header {
+        margin-bottom: 16px;
+
+        h4 {
+          font-size: 16px;
+        }
+
+        p {
+          font-size: 13px;
+        }
+      }
+
+      .ai-actions {
+        flex-direction: column;
+        gap: 8px;
+
+        .ai-button {
+          width: 100%;
+          min-width: auto;
+          padding: 14px 20px;
+        }
+      }
+    }
+
+    .version-history {
+      margin-top: 20px;
+      padding: 16px;
+
+      .version-list {
+        .version-item {
+          padding: 10px 12px;
+
+          .version-info {
+            gap: 8px;
+
+            .version-number {
+              font-size: 13px;
+            }
+
+            .version-date {
+              font-size: 11px;
+            }
+          }
+
+          .version-description {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .user-workspace-card {
+    .card-header {
+      margin: -12px -12px 8px -12px;
+      padding: 8px 12px;
+    }
+
+    &.no-solution {
+      .no-solution-content {
+        padding: 24px 12px;
+
+        h3 {
+          font-size: 18px;
+        }
+
+        p {
+          font-size: 14px;
+        }
+      }
+    }
+
+    .version-controls {
+      padding: 10px;
+
+      .version-actions {
+        .save-buttons {
+          flex-direction: column;
+          gap: 4px;
+          width: 100%;
+
+          .save-current-button,
+          .save-new-version-button {
+            width: 100%;
+            height: 32px;
+            font-size: 12px;
+            justify-content: center;
+          }
+        }
+      }
+    }
+
+    .ai-actions-section {
+      .ai-actions {
+        .ai-button {
+          padding: 12px 16px;
+          font-size: 13px;
+        }
+      }
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  .user-workspace-card {
+    border-color: rgba($primary-color, 0.2);
+
+    .card-header {
+      background: rgba($primary-color, 0.1);
+      border-bottom-color: rgba($primary-color, 0.2);
+    }
+
+    &.no-solution {
+      .no-solution-content {
+        h3 {
+          color: #ffffff;
+        }
+
+        p {
+          color: rgba(255, 255, 255, 0.8);
+        }
+      }
+    }
+
+    .version-controls {
+      background: rgba(#434343, 0.3);
+      border-color: #434343;
+
+      .version-actions {
+        .save-buttons {
+          .save-current-button {
+            background: #52c41a;
+            border-color: #52c41a;
+
+            &:hover {
+              background: rgba(#52c41a, 0.9);
+              border-color: rgba(#52c41a, 0.9);
+            }
+          }
+
+          .save-new-version-button {
+            background: linear-gradient(135deg, #fa8c16 0%, #d46b08 100%);
+            border-color: #fa8c16;
+
+            &:hover {
+              background: linear-gradient(135deg, rgba(#fa8c16, 0.9) 0%, rgba(#d46b08, 0.9) 100%);
+              border-color: rgba(#fa8c16, 0.9);
+            }
+          }
+        }
+      }
+    }
+
+    .ai-actions-section {
+      .ai-actions-header {
+        h4 {
+          color: #ffffff;
+        }
+
+        p {
+          color: rgba(255, 255, 255, 0.8);
+        }
+      }
+
+      .ai-processing {
+        background: rgba($primary-color, 0.1);
+        color: rgba(255, 255, 255, 0.9);
+      }
+    }
+
+    .version-history {
+      background: rgba(#434343, 0.3);
+      border-color: #434343;
+
+      h4 {
+        color: #ffffff;
+      }
+
+      .version-list {
+        .version-item {
+          background: #2a2a2a;
+          border-color: #434343;
+          color: rgba(255, 255, 255, 0.9);
+
+          &:hover {
+            background: rgba($primary-color, 0.1);
+          }
+
+          &.active {
+            background: rgba($primary-color, 0.15);
+          }
+
+          .version-info {
+            .version-date {
+              color: rgba(255, 255, 255, 0.6);
+            }
+          }
+
+          .version-description {
+            color: rgba(255, 255, 255, 0.7);
+          }
+        }
+      }
+    }
+  }
+}

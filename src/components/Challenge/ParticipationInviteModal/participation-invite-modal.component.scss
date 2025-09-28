@@ -1,0 +1,544 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+.participation-invite-modal {
+  .ant-modal-content {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .ant-modal-body {
+    padding: 0;
+  }
+
+  .modal-content {
+    .modal-header {
+      text-align: center;
+      padding: 32px 24px 24px;
+      background: linear-gradient(135deg, rgba($primary-color, 0.05) 0%, rgba($primary-color, 0.02) 100%);
+      border-bottom: 1px solid rgba($primary-color, 0.1);
+
+      .modal-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 20px;
+        background: linear-gradient(135deg, $primary-color 0%, rgba($primary-color, 0.8) 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .anticon {
+          font-size: 28px;
+          color: white;
+        }
+      }
+
+      h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: $heading-color;
+        margin: 0 0 12px 0;
+      }
+
+      p {
+        font-size: 16px;
+        color: $text-color;
+        line-height: 1.6;
+        margin: 0;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    .participation-options {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      .option-card {
+        border: 2px solid $border-color;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        padding: 0;
+
+        &:hover {
+          border-color: $primary-color;
+          box-shadow: 0 4px 12px rgba($primary-color, 0.15);
+          transform: translateY(-2px);
+        }
+
+        .ant-card-body {
+          padding: 20px;
+        }
+
+        &.author-solution-option {
+          border-color: rgba($success-color, 0.3);
+
+          &:hover {
+            border-color: $success-color;
+            box-shadow: 0 4px 12px rgba($success-color, 0.15);
+          }
+
+          .option-icon {
+            background: linear-gradient(135deg, $success-color 0%, rgba($success-color, 0.8) 100%);
+          }
+        }
+
+        &.ai-direction-option {
+          border-color: rgba($primary-color, 0.3);
+
+          &:hover {
+            border-color: $primary-color;
+            box-shadow: 0 4px 12px rgba($primary-color, 0.15);
+          }
+
+          .option-icon {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+          }
+        }
+
+        &.scratch-option {
+          border-color: rgba(#fa8c16, 0.3);
+
+          &:hover {
+            border-color: #fa8c16;
+            box-shadow: 0 4px 12px rgba(#fa8c16, 0.15);
+          }
+
+          .option-icon {
+            background: linear-gradient(135deg, #fa8c16 0%, #d46b08 100%);
+          }
+        }
+
+        .option-content {
+          display: flex;
+          align-items: flex-start;
+          gap: 16px;
+
+          .option-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            .anticon {
+              font-size: 20px;
+              color: white;
+            }
+          }
+
+          .option-info {
+            flex: 1;
+
+            h3 {
+              font-size: 18px;
+              font-weight: 600;
+              color: $heading-color;
+              margin: 0 0 8px 0;
+            }
+
+            p {
+              font-size: 14px;
+              color: $text-color;
+              line-height: 1.6;
+              margin: 0 0 12px 0;
+            }
+
+            .option-features {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 8px;
+
+              span {
+                background: rgba($primary-color, 0.1);
+                color: $primary-color;
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-size: 12px;
+                font-weight: 500;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .modal-info {
+      padding: 0 24px 24px;
+
+      .info-section {
+        display: flex;
+        gap: 12px;
+        padding: 16px;
+        background: rgba($info-color, 0.05);
+        border: 1px solid rgba($info-color, 0.1);
+        border-radius: 8px;
+        margin-bottom: 16px;
+
+        .info-icon {
+          color: $info-color;
+          font-size: 18px;
+          flex-shrink: 0;
+          margin-top: 2px;
+        }
+
+        .info-text {
+          flex: 1;
+
+          strong {
+            font-size: 14px;
+            font-weight: 600;
+            color: $heading-color;
+            display: block;
+            margin-bottom: 4px;
+          }
+
+          p {
+            font-size: 13px;
+            color: $text-color;
+            line-height: 1.5;
+            margin: 0;
+          }
+        }
+      }
+
+      .stats-section {
+        .stats-label {
+          font-size: 13px;
+          font-weight: 600;
+          color: $heading-color;
+          display: block;
+          margin-bottom: 8px;
+        }
+
+        .stats-items {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+
+          .stats-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: $text-color;
+
+            .stats-icon {
+              color: $primary-color;
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+
+    .modal-actions {
+      padding: 16px 24px 24px;
+      text-align: center;
+      border-top: 1px solid $border-color;
+
+      .ant-btn {
+        min-width: 120px;
+        height: 40px;
+        border-radius: 6px;
+      }
+    }
+  }
+}
+
+// Мобильная адаптация
+@media (max-width: 768px) {
+  .participation-invite-modal {
+    .ant-modal {
+      width: 90% !important;
+      max-width: 500px;
+      margin: 20px auto;
+    }
+
+    .modal-content {
+      .modal-header {
+        padding: 24px 16px 20px;
+
+        .modal-icon {
+          width: 56px;
+          height: 56px;
+          margin-bottom: 16px;
+
+          .anticon {
+            font-size: 24px;
+          }
+        }
+
+        h2 {
+          font-size: 20px;
+          margin-bottom: 8px;
+        }
+
+        p {
+          font-size: 15px;
+        }
+      }
+
+      .participation-options {
+        padding: 16px;
+        gap: 12px;
+
+        .option-card {
+          .ant-card-body {
+            padding: 16px;
+          }
+
+          .option-content {
+            gap: 12px;
+
+            .option-icon {
+              width: 40px;
+              height: 40px;
+              border-radius: 8px;
+
+              .anticon {
+                font-size: 18px;
+              }
+            }
+
+            .option-info {
+              h3 {
+                font-size: 16px;
+                margin-bottom: 6px;
+              }
+
+              p {
+                font-size: 13px;
+                margin-bottom: 10px;
+              }
+
+              .option-features {
+                gap: 6px;
+
+                span {
+                  padding: 3px 6px;
+                  font-size: 11px;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .modal-info {
+        padding: 0 16px 16px;
+
+        .info-section {
+          padding: 12px;
+          margin-bottom: 12px;
+
+          .info-icon {
+            font-size: 16px;
+          }
+
+          .info-text {
+            strong {
+              font-size: 13px;
+            }
+
+            p {
+              font-size: 12px;
+            }
+          }
+        }
+
+        .stats-section {
+          .stats-label {
+            font-size: 12px;
+            margin-bottom: 6px;
+          }
+
+          .stats-items {
+            gap: 8px;
+
+            .stats-item {
+              font-size: 12px;
+
+              .stats-icon {
+                font-size: 13px;
+              }
+            }
+          }
+        }
+      }
+
+      .modal-actions {
+        padding: 12px 16px 16px;
+
+        .ant-btn {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .participation-invite-modal {
+    .ant-modal {
+      width: 95% !important;
+      margin: 10px auto;
+    }
+
+    .modal-content {
+      .modal-header {
+        padding: 20px 12px 16px;
+
+        h2 {
+          font-size: 18px;
+        }
+
+        p {
+          font-size: 14px;
+        }
+      }
+
+      .participation-options {
+        padding: 12px;
+
+        .option-card {
+          .option-content {
+            flex-direction: column;
+            text-align: center;
+            gap: 8px;
+
+            .option-icon {
+              align-self: center;
+            }
+
+            .option-info {
+              h3 {
+                font-size: 15px;
+              }
+
+              .option-features {
+                justify-content: center;
+              }
+            }
+          }
+        }
+      }
+
+      .modal-info {
+        padding: 0 12px 12px;
+
+        .stats-section {
+          .stats-items {
+            flex-direction: column;
+            gap: 4px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  .participation-invite-modal {
+    .ant-modal-content {
+      background: #2a2a2a;
+    }
+
+    .modal-content {
+      .modal-header {
+        background: rgba($primary-color, 0.1);
+        border-bottom-color: rgba($primary-color, 0.2);
+
+        h2 {
+          color: #ffffff;
+        }
+
+        p {
+          color: rgba(255, 255, 255, 0.8);
+        }
+      }
+
+      .participation-options {
+        .option-card {
+          background: #2a2a2a;
+          border-color: #434343;
+
+          &:hover {
+            border-color: $primary-color;
+          }
+
+          &.author-solution-option:hover {
+            border-color: $success-color;
+          }
+
+          &.ai-direction-option:hover {
+            border-color: $primary-color;
+          }
+
+          &.scratch-option:hover {
+            border-color: #fa8c16;
+          }
+
+          .option-content {
+            .option-info {
+              h3 {
+                color: #ffffff;
+              }
+
+              p {
+                color: rgba(255, 255, 255, 0.8);
+              }
+
+              .option-features {
+                span {
+                  background: rgba($primary-color, 0.2);
+                  color: $primary-color;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .modal-info {
+        .info-section {
+          background: rgba($info-color, 0.1);
+          border-color: rgba($info-color, 0.2);
+
+          .info-text {
+            strong {
+              color: #ffffff;
+            }
+
+            p {
+              color: rgba(255, 255, 255, 0.8);
+            }
+          }
+        }
+
+        .stats-section {
+          .stats-label {
+            color: #ffffff;
+          }
+
+          .stats-items {
+            .stats-item {
+              color: rgba(255, 255, 255, 0.8);
+            }
+          }
+        }
+      }
+
+      .modal-actions {
+        border-top-color: #434343;
+      }
+    }
+  }
+}

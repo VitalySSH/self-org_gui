@@ -23,6 +23,7 @@ export * from './rule/RuleDetail/rule-detail.page';
 export * from './dispute/Disputes/disputes.page';
 export * from './challenge/Challenges/challenges.page';
 export * from './challenge/NewChallenge/new-challenge.page';
+export * from './challenge/ChallengeDetail/challenge-detail.page';
 export * from './delegate/MyDelegates/my-delegates.page';
 export * from './delegate/NewDelegate/new-delegate.page';
 export * from './delegate/DelegateDetail/delegate-detail.page';

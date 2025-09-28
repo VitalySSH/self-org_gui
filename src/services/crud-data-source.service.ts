@@ -172,15 +172,15 @@ export class CrudDataSourceService<
         relations[attr] = this.modelToJsonApi(model[attr]);
       }
     });
-    Object.keys(model.manyToMany).forEach((attr) => {
-      if (Array.isArray(model[attr])) {
+    for (const [attr, meta] of Object.entries(model.manyToMany)) {
+      if (!meta.isBackRef && Array.isArray(model[attr])) {
         const manyToMany: CrudApiDataInterface[] = [];
         model[attr].forEach((relation: T) => {
           manyToMany.push(this.modelToJsonApi(relation));
         });
         relations[attr] = manyToMany;
       }
-    });
+    }
 
     jsonApi['attributes'] = attributes;
     jsonApi['relations'] = relations;

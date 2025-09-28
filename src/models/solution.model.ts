@@ -29,7 +29,7 @@ export class SolutionModel extends ApiModel {
   @oneToMany('challenge')
   challenge!: ChallengeModel;
 
-  @manyToMany('solution_version')
+  @manyToMany('solution_version', true)
   versions?: SolutionVersionModel[];
 
   @manyToMany('collective_interaction')

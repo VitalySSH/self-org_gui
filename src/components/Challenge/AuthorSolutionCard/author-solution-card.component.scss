@@ -1,0 +1,178 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+.author-solution-card {
+  border: 2px solid rgba($success-color, 0.1);
+
+  .card-header {
+    background: linear-gradient(135deg, rgba($success-color, 0.05) 0%, rgba($success-color, 0.02) 100%);
+    margin: -24px -24px 16px -24px;
+    padding: 16px 24px;
+    border-radius: 12px 12px 0 0;
+    border-bottom: 1px solid rgba($success-color, 0.1);
+
+    .card-title {
+      .card-icon {
+        background: linear-gradient(135deg, $success-color 0%, rgba($success-color, 0.8) 100%);
+      }
+    }
+  }
+
+  .solution-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    background: rgba($background-color, 0.3);
+    border-radius: 8px;
+    border: 1px solid $border-color;
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: $text-color;
+
+      .meta-icon {
+        color: $success-color;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .author-solution-text {
+    background: rgba($success-color, 0.02);
+    border-color: rgba($success-color, 0.1);
+    min-height: 120px;
+    max-height: 300px;
+    overflow-y: auto;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .change-description {
+    background: rgba($info-color, 0.05);
+    border-color: rgba($info-color, 0.1);
+    font-style: italic;
+    color: rgba($text-color, 0.8);
+  }
+
+  .author-solution-note {
+    margin-top: 20px;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba($success-color, 0.08) 0%, rgba($success-color, 0.03) 100%);
+    border: 1px solid rgba($success-color, 0.15);
+    border-radius: 8px;
+    border-left: 4px solid $success-color;
+
+    p {
+      margin: 0;
+      font-size: 14px;
+      color: $text-color;
+      line-height: 1.5;
+    }
+  }
+}
+
+// Мобильная адаптация
+@media (max-width: 768px) {
+  .author-solution-card {
+    .card-header {
+      margin: -16px -16px 12px -16px;
+      padding: 12px 16px;
+    }
+
+    .solution-meta {
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding: 10px 12px;
+
+      .meta-item {
+        font-size: 12px;
+      }
+    }
+
+    .author-solution-text {
+      font-size: 15px;
+      max-height: 250px;
+    }
+
+    .author-solution-note {
+      margin-top: 16px;
+      padding: 12px;
+
+      p {
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .author-solution-card {
+    .card-header {
+      margin: -12px -12px 8px -12px;
+      padding: 8px 12px;
+    }
+
+    .solution-meta {
+      gap: 6px;
+      margin-bottom: 12px;
+      padding: 8px 10px;
+
+      .meta-item {
+        font-size: 11px;
+      }
+    }
+
+    .author-solution-text {
+      font-size: 14px;
+      max-height: 200px;
+    }
+  }
+}
+
+// Темная тема
+.dark-theme {
+  .author-solution-card {
+    border-color: rgba($success-color, 0.2);
+
+    .card-header {
+      background: rgba($success-color, 0.1);
+      border-bottom-color: rgba($success-color, 0.2);
+    }
+
+    .solution-meta {
+      background: rgba(#434343, 0.3);
+      border-color: #434343;
+
+      .meta-item {
+        color: rgba(255, 255, 255, 0.8);
+      }
+    }
+
+    .author-solution-text {
+      background: rgba($success-color, 0.05);
+      border-color: rgba($success-color, 0.2);
+      color: #ffffff;
+    }
+
+    .change-description {
+      background: rgba($info-color, 0.1);
+      border-color: rgba($info-color, 0.2);
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .author-solution-note {
+      background: rgba($success-color, 0.1);
+      border-color: rgba($success-color, 0.25);
+
+      p {
+        color: rgba(255, 255, 255, 0.9);
+      }
+    }
+  }
+}
