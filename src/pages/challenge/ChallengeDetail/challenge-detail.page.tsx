@@ -18,10 +18,7 @@ import {
   AIResponseModal,
 } from 'src/components';
 import './challenge-detail.page.scss';
-
-interface ChallengeDetailPageProps {
-  communityId: string;
-}
+import { CompletedSolution, ThinkingDirection } from 'src/interfaces';
 
 interface UserSolution {
   solution: SolutionModel;
@@ -34,7 +31,7 @@ interface AuthorSolution {
   currentVersion: SolutionVersionModel;
 }
 
-export function ChallengeDetail(props: ChallengeDetailPageProps) {
+export function ChallengeDetail() {
   const { id } = useParams();
   const authData = useAuth();
   const [messageApi, contextHolder] = message.useMessage();
@@ -46,7 +43,11 @@ export function ChallengeDetail(props: ChallengeDetailPageProps) {
     null
   );
   const [userSolution, setUserSolution] = useState<UserSolution | null>(null);
-  const [completedSolutions, setCompletedSolutions] = useState<any[]>([]);
+  const [completedSolutions, setCompletedSolutions] = useState<
+    CompletedSolution[]
+  >([]);
+  const [directions, setDirections] = useState<ThinkingDirection[]>([]);
+  const [isLoadingDirections, setIsLoadingDirections] = useState(false);
 
   // Состояния модальных окон
   const [showParticipationModal, setShowParticipationModal] = useState(false);
@@ -88,24 +89,26 @@ export function ChallengeDetail(props: ChallengeDetailPageProps) {
     if (!challenge?.creator?.id || isAuthor) return;
 
     try {
-      const authorSolutions = await solutionService.list([
-        { field: 'user_id', op: 'equals', val: challenge.creator.id },
-        { field: 'challenge.id', op: 'equals', val: challenge.id },
-      ]);
+      const authorSolutions = await solutionService.list(
+        [
+          { field: 'user_id', op: 'equals', val: challenge.creator.id },
+          { field: 'challenge.id', op: 'equals', val: challenge.id },
+        ],
+        undefined,
+        undefined,
+        ['versions']
+      );
 
       if (authorSolutions.data.length > 0) {
         const solution = authorSolutions.data[0];
-        const versions = await versionService.list(
-          [{ field: 'solution.id', op: 'equals', val: solution.id }],
-          [{ field: 'version_number', direction: 'desc' }]
+        const versions = (solution.versions || []).sort(
+          (a, b) => b.version_number - a.version_number
         );
 
-        if (versions.data.length > 0) {
-          setAuthorSolution({
-            solution,
-            currentVersion: versions.data[0],
-          });
-        }
+        setAuthorSolution({
+          solution,
+          currentVersion: versions[0],
+        });
       }
     } catch (error) {
       console.error('Error loading author solution:', error);
@@ -117,22 +120,26 @@ export function ChallengeDetail(props: ChallengeDetailPageProps) {
     if (!authData.user?.id || !challenge?.id) return;
 
     try {
-      const userSolutions = await solutionService.list([
-        { field: 'user_id', op: 'equals', val: authData.user.id },
-        { field: 'challenge.id', op: 'equals', val: challenge.id },
-      ]);
+      const userSolutions = await solutionService.list(
+        [
+          { field: 'user_id', op: 'equals', val: authData.user.id },
+          { field: 'challenge.id', op: 'equals', val: challenge.id },
+        ],
+        undefined,
+        undefined,
+        ['versions']
+      );
 
       if (userSolutions.data.length > 0) {
         const solution = userSolutions.data[0];
-        const versions = await versionService.list(
-          [{ field: 'solution.id', op: 'equals', val: solution.id }],
-          [{ field: 'version_number', direction: 'desc' }]
+        const versions = (solution.versions || []).sort(
+          (a, b) => b.version_number - a.version_number
         );
 
         setUserSolution({
           solution,
-          currentVersion: versions.data[0],
-          allVersions: versions.data,
+          currentVersion: versions[0],
+          allVersions: versions,
         });
       }
     } catch (error) {
@@ -140,10 +147,29 @@ export function ChallengeDetail(props: ChallengeDetailPageProps) {
     }
   }, [authData.user?.id, challenge?.id]);
 
-  // Загрузка готовых решений
   const fetchCompletedSolutions = useCallback(async () => {
-    // TODO: Заглушка - реализовать получение решений со статусом 'completed'
-    setCompletedSolutions([]);
+    const response = await solutionService.list(
+      [
+        { field: 'status', op: 'equals', val: 'completed' },
+        { field: 'challenge.id', op: 'equals', val: challenge?.id },
+      ],
+      undefined,
+      undefined,
+      ['user']
+    );
+    const solutionsData = response.data.map((solution) => {
+      return {
+        id: solution.id,
+        content: solution.current_content,
+        authorName: solution.user?.fullname || 'Аноним',
+        authorId: solution.user.id || '',
+        createdAt: solution.created_at || '',
+        updatedAt: solution.updated_at || '',
+        isLiked: false,
+        likesCount: 0,
+      };
+    });
+    setCompletedSolutions(solutionsData);
   }, [challenge?.id]);
 
   // Основная загрузка данных
@@ -177,7 +203,23 @@ export function ChallengeDetail(props: ChallengeDetailPageProps) {
   };
 
   const handleUseAuthorSolution = async (authorSolutionText: string) => {
-    // TODO: Создание нового решения на основе решения автора
+    if (!challenge) return;
+
+    const solution = solutionService.createRecord();
+    solution.id = userSolution?.solution.id || '';
+    solution.current_content = authorSolutionText;
+    solution.challenge = challenge;
+    solution.user = authData.getUserRelation();
+    solution.status = 'draft';
+    const createdSolution = await solutionService.save(solution);
+
+    const newVersion = versionService.createRecord();
+    newVersion.content = authorSolutionText;
+    newVersion.version_number = 1;
+    newVersion.change_description = 'Выбрано решение автора в качестве основы';
+    newVersion.solution = createdSolution;
+    await versionService.save(newVersion);
+
     setShowParticipationModal(false);
     messageApi.success('Решение автора скопировано как основа');
     // Перезагружаем данные пользователя
@@ -187,24 +229,82 @@ export function ChallengeDetail(props: ChallengeDetailPageProps) {
   const handleSelectDirection = async () => {
     if (!challenge?.id || !authData.user?.id) return;
 
+    setIsLoadingDirections(true);
     try {
-      const directions = await llmService.getSolutionDirections(
+      const response = await llmService.getSolutionDirections(
         challenge.id,
         authData.user.id
       );
-      // TODO: Показать модальное окно с направлениями
+      setDirections(response.data.directions);
+      setShowParticipationModal(false);
       setShowDirectionModal(true);
     } catch (error) {
       console.error('Error getting directions:', error);
       messageApi.error('Ошибка получения направлений');
+    } finally {
+      setIsLoadingDirections(false);
     }
   };
 
   const handleStartFromScratch = async () => {
-    // TODO: Создание пустого решения
+    const solution = solutionService.createRecord();
+    solution.challenge = challenge as ChallengeModel;
+    solution.user = authData.getUserRelation();
+    solution.current_content = '';
+    solution.current_content = '';
+    const createdSolution = await solutionService.save(solution);
+
+    const newVersion = versionService.createRecord();
+    newVersion.solution = createdSolution;
+    newVersion.content = '';
+    newVersion.version_number = 1;
+    newVersion.change_description = 'Оригинальное решение';
+    const createdVersion = await versionService.save(newVersion);
+
+    solution.versions = [createdVersion];
+    setUserSolution({
+      solution,
+      currentVersion: createdVersion,
+      allVersions: [createdVersion],
+    });
     setShowParticipationModal(false);
     messageApi.success('Создано новое решение');
     await fetchUserSolution();
+  };
+
+  const handleDirectionSelected = async (direction: ThinkingDirection) => {
+    if (!challenge) return;
+
+    try {
+      const solution = solutionService.createRecord();
+      solution.challenge = challenge;
+      solution.user = authData.getUserRelation();
+      solution.current_content = direction.initial_solution_text;
+      const createdSolution = await solutionService.save(solution);
+
+      const newVersion = versionService.createRecord();
+      newVersion.solution = createdSolution;
+      newVersion.content = direction.initial_solution_text;
+      newVersion.version_number = 1;
+      newVersion.change_description = `Выбран подход: "${direction.title}"`;
+      const createdVersion = await versionService.save(newVersion);
+
+      solution.versions = [createdVersion];
+      setUserSolution({
+        solution,
+        currentVersion: createdVersion,
+        allVersions: [createdVersion],
+      });
+
+      setShowDirectionModal(false);
+      messageApi.success(
+        `Направление "${direction.title}" выбрано, создано новое решение`
+      );
+      await fetchUserSolution();
+    } catch (error) {
+      console.error('Error creating solution from direction:', error);
+      messageApi.error('Ошибка создания решения на основе направления');
+    }
   };
 
   const handleAIRequest = async (
@@ -234,7 +334,7 @@ export function ChallengeDetail(props: ChallengeDetailPageProps) {
           break;
       }
 
-      setAIResponseData(response);
+      setAIResponseData(response.data);
       setShowAIResponseModal(true);
     } catch (error) {
       console.error(`Error getting ${type}:`, error);
@@ -262,6 +362,20 @@ export function ChallengeDetail(props: ChallengeDetailPageProps) {
     await versionService.save(newVersion);
     messageApi.success('Новая версия сохранена');
     await fetchUserSolution();
+  };
+
+  const handleDeleteInteraction = async () => {
+    setShowAIResponseModal(false);
+    if (aiResponseData?.interaction_id) {
+      try {
+        await llmService.deleteInteraction(aiResponseData.interaction_id);
+        messageApi.success('Взаимодействие c КИ удалено');
+        await fetchUserSolution();
+      } catch (error) {
+        console.error('Error deleting interaction:', error);
+        messageApi.error('Ошибка удаления взаимодействия c КИ');
+      }
+    }
   };
 
   if (loading) {
@@ -292,25 +406,25 @@ export function ChallengeDetail(props: ChallengeDetailPageProps) {
         <ChallengeInfoCard challenge={challenge} isAuthor={isAuthor} />
 
         {authorSolution && !isAuthor && (
-          <AuthorSolutionCard
-            authorSolution={authorSolution}
-            authorName={
-              challenge.creator?.first_name + ' ' + challenge.creator?.last_name
-            }
-          />
+          <AuthorSolutionCard authorSolution={authorSolution} />
         )}
 
         {/* Рабочая область пользователя */}
-        {userSolution && (
-          <UserWorkspaceCard
-            challenge={challenge}
-            userSolution={userSolution}
-            isAuthor={isAuthor}
-            onParticipate={handleParticipate}
-            onAIRequest={handleAIRequest}
-            onSaveNewVersion={handleSaveNewVersion}
-          />
-        )}
+        <UserWorkspaceCard
+          challenge={challenge}
+          userSolution={userSolution}
+          isAuthor={isAuthor}
+          onParticipate={handleParticipate}
+          onAIRequest={handleAIRequest}
+          onSaveNewVersion={handleSaveNewVersion}
+          onSolutionDeleted={async () => {
+            setUserSolution(null);
+            await fetchCompletedSolutions();
+          }}
+          onStatusChanged={async () => {
+            await fetchCompletedSolutions();
+          }}
+        />
 
         {/* Готовые решения */}
         <CompletedSolutionsCard
@@ -334,26 +448,26 @@ export function ChallengeDetail(props: ChallengeDetailPageProps) {
 
       <DirectionSelectionModal
         visible={showDirectionModal}
-        onCancel={() => setShowDirectionModal(false)}
-        onSelect={(direction) => {
-          // TODO: Создать решение на основе выбранного направления
+        onCancel={() => {
           setShowDirectionModal(false);
-          messageApi.success('Направление выбрано, создано новое решение');
-          fetchUserSolution();
+          setDirections([]);
         }}
+        onSelect={handleDirectionSelected}
+        directions={directions}
+        loading={isLoadingDirections}
       />
 
       <AIResponseModal
         visible={showAIResponseModal}
-        onCancel={() => setShowAIResponseModal(false)}
+        onCancel={handleDeleteInteraction}
         responseData={aiResponseData}
         interactionType={aiInteractionType}
         userSolution={userSolution}
-        onComplete={() => {
+        onComplete={async () => {
           setShowAIResponseModal(false);
           setAIResponseData(null);
           setAIInteractionType(null);
-          fetchUserSolution();
+          await fetchUserSolution();
         }}
       />
     </div>

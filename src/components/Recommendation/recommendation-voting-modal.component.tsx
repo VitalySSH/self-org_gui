@@ -41,8 +41,7 @@ export const RecommendationVotingModal = ({
       width={isMobile ? '100%' : '60%'}
       className="recommendation-modal"
       centered={!isMobile}
-      destroyOnClose
-      maskClosable
+      destroyOnHidden
       keyboard
       // Мобильные настройки
       {...(isMobile && {

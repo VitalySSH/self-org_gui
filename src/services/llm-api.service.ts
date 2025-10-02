@@ -61,6 +61,18 @@ export class LlmApiService extends DataSourceService {
     return await this.http.post<InteractionSaveResponse>(url, response);
   }
 
+  async deleteInteraction(interaction_id: string) {
+    const url = `interaction/${interaction_id}`;
+
+    return await this.http.delete<void>(url);
+  }
+
+  async deleteSolution(solution_id: string) {
+    const url = `solution/${solution_id}`;
+
+    return await this.http.delete<void>(url);
+  }
+
   async integrationToSolution(request: IntegrationRequest) {
     const url = 'integration/apply';
 

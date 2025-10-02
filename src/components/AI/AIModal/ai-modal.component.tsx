@@ -87,7 +87,7 @@ export function AIModal(props: AiModalProps) {
         maxWidth: isFullscreen ? 'none' : '800px',
       }}
       className="ai-summary-modal ai-modal-fade-in"
-      destroyOnClose
+      destroyOnHidden
       transitionName=""
     >
       {loading ? (

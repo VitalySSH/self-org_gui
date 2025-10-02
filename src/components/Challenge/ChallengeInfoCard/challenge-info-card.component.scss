@@ -1,6 +1,24 @@
 @use 'src/shared/assets/scss/variables' as *;
 
 .challenge-info-card {
+  .card-actions {
+    .metrics-button {
+      color: #10b981;
+      font-size: 12px;
+      height: 28px;
+      padding: 0 8px;
+
+      &:hover:not(:disabled) {
+        color: #059669;
+        background: rgba(#10b981, 0.1);
+      }
+
+      .anticon {
+        font-size: 12px;
+      }
+    }
+  }
+
   .challenge-title-section {
     margin-bottom: 20px;
 

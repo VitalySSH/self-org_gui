@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, Select, message } from 'antd';
+import { Card, Select, message, Tooltip, Button } from 'antd';
 import {
   ExperimentOutlined,
   UpOutlined,
@@ -7,11 +7,14 @@ import {
   FileTextOutlined,
   UserOutlined,
   TagOutlined,
-  CalendarOutlined,
+  LineChartOutlined,
+  // CalendarOutlined,
 } from '@ant-design/icons';
-import { ChallengeModel } from 'src/models';
+import { ChallengeModel, StatusModel } from 'src/models';
 import './challenge-info-card.component.scss';
-import { AdvancedEditor } from 'src/components';
+import { AdvancedEditor, CollectiveMetricsModal } from 'src/components';
+import { CrudDataSourceService, LlmApiService } from 'src/services';
+import { CollectiveMetricsResponse } from 'src/interfaces';
 
 interface ChallengeInfoCardProps {
   challenge: ChallengeModel;
@@ -33,12 +36,25 @@ export function ChallengeInfoCard({
   const [currentStatus, setCurrentStatus] = useState(
     challenge.status?.code || 'new'
   );
+  const llmService = new LlmApiService();
+  const [showMetricsModal, setShowMetricsModal] = useState(false);
+  const [metricsData, setMetricsData] =
+    useState<CollectiveMetricsResponse | null>(null);
+  const [loadingMetrics, setLoadingMetrics] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
+
+  const challengeService = new CrudDataSourceService(ChallengeModel);
+  const statusService = new CrudDataSourceService(StatusModel);
 
   const handleStatusChange = async (newStatus: string) => {
     try {
-      // TODO: Обновить статус задачи через API
       setCurrentStatus(newStatus);
+      const statuses = await statusService.list([
+        { field: 'code', op: 'equals', val: newStatus },
+      ]);
+      challenge.status = statuses.data[0];
+      await challengeService.save(challenge);
+
       messageApi.success('Статус задачи обновлен');
     } catch (error) {
       console.error('Error updating challenge status:', error);
@@ -46,15 +62,32 @@ export function ChallengeInfoCard({
     }
   };
 
-  const formatDate = (date: Date | string | undefined) => {
-    if (!date) return 'Не указано';
-    const d = typeof date === 'string' ? new Date(date) : date;
-    return d.toLocaleDateString('ru-RU', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
+  const handleShowMetrics = async () => {
+    if (!challenge?.id) return;
+
+    setShowMetricsModal(true);
+    setLoadingMetrics(true);
+
+    try {
+      const response = await llmService.getCollectiveMetrics(challenge.id);
+      setMetricsData(response.data);
+    } catch (error) {
+      console.error('Error loading collective metrics:', error);
+      messageApi.error('Ошибка загрузки метрик коллективного интеллекта');
+    } finally {
+      setLoadingMetrics(false);
+    }
   };
+
+  // const formatDate = (date: Date | string | undefined) => {
+  //   if (!date) return 'Не указано';
+  //   const d = typeof date === 'string' ? new Date(date) : date;
+  //   return d.toLocaleDateString('ru-RU', {
+  //     year: 'numeric',
+  //     month: 'long',
+  //     day: 'numeric',
+  //   });
+  // };
 
   const getCurrentStatusInfo = () => {
     return (
@@ -76,6 +109,18 @@ export function ChallengeInfoCard({
         </div>
 
         <div className="card-actions">
+          <Tooltip title="Метрики коллективного интеллекта">
+            <Button
+              type="text"
+              size="small"
+              icon={<LineChartOutlined />}
+              onClick={handleShowMetrics}
+              className="metrics-button"
+            >
+              Статистика
+            </Button>
+          </Tooltip>
+
           {isAuthor && (
             <Select
               value={currentStatus}
@@ -113,10 +158,10 @@ export function ChallengeInfoCard({
               </div>
             )}
 
-            <div className="meta-item">
-              <CalendarOutlined className="meta-icon" />
-              <span>Создано: {formatDate(challenge.created_at)}</span>
-            </div>
+            {/*<div className="meta-item">*/}
+            {/*  <CalendarOutlined className="meta-icon" />*/}
+            {/*  <span>Создано: {formatDate(challenge.created_at)}</span>*/}
+            {/*</div>*/}
 
             <div className="meta-item">
               <div className={`status-badge ${getCurrentStatusInfo().value}`}>
@@ -147,6 +192,13 @@ export function ChallengeInfoCard({
           </div>
         )}
       </div>
+
+      <CollectiveMetricsModal
+        visible={showMetricsModal}
+        onCancel={() => setShowMetricsModal(false)}
+        data={metricsData}
+        loading={loadingMetrics}
+      />
     </Card>
   );
 }

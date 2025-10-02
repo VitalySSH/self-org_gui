@@ -1,0 +1,371 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+.collective-metrics-modal {
+  .modal-content {
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid $border-color;
+
+      .modal-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        .anticon {
+          font-size: 24px;
+          color: white;
+        }
+      }
+
+      .modal-text {
+        flex: 1;
+
+        h2 {
+          font-size: 20px;
+          font-weight: 600;
+          color: $heading-color;
+          margin: 0 0 4px 0;
+        }
+
+        p {
+          font-size: 14px;
+          color: $text-color;
+          margin: 0;
+        }
+      }
+    }
+
+    .modal-body {
+      .loading-section {
+        text-align: center;
+        padding: 40px 20px;
+
+        p {
+          margin-top: 16px;
+          color: $text-color;
+        }
+      }
+
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+
+        .metric-card {
+          background: rgba($background-color, 0.5);
+          border: 1px solid $border-color;
+          border-radius: 8px;
+          padding: 20px;
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          transition: all 0.2s ease;
+
+          &:hover {
+            border-color: rgba(#10b981, 0.3);
+            box-shadow: 0 2px 8px rgba(#10b981, 0.1);
+          }
+
+          .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            &.solutions {
+              background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            }
+
+            &.participants {
+              background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            }
+
+            .anticon {
+              font-size: 24px;
+              color: white;
+            }
+          }
+
+          .metric-content {
+            flex: 1;
+
+            .metric-value {
+              font-size: 32px;
+              font-weight: 700;
+              color: $heading-color;
+              line-height: 1;
+              margin-bottom: 6px;
+            }
+
+            .metric-label {
+              font-size: 14px;
+              color: $text-color;
+            }
+          }
+        }
+      }
+
+      .average-metrics {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+
+        .average-card {
+          padding: 20px;
+          background: rgba($background-color, 0.3);
+          border: 1px solid $border-color;
+          border-radius: 8px;
+
+          .average-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+
+            .average-icon {
+              font-size: 18px;
+              color: #10b981;
+            }
+
+            h4 {
+              font-size: 15px;
+              font-weight: 600;
+              color: $heading-color;
+              margin: 0;
+            }
+          }
+
+          .average-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #10b981;
+            line-height: 1;
+            margin-bottom: 12px;
+          }
+
+          .average-bar {
+            height: 8px;
+            background: rgba($border-color, 0.5);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 12px;
+
+            .average-bar-fill {
+              height: 100%;
+              background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+              transition: width 0.6s ease;
+
+              &.ai {
+                background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%);
+              }
+            }
+          }
+
+          .average-description {
+            font-size: 13px;
+            color: $text-color;
+            line-height: 1.5;
+            margin: 0;
+          }
+        }
+      }
+
+      .intensity-section {
+        padding: 20px;
+        background: rgba($background-color, 0.3);
+        border: 1px solid $border-color;
+        border-radius: 8px;
+        text-align: center;
+
+        h4 {
+          font-size: 16px;
+          font-weight: 600;
+          color: $heading-color;
+          margin: 0 0 16px 0;
+        }
+
+        .intensity-badge {
+          display: inline-block;
+          padding: 12px 24px;
+          border-radius: 8px;
+          font-size: 18px;
+          font-weight: 600;
+          border: 2px solid;
+          margin-bottom: 16px;
+        }
+
+        .intensity-description {
+          font-size: 14px;
+          color: $text-color;
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .collective-metrics-modal {
+    .modal-content {
+      .modal-header {
+        .modal-icon {
+          width: 40px;
+          height: 40px;
+
+          .anticon {
+            font-size: 20px;
+          }
+        }
+
+        .modal-text {
+          h2 {
+            font-size: 18px;
+          }
+
+          p {
+            font-size: 13px;
+          }
+        }
+      }
+
+      .modal-body {
+        .metrics-grid,
+        .average-metrics {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+
+        .metrics-grid {
+          .metric-card {
+            padding: 16px;
+
+            .metric-icon {
+              width: 40px;
+              height: 40px;
+
+              .anticon {
+                font-size: 20px;
+              }
+            }
+
+            .metric-content {
+              .metric-value {
+                font-size: 24px;
+              }
+
+              .metric-label {
+                font-size: 13px;
+              }
+            }
+          }
+        }
+
+        .average-metrics {
+          .average-card {
+            padding: 16px;
+
+            .average-value {
+              font-size: 28px;
+            }
+
+            .average-description {
+              font-size: 12px;
+            }
+          }
+        }
+
+        .intensity-section {
+          padding: 16px;
+
+          h4 {
+            font-size: 15px;
+          }
+
+          .intensity-badge {
+            font-size: 16px;
+            padding: 10px 20px;
+          }
+
+          .intensity-description {
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.dark-theme {
+  .collective-metrics-modal {
+    .modal-content {
+      .modal-header {
+        border-bottom-color: #434343;
+
+        .modal-text {
+          h2 {
+            color: #ffffff;
+          }
+
+          p {
+            color: rgba(255, 255, 255, 0.8);
+          }
+        }
+      }
+
+      .modal-body {
+        .metrics-grid {
+          .metric-card {
+            background: rgba(#434343, 0.3);
+            border-color: #434343;
+
+            .metric-content {
+              .metric-value {
+                color: #ffffff;
+              }
+
+              .metric-label {
+                color: rgba(255, 255, 255, 0.7);
+              }
+            }
+          }
+        }
+
+        .average-metrics,
+        .intensity-section {
+          .average-card,
+          & {
+            background: rgba(#434343, 0.3);
+            border-color: #434343;
+          }
+
+          h4 {
+            color: #ffffff;
+          }
+
+          .average-description,
+          .intensity-description {
+            color: rgba(255, 255, 255, 0.8);
+          }
+
+          .average-bar {
+            background: rgba(#666, 0.5);
+          }
+        }
+      }
+    }
+  }
+}

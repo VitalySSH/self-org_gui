@@ -362,7 +362,7 @@ export const AIChat: React.FC<AIChatProps> = ({
         }}
         className="ai-chat-modal"
         closable={false}
-        destroyOnClose={true}
+        destroyOnHidden
       >
         <AIChatComponent
           onComplete={onComplete}

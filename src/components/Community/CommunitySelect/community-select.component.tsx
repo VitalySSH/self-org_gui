@@ -452,7 +452,7 @@ export function CommunitySelect(props: CommunitySelectProps) {
         width={isMobile ? '100%' : '60%'}
         className="custom-modal"
         centered
-        destroyOnClose
+        destroyOnHidden
         getContainer={() => containerRef.current || document.body}
       >
         <div className="new-community-form in-modal">

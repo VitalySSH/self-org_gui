@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Card, Select, Button, Spin, message, Tooltip } from 'antd';
+import { useState, useEffect } from 'react';
+import { Card, Select, Button, Spin, message, Tooltip, Modal } from 'antd';
 import {
   EditOutlined,
   RobotOutlined,
@@ -9,15 +9,18 @@ import {
   SaveOutlined,
   HistoryOutlined,
   PlusOutlined,
+  DeleteOutlined,
+  LineChartOutlined,
 } from '@ant-design/icons';
 import {
   ChallengeModel,
   SolutionModel,
   SolutionVersionModel,
 } from 'src/models';
-import { SolutionEditor } from 'src/components';
+import { SolutionAIInfluenceModal, SolutionEditor } from 'src/components';
 import './user-workspace-card.component.scss';
-import { CrudDataSourceService } from 'src/services';
+import { CrudDataSourceService, LlmApiService } from 'src/services';
+import { AIInfluenceResponse } from 'src/interfaces';
 
 interface UserSolution {
   solution: SolutionModel;
@@ -32,16 +35,18 @@ interface UserWorkspaceCardProps {
   onParticipate: () => void;
   onAIRequest: (type: 'ideas' | 'improvements' | 'criticism') => void;
   onSaveNewVersion: (content: string, versionNumber: number) => Promise<void>;
+  onSolutionDeleted?: () => void;
+  onStatusChanged?: () => void;
 }
 
 const statusOptions = [
   { value: 'draft', label: 'Черновик', color: '#999' },
-  {
-    value: 'ready_for_review',
-    label: 'Готово для просмотра',
-    color: '#fa8c16',
-  },
-  { value: 'completed', label: 'Завершено', color: '#52c41a' },
+  // {
+  //   value: 'ready_for_review',
+  //   label: 'Готово для просмотра',
+  //   color: '#fa8c16',
+  // },
+  { value: 'completed', label: 'Готово', color: '#52c41a' },
 ];
 
 export function UserWorkspaceCard({
@@ -49,26 +54,114 @@ export function UserWorkspaceCard({
   onParticipate,
   onAIRequest,
   onSaveNewVersion,
+  onSolutionDeleted,
+  onStatusChanged,
 }: UserWorkspaceCardProps) {
   const [messageApi, contextHolder] = message.useMessage();
-  const [selectedVersion, setSelectedVersion] = useState<number>(
-    userSolution?.currentVersion.version_number || 1
-  );
+  const [selectedVersion, setSelectedVersion] = useState<number>(1);
   const [showVersionHistory, setShowVersionHistory] = useState(false);
-  const [solutionStatus, setSolutionStatus] = useState(
-    userSolution?.solution.status || 'draft'
-  );
+  const [solutionStatus, setSolutionStatus] = useState('draft');
   const [isProcessingAI, setIsProcessingAI] = useState(false);
-  const [editedContent, setEditedContent] = useState(
-    userSolution?.currentVersion.content || ''
-  );
+  const [editedContent, setEditedContent] = useState('');
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [hasSubstantialChanges, setHasSubstantialChanges] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showInfluenceModal, setShowInfluenceModal] = useState(false);
+  const [influenceData, setInfluenceData] =
+    useState<AIInfluenceResponse | null>(null);
+  const [loadingInfluence, setLoadingInfluence] = useState(false);
 
   const solutionService = new CrudDataSourceService(SolutionModel);
   const versionService = new CrudDataSourceService(SolutionVersionModel);
+  const llmService = new LlmApiService();
 
-  // Если у пользователя нет решения
+  useEffect(() => {
+    if (userSolution) {
+      setSelectedVersion(userSolution.currentVersion.version_number);
+      setSolutionStatus(userSolution.solution.status || 'draft');
+      setEditedContent(userSolution.currentVersion.content || '');
+      setHasUnsavedChanges(false);
+      setHasSubstantialChanges(false);
+      setShowVersionHistory(false);
+    } else {
+      setSelectedVersion(1);
+      setSolutionStatus('draft');
+      setEditedContent('');
+      setHasUnsavedChanges(false);
+      setHasSubstantialChanges(false);
+      setShowVersionHistory(false);
+    }
+  }, [userSolution]);
+
+  const handleDeleteSolution = () => {
+    Modal.confirm({
+      title: 'Удалить своё решение?',
+      icon: <ExclamationCircleOutlined style={{ color: '#ff4d4f' }} />,
+      content: (
+        <div>
+          <p>
+            Вы уверены, что хотите удалить своё решение и прекратить участие в
+            этой задаче?
+          </p>
+          <p style={{ marginTop: '12px' }}>
+            <strong>Это действие нельзя отменить.</strong> Будут удалены:
+          </p>
+          <ul style={{ marginTop: '8px', paddingLeft: '20px' }}>
+            <li>Все версии вашего решения</li>
+            <li>История взаимодействий с коллективным интеллектом</li>
+            <li>Все связанные данные</li>
+          </ul>
+          <p style={{ marginTop: '12px', color: '#666' }}>
+            Вы сможете начать новое участие в любое время, но текущие данные
+            будут потеряны безвозвратно.
+          </p>
+        </div>
+      ),
+      okText: 'Да, удалить',
+      okType: 'danger',
+      cancelText: 'Отмена',
+      maskClosable: false,
+      keyboard: false,
+      onOk: async () => {
+        if (!userSolution?.solution.id) return;
+
+        setIsDeleting(true);
+        try {
+          await llmService.deleteSolution(userSolution.solution.id);
+          messageApi.success('Ваше решение успешно удалено');
+
+          if (onSolutionDeleted) {
+            onSolutionDeleted();
+          }
+        } catch (error) {
+          console.error('Error deleting solution:', error);
+          messageApi.error('Ошибка при удалении решения');
+        } finally {
+          setIsDeleting(false);
+        }
+      },
+    });
+  };
+
+  const handleShowInfluence = async () => {
+    if (!userSolution?.solution.id) return;
+
+    setShowInfluenceModal(true);
+    setLoadingInfluence(true);
+
+    try {
+      const response = await llmService.getSolutionAIInfluence(
+        userSolution.solution.id
+      );
+      setInfluenceData(response.data);
+    } catch (error) {
+      console.error('Error loading AI influence:', error);
+      messageApi.error('Ошибка загрузки статистики влияния ИИ');
+    } finally {
+      setLoadingInfluence(false);
+    }
+  };
+
   if (!userSolution) {
     return (
       <Card className="challenge-card user-workspace-card no-solution">
@@ -90,9 +183,9 @@ export function UserWorkspaceCard({
             </div>
             <h3>Присоединяйтесь к решению задачи</h3>
             <p>
-              Вы еще не участвуете в решении этой задачи. Присоединитесь к
-              коллективному поиску решения и получите помощь от ИИ и других
-              участников сообщества.
+              Ваш подход уникален и может стать тем самым ключевым элементом,
+              которого не хватает для прорыва. Внесите свой вклад в общее
+              решение и помогите ему эволюционировать.
             </p>
             <Button
               type="primary"
@@ -111,8 +204,16 @@ export function UserWorkspaceCard({
 
   const handleStatusChange = async (newStatus: string) => {
     try {
-      // TODO: Обновить статус решения через API
       setSolutionStatus(newStatus);
+      const solution = solutionService.createRecord();
+      solution.id = userSolution.solution.id;
+      solution.status = newStatus;
+      await solutionService.save(solution);
+
+      if (onStatusChanged) {
+        onStatusChanged();
+      }
+
       messageApi.success('Статус решения обновлен');
     } catch (error) {
       console.error('Error updating solution status:', error);
@@ -144,14 +245,14 @@ export function UserWorkspaceCard({
       content !== currentVersionContent && content.trim() !== '';
     setHasUnsavedChanges(hasChanges);
 
-    // Проверяем существенность изменений (более 10% от исходного текста или более 100 символов)
+    // Проверяем существенность изменений (более 20% от исходного текста или более 100 символов)
     if (hasChanges) {
       const originalLength = currentVersionContent.length;
       const changedLength = Math.abs(content.length - originalLength);
       const changePercentage =
         originalLength > 0 ? (changedLength / originalLength) * 100 : 100;
 
-      const isSubstantial = changePercentage > 10 || changedLength > 100;
+      const isSubstantial = changePercentage > 20 || changedLength > 100;
       setHasSubstantialChanges(isSubstantial);
     } else {
       setHasSubstantialChanges(false);
@@ -273,7 +374,7 @@ export function UserWorkspaceCard({
               onChange={handleVersionChange}
               disabled={hasUnsavedChanges}
               className="version-select"
-              dropdownRender={(menu) => (
+              popupRender={(menu) => (
                 <div>
                   {menu}
                   <div className="version-divider" />
@@ -342,6 +443,32 @@ export function UserWorkspaceCard({
             >
               {getStatusInfo(solutionStatus).label}
             </div>
+
+            <Tooltip title="Удалить своё решение и прекратить участие">
+              <Button
+                type="text"
+                size="small"
+                danger
+                icon={<DeleteOutlined />}
+                onClick={handleDeleteSolution}
+                loading={isDeleting}
+                className="delete-solution-button"
+              >
+                Удалить
+              </Button>
+            </Tooltip>
+
+            <Tooltip title="Статистика влияния коллективного интеллекта">
+              <Button
+                type="text"
+                size="small"
+                icon={<LineChartOutlined />}
+                onClick={handleShowInfluence}
+                className="influence-button"
+              >
+                Статистика
+              </Button>
+            </Tooltip>
           </div>
         </div>
 
@@ -350,7 +477,7 @@ export function UserWorkspaceCard({
           <SolutionEditor
             value={editedContent}
             onChange={handleContentChange}
-            disabled={
+            readonly={
               selectedVersion !== userSolution.currentVersion.version_number
             }
             placeholder="Начните писать ваше решение..."
@@ -436,6 +563,13 @@ export function UserWorkspaceCard({
           </div>
         )}
       </div>
+
+      <SolutionAIInfluenceModal
+        visible={showInfluenceModal}
+        onCancel={() => setShowInfluenceModal(false)}
+        data={influenceData}
+        loading={loadingInfluence}
+      />
     </Card>
   );
 }

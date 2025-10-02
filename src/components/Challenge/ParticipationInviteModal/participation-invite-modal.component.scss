@@ -1,54 +1,158 @@
 @use 'src/shared/assets/scss/variables' as *;
 
 .participation-invite-modal {
+  // Переопределяем стили враппера модального окна
+  &.ant-modal-wrap {
+    overflow: hidden !important;
+  }
+
+  // Основные настройки модального окна с высокой специфичностью
+  &.ant-modal-wrap .ant-modal {
+    max-width: 800px;
+    width: 90%;
+    max-height: calc(100vh - 100px) !important;
+    margin: 50px auto !important;
+    top: 0 !important;
+    padding-bottom: 0 !important;
+    transform: none !important;
+
+    // Для экранов с малой высотой
+    @media (max-height: 800px) {
+      margin: 40px auto !important;
+      max-height: calc(100vh - 80px) !important;
+    }
+
+    // Для очень низких экранов
+    @media (max-height: 700px) {
+      margin: 32px auto !important;
+      max-height: calc(100vh - 64px) !important;
+    }
+
+    // Для критически низких экранов
+    @media (max-height: 600px) {
+      margin: 24px auto !important;
+      max-height: calc(100vh - 48px) !important;
+    }
+  }
+
   .ant-modal-content {
     border-radius: 12px;
     overflow: hidden;
+    height: 100%;
+    max-height: inherit;
+    display: flex;
+    flex-direction: column;
+
+    // КРИТИЧНО: ограничиваем высоту контента модального окна
+    max-height: calc(100vh - 100px);
+
+    @media (max-height: 800px) {
+      max-height: calc(100vh - 80px);
+    }
+
+    @media (max-height: 700px) {
+      max-height: calc(100vh - 64px);
+    }
+
+    @media (max-height: 600px) {
+      max-height: calc(100vh - 48px);
+    }
   }
 
   .ant-modal-body {
-    padding: 0;
+    padding: 0 !important;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0; // Важно для правильной работы flex
   }
 
   .modal-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0; // Важно для правильной работы flex
+
     .modal-header {
-      text-align: center;
-      padding: 32px 24px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 24px 12px; // Еще более компактный
       background: linear-gradient(135deg, rgba($primary-color, 0.05) 0%, rgba($primary-color, 0.02) 100%);
       border-bottom: 1px solid rgba($primary-color, 0.1);
+      flex-shrink: 0;
 
       .modal-icon {
-        width: 64px;
-        height: 64px;
-        margin: 0 auto 20px;
+        width: 40px; // Еще меньше
+        height: 40px;
         background: linear-gradient(135deg, $primary-color 0%, rgba($primary-color, 0.8) 100%);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-shrink: 0;
 
         .anticon {
-          font-size: 28px;
+          font-size: 18px; // Пропорционально уменьшил
           color: white;
         }
       }
 
-      h2 {
-        font-size: 24px;
-        font-weight: 700;
-        color: $heading-color;
-        margin: 0 0 12px 0;
+      .modal-text {
+        flex: 1;
+        text-align: left;
+
+        h2 {
+          font-size: 18px; // Компактнее
+          font-weight: 700;
+          color: $heading-color;
+          margin: 0 0 4px 0; // Минимальный отступ
+          line-height: 1.3;
+        }
+
+        p {
+          font-size: 13px; // Меньше
+          color: $text-color;
+          line-height: 1.4;
+          margin: 0;
+        }
+      }
+    }
+
+    // Прокручиваемая область
+    .modal-scrollable-content {
+      flex: 1;
+      overflow-y: auto !important;
+      overflow-x: hidden;
+      min-height: 0; // Критически важно для flex
+      overscroll-behavior: contain; // Предотвращает прокрутку родительских элементов
+
+      // Кастомный скроллбар для WebKit браузеров
+      &::-webkit-scrollbar {
+        width: 6px;
       }
 
-      p {
-        font-size: 16px;
-        color: $text-color;
-        line-height: 1.6;
-        margin: 0;
-        max-width: 500px;
-        margin-left: auto;
-        margin-right: auto;
+      &::-webkit-scrollbar-track {
+        background: rgba($border-color, 0.3);
+        border-radius: 3px;
       }
+
+      &::-webkit-scrollbar-thumb {
+        background: rgba($primary-color, 0.4);
+        border-radius: 3px;
+
+        &:hover {
+          background: rgba($primary-color, 0.6);
+        }
+      }
+
+      // Firefox и другие браузеры
+      scrollbar-width: thin;
+      scrollbar-color: rgba($primary-color, 0.4) rgba($border-color, 0.3);
+
+      // Принудительное включение прокрутки
+      scroll-behavior: smooth;
     }
 
     .participation-options {
@@ -239,9 +343,15 @@
     }
 
     .modal-actions {
-      padding: 16px 24px 24px;
+      padding: 20px 24px 24px;
       text-align: center;
       border-top: 1px solid $border-color;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+      position: relative;
+      z-index: 10;
 
       .ant-btn {
         min-width: 120px;
@@ -255,33 +365,40 @@
 // Мобильная адаптация
 @media (max-width: 768px) {
   .participation-invite-modal {
-    .ant-modal {
-      width: 90% !important;
-      max-width: 500px;
-      margin: 20px auto;
+    &.ant-modal-wrap .ant-modal {
+      width: 95% !important;
+      max-width: 500px !important;
+      margin: 30px auto !important;
+      max-height: calc(100vh - 60px) !important;
+    }
+
+    .ant-modal-content {
+      max-height: calc(100vh - 60px);
     }
 
     .modal-content {
       .modal-header {
-        padding: 24px 16px 20px;
+        padding: 12px 16px 8px;
+        gap: 12px;
 
         .modal-icon {
-          width: 56px;
-          height: 56px;
-          margin-bottom: 16px;
+          width: 32px;
+          height: 32px;
 
           .anticon {
-            font-size: 24px;
+            font-size: 14px;
           }
         }
 
-        h2 {
-          font-size: 20px;
-          margin-bottom: 8px;
-        }
+        .modal-text {
+          h2 {
+            font-size: 16px;
+            margin-bottom: 3px;
+          }
 
-        p {
-          font-size: 15px;
+          p {
+            font-size: 12px;
+          }
         }
       }
 
@@ -374,7 +491,7 @@
       }
 
       .modal-actions {
-        padding: 12px 16px 16px;
+        padding: 16px 16px 20px;
 
         .ant-btn {
           width: 100%;
@@ -386,21 +503,39 @@
 
 @media (max-width: 480px) {
   .participation-invite-modal {
-    .ant-modal {
-      width: 95% !important;
-      margin: 10px auto;
+    &.ant-modal-wrap .ant-modal {
+      width: 98% !important;
+      margin: 20px auto !important;
+      max-height: calc(100vh - 40px) !important;
+    }
+
+    .ant-modal-content {
+      max-height: calc(100vh - 40px);
     }
 
     .modal-content {
       .modal-header {
-        padding: 20px 12px 16px;
+        padding: 10px 12px 6px;
+        gap: 10px;
 
-        h2 {
-          font-size: 18px;
+        .modal-icon {
+          width: 28px;
+          height: 28px;
+
+          .anticon {
+            font-size: 12px;
+          }
         }
 
-        p {
-          font-size: 14px;
+        .modal-text {
+          h2 {
+            font-size: 14px;
+            margin-bottom: 2px;
+          }
+
+          p {
+            font-size: 11px;
+          }
         }
       }
 
@@ -463,6 +598,22 @@
         p {
           color: rgba(255, 255, 255, 0.8);
         }
+      }
+
+      .modal-scrollable-content {
+        &::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: rgba($primary-color, 0.4);
+
+          &:hover {
+            background: rgba($primary-color, 0.6);
+          }
+        }
+
+        scrollbar-color: rgba($primary-color, 0.4) rgba(255, 255, 255, 0.1);
       }
 
       .participation-options {
@@ -538,6 +689,8 @@
 
       .modal-actions {
         border-top-color: #434343;
+        background: rgba(42, 42, 42, 0.98);
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
       }
     }
   }

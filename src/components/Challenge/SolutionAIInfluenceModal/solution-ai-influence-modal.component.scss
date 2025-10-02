@@ -1,0 +1,320 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+.solution-ai-influence-modal {
+  .modal-content {
+    .modal-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid $border-color;
+
+      .modal-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        .anticon {
+          font-size: 24px;
+          color: white;
+        }
+      }
+
+      .modal-text {
+        flex: 1;
+
+        h2 {
+          font-size: 20px;
+          font-weight: 600;
+          color: $heading-color;
+          margin: 0 0 4px 0;
+        }
+
+        p {
+          font-size: 14px;
+          color: $text-color;
+          margin: 0;
+        }
+      }
+    }
+
+    .modal-body {
+      .loading-section {
+        text-align: center;
+        padding: 40px 20px;
+
+        p {
+          margin-top: 16px;
+          color: $text-color;
+        }
+      }
+
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+
+        .metric-card {
+          background: rgba($background-color, 0.5);
+          border: 1px solid $border-color;
+          border-radius: 8px;
+          padding: 16px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          transition: all 0.2s ease;
+
+          &:hover {
+            border-color: rgba(#6366f1, 0.3);
+            box-shadow: 0 2px 8px rgba(#6366f1, 0.1);
+          }
+
+          &.highlight {
+            background: linear-gradient(135deg, rgba(#6366f1, 0.1) 0%, rgba(#8b5cf6, 0.05) 100%);
+            border-color: rgba(#6366f1, 0.3);
+          }
+
+          .metric-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+
+            .anticon {
+              font-size: 20px;
+              color: white;
+            }
+          }
+
+          .metric-content {
+            flex: 1;
+
+            .metric-value {
+              font-size: 24px;
+              font-weight: 700;
+              color: $heading-color;
+              line-height: 1;
+              margin-bottom: 4px;
+            }
+
+            .metric-label {
+              font-size: 12px;
+              color: $text-color;
+              line-height: 1.2;
+            }
+          }
+        }
+      }
+
+      .influence-progress {
+        margin-bottom: 24px;
+        padding: 20px;
+        background: rgba($background-color, 0.3);
+        border: 1px solid $border-color;
+        border-radius: 8px;
+
+        h4 {
+          font-size: 16px;
+          font-weight: 600;
+          color: $heading-color;
+          margin: 0 0 16px 0;
+        }
+
+        .progress-description {
+          margin-top: 12px;
+          font-size: 13px;
+          color: $text-color;
+          text-align: center;
+        }
+      }
+
+      .timeline-section {
+        padding: 20px;
+        background: rgba($background-color, 0.3);
+        border: 1px solid $border-color;
+        border-radius: 8px;
+
+        h4 {
+          font-size: 16px;
+          font-weight: 600;
+          color: $heading-color;
+          margin: 0 0 16px 0;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .timeline-item {
+          .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+
+            .timeline-type {
+              font-weight: 600;
+              color: $heading-color;
+              font-size: 14px;
+            }
+
+            .timeline-date {
+              font-size: 12px;
+              color: rgba($text-color, 0.6);
+            }
+          }
+
+          .timeline-description {
+            font-size: 13px;
+            color: $text-color;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .solution-ai-influence-modal {
+    .modal-content {
+      .modal-header {
+        .modal-icon {
+          width: 40px;
+          height: 40px;
+
+          .anticon {
+            font-size: 20px;
+          }
+        }
+
+        .modal-text {
+          h2 {
+            font-size: 18px;
+          }
+
+          p {
+            font-size: 13px;
+          }
+        }
+      }
+
+      .modal-body {
+        .metrics-grid {
+          grid-template-columns: 1fr;
+          gap: 12px;
+
+          .metric-card {
+            padding: 12px;
+
+            .metric-icon {
+              width: 36px;
+              height: 36px;
+
+              .anticon {
+                font-size: 18px;
+              }
+            }
+
+            .metric-content {
+              .metric-value {
+                font-size: 20px;
+              }
+
+              .metric-label {
+                font-size: 11px;
+              }
+            }
+          }
+        }
+
+        .influence-progress,
+        .timeline-section {
+          padding: 16px;
+
+          h4 {
+            font-size: 15px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.dark-theme {
+  .solution-ai-influence-modal {
+    .modal-content {
+      .modal-header {
+        border-bottom-color: #434343;
+
+        .modal-text {
+          h2 {
+            color: #ffffff;
+          }
+
+          p {
+            color: rgba(255, 255, 255, 0.8);
+          }
+        }
+      }
+
+      .modal-body {
+        .metrics-grid {
+          .metric-card {
+            background: rgba(#434343, 0.3);
+            border-color: #434343;
+
+            &.highlight {
+              background: rgba(#6366f1, 0.15);
+              border-color: rgba(#6366f1, 0.3);
+            }
+
+            .metric-content {
+              .metric-value {
+                color: #ffffff;
+              }
+
+              .metric-label {
+                color: rgba(255, 255, 255, 0.7);
+              }
+            }
+          }
+        }
+
+        .influence-progress,
+        .timeline-section {
+          background: rgba(#434343, 0.3);
+          border-color: #434343;
+
+          h4 {
+            color: #ffffff;
+          }
+
+          .progress-description,
+          .timeline-description {
+            color: rgba(255, 255, 255, 0.8);
+          }
+
+          .timeline-header {
+            .timeline-type {
+              color: #ffffff;
+            }
+
+            .timeline-date {
+              color: rgba(255, 255, 255, 0.6);
+            }
+          }
+        }
+      }
+    }
+  }
+}

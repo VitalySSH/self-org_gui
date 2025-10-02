@@ -230,7 +230,7 @@ export function CommunityWorkSpace() {
               />
               <Route
                 path="challenges/:id/*"
-                element={<ChallengeDetail communityId={id || ''} />}
+                element={<ChallengeDetail />}
               />
               <Route
                 path="disputes"

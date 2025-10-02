@@ -150,7 +150,7 @@ export function AuthHeaderIcons() {
           },
         }}
         centered
-        destroyOnClose
+        destroyOnHidden
       >
         <div className="profile-content">
           <div className="profile-avatar-section">
@@ -241,7 +241,7 @@ export function AuthHeaderIcons() {
         open={drawerOpen}
         onClose={handleDrawerClose}
         className="navigation-drawer"
-        destroyOnClose
+        destroyOnHidden
       >
         <RightMenu setDrawerOpen={setDrawerOpen} />
       </Drawer>

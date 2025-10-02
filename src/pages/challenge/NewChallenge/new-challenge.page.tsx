@@ -190,7 +190,7 @@ export function NewChallenge(props: NewChallengeProps) {
         const solution = solutionService.createRecord();
 
         solution.challenge = savedChallenge;
-        solution.user_id = authData.user?.id;
+        solution.user = authData.getUserRelation();
         solution.current_content = formData.initial_solution;
 
         const savedSolution = await solutionService.save(solution, true);

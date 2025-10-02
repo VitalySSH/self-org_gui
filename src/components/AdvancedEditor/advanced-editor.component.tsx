@@ -38,6 +38,8 @@ export interface AdvancedEditorProps {
   readonly?: boolean;
   showToolbar?: boolean;
   className?: string;
+  autoHeight?: boolean;
+  initialPreviewMode?: boolean;
 }
 
 export interface AdvancedEditorRef {
@@ -63,11 +65,15 @@ export const AdvancedEditor = forwardRef<
       readonly = false,
       showToolbar = true,
       className = '',
+      autoHeight = false,
+      initialPreviewMode,
     },
     ref
   ) => {
     const [focused, setFocused] = useState(false);
-    const [previewMode, setPreviewMode] = useState(readonly); // Если readonly, всегда в preview
+    const [previewMode, setPreviewMode] = useState(
+      initialPreviewMode !== undefined ? initialPreviewMode : readonly
+    );
     const [isMobile, setIsMobile] = useState(false);
     const [history, setHistory] = useState<string[]>([]);
     const [hasSelection, setHasSelection] = useState(false);
@@ -454,8 +460,12 @@ export const AdvancedEditor = forwardRef<
               onSelect={handleSelectionChange}
               placeholder={placeholder}
               disabled={disabled}
-              style={{ minHeight }}
+              style={{
+                minHeight,
+                ...(autoHeight ? { height: 'auto', resize: 'none' } : {}),
+              }}
               maxLength={maxLength > 0 ? maxLength : undefined}
+              autoSize={autoHeight ? { minRows: 3 } : false}
             />
           )}
         </div>

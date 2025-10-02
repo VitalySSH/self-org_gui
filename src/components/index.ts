@@ -47,4 +47,6 @@ export * from './Challenge/AuthorSolutionCard/author-solution-card.component';
 export * from './Challenge/UserWorkspaceCard/user-workspace-card.component';
 export * from './Challenge/CompletedSolutionsCard/completed-solutions-card.component';
 export * from './Challenge/ParticipationInviteModal/participation-invite-modal.component';
-export * from './Challenge/DirectionSelectionModal/direction-selection-modal.component.tsx';
+export * from './Challenge/DirectionSelectionModal/direction-selection-modal.component';
+export * from './Challenge/SolutionAIInfluenceModal/solution-ai-influence-modal.component';
+export * from './Challenge/CollectiveMetricsModal/collective-metrics-modal.component';

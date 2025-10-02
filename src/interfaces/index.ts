@@ -55,8 +55,10 @@ export * from './rule/responsibility-data.interface';
 export * from './shared/recommendation-modal-props.interface';
 export * from './challenge/challenge-card.interface';
 export * from './challenge/challenge-form.interface';
+export * from './challenge/completed-solution.interface';
 
-export * from './llm/thinking-direction-response.interface';
+export * from './llm/thinking-direction.interface.ts';
+export * from './llm/thinking-direction-response.interface.ts';
 export * from './llm/collective-idea-response.interface';
 export * from './llm/ideas-response.interface';
 export * from './llm/improvement-suggestion-response.interface';

@@ -16,12 +16,10 @@ interface AuthorSolutionCardProps {
     solution: SolutionModel;
     currentVersion: SolutionVersionModel;
   };
-  authorName: string;
 }
 
 export function AuthorSolutionCard({
   authorSolution,
-  authorName,
 }: AuthorSolutionCardProps) {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -37,21 +35,6 @@ export function AuthorSolutionCard({
     });
   };
 
-  const getStatusInfo = (status: string) => {
-    switch (status) {
-      case 'draft':
-        return { label: 'Черновик', class: 'draft' };
-      case 'ready_for_review':
-        return { label: 'Готово для просмотра', class: 'ready-for-review' };
-      case 'completed':
-        return { label: 'Завершено', class: 'completed' };
-      default:
-        return { label: 'Неизвестно', class: 'draft' };
-    }
-  };
-
-  const statusInfo = getStatusInfo(authorSolution.solution.status);
-
   return (
     <Card className="challenge-card author-solution-card">
       <div className="card-header">
@@ -63,10 +46,6 @@ export function AuthorSolutionCard({
         </div>
 
         <div className="card-actions">
-          <div className={`status-badge ${statusInfo.class}`}>
-            {statusInfo.label}
-          </div>
-
           <button
             className={`collapse-button ${collapsed ? 'collapsed' : ''}`}
             onClick={() => setCollapsed(!collapsed)}
@@ -79,11 +58,6 @@ export function AuthorSolutionCard({
       <div className={`card-content ${collapsed ? 'collapsed' : ''}`}>
         {/* Мета информация о решении */}
         <div className="solution-meta">
-          <div className="meta-item">
-            <UserOutlined className="meta-icon" />
-            <span>Автор: {authorName}</span>
-          </div>
-
           <div className="meta-item">
             <ClockCircleOutlined className="meta-icon" />
             <span>

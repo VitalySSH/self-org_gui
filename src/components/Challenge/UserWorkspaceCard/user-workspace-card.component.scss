@@ -149,6 +149,38 @@
           }
         }
       }
+
+      .delete-solution-button {
+        color: #ff4d4f;
+        font-size: 12px;
+        height: 28px;
+        padding: 0 8px;
+
+        &:hover:not(:disabled) {
+          color: #ff7875;
+          background: rgba(#ff4d4f, 0.1);
+        }
+
+        .anticon {
+          font-size: 12px;
+        }
+      }
+
+      .influence-button {
+        color: #6366f1;
+        font-size: 12px;
+        height: 28px;
+        padding: 0 8px;
+
+        &:hover:not(:disabled) {
+          color: #8b5cf6;
+          background: rgba(#6366f1, 0.1);
+        }
+
+        .anticon {
+          font-size: 12px;
+        }
+      }
     }
   }
 

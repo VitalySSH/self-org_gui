@@ -1,87 +1,186 @@
 @use 'src/shared/assets/scss/variables' as *;
 
 .ai-response-modal {
+  // Переопределяем стили враппера модального окна
+  &.ant-modal-wrap {
+    overflow: hidden !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 40px 0 !important;
+
+    @media (max-height: 700px) {
+      padding: 30px 0 !important;
+    }
+
+    @media (max-height: 600px) {
+      padding: 24px 0 !important;
+    }
+  }
+
+  // Основные настройки модального окна с высокой специфичностью
+  &.ant-modal-wrap .ant-modal {
+    max-width: 900px;
+    width: 90%;
+    max-height: calc(100vh - 80px) !important;
+    margin: 0 auto !important;
+    top: 0 !important;
+    padding-bottom: 0 !important;
+    transform: none !important;
+
+    @media (max-height: 700px) {
+      max-height: calc(100vh - 60px) !important;
+    }
+
+    @media (max-height: 600px) {
+      max-height: calc(100vh - 48px) !important;
+    }
+  }
+
   .ant-modal-content {
     border-radius: 12px;
     overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 80px);
+
+    @media (max-height: 700px) {
+      max-height: calc(100vh - 60px);
+    }
+
+    @media (max-height: 600px) {
+      max-height: calc(100vh - 48px);
+    }
   }
 
   .ant-modal-body {
-    padding: 0;
-    max-height: 80vh;
+    padding: 0 !important;
+    flex: 1;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
 
   .modal-content {
     display: flex;
     flex-direction: column;
-    height: 80vh;
+    height: 100%;
+    min-height: 0;
 
     .modal-header {
-      text-align: center;
-      padding: 24px 24px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 24px 12px;
       background: linear-gradient(135deg, rgba(#6366f1, 0.05) 0%, rgba(#6366f1, 0.02) 100%);
       border-bottom: 1px solid rgba(#6366f1, 0.1);
       flex-shrink: 0;
 
       .modal-icon {
-        width: 56px;
-        height: 56px;
-        margin: 0 auto 16px;
+        width: 40px;
+        height: 40px;
         background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-shrink: 0;
 
         .anticon {
-          font-size: 24px;
+          font-size: 18px;
           color: white;
         }
       }
 
-      h2 {
-        font-size: 20px;
-        font-weight: 600;
-        color: $heading-color;
-        margin: 0 0 8px 0;
-      }
+      .modal-text {
+        flex: 1;
+        text-align: left;
 
-      p {
-        font-size: 14px;
-        color: $text-color;
-        line-height: 1.5;
-        margin: 0;
+        h2 {
+          font-size: 18px;
+          font-weight: 700;
+          color: $heading-color;
+          margin: 0 0 4px 0;
+          line-height: 1.3;
+        }
+
+        p {
+          font-size: 13px;
+          color: $text-color;
+          line-height: 1.4;
+          margin: 0;
+        }
       }
     }
 
-    .modal-body {
+    .modal-scrollable-content {
       flex: 1;
-      overflow-y: auto;
-      padding: 20px 24px;
+      overflow-y: auto !important;
+      overflow-x: hidden;
+      min-height: 0;
+      overscroll-behavior: contain;
+
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: rgba($border-color, 0.3);
+        border-radius: 3px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: rgba(#6366f1, 0.4);
+        border-radius: 3px;
+
+        &:hover {
+          background: rgba(#6366f1, 0.6);
+        }
+      }
+
+      scrollbar-width: thin;
+      scrollbar-color: rgba(#6366f1, 0.4) rgba($border-color, 0.3);
+      scroll-behavior: smooth;
+    }
+
+    .modal-body {
+      padding: 24px;
 
       .response-stats {
         display: flex;
-        gap: 16px;
+        justify-content: center;
+        gap: 24px;
         margin-bottom: 20px;
-        padding: 12px 16px;
+        padding: 16px;
         background: rgba($background-color, 0.5);
         border-radius: 8px;
         border: 1px solid $border-color;
 
-        .ant-badge {
-          .ant-badge-count {
-            font-size: 12px;
-            font-weight: 600;
-            min-width: 20px;
-            height: 20px;
-            line-height: 18px;
+        .stats-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+
+          .ant-badge {
+            .ant-badge-count {
+              position: static;
+              transform: none;
+              font-size: 18px;
+              font-weight: 700;
+              min-width: 32px;
+              height: 32px;
+              line-height: 32px;
+              box-shadow: none;
+            }
           }
 
-          span {
-            font-size: 14px;
+          .stats-label {
+            font-size: 13px;
             font-weight: 500;
             color: $heading-color;
+            text-align: center;
           }
         }
       }
@@ -141,22 +240,27 @@
                   }
 
                   &.ant-radio-button-wrapper-checked {
-                    background: #52c41a;
-                    border-color: #52c41a;
                     color: white;
 
                     &:hover {
-                      background: rgba(#52c41a, 0.9);
-                      border-color: rgba(#52c41a, 0.9);
+                      opacity: 0.9;
                     }
                   }
 
-                  &[data-value="modified"].ant-radio-button-wrapper-checked {
+                  // Цвет для кнопки "Принять"
+                  &:first-child.ant-radio-button-wrapper-checked {
+                    background: #52c41a;
+                    border-color: #52c41a;
+                  }
+
+                  // Цвет для кнопки "Принять с изменениями"
+                  &:nth-child(2).ant-radio-button-wrapper-checked {
                     background: #fa8c16;
                     border-color: #fa8c16;
                   }
 
-                  &[data-value="rejected"].ant-radio-button-wrapper-checked {
+                  // Цвет для кнопки "Отклонить"
+                  &:last-child.ant-radio-button-wrapper-checked {
                     background: #f5222d;
                     border-color: #f5222d;
                   }
@@ -254,7 +358,6 @@
         }
       }
 
-      // Стили для этапа интеграции
       .integration-preview {
         .ant-tabs {
           .ant-tabs-tab {
@@ -340,12 +443,18 @@
     }
 
     .modal-actions {
-      padding: 16px 24px;
+      padding: 20px 24px 24px;
+      text-align: center;
       border-top: 1px solid $border-color;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+      position: relative;
+      z-index: 10;
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      flex-shrink: 0;
 
       .ant-btn {
         min-width: 140px;
@@ -364,34 +473,40 @@
 // Мобильная адаптация
 @media (max-width: 768px) {
   .ai-response-modal {
-    .ant-modal {
+    &.ant-modal-wrap .ant-modal {
       width: 95% !important;
-      margin: 10px auto;
+      max-width: 500px !important;
+      margin: 30px auto !important;
+      max-height: calc(100vh - 60px) !important;
+    }
+
+    .ant-modal-content {
+      max-height: calc(100vh - 60px);
     }
 
     .modal-content {
-      height: 90vh;
-
       .modal-header {
-        padding: 20px 16px 16px;
+        padding: 12px 16px 8px;
+        gap: 12px;
 
         .modal-icon {
-          width: 48px;
-          height: 48px;
-          margin-bottom: 12px;
+          width: 32px;
+          height: 32px;
 
           .anticon {
-            font-size: 20px;
+            font-size: 14px;
           }
         }
 
-        h2 {
-          font-size: 18px;
-          margin-bottom: 6px;
-        }
+        .modal-text {
+          h2 {
+            font-size: 16px;
+            margin-bottom: 3px;
+          }
 
-        p {
-          font-size: 13px;
+          p {
+            font-size: 12px;
+          }
         }
       }
 
@@ -399,14 +514,24 @@
         padding: 16px;
 
         .response-stats {
-          gap: 12px;
+          gap: 16px;
           margin-bottom: 16px;
-          padding: 10px 12px;
-          flex-wrap: wrap;
+          padding: 12px;
 
-          .ant-badge {
-            span {
-              font-size: 13px;
+          .stats-item {
+            gap: 6px;
+
+            .ant-badge {
+              .ant-badge-count {
+                font-size: 16px;
+                min-width: 28px;
+                height: 28px;
+                line-height: 28px;
+              }
+            }
+
+            .stats-label {
+              font-size: 12px;
             }
           }
         }
@@ -538,7 +663,7 @@
       }
 
       .modal-actions {
-        padding: 12px 16px;
+        padding: 16px 16px 20px;
         flex-direction: column;
 
         .ant-btn {
@@ -556,33 +681,39 @@
 
 @media (max-width: 480px) {
   .ai-response-modal {
-    .ant-modal {
+    &.ant-modal-wrap .ant-modal {
       width: 98% !important;
-      margin: 5px auto;
+      margin: 20px auto !important;
+      max-height: calc(100vh - 40px) !important;
+    }
+
+    .ant-modal-content {
+      max-height: calc(100vh - 40px);
     }
 
     .modal-content {
-      height: 95vh;
-
       .modal-header {
-        padding: 16px 12px 12px;
+        padding: 10px 12px 6px;
+        gap: 10px;
 
         .modal-icon {
-          width: 40px;
-          height: 40px;
-          margin-bottom: 10px;
+          width: 28px;
+          height: 28px;
 
           .anticon {
-            font-size: 18px;
+            font-size: 12px;
           }
         }
 
-        h2 {
-          font-size: 16px;
-        }
+        .modal-text {
+          h2 {
+            font-size: 14px;
+            margin-bottom: 2px;
+          }
 
-        p {
-          font-size: 12px;
+          p {
+            font-size: 11px;
+          }
         }
       }
 
@@ -590,19 +721,21 @@
         padding: 12px;
 
         .response-stats {
-          gap: 8px;
-          padding: 8px 10px;
+          gap: 12px;
+          padding: 10px;
 
-          .ant-badge {
-            .ant-badge-count {
-              font-size: 11px;
-              min-width: 18px;
-              height: 18px;
-              line-height: 16px;
+          .stats-item {
+            .ant-badge {
+              .ant-badge-count {
+                font-size: 14px;
+                min-width: 24px;
+                height: 24px;
+                line-height: 24px;
+              }
             }
 
-            span {
-              font-size: 12px;
+            .stats-label {
+              font-size: 11px;
             }
           }
         }
@@ -690,7 +823,7 @@
       }
 
       .modal-actions {
-        padding: 10px 12px;
+        padding: 12px 12px 16px;
 
         .ant-btn {
           height: 36px;
@@ -713,13 +846,31 @@
         background: rgba(#6366f1, 0.1);
         border-bottom-color: rgba(#6366f1, 0.2);
 
-        h2 {
-          color: #ffffff;
+        .modal-text {
+          h2 {
+            color: #ffffff;
+          }
+
+          p {
+            color: rgba(255, 255, 255, 0.8);
+          }
+        }
+      }
+
+      .modal-scrollable-content {
+        &::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
         }
 
-        p {
-          color: rgba(255, 255, 255, 0.8);
+        &::-webkit-scrollbar-thumb {
+          background: rgba(#6366f1, 0.4);
+
+          &:hover {
+            background: rgba(#6366f1, 0.6);
+          }
         }
+
+        scrollbar-color: rgba(#6366f1, 0.4) rgba(255, 255, 255, 0.1);
       }
 
       .modal-body {
@@ -727,8 +878,8 @@
           background: rgba(#434343, 0.3);
           border-color: #434343;
 
-          .ant-badge {
-            span {
+          .stats-item {
+            .stats-label {
               color: #ffffff;
             }
           }
@@ -762,9 +913,37 @@
                     }
 
                     &.ant-radio-button-wrapper-checked {
-                      background: #52c41a;
-                      border-color: #52c41a;
                       color: white;
+
+                      &[value="accepted"] {
+                        background: #52c41a;
+                        border-color: #52c41a;
+
+                        &:hover {
+                          background: rgba(#52c41a, 0.9);
+                          border-color: rgba(#52c41a, 0.9);
+                        }
+                      }
+
+                      &[value="modified"] {
+                        background: #fa8c16;
+                        border-color: #fa8c16;
+
+                        &:hover {
+                          background: rgba(#fa8c16, 0.9);
+                          border-color: rgba(#fa8c16, 0.9);
+                        }
+                      }
+
+                      &[value="rejected"] {
+                        background: #f5222d;
+                        border-color: #f5222d;
+
+                        &:hover {
+                          background: rgba(#f5222d, 0.9);
+                          border-color: rgba(#f5222d, 0.9);
+                        }
+                      }
                     }
                   }
                 }
@@ -885,6 +1064,8 @@
 
       .modal-actions {
         border-top-color: #434343;
+        background: rgba(42, 42, 42, 0.98);
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
       }
     }
   }

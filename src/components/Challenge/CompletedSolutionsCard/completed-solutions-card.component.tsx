@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Card, List, Empty, Button, message, Pagination } from 'antd';
+import { AIInfluenceResponse, CompletedSolution } from 'src/interfaces';
 import {
   SolutionOutlined,
   UpOutlined,
@@ -9,20 +10,11 @@ import {
   StarFilled,
   EyeOutlined,
   ClockCircleOutlined,
+  LineChartOutlined,
 } from '@ant-design/icons';
 import './completed-solutions-card.component.scss';
-
-interface CompletedSolution {
-  id: string;
-  authorName: string;
-  authorId: string;
-  content: string;
-  status: string;
-  createdAt: Date | string;
-  updatedAt: Date | string;
-  isLiked?: boolean;
-  likesCount?: number;
-}
+import { LlmApiService } from 'src/services';
+import { AdvancedEditor, SolutionAIInfluenceModal } from 'src/components';
 
 interface CompletedSolutionsCardProps {
   solutions: CompletedSolution[];
@@ -41,6 +33,12 @@ export function CompletedSolutionsCard({
   );
   const [likedSolutions, setLikedSolutions] = useState<Set<string>>(new Set());
   const [messageApi, contextHolder] = message.useMessage();
+  const [showInfluenceModal, setShowInfluenceModal] = useState(false);
+  const [influenceData, setInfluenceData] =
+    useState<AIInfluenceResponse | null>(null);
+  const [loadingInfluence, setLoadingInfluence] = useState(false);
+
+  const llmService = new LlmApiService();
 
   const handleToggleExpand = (solutionId: string) => {
     const newExpanded = new Set(expandedSolutions);
@@ -72,6 +70,21 @@ export function CompletedSolutionsCard({
     }
   };
 
+  const handleShowInfluence = async (solutionId: string) => {
+    setShowInfluenceModal(true);
+    setLoadingInfluence(true);
+
+    try {
+      const response = await llmService.getSolutionAIInfluence(solutionId);
+      setInfluenceData(response.data);
+    } catch (error) {
+      console.error('Error loading AI influence:', error);
+      messageApi.error('Ошибка загрузки статистики влияния ИИ');
+    } finally {
+      setLoadingInfluence(false);
+    }
+  };
+
   const formatDate = (date: Date | string | undefined) => {
     if (!date) return 'Не указано';
     const d = typeof date === 'string' ? new Date(date) : date;
@@ -89,16 +102,16 @@ export function CompletedSolutionsCard({
     return content.slice(0, maxLength) + '...';
   };
 
-  const getStatusInfo = (status: string) => {
-    switch (status) {
-      case 'ready_for_review':
-        return { label: 'На рассмотрении', class: 'ready-for-review' };
-      case 'completed':
-        return { label: 'Завершено', class: 'completed' };
-      default:
-        return { label: 'Неизвестно', class: 'draft' };
-    }
-  };
+  // const getStatusInfo = (status: string) => {
+  //   switch (status) {
+  //     case 'ready_for_review':
+  //       return { label: 'На рассмотрении', class: 'ready-for-review' };
+  //     case 'completed':
+  //       return { label: 'Завершено', class: 'completed' };
+  //     default:
+  //       return { label: 'Неизвестно', class: 'draft' };
+  //   }
+  // };
 
   // Пагинация
   const startIndex = (currentPage - 1) * pageSize;
@@ -150,7 +163,7 @@ export function CompletedSolutionsCard({
               renderItem={(solution) => {
                 const isExpanded = expandedSolutions.has(solution.id);
                 const isLiked = likedSolutions.has(solution.id);
-                const statusInfo = getStatusInfo(solution.status);
+                // const statusInfo = getStatusInfo(solution.status);
 
                 return (
                   <List.Item key={solution.id} className="solution-item">
@@ -164,9 +177,9 @@ export function CompletedSolutionsCard({
                         </div>
 
                         <div className="solution-details">
-                          <div className={`status-badge ${statusInfo.class}`}>
-                            {statusInfo.label}
-                          </div>
+                          {/*<div className={`status-badge ${statusInfo.class}`}>*/}
+                          {/*  {statusInfo.label}*/}
+                          {/*</div>*/}
 
                           <div className="date-info">
                             <ClockCircleOutlined className="date-icon" />
@@ -194,6 +207,15 @@ export function CompletedSolutionsCard({
                         <Button
                           type="text"
                           size="small"
+                          icon={<LineChartOutlined />}
+                          onClick={() => handleShowInfluence(solution.id)}
+                          className="stats-button"
+                          title="Статистика влияния ИИ"
+                        />
+
+                        <Button
+                          type="text"
+                          size="small"
                           icon={<EyeOutlined />}
                           onClick={() => handleToggleExpand(solution.id)}
                           className="expand-button"
@@ -204,11 +226,19 @@ export function CompletedSolutionsCard({
                     </div>
 
                     <div className="solution-content">
-                      <div className="content-text">
-                        {isExpanded
-                          ? solution.content
-                          : truncateContent(solution.content)}
-                      </div>
+                      {isExpanded ? (
+                        <AdvancedEditor
+                          value={solution.content}
+                          readonly={true}
+                          showToolbar={false}
+                          autoHeight={true}
+                          initialPreviewMode={true}
+                        />
+                      ) : (
+                        <div className="content-preview">
+                          {truncateContent(solution.content)}
+                        </div>
+                      )}
 
                       {solution.content.length > 300 && !isExpanded && (
                         <div className="read-more">
@@ -279,6 +309,15 @@ export function CompletedSolutionsCard({
           </div>
         )}
       </div>
+
+      <SolutionAIInfluenceModal
+        visible={showInfluenceModal}
+        onCancel={() => {
+          setShowInfluenceModal(false);
+        }}
+        data={influenceData}
+        loading={loadingInfluence}
+      />
     </Card>
   );
 }

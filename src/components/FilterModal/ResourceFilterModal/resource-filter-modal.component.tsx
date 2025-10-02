@@ -132,7 +132,7 @@ export function ResourceFilterModal({
       className="filter-modal"
       width={550}
       centered
-      destroyOnClose
+      destroyOnHidden
       styles={{
         body: {
           maxHeight: 'calc(85vh - 108px)',

@@ -21,6 +21,7 @@ import {
   ItemResponse,
   IntegrationResponse,
 } from 'src/interfaces';
+import { AdvancedEditor } from 'src/components';
 import './ai-response-modal.component.scss';
 import { ItemResponseType } from 'src/shared/types.ts';
 
@@ -72,7 +73,6 @@ export function AIResponseModal({
 
   const llmService = new LlmApiService();
 
-  // Инициализация ответов при открытии модального окна
   useEffect(() => {
     if (visible && responseData && userSolution) {
       const items = getItemsFromResponse();
@@ -80,7 +80,7 @@ export function AIResponseModal({
         index,
         title: getItemTitle(item, index),
         description: getItemDescription(item),
-        response: 'accepted' as ItemResponseType,
+        response: '' as ItemResponseType,
         reasoning: '',
         modification: '',
         originalText: getItemDescription(item),
@@ -127,6 +127,16 @@ export function AIResponseModal({
     return '';
   };
 
+  const getSeverityTranslation = (severity: string): string => {
+    const translations: Record<string, string> = {
+      minor: 'Незначительная',
+      major: 'Существенная',
+      critical: 'Критическая',
+    };
+
+    return translations[severity.toLowerCase()] || severity;
+  };
+
   const getItemDetails = (item: any) => {
     const details: { label: string; value: string }[] = [];
 
@@ -145,7 +155,10 @@ export function AIResponseModal({
     }
 
     if ('severity' in item && item.severity) {
-      details.push({ label: 'Критичность', value: item.severity });
+      details.push({
+        label: 'Критичность',
+        value: getSeverityTranslation(item.severity),
+      });
     }
 
     if ('suggested_fix' in item && item.suggested_fix) {
@@ -171,7 +184,15 @@ export function AIResponseModal({
 
   const handleResponseChange = (index: number, response: ItemResponseType) => {
     setResponses((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, response } : item))
+      prev.map((item, i) => {
+        if (i === index) {
+          if (item.response === response) {
+            return { ...item, response: '' as ItemResponseType };
+          }
+          return { ...item, response };
+        }
+        return item;
+      })
     );
   };
 
@@ -189,8 +210,11 @@ export function AIResponseModal({
 
   const canProceed = () => {
     return responses.every((item) => {
+      if ((item.response as unknown as string) === '') {
+        return false;
+      }
       if (item.response === 'rejected') {
-        return true; // Отклоненные не требуют дополнительных данных
+        return true;
       }
       if (item.response === 'modified') {
         return item.modification.trim().length > 0;
@@ -208,31 +232,29 @@ export function AIResponseModal({
     setProcessing(true);
 
     try {
-      // Подготавливаем ответы для отправки
-      const itemResponses: ItemResponse[] = responses.map((item) => ({
-        item_index: item.index,
-        response: item.response,
-        reasoning: item.reasoning || undefined,
-        modification:
-          item.response === 'modified' ? item.modification : undefined,
-        original_text: item.originalText,
-      }));
+      const itemResponses: ItemResponse[] = responses
+        .filter((item) => (item.response as unknown as string) !== '')
+        .map((item) => ({
+          item_index: item.index,
+          response: item.response,
+          reasoning: item.reasoning || undefined,
+          modification:
+            item.response === 'modified' ? item.modification : undefined,
+          original_text: item.originalText,
+        }));
 
-      // Сохраняем ответы пользователя
-      if (responseData && userSolution) {
+      if (responseData && userSolution && itemResponses.length > 0) {
         await llmService.interactionUserResponse(responseData.interaction_id, {
           interaction_id: responseData.interaction_id,
           item_responses: itemResponses,
         });
       }
 
-      // Проверяем, есть ли принятые элементы
       const acceptedItems = responses.filter(
         (item) => item.response === 'accepted' || item.response === 'modified'
       );
 
       if (acceptedItems.length > 0) {
-        // Интегрируем изменения
         const integrationRequest = {
           solution_id: userSolution!.solution.id!,
           interaction_id: responseData!.interaction_id,
@@ -254,7 +276,6 @@ export function AIResponseModal({
         setIntegratedText(integration.data.integrated_text);
         setIntegrationStep('integration');
       } else {
-        // Нет принятых элементов, просто завершаем
         messageApi.success('Ответы сохранены');
         onComplete();
       }
@@ -272,7 +293,6 @@ export function AIResponseModal({
     setProcessing(true);
 
     try {
-      // Создаем новую версию решения
       await llmService.createSolutionVersion({
         solution_id: userSolution.solution.id!,
         new_content: integratedText,
@@ -292,7 +312,6 @@ export function AIResponseModal({
 
   const handleRejectIntegration = async () => {
     try {
-      // TODO: Вызвать метод для удаления данных интеграции
       messageApi.info('Изменения отклонены');
       onComplete();
     } catch (error) {
@@ -336,6 +355,9 @@ export function AIResponseModal({
   const rejectedCount = responses.filter(
     (r) => r.response === 'rejected'
   ).length;
+  const processedCount = responses.filter(
+    (r) => (r.response as unknown as string) !== ''
+  ).length;
 
   const items = getItemsFromResponse();
 
@@ -346,187 +368,216 @@ export function AIResponseModal({
       onCancel={onCancel}
       footer={null}
       width={900}
+      destroyOnHidden
+      keyboard
       className="ai-response-modal"
-      destroyOnClose
-      maskClosable={false}
+      styles={{
+        mask: { backgroundColor: 'rgba(0, 0, 0, 0.45)' },
+      }}
+      wrapClassName="ai-response-modal"
     >
       <div className="modal-content">
         {contextHolder}
 
-        {/* Заголовок */}
         <div className="modal-header">
           <div className="modal-icon">{getModalIcon()}</div>
-          <h2>{getModalTitle()}</h2>
-          <p>
-            {integrationStep === 'responding' &&
-              'Рассмотрите каждое предложение и выберите действие'}
-            {integrationStep === 'integration' &&
-              'Проверьте интегрированные изменения'}
-            {integrationStep === 'confirmation' &&
-              'Подтвердите создание новой версии'}
-          </p>
+          <div className="modal-text">
+            <h2>{getModalTitle()}</h2>
+            <p>
+              {integrationStep === 'responding' &&
+                'Рассмотрите каждое предложение и выберите действие'}
+              {integrationStep === 'integration' &&
+                'Проверьте интегрированные изменения'}
+              {integrationStep === 'confirmation' &&
+                'Подтвердите создание новой версии'}
+            </p>
+          </div>
         </div>
 
-        {/* Основной контент */}
-        <div className="modal-body">
-          {integrationStep === 'responding' && (
-            <>
-              {/* Статистика ответов */}
-              <div className="response-stats">
-                <Badge count={acceptedCount} color="#52c41a">
-                  <span>Принято</span>
-                </Badge>
-                <Badge count={modifiedCount} color="#fa8c16">
-                  <span>Изменено</span>
-                </Badge>
-                <Badge count={rejectedCount} color="#f5222d">
-                  <span>Отклонено</span>
-                </Badge>
-              </div>
+        <div className="modal-scrollable-content">
+          <div className="modal-body">
+            {integrationStep === 'responding' && (
+              <>
+                <div className="response-stats">
+                  <div className="stats-item">
+                    <Badge
+                      count={acceptedCount}
+                      showZero
+                      color="#52c41a"
+                      overflowCount={999}
+                    />
+                    <span className="stats-label">Принято</span>
+                  </div>
+                  <div className="stats-item">
+                    <Badge
+                      count={modifiedCount}
+                      showZero
+                      color="#fa8c16"
+                      overflowCount={999}
+                    />
+                    <span className="stats-label">Изменено</span>
+                  </div>
+                  <div className="stats-item">
+                    <Badge
+                      count={rejectedCount}
+                      showZero
+                      color="#f5222d"
+                      overflowCount={999}
+                    />
+                    <span className="stats-label">Отклонено</span>
+                  </div>
+                </div>
 
-              {/* Список элементов для обработки */}
-              <div className="responses-list">
-                {items.map((item, index) => {
-                  const response = responses[index];
-                  if (!response) return null;
+                <div className="responses-list">
+                  {items.map((item, index) => {
+                    const response = responses[index];
+                    if (!response) return null;
 
-                  return (
-                    <Card key={index} className="response-item">
-                      <div className="response-header">
-                        <h4>{response.title}</h4>
-                        <div className="response-actions">
-                          <Radio.Group
-                            value={response.response}
-                            onChange={(e) =>
-                              handleResponseChange(index, e.target.value)
-                            }
-                            size="small"
-                          >
-                            <Radio.Button value="accepted">
-                              <CheckOutlined /> Принять
-                            </Radio.Button>
-                            <Radio.Button value="modified">
-                              <EditOutlined /> Изменить
-                            </Radio.Button>
-                            <Radio.Button value="rejected">
-                              <CloseOutlined /> Отклонить
-                            </Radio.Button>
-                          </Radio.Group>
-                        </div>
-                      </div>
-
-                      <div className="response-content">
-                        <div className="item-description">
-                          {response.description}
-                        </div>
-
-                        {/* Дополнительные детали */}
-                        {getItemDetails(item).length > 0 && (
-                          <div className="item-details">
-                            {getItemDetails(item).map((detail, idx) => (
-                              <div key={idx} className="detail-item">
-                                <strong>{detail.label}:</strong> {detail.value}
-                              </div>
-                            ))}
-                          </div>
-                        )}
-
-                        {/* Поле для изменений */}
-                        {response.response === 'modified' && (
-                          <div className="modification-section">
-                            <label>Ваша версия:</label>
-                            <TextArea
-                              value={response.modification}
+                    return (
+                      <Card key={index} className="response-item">
+                        <div className="response-header">
+                          <h4>{response.title}</h4>
+                          <div className="response-actions">
+                            <Radio.Group
+                              value={response.response}
                               onChange={(e) =>
-                                handleModificationChange(index, e.target.value)
+                                handleResponseChange(index, e.target.value)
                               }
-                              placeholder="Введите вашу версию предложения..."
-                              rows={3}
-                              maxLength={1000}
+                              size="small"
+                            >
+                              <Radio.Button value="accepted">
+                                <CheckOutlined /> Принять
+                              </Radio.Button>
+                              <Radio.Button value="modified">
+                                <EditOutlined /> Принять с изменениями
+                              </Radio.Button>
+                              <Radio.Button value="rejected">
+                                <CloseOutlined /> Отклонить
+                              </Radio.Button>
+                            </Radio.Group>
+                          </div>
+                        </div>
+
+                        <div className="response-content">
+                          <div className="item-description">
+                            {response.description}
+                          </div>
+
+                          {getItemDetails(item).length > 0 && (
+                            <div className="item-details">
+                              {getItemDetails(item).map((detail, idx) => (
+                                <div key={idx} className="detail-item">
+                                  <strong>{detail.label}:</strong>{' '}
+                                  {detail.value}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {response.response === 'modified' && (
+                            <div className="modification-section">
+                              <label>Ваша версия:</label>
+                              <TextArea
+                                value={response.modification}
+                                onChange={(e) =>
+                                  handleModificationChange(
+                                    index,
+                                    e.target.value
+                                  )
+                                }
+                                placeholder="Введите вашу версию предложения..."
+                                rows={3}
+                                maxLength={1000}
+                              />
+                            </div>
+                          )}
+
+                          {response.response === 'rejected' && (
+                            <div className="reasoning-section">
+                              <label>Причина отклонения (опционально):</label>
+                              <TextArea
+                                value={response.reasoning}
+                                onChange={(e) =>
+                                  handleReasoningChange(index, e.target.value)
+                                }
+                                placeholder="Объясните, почему отклоняете это предложение..."
+                                rows={2}
+                                maxLength={500}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+
+            {integrationStep === 'integration' && (
+              <div className="integration-preview">
+                <Tabs
+                  defaultActiveKey="preview"
+                  items={[
+                    {
+                      key: 'preview',
+                      label: (
+                        <span>
+                          <EyeOutlined />
+                          Предварительный просмотр
+                        </span>
+                      ),
+                      children: (
+                        <div className="preview-content">
+                          <div className="integrated-text">
+                            <h4>Новая версия решения:</h4>
+                            <AdvancedEditor
+                              value={integratedText}
+                              onChange={setIntegratedText}
+                              placeholder="Отредактируйте текст решения..."
+                              showToolbar={true}
+                              autoHeight={true}
+                              initialPreviewMode={true}
                             />
                           </div>
-                        )}
 
-                        {/* Поле для обоснования отклонения */}
-                        {response.response === 'rejected' && (
-                          <div className="reasoning-section">
-                            <label>Причина отклонения (опционально):</label>
-                            <TextArea
-                              value={response.reasoning}
-                              onChange={(e) =>
-                                handleReasoningChange(index, e.target.value)
-                              }
-                              placeholder="Объясните, почему отклоняете это предложение..."
-                              rows={2}
-                              maxLength={500}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </Card>
-                  );
-                })}
-              </div>
-            </>
-          )}
-
-          {integrationStep === 'integration' && (
-            <div className="integration-preview">
-              <Tabs
-                defaultActiveKey="preview"
-                items={[
-                  {
-                    key: 'preview',
-                    label: (
-                      <span>
-                        <EyeOutlined />
-                        Предварительный просмотр
-                      </span>
-                    ),
-                    children: (
-                      <div className="preview-content">
-                        <div className="integrated-text">
-                          <h4>Новая версия решения:</h4>
-                          <div className="text-content">{integratedText}</div>
+                          {integrationData && (
+                            <div className="change-description">
+                              <h4>Описание изменений:</h4>
+                              <p>{integrationData.change_description}</p>
+                            </div>
+                          )}
                         </div>
-
-                        {integrationData && (
-                          <div className="change-description">
-                            <h4>Описание изменений:</h4>
-                            <p>{integrationData.change_description}</p>
-                          </div>
-                        )}
-                      </div>
-                    ),
-                  },
-                  {
-                    key: 'diff',
-                    label: (
-                      <span>
-                        <FileTextOutlined />
-                        Сравнение версий
-                      </span>
-                    ),
-                    children: (
-                      <div className="diff-content">
-                        <ReactDiffViewer
-                          oldValue={originalText}
-                          newValue={integratedText}
-                          splitView={window.innerWidth > 768}
-                          leftTitle="Текущая версия"
-                          rightTitle="Новая версия"
-                          showDiffOnly={false}
-                        />
-                      </div>
-                    ),
-                  },
-                ]}
-              />
-            </div>
-          )}
+                      ),
+                    },
+                    {
+                      key: 'diff',
+                      label: (
+                        <span>
+                          <FileTextOutlined />
+                          Сравнение версий
+                        </span>
+                      ),
+                      children: (
+                        <div className="diff-content">
+                          <ReactDiffViewer
+                            oldValue={originalText}
+                            newValue={integratedText}
+                            splitView={window.innerWidth > 768}
+                            leftTitle="Текущая версия"
+                            rightTitle="Новая версия"
+                            showDiffOnly={false}
+                          />
+                        </div>
+                      ),
+                    },
+                  ]}
+                />
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Действия */}
         <div className="modal-actions">
           {integrationStep === 'responding' && (
             <>
@@ -541,7 +592,7 @@ export function AIResponseModal({
                 size="large"
                 icon={<SendOutlined />}
               >
-                Отправить ответы ({acceptedCount + modifiedCount} принято)
+                Отправить ответы ({processedCount}/{responses.length})
               </Button>
             </>
           )}

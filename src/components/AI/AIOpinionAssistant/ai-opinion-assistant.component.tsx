@@ -296,7 +296,7 @@ export const AIOpinionAssistant: React.FC<AIOpinionAssistantProps> = ({
         }}
         className="ai-opinion-modal"
         closable={false}
-        destroyOnClose={true}
+        destroyOnHidden
       >
         <AIOpinionChat
           onComplete={onComplete}

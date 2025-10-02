@@ -89,7 +89,7 @@ export function DelegateFilterModal({
       className="filter-modal"
       width={500}
       centered
-      destroyOnClose
+      destroyOnHidden
       styles={{
         body: {
           maxHeight: 'calc(85vh - 108px)',
