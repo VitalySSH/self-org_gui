@@ -11,6 +11,7 @@ import {
   PlusOutlined,
   DeleteOutlined,
   LineChartOutlined,
+  TeamOutlined,
 } from '@ant-design/icons';
 import {
   ChallengeModel,
@@ -37,6 +38,7 @@ interface UserWorkspaceCardProps {
   onSaveNewVersion: (content: string, versionNumber: number) => Promise<void>;
   onSolutionDeleted?: () => void;
   onStatusChanged?: () => void;
+  totalSolutions: number;
 }
 
 const statusOptions = [
@@ -56,6 +58,7 @@ export function UserWorkspaceCard({
   onSaveNewVersion,
   onSolutionDeleted,
   onStatusChanged,
+  totalSolutions = 0,
 }: UserWorkspaceCardProps) {
   const [messageApi, contextHolder] = message.useMessage();
   const [selectedVersion, setSelectedVersion] = useState<number>(1);
@@ -70,6 +73,7 @@ export function UserWorkspaceCard({
   const [influenceData, setInfluenceData] =
     useState<AIInfluenceResponse | null>(null);
   const [loadingInfluence, setLoadingInfluence] = useState(false);
+  const [showFirstVersionTip, setShowFirstVersionTip] = useState(false);
 
   const solutionService = new CrudDataSourceService(SolutionModel);
   const versionService = new CrudDataSourceService(SolutionVersionModel);
@@ -90,6 +94,20 @@ export function UserWorkspaceCard({
       setHasUnsavedChanges(false);
       setHasSubstantialChanges(false);
       setShowVersionHistory(false);
+    }
+  }, [userSolution]);
+
+  useEffect(() => {
+    if (userSolution && userSolution.allVersions.length === 1) {
+      // Проверяем, было ли уведомление уже показано для этого решения
+      const tipShownKey = `first-version-tip-shown-${userSolution.solution.id}`;
+      const wasTipShown = localStorage.getItem(tipShownKey);
+
+      if (!wasTipShown) {
+        setShowFirstVersionTip(true);
+      }
+    } else {
+      setShowFirstVersionTip(false);
     }
   }, [userSolution]);
 
@@ -162,6 +180,14 @@ export function UserWorkspaceCard({
     }
   };
 
+  const handleCloseTip = () => {
+    if (userSolution) {
+      const tipShownKey = `first-version-tip-shown-${userSolution.solution.id}`;
+      localStorage.setItem(tipShownKey, 'true');
+    }
+    setShowFirstVersionTip(false);
+  };
+
   if (!userSolution) {
     return (
       <Card className="challenge-card user-workspace-card no-solution">
@@ -183,9 +209,11 @@ export function UserWorkspaceCard({
             </div>
             <h3>Присоединяйтесь к решению задачи</h3>
             <p>
-              Ваш подход уникален и может стать тем самым ключевым элементом,
-              которого не хватает для прорыва. Внесите свой вклад в общее
-              решение и помогите ему эволюционировать.
+              Не нужно быть экспертом, чтобы внести ценный вклад. Поделитесь
+              своим взглядом на проблему — даже неочевидные мысли и аналогии из
+              вашего опыта могут стать катализатором для других участников.
+              Коллективный интеллект сильнее, когда объединяет разные точки
+              зрения.
             </p>
             <Button
               type="primary"
@@ -484,6 +512,43 @@ export function UserWorkspaceCard({
           />
         </div>
 
+        {/* Подсказка для первой версии */}
+        {showFirstVersionTip && (
+          <div className="first-version-tip">
+            <div className="tip-header">
+              <div className="tip-icon">
+                <BulbOutlined />
+              </div>
+              <h5>Ваш вклад важен!</h5>
+              <button className="tip-close" onClick={handleCloseTip}>
+                ×
+              </button>
+            </div>
+            <div className="tip-content">
+              <p>
+                Даже если вы не являетесь экспертом в области этой задачи, ваше
+                мнение делает коллективный интеллект сильнее. Поделитесь любой
+                информацией, которая может быть полезна другим участникам.
+              </p>
+              <ul className="tip-suggestions">
+                <li>Есть ли аналогии из вашей профессиональной области?</li>
+                <li>В каком направлении вы бы начали искать решение?</li>
+                <li>Какие вопросы возникают при изучении задачи?</li>
+                <li>Что вас вдохновляет или интригует в этой проблеме?</li>
+              </ul>
+              <p className="tip-footer">
+                Любая мысль, даже неочевидная, может стать ключом к прорыву.
+                Коллективный интеллект строится на разнообразии взглядов.
+              </p>
+            </div>
+            <div className="tip-actions">
+              <Button type="primary" size="small" onClick={handleCloseTip}>
+                Понятно, приступаю к работе
+              </Button>
+            </div>
+          </div>
+        )}
+
         {/* ИИ действия */}
         <div className="ai-actions-section">
           <div className="ai-actions-header">
@@ -491,42 +556,63 @@ export function UserWorkspaceCard({
             <p>Используйте общую интеллектуальную мощь сообщества</p>
           </div>
 
-          <div className="ai-actions">
-            <Button
-              className="ai-button ideas-button"
-              icon={<BulbOutlined />}
-              onClick={() => handleAIRequest('ideas')}
-              disabled={isProcessingAI || !userSolution}
-              loading={isProcessingAI}
-            >
-              Сгенерировать гипотезы
-            </Button>
+          {totalSolutions > 2 ? (
+            <>
+              <div className="ai-actions">
+                <Button
+                  className="ai-button ideas-button"
+                  icon={<BulbOutlined />}
+                  onClick={() => handleAIRequest('ideas')}
+                  disabled={isProcessingAI || !userSolution}
+                  loading={isProcessingAI}
+                >
+                  Сгенерировать гипотезы
+                </Button>
 
-            <Button
-              className="ai-button improvements-button"
-              icon={<ThunderboltOutlined />}
-              onClick={() => handleAIRequest('improvements')}
-              disabled={isProcessingAI || !userSolution}
-              loading={isProcessingAI}
-            >
-              Усилить решение
-            </Button>
+                <Button
+                  className="ai-button improvements-button"
+                  icon={<ThunderboltOutlined />}
+                  onClick={() => handleAIRequest('improvements')}
+                  disabled={isProcessingAI || !userSolution}
+                  loading={isProcessingAI}
+                >
+                  Усилить решение
+                </Button>
 
-            <Button
-              className="ai-button criticism-button"
-              icon={<ExclamationCircleOutlined />}
-              onClick={() => handleAIRequest('criticism')}
-              disabled={isProcessingAI || !userSolution}
-              loading={isProcessingAI}
-            >
-              Выявить уязвимости
-            </Button>
-          </div>
+                <Button
+                  className="ai-button criticism-button"
+                  icon={<ExclamationCircleOutlined />}
+                  onClick={() => handleAIRequest('criticism')}
+                  disabled={isProcessingAI || !userSolution}
+                  loading={isProcessingAI}
+                >
+                  Выявить уязвимости
+                </Button>
+              </div>
 
-          {isProcessingAI && (
-            <div className="ai-processing">
-              <Spin size="small" />
-              <span>ИИ анализирует ваше решение...</span>
+              {isProcessingAI && (
+                <div className="ai-processing">
+                  <Spin size="small" />
+                  <span>ИИ анализирует ваше решение...</span>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="ai-inactive">
+              <div className="ai-inactive-icon">
+                <TeamOutlined />
+              </div>
+              <div className="ai-inactive-text">
+                <h5>Коллективный интеллект пока недоступен</h5>
+                <p>
+                  Для активации требуется минимум 3 решения от участников.
+                  Сейчас: <strong>{totalSolutions}</strong> из 3
+                </p>
+                <p className="ai-inactive-hint">
+                  💡 Пригласите коллег присоединиться к решению задачи или
+                  дождитесь других участников
+                </p>
+              </div>
             </div>
           )}
         </div>

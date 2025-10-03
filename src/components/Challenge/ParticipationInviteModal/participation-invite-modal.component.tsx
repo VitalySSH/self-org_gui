@@ -1,4 +1,4 @@
-import { Modal, Button, Card } from 'antd';
+import { Modal, Button, Card, Spin } from 'antd';
 import {
   UserOutlined,
   BulbOutlined,
@@ -16,6 +16,7 @@ interface ParticipationInviteModalProps {
   onStartFromScratch: () => void;
   hasAuthorSolution: boolean;
   totalSolutions: number;
+  loadingDirections?: boolean;
 }
 
 export function ParticipationInviteModal({
@@ -26,8 +27,9 @@ export function ParticipationInviteModal({
   onStartFromScratch,
   hasAuthorSolution,
   totalSolutions,
+  loadingDirections = false,
 }: ParticipationInviteModalProps) {
-  const hasMultipleSolutions = totalSolutions > 0;
+  const hasMultipleSolutions = totalSolutions > 2;
 
   return (
     <Modal
@@ -90,9 +92,9 @@ export function ParticipationInviteModal({
             {/* Вариант 2: Выбрать направление из КИ */}
             {hasMultipleSolutions && (
               <Card
-                className="option-card ai-direction-option"
-                hoverable
-                onClick={onSelectDirection}
+                className={`option-card ai-direction-option ${loadingDirections ? 'loading' : ''}`}
+                hoverable={!loadingDirections}
+                onClick={loadingDirections ? undefined : onSelectDirection}
               >
                 <div className="option-content">
                   <div className="option-icon">
@@ -110,6 +112,12 @@ export function ParticipationInviteModal({
                       <span>💡 Умные предложения</span>
                     </div>
                   </div>
+                  {loadingDirections && (
+                    <div className="option-loading">
+                      <Spin />
+                      {/*<span>Анализ решений...</span>*/}
+                    </div>
+                  )}
                 </div>
               </Card>
             )}

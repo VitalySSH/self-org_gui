@@ -269,6 +269,44 @@
               }
             }
           }
+
+          &.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+
+            &:hover {
+              transform: none;
+              box-shadow: none;
+              border-color: $border-color;
+            }
+          }
+
+          .option-content {
+            position: relative;
+
+            .option-loading {
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              background: rgba(255, 255, 255, 0.95);
+              display: flex;
+              flex-direction: row;
+              align-items: center;
+              justify-content: center;
+              gap: 12px;
+              border-radius: 12px;
+              z-index: 10;
+
+              span {
+                font-size: 14px;
+                font-weight: 500;
+                color: $primary-color;
+              }
+            }
+          }
         }
       }
     }
@@ -495,6 +533,20 @@
 
         .ant-btn {
           width: 100%;
+        }
+      }
+    }
+
+    &.loading {
+      opacity: 0.6;
+    }
+
+    .option-content {
+      .option-loading {
+        background: rgba(42, 42, 42, 0.95);
+
+        span {
+          color: $primary-color;
         }
       }
     }

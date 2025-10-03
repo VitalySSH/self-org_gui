@@ -46,6 +46,7 @@ export function ChallengeDetail() {
   const [completedSolutions, setCompletedSolutions] = useState<
     CompletedSolution[]
   >([]);
+  const [totalSolutions, setTotalSolutions] = useState<number>(0);
   const [directions, setDirections] = useState<ThinkingDirection[]>([]);
   const [isLoadingDirections, setIsLoadingDirections] = useState(false);
 
@@ -149,26 +150,26 @@ export function ChallengeDetail() {
 
   const fetchCompletedSolutions = useCallback(async () => {
     const response = await solutionService.list(
-      [
-        { field: 'status', op: 'equals', val: 'completed' },
-        { field: 'challenge.id', op: 'equals', val: challenge?.id },
-      ],
+      [{ field: 'challenge.id', op: 'equals', val: challenge?.id }],
       undefined,
       undefined,
       ['user']
     );
-    const solutionsData = response.data.map((solution) => {
-      return {
-        id: solution.id,
-        content: solution.current_content,
-        authorName: solution.user?.fullname || 'Аноним',
-        authorId: solution.user.id || '',
-        createdAt: solution.created_at || '',
-        updatedAt: solution.updated_at || '',
-        isLiked: false,
-        likesCount: 0,
-      };
-    });
+    setTotalSolutions(response.total);
+    const solutionsData = response.data
+      .filter((s) => s.status === 'completed')
+      .map((solution) => {
+        return {
+          id: solution.id,
+          content: solution.current_content,
+          authorName: solution.user?.fullname || 'Аноним',
+          authorId: solution.user.id || '',
+          createdAt: solution.created_at || '',
+          updatedAt: solution.updated_at || '',
+          isLiked: false,
+          likesCount: 0,
+        };
+      });
     setCompletedSolutions(solutionsData);
   }, [challenge?.id]);
 
@@ -424,6 +425,7 @@ export function ChallengeDetail() {
           onStatusChanged={async () => {
             await fetchCompletedSolutions();
           }}
+          totalSolutions={totalSolutions}
         />
 
         {/* Готовые решения */}
@@ -443,7 +445,8 @@ export function ChallengeDetail() {
         onSelectDirection={handleSelectDirection}
         onStartFromScratch={handleStartFromScratch}
         hasAuthorSolution={!!authorSolution}
-        totalSolutions={completedSolutions.length + (authorSolution ? 1 : 0)}
+        totalSolutions={totalSolutions}
+        loadingDirections={isLoadingDirections}
       />
 
       <DirectionSelectionModal

@@ -189,6 +189,138 @@
     margin-bottom: 24px;
   }
 
+  // Подсказка для первой версии
+  .first-version-tip {
+    margin-bottom: 24px;
+    border: 2px solid rgba(#f59e0b, 0.3);
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(#f59e0b, 0.08) 0%, rgba(#f59e0b, 0.03) 100%);
+    overflow: hidden;
+    animation: slideIn 0.4s ease-out;
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .tip-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, rgba(#f59e0b, 0.12) 0%, rgba(#f59e0b, 0.06) 100%);
+      border-bottom: 1px solid rgba(#f59e0b, 0.2);
+      position: relative;
+
+      .tip-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        .anticon {
+          font-size: 16px;
+          color: white;
+        }
+      }
+
+      h5 {
+        flex: 1;
+        font-size: 16px;
+        font-weight: 600;
+        color: $heading-color;
+        margin: 0;
+      }
+
+      .tip-close {
+        width: 24px;
+        height: 24px;
+        border: none;
+        background: rgba(#000, 0.1);
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        line-height: 1;
+        color: rgba($text-color, 0.6);
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+
+        &:hover {
+          background: rgba(#000, 0.15);
+          color: $text-color;
+        }
+      }
+    }
+
+    .tip-content {
+      padding: 20px;
+
+      p {
+        font-size: 14px;
+        color: $text-color;
+        line-height: 1.6;
+        margin: 0 0 16px 0;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      .tip-suggestions {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 16px 0;
+
+        li {
+          padding: 8px 0 8px 24px;
+          font-size: 14px;
+          color: $text-color;
+          line-height: 1.5;
+          position: relative;
+
+          &:before {
+            content: '💡';
+            position: absolute;
+            left: 0;
+            font-size: 14px;
+          }
+        }
+      }
+
+      .tip-footer {
+        font-size: 13px;
+        color: rgba($text-color, 0.8);
+        font-style: italic;
+        padding: 12px 16px;
+        background: rgba(#f59e0b, 0.08);
+        border-left: 3px solid #f59e0b;
+        border-radius: 4px;
+      }
+    }
+
+    .tip-actions {
+      padding: 0 20px 20px;
+      text-align: center;
+
+      .ant-btn {
+        min-width: 200px;
+      }
+    }
+  }
+
   // ИИ действия
   .ai-actions-section {
     .ai-actions-header {
@@ -295,6 +427,66 @@
       border-radius: 6px;
       color: $text-color;
       font-size: 14px;
+    }
+
+    .ai-inactive {
+      display: flex;
+      gap: 16px;
+      padding: 24px;
+      background: rgba($border-color, 0.1);
+      border: 1px dashed $border-color;
+      border-radius: 8px;
+      align-items: flex-start;
+
+      .ai-inactive-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba($primary-color, 0.1) 0%, rgba($primary-color, 0.05) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        .anticon {
+          font-size: 24px;
+          color: $primary-color;
+        }
+      }
+
+      .ai-inactive-text {
+        flex: 1;
+
+        h5 {
+          font-size: 16px;
+          font-weight: 600;
+          color: $heading-color;
+          margin: 0 0 8px 0;
+        }
+
+        p {
+          font-size: 14px;
+          color: $text-color;
+          line-height: 1.6;
+          margin: 0 0 8px 0;
+
+          strong {
+            color: $primary-color;
+            font-weight: 600;
+          }
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+
+        .ai-inactive-hint {
+          font-size: 13px;
+          color: rgba($text-color, 0.8);
+          font-style: italic;
+          margin-top: 12px;
+        }
+      }
     }
   }
 
@@ -448,6 +640,70 @@
       }
     }
 
+    .first-version-tip {
+      margin-bottom: 16px;
+
+      .tip-header {
+        padding: 12px 16px;
+
+        .tip-icon {
+          width: 28px;
+          height: 28px;
+
+          .anticon {
+            font-size: 14px;
+          }
+        }
+
+        h5 {
+          font-size: 15px;
+        }
+
+        .tip-close {
+          width: 22px;
+          height: 22px;
+          font-size: 18px;
+        }
+      }
+
+      .tip-content {
+        padding: 16px;
+
+        p {
+          font-size: 13px;
+          margin-bottom: 12px;
+        }
+
+        .tip-suggestions {
+          margin-bottom: 12px;
+
+          li {
+            padding: 6px 0 6px 22px;
+            font-size: 13px;
+
+            &:before {
+              font-size: 12px;
+            }
+          }
+        }
+
+        .tip-footer {
+          font-size: 12px;
+          padding: 10px 12px;
+        }
+      }
+
+      .tip-actions {
+        padding: 0 16px 16px;
+
+        .ant-btn {
+          min-width: auto;
+          width: 100%;
+          font-size: 13px;
+        }
+      }
+    }
+
     .ai-actions-section {
       .ai-actions-header {
         margin-bottom: 16px;
@@ -469,6 +725,39 @@
           width: 100%;
           min-width: auto;
           padding: 14px 20px;
+        }
+      }
+
+      .ai-inactive {
+        flex-direction: column;
+        padding: 20px;
+        gap: 12px;
+        text-align: center;
+
+        .ai-inactive-icon {
+          align-self: center;
+          width: 40px;
+          height: 40px;
+
+          .anticon {
+            font-size: 20px;
+          }
+        }
+
+        .ai-inactive-text {
+          h5 {
+            font-size: 15px;
+            margin-bottom: 6px;
+          }
+
+          p {
+            font-size: 13px;
+          }
+
+          .ai-inactive-hint {
+            font-size: 12px;
+            margin-top: 10px;
+          }
         }
       }
     }
@@ -605,6 +894,42 @@
       }
     }
 
+    .first-version-tip {
+      background: rgba(#f59e0b, 0.12);
+      border-color: rgba(#f59e0b, 0.3);
+
+      .tip-header {
+        background: rgba(#f59e0b, 0.18);
+        border-bottom-color: rgba(#f59e0b, 0.3);
+
+        h5 {
+          color: #ffffff;
+        }
+
+        .tip-close {
+          background: rgba(255, 255, 255, 0.1);
+          color: rgba(255, 255, 255, 0.7);
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+          }
+        }
+      }
+
+      .tip-content {
+        p,
+        .tip-suggestions li {
+          color: rgba(255, 255, 255, 0.9);
+        }
+
+        .tip-footer {
+          background: rgba(#f59e0b, 0.15);
+          color: rgba(255, 255, 255, 0.85);
+        }
+      }
+    }
+
     .ai-actions-section {
       .ai-actions-header {
         h4 {
@@ -619,6 +944,33 @@
       .ai-processing {
         background: rgba($primary-color, 0.1);
         color: rgba(255, 255, 255, 0.9);
+      }
+
+      .ai-inactive {
+        background: rgba(#434343, 0.3);
+        border-color: #434343;
+
+        .ai-inactive-icon {
+          background: rgba($primary-color, 0.15);
+        }
+
+        .ai-inactive-text {
+          h5 {
+            color: #ffffff;
+          }
+
+          p {
+            color: rgba(255, 255, 255, 0.8);
+
+            strong {
+              color: $primary-color;
+            }
+          }
+
+          .ai-inactive-hint {
+            color: rgba(255, 255, 255, 0.7);
+          }
+        }
       }
     }
 
