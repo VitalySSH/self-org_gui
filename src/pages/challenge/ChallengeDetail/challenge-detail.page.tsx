@@ -166,7 +166,7 @@ export function ChallengeDetail() {
           authorId: solution.user.id || '',
           createdAt: solution.created_at || '',
           updatedAt: solution.updated_at || '',
-          isLiked: false,
+          isAuthorLike: solution.is_author_like,
           likesCount: 0,
         };
       });
@@ -221,6 +221,8 @@ export function ChallengeDetail() {
     newVersion.solution = createdSolution;
     await versionService.save(newVersion);
 
+    await llmService.solutionPreprocessing(solution.id);
+
     setShowParticipationModal(false);
     messageApi.success('Решение автора скопировано как основа');
     // Перезагружаем данные пользователя
@@ -262,6 +264,8 @@ export function ChallengeDetail() {
     newVersion.change_description = 'Оригинальное решение';
     const createdVersion = await versionService.save(newVersion);
 
+    await llmService.solutionPreprocessing(solution.id);
+
     solution.versions = [createdVersion];
     setUserSolution({
       solution,
@@ -289,6 +293,8 @@ export function ChallengeDetail() {
       newVersion.version_number = 1;
       newVersion.change_description = `Выбран подход: "${direction.title}"`;
       const createdVersion = await versionService.save(newVersion);
+
+      await llmService.solutionPreprocessing(solution.id);
 
       solution.versions = [createdVersion];
       setUserSolution({
@@ -361,6 +367,9 @@ export function ChallengeDetail() {
 
     newVersion.solution = solution;
     await versionService.save(newVersion);
+
+    await llmService.solutionPreprocessing(solution.id);
+
     messageApi.success('Новая версия сохранена');
     await fetchUserSolution();
   };

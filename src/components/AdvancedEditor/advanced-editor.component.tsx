@@ -40,6 +40,7 @@ export interface AdvancedEditorProps {
   className?: string;
   autoHeight?: boolean;
   initialPreviewMode?: boolean;
+  onLengthExceeded?: (isExceeded: boolean) => void;
 }
 
 export interface AdvancedEditorRef {
@@ -67,6 +68,7 @@ export const AdvancedEditor = forwardRef<
       className = '',
       autoHeight = false,
       initialPreviewMode,
+      onLengthExceeded,
     },
     ref
   ) => {
@@ -89,6 +91,13 @@ export const AdvancedEditor = forwardRef<
       window.addEventListener('resize', checkMobile);
       return () => window.removeEventListener('resize', checkMobile);
     }, []);
+
+    useEffect(() => {
+      if (onLengthExceeded && maxLength > 0) {
+        const isExceeded = value.length > maxLength;
+        onLengthExceeded(isExceeded);
+      }
+    }, [value, maxLength, onLengthExceeded]);
 
     const saveToHistory = useCallback((currentValue: string) => {
       setHistory((prev) => {

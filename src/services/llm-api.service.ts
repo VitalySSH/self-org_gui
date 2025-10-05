@@ -85,6 +85,12 @@ export class LlmApiService extends DataSourceService {
     return await this.http.post<SolutionVersionResponse>(url, request);
   }
 
+  async solutionPreprocessing(solution_id: string) {
+    const url = `solution/${solution_id}/preprocess`;
+
+    return await this.http.post<SolutionVersionResponse>(url);
+  }
+
   async getSolutionAIInfluence(solution_id: string) {
     const url = `analytics/solution-ai-influence/${solution_id}`;
 

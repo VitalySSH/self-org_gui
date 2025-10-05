@@ -70,6 +70,7 @@ export function AIResponseModal({
   >('responding');
   const [integrationData, setIntegrationData] =
     useState<IntegrationResponse | null>(null);
+  const [isTextTooLong, setIsTextTooLong] = useState(false);
 
   const llmService = new LlmApiService();
 
@@ -80,8 +81,8 @@ export function AIResponseModal({
         index,
         title: getItemTitle(item, index),
         description: getItemDescription(item),
-        response: '' as ItemResponseType,
-        reasoning: '',
+        response: item.response || '',
+        reasoning: item.reasoning || '',
         modification: '',
         originalText: getItemDescription(item),
       }));
@@ -89,6 +90,8 @@ export function AIResponseModal({
       setOriginalText(userSolution.currentVersion.content);
       setIntegratedText(userSolution.currentVersion.content);
       setIntegrationStep('responding');
+
+      setIsTextTooLong(userSolution.currentVersion.content.length > 3000);
     }
   }, [visible, responseData, userSolution]);
 
@@ -538,6 +541,7 @@ export function AIResponseModal({
                               showToolbar={true}
                               autoHeight={true}
                               initialPreviewMode={true}
+                              onLengthExceeded={setIsTextTooLong}
                             />
                           </div>
 
@@ -578,6 +582,22 @@ export function AIResponseModal({
           </div>
         </div>
 
+        {integrationStep === 'integration' && isTextTooLong && (
+          <div
+            style={{
+              padding: '12px 24px',
+              background: 'rgba(245, 34, 45, 0.1)',
+              borderTop: '1px solid rgba(245, 34, 45, 0.2)',
+              color: '#f5222d',
+              fontSize: '14px',
+              textAlign: 'center',
+            }}
+          >
+            ⚠️ Текст решения превышает максимально допустимую длину.
+            Отредактируйте текст или удалите лишнее содержимое.
+          </div>
+        )}
+
         <div className="modal-actions">
           {integrationStep === 'responding' && (
             <>
@@ -611,6 +631,7 @@ export function AIResponseModal({
                 type="primary"
                 onClick={handleConfirmIntegration}
                 loading={processing}
+                disabled={isTextTooLong}
                 size="large"
                 icon={<CheckOutlined />}
               >

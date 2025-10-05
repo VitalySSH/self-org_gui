@@ -5,6 +5,6 @@ export interface CompletedSolution {
   content: string;
   createdAt: Date | string;
   updatedAt: Date | string;
-  isLiked?: boolean;
+  isAuthorLike?: boolean;
   likesCount?: number;
 }

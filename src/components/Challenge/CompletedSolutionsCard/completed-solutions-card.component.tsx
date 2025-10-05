@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, List, Empty, Button, message, Pagination } from 'antd';
+import { Card, List, Empty, Button, message, Pagination, Tooltip } from 'antd';
 import { AIInfluenceResponse, CompletedSolution } from 'src/interfaces';
 import {
   SolutionOutlined,
@@ -13,8 +13,9 @@ import {
   LineChartOutlined,
 } from '@ant-design/icons';
 import './completed-solutions-card.component.scss';
-import { LlmApiService } from 'src/services';
+import { CrudDataSourceService, LlmApiService } from 'src/services';
 import { AdvancedEditor, SolutionAIInfluenceModal } from 'src/components';
+import { SolutionModel } from 'src/models';
 
 interface CompletedSolutionsCardProps {
   solutions: CompletedSolution[];
@@ -39,6 +40,7 @@ export function CompletedSolutionsCard({
   const [loadingInfluence, setLoadingInfluence] = useState(false);
 
   const llmService = new LlmApiService();
+  const solutionService = new CrudDataSourceService(SolutionModel);
 
   const handleToggleExpand = (solutionId: string) => {
     const newExpanded = new Set(expandedSolutions);
@@ -54,9 +56,9 @@ export function CompletedSolutionsCard({
     if (!isAuthor) return;
 
     try {
-      // TODO: Реализовать API для лайков решений
       const newLiked = new Set(likedSolutions);
-      if (newLiked.has(solutionId)) {
+      const isAuthorLike = newLiked.has(solutionId);
+      if (isAuthorLike) {
         newLiked.delete(solutionId);
         messageApi.success('Отметка убрана');
       } else {
@@ -64,6 +66,11 @@ export function CompletedSolutionsCard({
         messageApi.success('Решение отмечено как понравившееся');
       }
       setLikedSolutions(newLiked);
+
+      const solution = solutionService.createRecord();
+      solution.id = solutionId;
+      solution.is_author_like = isAuthorLike;
+      await solutionService.save(solution);
     } catch (error) {
       console.error('Error toggling like:', error);
       messageApi.error('Ошибка при изменении отметки');
@@ -101,17 +108,6 @@ export function CompletedSolutionsCard({
     if (content.length <= maxLength) return content;
     return content.slice(0, maxLength) + '...';
   };
-
-  // const getStatusInfo = (status: string) => {
-  //   switch (status) {
-  //     case 'ready_for_review':
-  //       return { label: 'На рассмотрении', class: 'ready-for-review' };
-  //     case 'completed':
-  //       return { label: 'Завершено', class: 'completed' };
-  //     default:
-  //       return { label: 'Неизвестно', class: 'draft' };
-  //   }
-  // };
 
   // Пагинация
   const startIndex = (currentPage - 1) * pageSize;
@@ -163,7 +159,6 @@ export function CompletedSolutionsCard({
               renderItem={(solution) => {
                 const isExpanded = expandedSolutions.has(solution.id);
                 const isLiked = likedSolutions.has(solution.id);
-                // const statusInfo = getStatusInfo(solution.status);
 
                 return (
                   <List.Item key={solution.id} className="solution-item">
@@ -177,14 +172,19 @@ export function CompletedSolutionsCard({
                         </div>
 
                         <div className="solution-details">
-                          {/*<div className={`status-badge ${statusInfo.class}`}>*/}
-                          {/*  {statusInfo.label}*/}
-                          {/*</div>*/}
-
                           <div className="date-info">
                             <ClockCircleOutlined className="date-icon" />
                             <span>{formatDate(solution.updatedAt)}</span>
                           </div>
+
+                          {!isAuthor && solution.isAuthorLike && (
+                            <Tooltip title="Автор задачи отметил это решение как полезное или понравившееся">
+                              <div className="author-liked-badge">
+                                <StarFilled className="author-liked-icon" />
+                                <span>Отмечено автором</span>
+                              </div>
+                            </Tooltip>
+                          )}
                         </div>
                       </div>
 

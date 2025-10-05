@@ -15,6 +15,9 @@ export class SolutionModel extends ApiModel {
   @attribute()
   collective_influence_count!: number;
 
+  @attribute()
+  is_author_like?: boolean;
+
   @attribute(Date)
   created_at?: Date;
 
