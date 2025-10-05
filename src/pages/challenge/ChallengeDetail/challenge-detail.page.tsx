@@ -221,7 +221,7 @@ export function ChallengeDetail() {
     newVersion.solution = createdSolution;
     await versionService.save(newVersion);
 
-    await llmService.solutionPreprocessing(solution.id);
+    await llmService.solutionPreprocessing(createdSolution.id);
 
     setShowParticipationModal(false);
     messageApi.success('Решение автора скопировано как основа');
@@ -264,7 +264,7 @@ export function ChallengeDetail() {
     newVersion.change_description = 'Оригинальное решение';
     const createdVersion = await versionService.save(newVersion);
 
-    await llmService.solutionPreprocessing(solution.id);
+    await llmService.solutionPreprocessing(createdSolution.id);
 
     solution.versions = [createdVersion];
     setUserSolution({
@@ -294,7 +294,7 @@ export function ChallengeDetail() {
       newVersion.change_description = `Выбран подход: "${direction.title}"`;
       const createdVersion = await versionService.save(newVersion);
 
-      await llmService.solutionPreprocessing(solution.id);
+      await llmService.solutionPreprocessing(createdSolution.id);
 
       solution.versions = [createdVersion];
       setUserSolution({
