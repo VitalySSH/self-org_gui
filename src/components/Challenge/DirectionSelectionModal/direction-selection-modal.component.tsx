@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons';
 import { ThinkingDirection } from 'src/interfaces';
 import './direction-selection-modal.component.scss';
+import { AdvancedEditor } from 'src/components';
 
 interface DirectionSelectionModalProps {
   visible: boolean;
@@ -145,9 +146,14 @@ export function DirectionSelectionModal({
 
                       <div className="initial-solution-preview">
                         <h4>Начальный текст:</h4>
-                        <div className="solution-text">
-                          {direction.initial_solution_text}
-                        </div>
+                        <AdvancedEditor
+                          value={
+                            direction.initial_solution_text ||
+                            'Описание не указано'
+                          }
+                          minHeight={100}
+                          readonly={true}
+                        />
                       </div>
                     </div>
                   </Card>

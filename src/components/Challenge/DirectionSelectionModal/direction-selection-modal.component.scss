@@ -321,17 +321,6 @@
                 color: $heading-color;
                 margin: 0 0 8px 0;
               }
-
-              .solution-text {
-                background: rgba(#6366f1, 0.05);
-                border: 1px solid rgba(#6366f1, 0.1);
-                border-radius: 6px;
-                padding: 12px;
-                font-size: 14px;
-                color: $text-color;
-                font-family: 'JetBrains Mono', 'Consolas', monospace;
-                line-height: 1.5;
-              }
             }
           }
         }
@@ -531,11 +520,6 @@
                   font-size: 13px;
                   margin-bottom: 6px;
                 }
-
-                .solution-text {
-                  padding: 10px;
-                  font-size: 13px;
-                }
               }
             }
           }
@@ -642,12 +626,6 @@
                   .excerpt-item {
                     font-size: 11px;
                   }
-                }
-              }
-
-              .initial-solution-preview {
-                .solution-text {
-                  font-size: 12px;
                 }
               }
             }
@@ -774,12 +752,6 @@
               .initial-solution-preview {
                 h4 {
                   color: #ffffff;
-                }
-
-                .solution-text {
-                  background: rgba(#6366f1, 0.1);
-                  border-color: rgba(#6366f1, 0.2);
-                  color: rgba(255, 255, 255, 0.9);
                 }
               }
             }
