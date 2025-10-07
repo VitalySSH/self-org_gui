@@ -82,7 +82,7 @@ export function AIResponseModal({
         title: getItemTitle(item, index),
         description: getItemDescription(item),
         response: item.response || '',
-        reasoning: item.reasoning || '',
+        reasoning: '',
         modification: '',
         originalText: getItemDescription(item),
       }));
