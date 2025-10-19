@@ -2,10 +2,6 @@
 @use 'src/shared/assets/scss/variables' as *;
 @use 'src/shared/assets/scss/mixins' as *;
 
-// ========================================
-// ОСНОВНЫЕ СТИЛИ САЙДБАРА
-// ========================================
-
 .sider-bar {
   background: linear-gradient(
     180deg,
@@ -710,6 +706,68 @@
 
     &:hover {
       opacity: 1;
+    }
+  }
+}
+
+.join-team-sider-button {
+  background: linear-gradient(
+                  135deg,
+                  rgba($success-color, 0.1) 0%,
+                  rgba($success-color, 0.05) 100%
+  );
+  border: 1px solid rgba($success-color, 0.3);
+  border-radius: 12px;
+  height: 44px;
+  font-weight: 500;
+  color: $success-color;
+  transition: all $transition-speed cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  z-index: 20;
+  margin-bottom: 8px;
+
+  @media (max-width: 480px) {
+    height: 40px;
+    font-size: 14px;
+  }
+
+  .anticon {
+    font-size: 18px;
+
+    @media (max-width: 480px) {
+      font-size: 16px;
+    }
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, $success-color 0%, #73d13d 100%);
+    border-color: $success-color;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($success-color, 0.3);
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $success-color;
+    outline-offset: 2px;
+  }
+}
+
+.ant-layout-sider-collapsed {
+  .join-team-sider-button {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .anticon {
+      margin: 0;
     }
   }
 }

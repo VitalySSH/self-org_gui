@@ -35,7 +35,7 @@ import {
 } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContextProvider, SiderBarInterface } from 'src/interfaces';
-import { AuthCard } from 'src/components';
+import { AuthCard, JoinTeamModal } from 'src/components';
 import { MenuItem } from 'src/shared/types.ts';
 import { SubCommunitiesLabel } from 'src/consts';
 import { AuthApiClientService } from 'src/services';
@@ -151,6 +151,7 @@ export function SiderBar(props: SiderBarInterface) {
   const [communityWSMenuKeys, setCommunityWSMenuKeys] = useState<string[]>([]);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
   // ДЕМО-РЕЖИМ: Состояние (легко удаляется в будущем)
   const [isDemoMode, setIsDemoMode] = useState(() => {
@@ -559,6 +560,18 @@ export function SiderBar(props: SiderBarInterface) {
       </div>
 
       <div className="sider-bottom">
+        {!isDemoMode && (
+          <Button
+            type="default"
+            icon={<UserAddOutlined />}
+            onClick={() => setIsJoinModalOpen(true)}
+            className="join-team-sider-button"
+            title="Присоединиться к команде"
+          >
+            {(!collapsed || isMobile) && 'Присоединиться'}
+          </Button>
+        )}
+
         {isMobile ? (
           <Button
             type="text"
@@ -596,6 +609,11 @@ export function SiderBar(props: SiderBarInterface) {
           </Flex>
         )}
       </div>
+
+      <JoinTeamModal
+        open={isJoinModalOpen}
+        onClose={() => setIsJoinModalOpen(false)}
+      />
     </>
   );
 

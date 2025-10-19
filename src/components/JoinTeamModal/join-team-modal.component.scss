@@ -1,0 +1,351 @@
+@use 'src/shared/assets/scss/variables' as *;
+
+.join-team-modal {
+  .ant-modal-content {
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .ant-modal-body {
+    padding: 0;
+  }
+}
+
+.join-team-content {
+  padding: 32px;
+
+  @media (max-width: 768px) {
+    padding: 24px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 20px;
+  }
+}
+
+// Header
+.join-team-header {
+  text-align: center;
+  margin-bottom: 8px;
+
+  .header-icon {
+    font-size: 48px;
+    color: $gradient-start;
+    margin-bottom: 16px;
+    animation: float 3s ease-in-out infinite;
+
+    @media (max-width: 480px) {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+  }
+
+  .header-title {
+    margin-bottom: 12px !important;
+    color: $heading-color;
+    font-size: 28px;
+
+    @media (max-width: 768px) {
+      font-size: 24px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 22px;
+    }
+  }
+
+  .header-subtitle {
+    font-size: 16px;
+    color: $text-color;
+    margin-bottom: 0;
+
+    @media (max-width: 480px) {
+      font-size: 15px;
+    }
+
+    strong {
+      color: $gradient-start;
+      font-weight: 600;
+    }
+  }
+}
+
+// Mission
+.join-team-mission {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba($success-color, 0.05) 0%, rgba($gradient-start, 0.05) 100%);
+  border-radius: 12px;
+
+  @media (max-width: 480px) {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .mission-icon {
+    font-size: 24px;
+    color: $success-color;
+    margin-top: 2px;
+    flex-shrink: 0;
+
+    @media (max-width: 480px) {
+      font-size: 20px;
+    }
+  }
+
+  .mission-text {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: $text-color;
+
+    @media (max-width: 480px) {
+      font-size: 14px;
+    }
+  }
+}
+
+// Contacts
+.join-team-contacts {
+  .contacts-title {
+    margin-bottom: 20px !important;
+    color: $heading-color;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+
+    @media (max-width: 480px) {
+      font-size: 16px;
+      margin-bottom: 16px !important;
+    }
+  }
+
+  .contact-methods {
+    width: 100%;
+  }
+}
+
+.contact-method {
+  padding: 20px;
+  border-radius: 12px;
+  background: $secondary-color;
+  border: 1px solid rgba($border-color, 0.6);
+  transition: all $transition-speed ease;
+
+  @media (max-width: 480px) {
+    padding: 16px;
+  }
+
+  &:hover {
+    border-color: rgba($gradient-start, 0.3);
+    box-shadow: 0 4px 12px rgba($card-shadow, 0.1);
+  }
+
+  .method-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+
+    .method-icon {
+      font-size: 20px;
+
+      @media (max-width: 480px) {
+        font-size: 18px;
+      }
+
+      &.telegram-icon {
+        color: #0088cc;
+      }
+
+      &.email-icon {
+        color: $gradient-start;
+      }
+    }
+
+    .method-title {
+      font-size: 16px;
+      color: $heading-color;
+
+      @media (max-width: 480px) {
+        font-size: 15px;
+      }
+    }
+  }
+
+  .method-description {
+    margin: 0 0 16px 0;
+    font-size: 14px;
+    color: rgba($text-color, 0.8);
+
+    @media (max-width: 480px) {
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+  }
+
+  .method-action {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .telegram-button {
+      background: linear-gradient(135deg, #0088cc 0%, #00aced 100%);
+      border: none;
+      height: 48px;
+      font-size: 15px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(#0088cc, 0.3);
+
+      @media (max-width: 480px) {
+        height: 44px;
+        font-size: 14px;
+      }
+
+      &:hover {
+        background: linear-gradient(135deg, #0077b3 0%, #0099db 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(#0088cc, 0.4);
+      }
+
+      &:active {
+        transform: translateY(-1px);
+      }
+    }
+
+    .email-button {
+      background: $background-color;
+      border: 1px solid rgba($border-color, 0.6);
+      height: 48px;
+      font-size: 15px;
+      font-weight: 500;
+      color: $text-color;
+
+      @media (max-width: 480px) {
+        height: 44px;
+        font-size: 14px;
+      }
+
+      &:hover {
+        border-color: $gradient-start;
+        color: $gradient-start;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($gradient-start, 0.2);
+      }
+
+      &:active {
+        transform: translateY(-1px);
+      }
+    }
+
+    .method-hint {
+      font-size: 13px;
+      text-align: center;
+
+      @media (max-width: 480px) {
+        font-size: 12px;
+      }
+
+      code {
+        background: rgba($gradient-start, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: $gradient-start;
+        font-family: 'Courier New', monospace;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Footer
+.join-team-footer {
+  text-align: center;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba($gradient-start, 0.05) 0%, rgba($gradient-end, 0.05) 100%);
+  border-radius: 12px;
+  margin-top: 8px;
+
+  @media (max-width: 480px) {
+    padding: 12px;
+  }
+
+  .footer-text {
+    margin: 0;
+    font-size: 14px;
+    color: $text-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    @media (max-width: 480px) {
+      font-size: 13px;
+      flex-direction: column;
+      gap: 4px;
+    }
+  }
+}
+
+// Animations
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+// Dark theme
+.dark-theme {
+  .join-team-modal {
+    .ant-modal-content {
+      background: #2d2d2d;
+    }
+  }
+
+  .join-team-header {
+    .header-title {
+      color: #ffffff;
+    }
+  }
+
+  .join-team-mission {
+    background: linear-gradient(135deg, rgba($success-color, 0.1) 0%, rgba($gradient-start, 0.1) 100%);
+  }
+
+  .contact-method {
+    background: #3a3a3a;
+    border-color: #444;
+
+    &:hover {
+      border-color: rgba($gradient-start, 0.4);
+    }
+
+    .method-header .method-title {
+      color: #ffffff;
+    }
+
+    .method-action {
+      .email-button {
+        background: #2d2d2d;
+        border-color: #444;
+        color: #e0e0e0;
+
+        &:hover {
+          border-color: $gradient-start;
+          color: $gradient-start;
+        }
+      }
+    }
+  }
+
+  .join-team-footer {
+    background: linear-gradient(135deg, rgba($gradient-start, 0.1) 0%, rgba($gradient-end, 0.1) 100%);
+  }
+}

@@ -50,3 +50,4 @@ export * from './Challenge/ParticipationInviteModal/participation-invite-modal.c
 export * from './Challenge/DirectionSelectionModal/direction-selection-modal.component';
 export * from './Challenge/SolutionAIInfluenceModal/solution-ai-influence-modal.component';
 export * from './Challenge/CollectiveMetricsModal/collective-metrics-modal.component';
+export * from './JoinTeamModal/join-team-modal.component';
