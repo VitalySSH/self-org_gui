@@ -75,3 +75,5 @@ export * from './llm/solution-version-response.interface';
 export * from './llm/ai-influence-response.interface';
 export * from './llm/collective-metrics-response.interface';
 export * from './llm/community-ai-overview-response.interface';
+export * from './llm/rate-limit-check-response.interface';
+export * from './llm/rate-limit-check-all-response.interface';

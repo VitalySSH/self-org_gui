@@ -12,6 +12,7 @@ import {
   DeleteOutlined,
   LineChartOutlined,
   TeamOutlined,
+  ClockCircleOutlined,
 } from '@ant-design/icons';
 import {
   ChallengeModel,
@@ -21,7 +22,7 @@ import {
 import { SolutionAIInfluenceModal, SolutionEditor } from 'src/components';
 import './user-workspace-card.component.scss';
 import { CrudDataSourceService, LlmApiService } from 'src/services';
-import { AIInfluenceResponse } from 'src/interfaces';
+import { AIInfluenceResponse, RateLimitCheckAllResponse } from 'src/interfaces';
 
 interface UserSolution {
   solution: SolutionModel;
@@ -39,15 +40,11 @@ interface UserWorkspaceCardProps {
   onSolutionDeleted?: () => void;
   onStatusChanged?: () => void;
   totalSolutions: number;
+  rateLimits?: RateLimitCheckAllResponse | null;
 }
 
 const statusOptions = [
   { value: 'draft', label: 'Черновик', color: '#999' },
-  // {
-  //   value: 'ready_for_review',
-  //   label: 'Готово для просмотра',
-  //   color: '#fa8c16',
-  // },
   { value: 'completed', label: 'Готово', color: '#52c41a' },
 ];
 
@@ -59,6 +56,7 @@ export function UserWorkspaceCard({
   onSolutionDeleted,
   onStatusChanged,
   totalSolutions = 0,
+  rateLimits,
 }: UserWorkspaceCardProps) {
   const [messageApi, contextHolder] = message.useMessage();
   const [selectedVersion, setSelectedVersion] = useState<number>(1);
@@ -75,9 +73,50 @@ export function UserWorkspaceCard({
   const [loadingInfluence, setLoadingInfluence] = useState(false);
   const [showFirstVersionTip, setShowFirstVersionTip] = useState(false);
 
+  // Состояния для таймеров rate limiting
+  const [ideasTimeLeft, setIdeasTimeLeft] = useState(0);
+  const [improvementsTimeLeft, setImprovementsTimeLeft] = useState(0);
+  const [criticismTimeLeft, setCriticismTimeLeft] = useState(0);
+
   const solutionService = new CrudDataSourceService(SolutionModel);
   const versionService = new CrudDataSourceService(SolutionVersionModel);
   const llmService = new LlmApiService();
+
+  // Инициализация таймеров на основе rate limits
+  useEffect(() => {
+    if (rateLimits?.request_types) {
+      const { ideas, improvements, criticism } = rateLimits.request_types;
+
+      if (!ideas.available) {
+        setIdeasTimeLeft(ideas.seconds_remaining);
+      }
+      if (!improvements.available) {
+        setImprovementsTimeLeft(improvements.seconds_remaining);
+      }
+      if (!criticism.available) {
+        setCriticismTimeLeft(criticism.seconds_remaining);
+      }
+    }
+  }, [rateLimits]);
+
+  // Таймеры для отсчёта времени
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIdeasTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+      setImprovementsTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+      setCriticismTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Форматирование времени
+  const formatTime = (seconds: number): string => {
+    if (seconds <= 0) return '';
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+  };
 
   useEffect(() => {
     if (userSolution) {
@@ -99,7 +138,6 @@ export function UserWorkspaceCard({
 
   useEffect(() => {
     if (userSolution && userSolution.allVersions.length === 1) {
-      // Проверяем, было ли уведомление уже показано для этого решения
       const tipShownKey = `first-version-tip-shown-${userSolution.solution.id}`;
       const wasTipShown = localStorage.getItem(tipShownKey);
 
@@ -268,12 +306,10 @@ export function UserWorkspaceCard({
     setEditedContent(content);
     const currentVersionContent = getCurrentVersion()?.content || '';
 
-    // Проверяем наличие изменений
     const hasChanges =
       content !== currentVersionContent && content.trim() !== '';
     setHasUnsavedChanges(hasChanges);
 
-    // Проверяем существенность изменений (более 20% от исходного текста или более 100 символов)
     if (hasChanges) {
       const originalLength = currentVersionContent.length;
       const changedLength = Math.abs(content.length - originalLength);
@@ -369,6 +405,11 @@ export function UserWorkspaceCard({
       minute: '2-digit',
     });
   };
+
+  // Проверка доступности кнопок AI
+  const isIdeasDisabled = ideasTimeLeft > 0 || isProcessingAI;
+  const isImprovementsDisabled = improvementsTimeLeft > 0 || isProcessingAI;
+  const isCriticismDisabled = criticismTimeLeft > 0 || isProcessingAI;
 
   return (
     <Card className="challenge-card user-workspace-card">
@@ -559,35 +600,83 @@ export function UserWorkspaceCard({
           {totalSolutions > 2 ? (
             <>
               <div className="ai-actions">
-                <Button
-                  className="ai-button ideas-button"
-                  icon={<BulbOutlined />}
-                  onClick={() => handleAIRequest('ideas')}
-                  disabled={isProcessingAI || !userSolution}
-                  loading={isProcessingAI}
+                <Tooltip
+                  title={
+                    ideasTimeLeft > 0
+                      ? `Доступно через ${formatTime(ideasTimeLeft)}`
+                      : 'Сгенерировать новые идеи на основе других решений'
+                  }
                 >
-                  Сгенерировать гипотезы
-                </Button>
+                  <Button
+                    className="ai-button ideas-button"
+                    icon={
+                      ideasTimeLeft > 0 ? (
+                        <ClockCircleOutlined />
+                      ) : (
+                        <BulbOutlined />
+                      )
+                    }
+                    onClick={() => handleAIRequest('ideas')}
+                    disabled={isIdeasDisabled}
+                    loading={isProcessingAI}
+                  >
+                    {ideasTimeLeft > 0
+                      ? `Гипотезы (${formatTime(ideasTimeLeft)})`
+                      : 'Сгенерировать гипотезы'}
+                  </Button>
+                </Tooltip>
 
-                <Button
-                  className="ai-button improvements-button"
-                  icon={<ThunderboltOutlined />}
-                  onClick={() => handleAIRequest('improvements')}
-                  disabled={isProcessingAI || !userSolution}
-                  loading={isProcessingAI}
+                <Tooltip
+                  title={
+                    improvementsTimeLeft > 0
+                      ? `Доступно через ${formatTime(improvementsTimeLeft)}`
+                      : 'Получить предложения по улучшению решения'
+                  }
                 >
-                  Усилить решение
-                </Button>
+                  <Button
+                    className="ai-button improvements-button"
+                    icon={
+                      improvementsTimeLeft > 0 ? (
+                        <ClockCircleOutlined />
+                      ) : (
+                        <ThunderboltOutlined />
+                      )
+                    }
+                    onClick={() => handleAIRequest('improvements')}
+                    disabled={isImprovementsDisabled}
+                    loading={isProcessingAI}
+                  >
+                    {improvementsTimeLeft > 0
+                      ? `Усилить (${formatTime(improvementsTimeLeft)})`
+                      : 'Усилить решение'}
+                  </Button>
+                </Tooltip>
 
-                <Button
-                  className="ai-button criticism-button"
-                  icon={<ExclamationCircleOutlined />}
-                  onClick={() => handleAIRequest('criticism')}
-                  disabled={isProcessingAI || !userSolution}
-                  loading={isProcessingAI}
+                <Tooltip
+                  title={
+                    criticismTimeLeft > 0
+                      ? `Доступно через ${formatTime(criticismTimeLeft)}`
+                      : 'Выявить слабые места и уязвимости'
+                  }
                 >
-                  Выявить уязвимости
-                </Button>
+                  <Button
+                    className="ai-button criticism-button"
+                    icon={
+                      criticismTimeLeft > 0 ? (
+                        <ClockCircleOutlined />
+                      ) : (
+                        <ExclamationCircleOutlined />
+                      )
+                    }
+                    onClick={() => handleAIRequest('criticism')}
+                    disabled={isCriticismDisabled}
+                    loading={isProcessingAI}
+                  >
+                    {criticismTimeLeft > 0
+                      ? `Уязвимости (${formatTime(criticismTimeLeft)})`
+                      : 'Выявить уязвимости'}
+                  </Button>
+                </Tooltip>
               </div>
 
               {isProcessingAI && (

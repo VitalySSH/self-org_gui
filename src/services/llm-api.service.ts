@@ -11,6 +11,8 @@ import {
   IntegrationResponse,
   InteractionResponse,
   InteractionSaveResponse,
+  RateLimitCheckAllResponse,
+  RateLimitCheckResponse,
   SolutionVersionRequest,
   SolutionVersionResponse,
   ThinkingDirectionResponse,
@@ -107,5 +109,17 @@ export class LlmApiService extends DataSourceService {
     const url = `analytics/community-ai-overview/${community_id}`;
 
     return await this.http.get<CommunityAIOverviewResponse>(url);
+  }
+
+  async checkRateLimit(request_type: string) {
+    const url = `rate-limit/check/${request_type}`;
+
+    return await this.http.get<RateLimitCheckResponse>(url);
+  }
+
+  async checkAllRateLimits() {
+    const url = 'rate-limit/check-all';
+
+    return await this.http.get<RateLimitCheckAllResponse>(url);
   }
 }

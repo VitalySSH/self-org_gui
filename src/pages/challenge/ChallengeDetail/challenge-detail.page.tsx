@@ -18,7 +18,11 @@ import {
   AIResponseModal,
 } from 'src/components';
 import './challenge-detail.page.scss';
-import { CompletedSolution, ThinkingDirection } from 'src/interfaces';
+import {
+  CompletedSolution,
+  RateLimitCheckAllResponse,
+  ThinkingDirection,
+} from 'src/interfaces';
 
 interface UserSolution {
   solution: SolutionModel;
@@ -50,6 +54,10 @@ export function ChallengeDetail() {
   const [directions, setDirections] = useState<ThinkingDirection[]>([]);
   const [isLoadingDirections, setIsLoadingDirections] = useState(false);
 
+  // Rate limiting состояния
+  const [rateLimits, setRateLimits] =
+    useState<RateLimitCheckAllResponse | null>(null);
+
   // Состояния модальных окон
   const [showParticipationModal, setShowParticipationModal] = useState(false);
   const [showDirectionModal, setShowDirectionModal] = useState(false);
@@ -67,6 +75,74 @@ export function ChallengeDetail() {
 
   // Проверяем, является ли пользователь автором задачи
   const isAuthor = challenge?.creator?.id === authData.user?.id;
+
+  // Загрузка rate limits
+  const fetchRateLimits = useCallback(async () => {
+    try {
+      const response = await llmService.checkAllRateLimits();
+      setRateLimits(response.data);
+    } catch (error) {
+      console.error('Error loading rate limits:', error);
+      // Не показываем ошибку пользователю, просто логируем
+    }
+  }, []);
+
+  // Обработка 429 ошибки
+  const handle429Error = useCallback(
+    (error: any) => {
+      if (error?.response?.status === 429) {
+        const errorData = error.response.data?.detail;
+
+        if (errorData?.seconds_remaining) {
+          const minutes = Math.floor(errorData.seconds_remaining / 60);
+          const seconds = errorData.seconds_remaining % 60;
+          const timeStr = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+          messageApi.warning({
+            content: `Этот запрос сейчас недоступен. Попробуйте через ${timeStr}`,
+            duration: 5,
+          });
+
+          // Автоматически обновляем rate limits
+          fetchRateLimits();
+        } else {
+          messageApi.warning(
+            'Этот запрос временно недоступен. Попробуйте позже.'
+          );
+        }
+
+        return true;
+      }
+
+      // Обработка 500 - внутренняя ошибка сервера
+      if (error?.response?.status === 500) {
+        messageApi.error({
+          content:
+            'Произошла ошибка на сервере. Попробуйте позже или обратитесь в поддержку.',
+          duration: 6,
+        });
+        return true;
+      }
+
+      // Обработка других ошибок
+      if (error?.response?.status) {
+        const errorMessage =
+          error.response.data?.detail ||
+          'Произошла ошибка при выполнении запроса';
+        messageApi.error({
+          content:
+            typeof errorMessage === 'string'
+              ? errorMessage
+              : 'Произошла ошибка при выполнении запроса',
+          duration: 5,
+        });
+        return true;
+      }
+
+      return false;
+    },
+    [fetchRateLimits, messageApi]
+  );
 
   // Загрузка данных о задаче
   const fetchChallenge = useCallback(async () => {
@@ -178,11 +254,12 @@ export function ChallengeDetail() {
     const loadData = async () => {
       setLoading(true);
       await fetchChallenge();
+      await fetchRateLimits(); // Загружаем rate limits при инициализации
       setLoading(false);
     };
 
     loadData();
-  }, [fetchChallenge]);
+  }, [fetchChallenge, fetchRateLimits]);
 
   // Загрузка зависимых данных после получения challenge
   useEffect(() => {
@@ -225,7 +302,6 @@ export function ChallengeDetail() {
 
     setShowParticipationModal(false);
     messageApi.success('Решение автора скопировано как основа');
-    // Перезагружаем данные пользователя
     await fetchUserSolution();
   };
 
@@ -241,9 +317,14 @@ export function ChallengeDetail() {
       setDirections(response.data.directions);
       setShowParticipationModal(false);
       setShowDirectionModal(true);
-    } catch (error) {
-      console.error('Error getting directions:', error);
-      messageApi.error('Ошибка получения направлений');
+
+      // Обновляем rate limits после успешного запроса
+      await fetchRateLimits();
+    } catch (error: any) {
+      if (!handle429Error(error)) {
+        console.error('Error getting directions:', error);
+        messageApi.error('Ошибка получения направлений');
+      }
     } finally {
       setIsLoadingDirections(false);
     }
@@ -253,7 +334,6 @@ export function ChallengeDetail() {
     const solution = solutionService.createRecord();
     solution.challenge = challenge as ChallengeModel;
     solution.user = authData.getUserRelation();
-    solution.current_content = '';
     solution.current_content = '';
     const createdSolution = await solutionService.save(solution);
 
@@ -343,11 +423,16 @@ export function ChallengeDetail() {
 
       setAIResponseData(response.data);
       setShowAIResponseModal(true);
-    } catch (error) {
-      console.error(`Error getting ${type}:`, error);
-      messageApi.error(
-        `Ошибка получения ${type === 'ideas' ? 'идей' : type === 'improvements' ? 'улучшений' : 'критики'}`
-      );
+
+      // Обновляем rate limits после успешного запроса
+      await fetchRateLimits();
+    } catch (error: any) {
+      if (!handle429Error(error)) {
+        console.error(`Error getting ${type}:`, error);
+        messageApi.error(
+          `Ошибка получения ${type === 'ideas' ? 'идей' : type === 'improvements' ? 'улучшений' : 'критики'}`
+        );
+      }
     }
   };
 
@@ -435,6 +520,7 @@ export function ChallengeDetail() {
             await fetchCompletedSolutions();
           }}
           totalSolutions={totalSolutions}
+          rateLimits={rateLimits}
         />
 
         {/* Готовые решения */}
@@ -456,6 +542,12 @@ export function ChallengeDetail() {
         hasAuthorSolution={!!authorSolution}
         totalSolutions={totalSolutions}
         loadingDirections={isLoadingDirections}
+        directionsAvailable={
+          rateLimits?.request_types?.directions?.available ?? true
+        }
+        directionsTimeRemaining={
+          rateLimits?.request_types?.directions?.formatted_time
+        }
       />
 
       <DirectionSelectionModal

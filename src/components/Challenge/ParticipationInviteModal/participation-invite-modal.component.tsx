@@ -1,10 +1,11 @@
-import { Modal, Button, Card, Spin } from 'antd';
+import { Modal, Button, Card, Spin, Alert } from 'antd';
 import {
   UserOutlined,
   BulbOutlined,
   EditOutlined,
   TeamOutlined,
   RobotOutlined,
+  ClockCircleOutlined,
 } from '@ant-design/icons';
 import './participation-invite-modal.component.scss';
 
@@ -17,6 +18,8 @@ interface ParticipationInviteModalProps {
   hasAuthorSolution: boolean;
   totalSolutions: number;
   loadingDirections?: boolean;
+  directionsAvailable?: boolean;
+  directionsTimeRemaining?: string;
 }
 
 export function ParticipationInviteModal({
@@ -28,8 +31,11 @@ export function ParticipationInviteModal({
   hasAuthorSolution,
   totalSolutions,
   loadingDirections = false,
+  directionsAvailable = true,
+  directionsTimeRemaining,
 }: ParticipationInviteModalProps) {
   const hasMultipleSolutions = totalSolutions > 2;
+  const showDirectionOption = hasMultipleSolutions && directionsAvailable;
 
   return (
     <Modal
@@ -55,7 +61,7 @@ export function ParticipationInviteModal({
             <h2>Присоединиться к решению задачи</h2>
             <p>
               Выберите, как вы хотите начать работу над решением этой задачи. Вы
-              всегда сможете изменить свое решение позже.
+              всегда сможете изменить своё решение позже.
             </p>
           </div>
         </div>
@@ -91,35 +97,62 @@ export function ParticipationInviteModal({
 
             {/* Вариант 2: Выбрать направление из КИ */}
             {hasMultipleSolutions && (
-              <Card
-                className={`option-card ai-direction-option ${loadingDirections ? 'loading' : ''}`}
-                hoverable={!loadingDirections}
-                onClick={loadingDirections ? undefined : onSelectDirection}
-              >
-                <div className="option-content">
-                  <div className="option-icon">
-                    <RobotOutlined />
-                  </div>
-                  <div className="option-info">
-                    <h3>Выбрать направление из КИ</h3>
-                    <p>
-                      ИИ проанализирует существующие решения и предложит
-                      основные направления подходов. Выберите подходящее вам.
-                    </p>
-                    <div className="option-features">
-                      <span>🤖 Анализ ИИ</span>
-                      <span>📊 Разные подходы</span>
-                      <span>💡 Умные предложения</span>
+              <>
+                {showDirectionOption ? (
+                  <Card
+                    className={`option-card ai-direction-option ${loadingDirections ? 'loading' : ''}`}
+                    hoverable={!loadingDirections}
+                    onClick={loadingDirections ? undefined : onSelectDirection}
+                  >
+                    <div className="option-content">
+                      <div className="option-icon">
+                        <RobotOutlined />
+                      </div>
+                      <div className="option-info">
+                        <h3>Выбрать направление из КИ</h3>
+                        <p>
+                          ИИ проанализирует существующие решения и предложит
+                          основные направления подходов. Выберите подходящее
+                          вам.
+                        </p>
+                        <div className="option-features">
+                          <span>🤖 Анализ ИИ</span>
+                          <span>📊 Разные подходы</span>
+                          <span>💡 Умные предложения</span>
+                        </div>
+                      </div>
+                      {loadingDirections && (
+                        <div className="option-loading">
+                          <Spin />
+                        </div>
+                      )}
                     </div>
-                  </div>
-                  {loadingDirections && (
-                    <div className="option-loading">
-                      <Spin />
-                      {/*<span>Анализ решений...</span>*/}
+                  </Card>
+                ) : (
+                  <Card className="option-card ai-direction-option disabled">
+                    <div className="option-content">
+                      <div className="option-icon">
+                        <ClockCircleOutlined />
+                      </div>
+                      <div className="option-info">
+                        <h3>Выбрать направление из КИ</h3>
+                        <Alert
+                          message="Временно недоступно"
+                          description={
+                            directionsTimeRemaining
+                              ? `Этот вариант будет доступен через ${directionsTimeRemaining}`
+                              : 'Этот вариант временно недоступен. Попробуйте позже.'
+                          }
+                          type="warning"
+                          showIcon
+                          icon={<ClockCircleOutlined />}
+                          style={{ marginTop: '8px' }}
+                        />
+                      </div>
                     </div>
-                  )}
-                </div>
-              </Card>
+                  </Card>
+                )}
+              </>
             )}
 
             {/* Вариант 3: Начать с нуля */}
